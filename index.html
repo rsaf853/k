@@ -28,7 +28,8 @@ textarea{resize:vertical;line-height:1.6}
 ::placeholder{color:var(--mut)}
 .shell{display:grid;grid-template-columns:var(--iw) minmax(0,1fr);gap:0 32px;max-width:1260px;margin:0 auto;padding:0 20px}
 .side{position:sticky;top:0;height:100vh;height:100svh;padding:16px 0}
-.im{position:relative;height:100%;background:var(--soft) var(--himg,none) center/cover}.im .bt{position:absolute;left:8px;bottom:8px;background:var(--bg)}
+.im{position:relative;height:100%;background:var(--soft);overflow:hidden}.im .imi{position:absolute;inset:0;background:var(--himg,none) var(--ix,50%) var(--iy,50%)/cover no-repeat;transform:scale(var(--iz,1));transform-origin:var(--ix,50%) var(--iy,50%)}.im .imb{position:absolute;left:8px;bottom:8px;display:flex;gap:4px;z-index:1}.im .bt{background:var(--bg)}
+input[type=range]{padding:0;border:0;height:24px;accent-color:var(--fg);cursor:pointer}
 .col{min-width:0;display:flex;flex-direction:column;min-height:100vh;min-height:100svh}
 header{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;justify-content:space-between;align-items:center;height:52px;border-bottom:1px solid var(--fg);padding-top:env(safe-area-inset-top,0px);box-sizing:content-box}
 nav{display:flex;gap:20px;font:500 13px var(--sans)}nav a{text-decoration:none;color:var(--mut);transition:color .15s}nav a.on,nav a:hover{color:var(--fg)}nav a.on{font-weight:700}
@@ -149,14 +150,14 @@ const date=(d,t)=>{const x=new Date(d);return `${p2(x.getDate())}/${p2(x.getMont
 const dateS=d=>{const x=new Date(d);return `${p2(x.getDate())}/${p2(x.getMonth()+1)}`};
 const uid=()=>Math.random().toString(36).slice(2,8),WD=['SUN','MON','TUE','WED','THU','FRI','SAT'];
 const KIND={posts:'post',gallery:'gallery',memo:'memo',lines:'line'},LBL={post:'archive',gallery:'img',memo:'memo',line:'txt'};
-let admin=false,ITEMS=[],PLANS=[],HOME={img:'',blocks:[]},TAG='',Q='',UNL={},EDITM=false,AK='todo';
+let admin=false,ITEMS=[],PLANS=[],HOME={img:'',blocks:[]},TAG='',Q='',UNL={},EDITM=false,AK='todo',ADJ=null;
 const now=new Date(),TODAY=ymd(now.getFullYear(),now.getMonth(),now.getDate()),CAL={y:now.getFullYear(),m:now.getMonth(),sel:TODAY};
 const G=i=>UNL[i.id]?{...i,...UNL[i.id]}:i,locked=i=>i.visibility==='locked'&&!admin&&!UNL[i.id];
 const vb=i=>i.visibility==='public'?'':`<span class="vb">${i.visibility==='private'?'PRIVATE':'LOCKED'}</span>`;
 const tags=i=>(i.tags||[]).map(t=>`<span class="tg" data-tag="${esc(t)}">#${esc(t)}</span>`).join('');
 const eb=i=>admin?`<button class="btn" data-ed="${i.id}">EDIT</button>`:'';
 const hash=t=>[...t.matchAll(/(?:^|\s)#([^\s#]+)/g)].map(m=>m[1]);
-const openM=h=>{$('#mb').innerHTML=h;$('#md').hidden=false},closeM=()=>$('#md').hidden=true;
+const openM=h=>{$('#mb').innerHTML=h;$('#md').hidden=false},closeM=()=>{$('#md').hidden=true;if(ADJ){Object.assign(HOME,ADJ);ADJ=null;paintVars()}};
 $('#md').onclick=e=>{if(e.target.id==='md')closeM()};$('#lb').onclick=()=>$('#lb').hidden=true;
 const msg=t=>{const e=$('#st');if(e)e.textContent=t;else alert(t)};
 const rid=f=>`${crypto.randomUUID()}.${(f.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg'}`;
@@ -175,11 +176,28 @@ $('#theme').onclick=()=>{const r=document.documentElement;r.dataset.theme=isDark
 matchMedia('(prefers-color-scheme:dark)').addEventListener('change',paintTheme);
 /* data */
 const DEF=()=>({img:'',blocks:[{id:uid(),t:'calendar',w:1},{id:uid(),t:'posts',w:1,n:6},{id:uid(),t:'memos',w:1,n:4},{id:uid(),t:'lines',w:1,n:6}]});
-async function load(){const r=await sb.from(admin?'items':'feed').select('*').order('created_at',{ascending:false});ITEMS=r.data||[];
- const h=await sb.from('settings').select('value').eq('key','home').maybeSingle();HOME=h.data?.value?.blocks?h.data.value:DEF();
- PLANS=[];if(admin){const p=await sb.from('plans').select('*').order('id');PLANS=p.data||[]}
- paintImg();if(r.error){app.innerHTML='<p class="empty">Load failed: '+esc(r.error.message)+'</p>';return false}return true}
-const paintImg=()=>{$('#im').style.setProperty('--himg',HOME.img?`url("${HOME.img}")`:'none');$('#im').innerHTML=admin?'<button class="bt" data-himg>IMAGE</button>':''};
+let loadSeq=0;
+async function load(){const my=++loadSeq;
+ try{
+  const [r,h,p]=await Promise.all([
+   sb.from(admin?'items':'feed').select('*').order('created_at',{ascending:false}),
+   sb.from('settings').select('value').eq('key','home').maybeSingle(),
+   admin?sb.from('plans').select('*').order('id'):Promise.resolve({data:[]})]);
+  if(my!==loadSeq)return false; /* a newer load started; drop this stale result */
+  ITEMS=r.data||[];HOME=h.data?.value?.blocks?h.data.value:DEF();PLANS=p.data||[];
+  paintImg();
+  if(r.error){app.innerHTML='<p class="empty">Load failed: '+esc(r.error.message)+'</p>';return false}
+  return true
+ }catch(x){app.innerHTML='<p class="empty">Load failed: '+esc(x.message||x)+'</p>';return false}}
+const IMG_DEF={iw:250,ix:50,iy:50,iz:100};
+const applyIw=()=>{const r=document.documentElement.style,w=HOME.iw||250;if(innerWidth<=720){r.removeProperty('--iw');return}r.setProperty('--iw',(innerWidth<=1024?Math.round(w*.68):w)+'px')};
+const paintVars=()=>{const s=$('#im').style;s.setProperty('--himg',HOME.img?`url("${HOME.img}")`:'none');s.setProperty('--ix',(HOME.ix??50)+'%');s.setProperty('--iy',(HOME.iy??50)+'%');s.setProperty('--iz',(HOME.iz||100)/100);applyIw()};
+const paintImg=()=>{paintVars();$('#im').innerHTML='<div class="imi"></div>'+(admin?'<div class="imb"><button class="bt" data-himg>IMAGE</button><button class="bt" data-iadj>ADJUST</button></div>':'')};
+addEventListener('resize',applyIw);
+const IU={iw:'px',ix:'%',iy:'%',iz:'%'};
+function imgAdjust(){ADJ={iw:HOME.iw||250,ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100};
+ const row=(k,l,min,max)=>`<label>${l} <span id="v_${k}">${ADJ[k]}${IU[k]}</span></label><input type="range" data-ia="${k}" min="${min}" max="${max}" value="${ADJ[k]}">`;
+ openM(`<h3>IMAGE ADJUST</h3>${row('iw','Width',120,420)}${row('ix','Position X',0,100)}${row('iy','Position Y',0,100)}${row('iz','Zoom',100,300)}<p class="st" style="margin-top:10px">Changes preview live. Width is scaled down automatically on tablets.</p><div class="acts"><button type="button" class="btn" data-ireset>RESET</button><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" data-isave>SAVE</button></div>`)}
 const saveHome=async()=>{const r=await sb.from('settings').upsert({key:'home',value:HOME});if(r.error)msg('Save failed: '+r.error.message)};
 function unlock(id){openM(`<h3>LOCKED</h3><form id="f"><input type="password" name="pw" placeholder="password" autofocus required><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn">UNLOCK</button></div></form>`);
  $('#f').onsubmit=async e=>{e.preventDefault();const r=await sb.rpc('unlock',{p_id:id,p_pw:new FormData(e.target).get('pw')});if(r.error||!r.data?.length)return msg('Wrong password');UNL[id]=r.data[0];closeM();route()}}
@@ -295,8 +313,13 @@ function editor(it){const i=it||{visibility:'public',tags:[],meta:{}},nw=!it,has
  if($('#edel'))$('#edel').onclick=async()=>{if(!confirm('Delete this post?'))return;const r=await sb.from('items').delete().eq('id',i.id);if(r.error)return $('#sv').textContent=r.error.message;closeEd();await load();location.hash='#/posts';route()};
  $('#esave').onclick=async()=>{const vis=$('#ev').value,pw=$('#epw').value;if(vis==='locked'&&nw&&!pw)return $('#sv').textContent='locked posts need a password';$('#sv').textContent='saving…';
   const row={kind:'post',title:$('#eti').value.trim()||null,body:src(),tags:[...new Set($('#et').value.match(/[^\s,#]+/g)||[])],visibility:vis,meta:{...(i.meta||{}),sub:$('#esu').value.trim()}};
-  const r=i.id?await sb.from('items').update(row).eq('id',i.id).select('id').single():await sb.from('items').insert(row).select('id').single();
-  if(r.error)return $('#sv').textContent='failed: '+r.error.message;if(pw)await sb.rpc('set_pw',{p_id:r.data.id,p_pw:pw});closeEd();await load();route()}}
+  const btn=$('#esave');if(btn.disabled)return;btn.disabled=true;
+  try{
+   const r=i.id?await sb.from('items').update(row).eq('id',i.id).select('id').single():await sb.from('items').insert(row).select('id').single();
+   if(r.error){btn.disabled=false;return $('#sv').textContent='failed: '+r.error.message}
+   if(pw){const q=await sb.rpc('set_pw',{p_id:r.data.id,p_pw:pw});if(q.error){btn.disabled=false;return $('#sv').textContent='saved, but password failed: '+q.error.message}}
+   closeEd();await load();route()
+  }catch(x){btn.disabled=false;$('#sv').textContent='failed: '+(x.message||x)}}}
 /* list views */
 function head(k,t){return`<div class="top"><div><h1>${t}</h1><p class="sub">${ITEMS.filter(i=>i.kind===KIND[k]).length} ITEMS</p></div>${admin?`<button class="btn" data-new="${KIND[k]}">+ NEW</button>`:''}</div>`}
 function chips(list){const all=[...new Set(list.flatMap(i=>i.tags||[]))].sort();return all.length?`<div class="bar"><button class="chip${TAG?'':' on'}" data-tag="">ALL</button>${all.map(t=>`<button class="chip${TAG===t?' on':''}" data-tag="${esc(t)}">#${esc(t)}</button>`).join('')}</div>`:''}
@@ -339,8 +362,8 @@ function form(kind,it){if(kind==='post'){closeM();return editor(it)}const i=it||
    if(!nw)return save({...base,body:fd.get('body'),meta:{src:srcs[0]}},i.id,pw);
    for(const s of srcs)await save({...base,body:fd.get('body'),meta:{src:s}},null,pw,1);return done()}
   save({...base,body:fd.get('body')},i.id,pw)}}
-async function save(row,id,pw,quiet){const r=id?await sb.from('items').update(row).eq('id',id).select('id').single():await sb.from('items').insert(row).select('id').single();
- if(r.error)return msg('Save failed: '+r.error.message);if(pw)await sb.rpc('set_pw',{p_id:r.data.id,p_pw:pw});if(!quiet)done()}
+async function save(row,id,pw,quiet){try{const r=id?await sb.from('items').update(row).eq('id',id).select('id').single():await sb.from('items').insert(row).select('id').single();
+ if(r.error)return msg('Save failed: '+r.error.message);if(pw)await sb.rpc('set_pw',{p_id:r.data.id,p_pw:pw});if(!quiet)await done()}catch(x){msg('Save failed: '+(x.message||x))}}
 async function done(){closeM();await load();route()}
 /* events */
 document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
@@ -360,18 +383,25 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(c('[data-em]')){EDITM=!EDITM;return home()}
  if(c('[data-addb]')){const t=$('#at').value;HOME.blocks.push({id:uid(),t,w:1,n:6});saveHome();return home()}
  if(c('[data-himg]')){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;try{HOME.img=await upload(f.files[0]);await saveHome();paintImg()}catch(x){alert('Upload failed: '+x.message)}};f.click();return}
+ if(c('[data-iadj]'))return imgAdjust();
+ if(c('[data-ireset]')){Object.assign(HOME,IMG_DEF);paintVars();document.querySelectorAll('[data-ia]').forEach(s=>{s.value=HOME[s.dataset.ia];$('#v_'+s.dataset.ia).textContent=s.value+IU[s.dataset.ia]});return}
+ if(c('[data-isave]')){ADJ=null;saveHome();closeM();return}
  if(x=c('[data-bm]')){const id=x.closest('[data-b]').dataset.b,B=HOME.blocks,i=B.findIndex(b=>b.id===id),b=B[i],op=x.dataset.bm;
   if(op==='up'&&i>0)[B[i-1],B[i]]=[B[i],B[i-1]];if(op==='dn'&&i<B.length-1)[B[i+1],B[i]]=[B[i],B[i+1]];if(op==='w')b.w=b.w===2?1:2;
   if(op==='rm'){if(!confirm('Delete this block?'))return;B.splice(i,1)}if(op==='ed')return blockForm(b);saveHome();home()}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pi'&&e.target.value.trim()){const v=e.target.value.trim();e.target.value='';planAdd(v)}});
 addEventListener('hashchange',()=>{TAG='';Q='';scrollTo(0,0);route()});
+document.addEventListener('input',e=>{const t=e.target,k=t.dataset&&t.dataset.ia;if(!k)return;HOME[k]=+t.value;$('#v_'+k).textContent=t.value+IU[k];paintVars()});
 /* auth */
 const sync=()=>$('#adm').classList.toggle('on',admin);
 $('#adm').onclick=async()=>{if(admin){await sb.auth.signOut();return}
  openM(`<h3>ADMIN LOGIN</h3><form id="f"><label>Email</label><input type="email" name="email" required autocomplete="username"><label>Password</label><input type="password" name="pw" required autocomplete="current-password"><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn">LOGIN</button></div></form>`);
  $('#f').onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target);msg('Signing in…');const r=await sb.auth.signInWithPassword({email:fd.get('email'),password:fd.get('pw')});if(r.error)return msg('Failed: '+r.error.message);closeM()}};
-sb.auth.onAuthStateChange(async(_,s)=>{const was=admin;admin=!!s;sync();if(!admin)EDITM=false;if(was!==admin&&ITEMS.length+1){UNL={};if(await load())route()}});
-(async()=>{const{data}=await sb.auth.getSession();admin=!!data.session;sync();if(await load())route()})();
+/* NOTE: never await supabase calls inside this callback (deadlocks the auth lock -> whole site freezes). Defer with setTimeout. */
+sb.auth.onAuthStateChange((ev,s)=>{const was=admin;admin=!!s;sync();if(!admin)EDITM=false;
+ if(ev==='INITIAL_SESSION'||was===admin)return;
+ setTimeout(async()=>{UNL={};if(await load())route()},0)});
+(async()=>{try{const{data}=await sb.auth.getSession();admin=!!data.session;sync();if(await load())route()}catch(x){app.innerHTML='<p class="empty">Load failed: '+esc(x.message||x)+'</p>'}})();
 </script>
 </body>
 </html>
