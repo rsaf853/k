@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>archive</title>
+<title>e4e5</title>
 <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard-jp@1.3.9/dist/web/variable/pretendardvariable-jp-dynamic-subset.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-kopubworld@1.0/css/all.css">
@@ -23,7 +23,7 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;heigh
 nav{display:flex;gap:2px;align-items:center}
 nav a,nav button{font-size:14px;font-weight:600;text-decoration:none;color:var(--mut);padding:3px 6px;border:0;background:none;cursor:pointer}
 nav a.on{color:var(--fg);text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px}
-nav a:hover,nav button:hover{color:var(--fg)}
+nav a:hover,nav button:hover{color:var(--fg)}nav button svg{display:block}
 main{padding:24px 0 56px;min-height:70vh}
 h1{font-size:22px;font-weight:800;letter-spacing:-.05em;margin:0 0 2px}
 .sub{color:var(--mut);font:500 11px/1.5 var(--sans);margin:0 0 18px}
@@ -36,7 +36,7 @@ h1{font-size:22px;font-weight:800;letter-spacing:-.05em;margin:0 0 2px}
 .vb{font:700 9px/1 var(--sans);border:1px solid var(--fg);padding:2px 4px;margin-left:6px;vertical-align:middle}
 input,select,textarea{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:7px 10px;outline:none;margin-bottom:6px}
 input:focus,select:focus,textarea:focus{border-color:var(--fg)}
-textarea{min-height:140px;resize:vertical}label{display:block;font:600 11px var(--sans);color:var(--mut);margin:8px 0 3px}
+#sq{margin-bottom:10px}#q{margin-bottom:8px}textarea{min-height:140px;resize:vertical}label{display:block;font:600 11px var(--sans);color:var(--mut);margin:8px 0 3px}
 .row{display:flex;gap:12px;align-items:baseline;border-bottom:1px solid var(--line);padding:10px 0;text-decoration:none}
 .row:hover b{text-decoration:underline}.row b{font-weight:800;flex:1;min-width:0}.row small{color:var(--mut);font-size:11px}
 .mas{column-width:211px;column-gap:10px}
@@ -70,19 +70,19 @@ footer{border-top:1px solid var(--line);padding:14px 0;font-size:11px;color:var(
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="#/posts">archive</a>
-<nav><a href="#/posts" data-n="posts">글</a><a href="#/gallery" data-n="gallery">갤러리</a><a href="#/memo" data-n="memo">메모</a><a href="#/lines" data-n="lines">줄글</a><button id="theme" aria-label="테마">◐</button></nav></div></header>
+<header><div class="wrap"><a class="logo" href="#/posts">e4e5</a>
+<nav><a href="#/posts" data-n="posts">archive</a><a href="#/gallery" data-n="gallery">img</a><a href="#/memo" data-n="memo">memo</a><a href="#/lines" data-n="lines">txt</a><button id="theme" aria-label="테마">◐</button></nav></div></header>
 <main><div class="wrap" id="app"></div></main>
 <footer><div class="wrap"><button id="adm" aria-label="관리자"><svg width="11" height="11" viewBox="0 0 24 24"><path d="M12 20.5C5 15.5 2.5 12 2.5 8.6 2.5 6 4.5 4 7 4c1.9 0 3.7 1 5 2.8C13.3 5 15.1 4 17 4c2.5 0 4.5 2 4.5 4.6 0 3.4-2.5 6.9-9.5 11.9z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg></button>PERSONAL ARCHIVE · NO REDISTRIBUTION</div></footer>
 <div id="md" hidden><div class="mb" id="mb"></div></div><div id="lb" hidden></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script>
-const SB_URL='YOUR_SUPABASE_URL',SB_KEY='YOUR_SUPABASE_ANON_KEY';
+const SB_URL='https://pqktacursqpgmdyxwlxm.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBxa3RhY3Vyc3FwZ21keXh3bHhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5OTQ1NzAsImV4cCI6MjEwODU3MDU3MH0.TPlYNV9t5EkhkYKTDank8nQp8BUnWs6ge9nOVaHgQN8';
 const sb=supabase.createClient(SB_URL,SB_KEY);
 const $=s=>document.querySelector(s),app=$('#app');
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const KIND={posts:'post',gallery:'gallery',memo:'memo',lines:'line'},LBL={post:'글',gallery:'갤러리',memo:'메모',line:'줄글'};
+const KIND={posts:'post',gallery:'gallery',memo:'memo',lines:'line'},LBL={post:'archive',gallery:'img',memo:'memo',line:'txt'};
 let admin=false,ITEMS=[],TAG='',UNL={};
 const date=(d,t)=>{const x=new Date(d),p=n=>String(n).padStart(2,'0');return`${x.getFullYear()}-${p(x.getMonth()+1)}-${p(x.getDate())}`+(t?` ${p(x.getHours())}:${p(x.getMinutes())}`:'')};
 const G=i=>UNL[i.id]?{...i,...UNL[i.id]}:i,locked=i=>i.visibility==='locked'&&!admin&&!UNL[i.id];
@@ -93,7 +93,11 @@ const openM=h=>{$('#mb').innerHTML=h;$('#md').hidden=false},closeM=()=>$('#md').
 $('#md').onclick=e=>{if(e.target.id==='md')closeM()};$('#lb').onclick=()=>$('#lb').hidden=true;
 const msg=t=>{const e=$('#st');if(e)e.textContent=t};
 /* theme */
-$('#theme').onclick=()=>{const r=document.documentElement,d=(r.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'))==='dark'?'light':'dark';r.dataset.theme=d;try{localStorage.setItem('theme',d)}catch(e){}};
+const SUN='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>',MOON='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>';
+const isDark=()=>{const r=document.documentElement;return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches};
+const paintTheme=()=>{const d=isDark(),b=$('#theme'),t=d?'라이트 모드로 전환':'다크 모드로 전환';b.innerHTML=d?MOON:SUN;b.setAttribute('aria-label',t);b.title=t};
+$('#theme').onclick=()=>{const r=document.documentElement;r.dataset.theme=isDark()?'light':'dark';try{localStorage.setItem('theme',r.dataset.theme)}catch(e){}paintTheme()};
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',paintTheme);paintTheme();
 /* data */
 async function load(){const r=await sb.from(admin?'items':'feed').select('*').order('created_at',{ascending:false});ITEMS=r.data||[];return!r.error||(app.innerHTML='<p>불러오기 실패: '+esc(r.error.message)+'</p>',false)}
 function unlock(id){openM(`<h3>LOCKED</h3><form id="f"><input type="password" name="pw" placeholder="비밀번호" autofocus required><p id="st" class="sub"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn">UNLOCK</button></div></form>`);
@@ -125,13 +129,18 @@ addEventListener('resize',layout);
 /* views */
 function head(k,t){return`<div class="top"><div><h1>${t}</h1><p class="sub">${ITEMS.filter(i=>i.kind===KIND[k]).length} ITEMS</p></div>${admin?`<button class="btn" data-new="${KIND[k]}">+ NEW</button>`:''}</div>`}
 function chips(list){const all=[...new Set(list.flatMap(i=>i.tags||[]))].sort();return all.length?`<div class="bar"><button class="chip${TAG?'':' on'}" data-tag="">ALL</button>${all.map(t=>`<button class="chip${TAG===t?' on':''}" data-tag="${esc(t)}">#${esc(t)}</button>`).join('')}</div>`:''}
-function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind),L=TAG?all.filter(i=>(i.tags||[]).includes(TAG)):all;let h=head(k,LBL[kind])+chips(all);
- if(kind==='post')h+=L.map(i=>`<a class="row" href="#/post/${i.id}"><b>${esc(i.title)}${vb(i)}</b><span>${tags(i)}</span><small>${date(i.created_at)}</small></a>`).join('');
- if(kind==='gallery')h+=`<div class="mas">${L.map(it=>{const i=G(it);return`<div class="gi" data-gi="${i.id}">${locked(i)?'<div class="lk">LOCKED</div>':`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${tags(i)}${vb(i)}</div>`:''}</div>`}).join('')}</div>`;
- if(kind==='memo')h+=`<div class="mas">${L.map(it=>{const i=G(it);return`<div class="mm">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED — 클릭해서 열기</span>`:esc(i.body)}<div class="ft"><span>${tags(i)}${vb(i)} ${date(i.created_at)}</span>${eb(i)}</div></div>`}).join('')}</div>`;
- if(kind==='line')h=head(k,LBL[kind])+(admin?`<form id="q" style="display:flex;gap:6px"><input name="t" placeholder="한 줄 입력 후 Enter (#태그 가능)" autocomplete="off"></form>`:'')+chips(all)+`<div style="margin-top:8px">${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><span class="t">${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED</span>`:esc(i.body)} ${tags(i)}${vb(i)}</span>${eb(i)}</div>`}).join('')}</div>`;
- app.innerHTML=h||'';if(!L.length)app.insertAdjacentHTML('beforeend','<p class="sub">비어 있어요</p>');
- const q=$('#q');if(q)q.onsubmit=async e=>{e.preventDefault();const t=new FormData(q).get('t').trim();if(!t)return;await save({kind:'line',body:t,tags:hash(t),visibility:'public'});}}
+let Q='';
+const match=i=>!Q||[i.title,i.body,(i.tags||[]).join(' ')].join(' ').toLowerCase().includes(Q.toLowerCase());
+function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
+ if(kind==='post')h=L.map(i=>`<a class="row" href="#/post/${i.id}"><b>${esc(i.title)}${vb(i)}</b><span>${tags(i)}</span><small>${date(i.created_at)}</small></a>`).join('');
+ if(kind==='gallery')h=`<div class="mas">${L.map(it=>{const i=G(it);return`<div class="gi" data-gi="${i.id}">${locked(i)?'<div class="lk">LOCKED</div>':`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${tags(i)}${vb(i)}</div>`:''}</div>`}).join('')}</div>`;
+ if(kind==='memo')h=`<div class="mas">${L.map(it=>{const i=G(it);return`<div class="mm">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED — 클릭해서 열기</span>`:esc(i.body)}<div class="ft"><span>${tags(i)}${vb(i)} ${date(i.created_at)}</span>${eb(i)}</div></div>`}).join('')}</div>`;
+ if(kind==='line')h=`<div style="margin-top:8px">${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><span class="t">${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED</span>`:esc(i.body)} ${tags(i)}${vb(i)}</span>${eb(i)}</div>`}).join('')}</div>`;
+ return L.length?h:'<p class="sub">비어 있어요</p>'}
+function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind);
+ app.innerHTML=head(k,LBL[kind])+`<input id="sq" placeholder="검색 (제목 · 본문 · 태그)" value="${esc(Q)}" autocomplete="off">`+(kind==='line'&&admin?`<form id="q"><input name="t" placeholder="한 줄 입력 후 Enter (#태그 가능)" autocomplete="off"></form>`:'')+chips(all)+`<div id="lst">${list(k)}</div>`;
+ $('#sq').oninput=e=>{Q=e.target.value;$('#lst').innerHTML=list(k)};
+ const q=$('#q');if(q)q.onsubmit=async e=>{e.preventDefault();const t=new FormData(q).get('t').trim();if(!t)return;await save({kind:'line',body:t,tags:hash(t),visibility:'public'})}}
 const hash=t=>[...t.matchAll(/(?:^|\s)#([^\s#]+)/g)].map(m=>m[1]);
 function route(){const h=location.hash.replace('#/','')||'posts',[a,b]=h.split('/');document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('on',x.dataset.n===a||(a==='post'&&x.dataset.n==='posts')));
  if(a==='post'){const it=ITEMS.find(i=>i.id==b);if(!it){app.innerHTML='<p>없는 글이에요</p>';return}if(locked(it))return app.innerHTML=`<a class="btn" href="#/posts">← BACK</a><h1 style="margin-top:14px">${esc(it.title)}</h1><p><button class="btn" data-un="${it.id}">비밀번호 입력</button></p>`;return reader(it)}
@@ -142,11 +151,13 @@ function form(kind,it){const i=it||{visibility:'public',tags:[],meta:{}},new_=!i
  ${kind==='post'||kind==='memo'?`<label>제목</label><input name="title" value="${esc(i.title)}">`:''}
  ${kind==='gallery'?`<label>이미지 URL (여러 줄 가능)</label><textarea name="urls" style="min-height:60px">${esc(i.meta?.src||'')}</textarea>${new_?'<label>또는 파일 업로드</label><input type="file" name="files" accept="image/*" multiple>':''}<label>캡션</label><input name="body" value="${esc(i.body)}">`
  :`<label>${kind==='post'?'본문 (Markdown · ```html 블록은 그대로 삽입)':'내용'}</label>${kind==='line'?`<input name="body" value="${esc(i.body)}">`:`<textarea name="body" style="min-height:${kind==='post'?320:140}px;font-family:ui-monospace,monospace;font-size:12px">${esc(i.body)}</textarea>`}`}
+ ${kind==='post'?'<button type="button" class="btn" id="up">+ 이미지 업로드</button><input type="file" id="upf" accept="image/*" multiple hidden>':''}
  <label>해시태그 (쉼표/공백 구분)</label><input name="tags" value="${esc((i.tags||[]).join(' '))}">
  <label>공개 설정</label><select name="vis">${[['public','공개'],['private','비밀글 (나만 보기)'],['locked','보호글 (비밀번호)']].map(([k,t])=>`<option value="${k}"${i.visibility===k?' selected':''}>${t}</option>`).join('')}</select>
  <input type="password" name="pw" placeholder="보호글 비밀번호 (바꿀 때만 입력)" autocomplete="new-password">
  <p id="st" class="sub"></p><div class="acts">${new_?'':'<button type="button" class="btn" data-del>DELETE</button>'}<button type="button" class="btn" data-x>CANCEL</button><button class="btn">SAVE</button></div></form>`);
  $('[data-del]')&&($('[data-del]').onclick=async()=>{if(!confirm('삭제할까요?'))return;const r=await sb.from('items').delete().eq('id',i.id);if(r.error)return msg(r.error.message);closeM();await load();location.hash=kind==='post'?'#/posts':location.hash;route()});
+ $('#up')&&($('#up').onclick=()=>$('#upf').click(),$('#upf').onchange=async e=>{const ta=$('#f [name=body]');for(const f of e.target.files){msg('업로드 중…');const p=Date.now()+'_'+Math.random().toString(36).slice(2,7)+'_'+f.name.replace(/[^\w.-]/g,'');const u=await sb.storage.from('img').upload(p,f);if(u.error)return msg('업로드 실패: '+u.error.message);ta.setRangeText(`\n![](${sb.storage.from('img').getPublicUrl(p).data.publicUrl})\n`,ta.selectionStart,ta.selectionEnd,'end')}msg('업로드 완료 — 본문에 삽입됐어요');e.target.value=''});
  $('#f').onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target);msg('저장 중…');
   const base={kind,title:fd.get('title')||null,tags:[...new Set([...(fd.get('tags')||'').split(/[,\s]+/).map(s=>s.replace(/^#/,'')).filter(Boolean),...(kind==='memo'||kind==='line'?hash(fd.get('body')||''):[])])],visibility:fd.get('vis')};
   const pw=fd.get('pw');if(base.visibility==='locked'&&new_&&!pw)return msg('보호글은 비밀번호가 필요해요');
@@ -167,7 +178,7 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);
  if(x=c('[data-ed]')){e.stopPropagation();const i=ITEMS.find(i=>i.id==x.dataset.ed);return form(i.kind,G(i))}
  if(x=c('[data-un]'))return unlock(+x.dataset.un);
  if(x=c('[data-gi]')){const i=G(ITEMS.find(i=>i.id==x.dataset.gi));if(locked(i))return unlock(i.id);$('#lb').innerHTML=`<img src="${esc(i.meta.src)}" alt="">`;$('#lb').hidden=false}});
-addEventListener('hashchange',()=>{TAG='';route()});
+addEventListener('hashchange',()=>{TAG='';Q='';route()});
 /* auth */
 const sync=()=>$('#adm').classList.toggle('on',admin);
 $('#adm').onclick=async()=>{if(admin){await sb.auth.signOut();return}
