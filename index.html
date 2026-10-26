@@ -31,7 +31,7 @@ input,select,textarea{width:100%;border:1px solid var(--line);background:var(--b
 input:focus,select:focus,textarea:focus{border-color:var(--fg)}
 textarea{resize:vertical;line-height:1.6}
 ::placeholder{color:var(--mut)}
-.shell{display:grid;grid-template-columns:var(--iw) minmax(0,1fr);gap:0 32px;max-width:1260px;margin:0 auto;padding:0 20px}
+.shell{display:grid;grid-template-columns:var(--iw) minmax(0,1fr);gap:0 32px;max-width:none;margin:0 auto;padding:0 20px}
 .side{position:sticky;top:0;height:100vh;height:100svh;padding:16px 0}
 .im{position:relative;height:100%;background:var(--soft);overflow:hidden}.im .imi{position:absolute;inset:0;background:var(--himg,none) var(--ix,50%) var(--iy,50%)/cover no-repeat;transform:scale(var(--iz,1));transform-origin:var(--ix,50%) var(--iy,50%)}.im .imb{position:absolute;left:8px;bottom:8px;display:flex;gap:4px;z-index:1}.im .bt{background:var(--bg)}
 input[type=range]{padding:0;border:0;height:24px;accent-color:var(--fg);cursor:pointer}
@@ -41,7 +41,7 @@ nav a{white-space:nowrap}nav{display:flex;gap:20px;font:500 13px var(--sans)}nav
 .hr{display:flex;gap:2px}
 .ib{display:inline-grid;place-items:center;min-width:30px;height:30px;color:var(--mut);font:600 12px var(--sans);text-decoration:none;transition:color .15s}.ib:hover{color:var(--fg)}.ib.s{min-width:24px;height:24px}
 main{flex:1;padding:24px 0 56px}
-footer{border-top:1px solid var(--line);padding:14px 0;color:var(--mut);font:500 10.5px var(--sans);display:flex;align-items:center;gap:8px}footer button{color:var(--mut);display:grid;place-items:center;width:18px;height:18px}footer button.on{color:var(--fg)}
+footer{border-top:1px solid var(--line);padding:14px 0;color:var(--mut);font:500 10.5px var(--sans);display:flex;align-items:center;gap:8px}footer button{color:var(--mut);display:grid;place-items:center;width:18px;height:18px}footer button.in{color:var(--fg);opacity:.45}footer button.on{color:var(--fg);opacity:1}footer button.on svg path{fill:currentColor}
 h1{font-size:24px;font-weight:800;margin:0;letter-spacing:-.03em}.sub{color:var(--mut);font:500 12px var(--sans);margin:2px 0 16px}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px}
 .bt,.btn{font:600 11.5px/1.5 var(--sans);border:1px solid var(--line);padding:3px 11px;text-decoration:none;display:inline-block;color:var(--fg);transition:background .15s,color .15s,border-color .15s}.bt:hover,.btn:hover,.btn.on,.bt.pri{background:var(--fg);color:var(--bg);border-color:var(--fg)}
@@ -69,8 +69,8 @@ h1{font-size:24px;font-weight:800;margin:0;letter-spacing:-.03em}.sub{color:var(
 .md>:first-child{margin-top:0}.md>:last-child{margin-bottom:0}.md p{margin:0 0 .6em}.md ul,.md ol{margin:0 0 .6em;padding-left:1.3em}.md blockquote{margin:0 0 .6em;padding-left:.8em;border-left:2px solid var(--line);color:var(--mut)}.md code,.md pre{font-family:var(--sans);background:var(--soft);padding:0 4px}.md pre{padding:8px;overflow:auto}.md img{max-width:100%}.md h1,.md h2,.md h3{font-size:1.05em;margin:0 0 .4em}.md a{text-underline-offset:3px}.md hr{border:0;border-top:1px solid var(--line)}
 .lq{display:flex;gap:8px;align-items:flex-end;margin-top:8px}.lq textarea{min-height:44px;max-height:45vh;resize:none;flex:1;overflow:auto}.lq .btn{padding:9px 16px}
 /* blocks */
-.blocks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 32px;align-items:start}
-.bl{border-top:1px solid var(--fg);padding-top:10px;min-width:0}.bl.w2{grid-column:span 2}.bl.edit{outline:1px dashed var(--mut);outline-offset:4px}
+.blocks{position:relative}
+.bl{position:absolute;top:0;left:0;width:100%;border-top:1px solid var(--fg);padding-top:10px;min-width:0}.bl.edit{outline:1px dashed var(--mut);outline-offset:4px}
 .bl h6{margin:0 0 8px;font:700 11px var(--sans);color:var(--mut);text-transform:uppercase;display:flex;justify-content:space-between}
 .bc{display:flex;gap:2px;margin:-2px 0 8px;flex-wrap:wrap}.bc .bt{padding:0 7px;font-size:10px}
 .bl .row{grid-template-columns:50px 1fr}.bl .ln{grid-template-columns:50px minmax(0,1fr)}.bl .ln .md{max-height:7.5em;overflow:hidden}.bl .mm{margin-bottom:8px}.bl .mm .mt{-webkit-line-clamp:5;line-clamp:5}
@@ -106,7 +106,7 @@ h1{font-size:24px;font-weight:800;margin:0;letter-spacing:-.03em}.sub{color:var(
 .mn2{padding:12px 16px}.tt,.stt{width:100%;border:0;padding:0;background:none}.tt{font:700 22px/1.3 var(--sans)}.stt{font:400 13px/1.5 var(--sans);color:var(--mut);padding:0 0 8px}
 .tb{display:flex;flex-wrap:wrap;gap:1px;padding:3px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);align-items:center;position:sticky;top:0;background:var(--bg);z-index:2}
 .tb button{min-width:26px;height:24px;font:700 11px var(--sans);padding:0 6px;color:var(--mut)}.tb button:hover{color:var(--fg)}.tb s{width:1px;height:12px;background:var(--line);margin:0 3px}.tb .md{margin-left:auto;display:flex}.tb .md button{height:20px;border:1px solid var(--line);margin-left:-1px;font:700 9.5px var(--sans)}.tb .md .on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-.eb2,.pvw{min-height:320px;padding:14px 2px;outline:0;font:15px/1.8 var(--sans);word-break:keep-all}.eb2:empty::before{content:"write here";color:var(--mut)}
+.eb2,.pvw{min-height:320px;padding:14px 2px;outline:0;font:15px/1.8 var(--sans);word-break:keep-all}
 .eb2 h2,.pvw h2{font:700 18px/1.4 var(--sans);margin:1em 0 .3em}.eb2 blockquote,.pvw blockquote{margin:.8em 0;padding-left:.9em;border-left:3px solid var(--fg);color:var(--mut)}.eb2 p,.pvw p{margin:0 0 .7em}.eb2 img,.pvw img{max-width:100%}.eb2 hr,.pvw hr{border:0;border-top:1px solid var(--fg)}
 .src{display:none;min-height:320px;font:13px/1.7 var(--sans);background:var(--soft);resize:vertical;border:0;padding:12px}.pvw{display:none}.stb{display:flex;justify-content:space-between;font:11px var(--sans);color:var(--mut);padding-top:4px}
 /* reader */
@@ -115,7 +115,7 @@ h1{font-size:24px;font-weight:800;margin:0;letter-spacing:-.03em}.sub{color:var(
 #rd .tp,#rd .bm{position:absolute;left:0;right:0;z-index:3;background:var(--tbg);transition:transform .2s;padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
 #rd .tp{top:0;height:calc(46px + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);display:flex;align-items:center;justify-content:space-between;gap:10px;transform:translateY(-100%)}
 #rd .tp b{flex:1;text-align:center;font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#rd .bm{bottom:0;border-top:1px solid var(--tln);padding-bottom:max(8px,env(safe-area-inset-bottom,0px));transform:translateY(100%)}#rd.ui .tp,#rd.ui .bm{transform:none}
+#rd .bm{bottom:0;padding-bottom:max(8px,env(safe-area-inset-bottom,0px));transform:translateY(100%)}#rd.ui .tp,#rd.ui .bm{transform:none}
 #rd .ib,#rd .bt{color:var(--tmu);border-color:var(--tln)}#rd .bt:hover{background:none;color:var(--tfg)}
 .trk{height:2px;background:var(--tln)}.trk i{display:block;height:2px;background:var(--tfg);width:0}.br{display:flex;justify-content:space-between;align-items:center;font:500 11px var(--sans);color:var(--tmu);padding-top:4px}
 .bk{position:absolute;top:calc(58px + env(safe-area-inset-top,0px));bottom:calc(60px + env(safe-area-inset-bottom,0px));left:calc(max(0px,50% - 380px) + var(--tm));right:calc(max(0px,50% - 380px) + var(--tm));overflow:hidden}#rd.two .bk{left:calc(max(0px,50% - 560px) + var(--tm));right:calc(max(0px,50% - 560px) + var(--tm))}
@@ -130,12 +130,42 @@ h1{font-size:24px;font-weight:800;margin:0;letter-spacing:-.03em}.sub{color:var(
 .sz{display:flex;align-items:center;gap:10px}.sz button{border:1px solid var(--tfg);width:46px;height:32px;font-weight:700}.sz span{flex:1;display:flex;justify-content:space-between}.sz i{width:6px;height:6px;border:1px solid var(--tfg)}.sz i.on{background:var(--tfg)}
 /* in-page article (default view) */
 .ar{--tbg:var(--bg);--tfg:var(--fg);--tmu:var(--mut);--tln:var(--line);--tf:serif;--tk:serif;--ts:17px;--tlh:1.8;--tc:-.03em;--tm:28px}
-.ar .pg{max-width:46em;padding:0 max(0px,calc(var(--tm) - 28px));transition:none}
+.ar .bk2{margin:0 max(0px,calc(var(--tm) - 28px))}
+.ar .pg{max-width:46em;transition:none}
+.ar.paged .pg{max-width:none;transition:transform .25s}.ar.paged .bk2{overflow:hidden}
+.ar .br2{display:none}.ar.paged .br2{display:block;margin:0 max(0px,calc(var(--tm) - 28px))}
+.br2 .row2{display:flex;justify-content:space-between;align-items:center;font:500 11px var(--sans);color:var(--mut);padding-top:4px}
+body.pgd main{padding-bottom:16px}
+#sq{display:block;margin-bottom:14px}#sq+.bar{margin-top:0}#sq+.lq{margin-top:0}
+.lq input[type=datetime-local]{width:auto;flex:none;padding:9px 8px}
+@media(max-width:720px){.lq{flex-wrap:wrap}.lq textarea{flex:1 1 100%}}
 .ar .pg h1{margin-top:2px}
 .sh.fx{position:fixed;z-index:45;--tbg:var(--bg);--tfg:var(--fg);--tmu:var(--mut);--tln:var(--line)}
+/* compact */
+body{font-size:13.5px;line-height:1.5}
+.shell{gap:0 22px;padding:0 16px}
+.side{padding:12px 0}
+header{height:44px}
+nav{gap:16px;font-size:12.5px}
+main{padding:14px 0 36px}
+footer{padding:10px 0}
+.sub{margin:0 0 10px}
+.top{margin-bottom:6px}
+.bar{margin:8px 0;gap:5px}
+.chip{padding:0 8px}
+.bt,.btn{padding:2px 9px}
+.row{padding:7px 0;gap:10px}
+.ln{padding:8px 0}
+.mas{column-gap:8px}.gi{margin-bottom:8px}
+.mm{padding:9px 11px;margin-bottom:8px}
+.bl{padding-top:8px}.bl h6{margin-bottom:5px}
+.cd{min-height:32px;padding:4px 0 8px}
+input,select,textarea{padding:6px 9px}
+#sq{margin-bottom:10px}
 /* responsive */
 @media(max-width:1024px){:root{--iw:170px}.shell{gap:0 22px;padding:0 16px}}
 @media(max-width:720px){:root{--iw:0px}.shell{display:block;padding:0 16px}.side{position:static;height:128px;padding:10px 0 0}.col{min-height:0}header{position:sticky}.blocks{grid-template-columns:1fr}.bl.w2{grid-column:auto}.ln{grid-template-columns:minmax(0,1fr) auto}.ln time{grid-column:1/-1}.bl .ln{grid-template-columns:50px minmax(0,1fr)}.bl .ln time{grid-column:auto}.row{grid-template-columns:64px 1fr}.row>span{grid-column:2}.tb .md{margin-left:0}main{padding-top:16px}.mas{column-gap:8px}.mm,.gi{margin-bottom:8px}}
+@media(max-width:720px){.bl{position:static;width:auto;margin-bottom:14px}.blocks{height:auto!important}}
 </style>
 </head>
 <body>
@@ -158,14 +188,15 @@ const p2=n=>String(n).padStart(2,'0'),ymd=(y,m,d)=>`${y}-${p2(m+1)}-${p2(d)}`,da
 /* date: dd/mm/yy (hh:mm) */
 const date=(d,t)=>{const x=new Date(d);return `${p2(x.getDate())}/${p2(x.getMonth()+1)}/${String(x.getFullYear()).slice(2)}`+(t?` (${p2(x.getHours())}:${p2(x.getMinutes())})`:'')};
 const dateS=d=>{const x=new Date(d);return `${p2(x.getDate())}/${p2(x.getMonth()+1)}`};
+const loc=d=>{const x=new Date(d);return `${x.getFullYear()}-${p2(x.getMonth()+1)}-${p2(x.getDate())}T${p2(x.getHours())}:${p2(x.getMinutes())}`};
 const uid=()=>Math.random().toString(36).slice(2,8),WD=['SUN','MON','TUE','WED','THU','FRI','SAT'];
 const KIND={posts:'post',gallery:'gallery',memo:'memo',lines:'line'},LBL={post:'archive',gallery:'img',memo:'memo',line:'txt'};
-let admin=false,ITEMS=[],PLANS=[],HOME={img:'',blocks:[]},TAG='',Q='',UNL={},EDITM=false,AK='todo',ADJ=null,FS=false;
+let admin=false,EM=false,ITEMS=[],PLANS=[],HOME={img:'',blocks:[]},TAG='',Q='',UNL={},EDITM=false,AK='todo',ADJ=null,FS=false;
 const now=new Date(),TODAY=ymd(now.getFullYear(),now.getMonth(),now.getDate()),CAL={y:now.getFullYear(),m:now.getMonth(),sel:TODAY};
 const G=i=>UNL[i.id]?{...i,...UNL[i.id]}:i,locked=i=>i.visibility==='locked'&&!admin&&!UNL[i.id];
 const vb=i=>i.visibility==='public'?'':`<span class="vb">${i.visibility==='private'?'PRIVATE':'LOCKED'}</span>`;
 const tags=i=>(i.tags||[]).map(t=>`<span class="tg" data-tag="${esc(t)}">#${esc(t)}</span>`).join('');
-const eb=i=>admin?`<button class="btn" data-ed="${i.id}">EDIT</button>`:'';
+const em=()=>admin&&EM,eb=i=>em()?`<button class="btn" data-ed="${i.id}">EDIT</button>`:'';
 const hash=t=>[...t.matchAll(/(?:^|\s)#([^\s#]+)/g)].map(m=>m[1]);
 const openM=h=>{$('#mb').innerHTML=h;$('#md').hidden=false},closeM=()=>{$('#md').hidden=true;if(ADJ){Object.assign(HOME,ADJ);ADJ=null;paintVars()}};
 $('#md').onclick=e=>{if(e.target.id==='md')closeM()};$('#lb').onclick=()=>$('#lb').hidden=true;
@@ -176,7 +207,7 @@ async function upload(f){const p=rid(f),u=await sb.storage.from('img').upload(p,
 let CFG={g:3,m:3};try{Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')||'{}'))}catch(e){}
 const applyCols=()=>{const cap=innerWidth<720?2:innerWidth<1024?3:4,r=document.documentElement.style;r.setProperty('--gc',Math.min(CFG.g,cap));r.setProperty('--mc',Math.min(CFG.m,cap))};
 const segCfg=(k,l)=>`<label>${l}</label><div class="sg2">${[2,3,4].map(n=>`<button class="btn${CFG[k]===n?' on':''}" data-cfg="${k}" data-v="${n}">${n}</button>`).join('')}</div>`;
-const settings=()=>openM(`<h3>SETTINGS</h3>${segCfg('g','IMG · columns')}${segCfg('m','MEMO · columns')}<p class="st" style="margin-top:10px">On phones up to 2 columns, on tablets up to 3.</p><div class="acts"><button class="btn" data-x>DONE</button></div>`);
+const settings=()=>openM(`<h3>SETTINGS</h3>${segCfg('g','IMG · columns')}${segCfg('m','MEMO · columns')}<div class="acts" style="margin-top:10px">${admin?'<button class="btn" data-lo>LOGOUT</button>':''}<button class="btn" data-x>DONE</button></div>`);
 $('#cfg').onclick=settings;applyCols();addEventListener('resize',applyCols);
 /* theme */
 const SUN='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>',MOON='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>';
@@ -202,12 +233,12 @@ async function load(){const my=++loadSeq;
 const IMG_DEF={iw:250,ix:50,iy:50,iz:100};
 const applyIw=()=>{const r=document.documentElement.style,w=HOME.iw||250;if(innerWidth<=720){r.removeProperty('--iw');return}r.setProperty('--iw',(innerWidth<=1024?Math.round(w*.68):w)+'px')};
 const paintVars=()=>{const s=$('#im').style;s.setProperty('--himg',HOME.img?`url("${HOME.img}")`:'none');s.setProperty('--ix',(HOME.ix??50)+'%');s.setProperty('--iy',(HOME.iy??50)+'%');s.setProperty('--iz',(HOME.iz||100)/100);applyIw()};
-const paintImg=()=>{paintVars();$('#im').innerHTML='<div class="imi"></div>'+(admin?'<div class="imb"><button class="bt" data-himg>IMAGE</button><button class="bt" data-iadj>ADJUST</button></div>':'')};
+const paintImg=()=>{paintVars();$('#im').innerHTML='<div class="imi"></div>'+(em()?'<div class="imb"><button class="bt" data-himg>IMAGE</button><button class="bt" data-iadj>ADJUST</button></div>':'')};
 addEventListener('resize',applyIw);
 const IU={iw:'px',ix:'%',iy:'%',iz:'%'};
 function imgAdjust(){ADJ={iw:HOME.iw||250,ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100};
  const row=(k,l,min,max)=>`<label>${l} <span id="v_${k}">${ADJ[k]}${IU[k]}</span></label><input type="range" data-ia="${k}" min="${min}" max="${max}" value="${ADJ[k]}">`;
- openM(`<h3>IMAGE ADJUST</h3>${row('iw','Width',120,420)}${row('ix','Position X',0,100)}${row('iy','Position Y',0,100)}${row('iz','Zoom',100,300)}<p class="st" style="margin-top:10px">Changes preview live. Width is scaled down automatically on tablets.</p><div class="acts"><button type="button" class="btn" data-ireset>RESET</button><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" data-isave>SAVE</button></div>`)}
+ openM(`<h3>IMAGE ADJUST</h3>${row('iw','Width',120,420)}${row('ix','Position X',0,100)}${row('iy','Position Y',0,100)}${row('iz','Zoom',100,300)}<div class="acts"><button type="button" class="btn" data-ireset>RESET</button><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" data-isave>SAVE</button></div>`)}
 const saveHome=async()=>{const r=await sb.from('settings').upsert({key:'home',value:HOME});if(r.error)msg('Save failed: '+r.error.message)};
 function unlock(id){openM(`<h3>LOCKED</h3><form id="f"><input type="password" name="pw" placeholder="password" autofocus required><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn">UNLOCK</button></div></form>`);
  $('#f').onsubmit=async e=>{e.preventDefault();const r=await sb.rpc('unlock',{p_id:id,p_pw:new FormData(e.target).get('pw')});if(r.error||!r.data?.length)return msg('Wrong password');UNL[id]=r.data[0];closeM();route()}}
@@ -219,11 +250,11 @@ function calHtml(){const{y,m}=CAL,f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0)
  for(let d=1;d<=n;d++){const k=ymd(y,m,d),e=P[k]||{p:[],t:[],n:[]};h+=`<button class="cd${k===TODAY?' t':''}${k===CAL.sel?' s':''}" data-d="${k}">${d}<em>${e.p.length?'<u></u>':''}${e.t.length?'<u class="t"></u>':''}${e.n.length?'<u class="n"></u>':''}</em></button>`}
  h+='</div>';const k=CAL.sel,e=P[k]||{p:[],t:[],n:[]},dt=new Date(k+'T00:00:00');
  h+=`<div class="dy"><h5>${k.slice(8)}/${k.slice(5,7)}<span>${WD[dt.getDay()]}</span></h5>`;
- if(e.t.length)h+='<div class="sec">TODO</div>'+e.t.map(x=>`<div class="ck${x.done?' d':''}" ${admin?`data-pk="${x.id}"`:''}><i></i><span>${esc(x.text)}</span>${admin?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
- if(e.n.length)h+='<div class="sec">NOTE</div>'+e.n.map(x=>`<div class="nn"><span>${esc(x.text)}</span>${admin?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
+ if(e.t.length)h+='<div class="sec">TODO</div>'+e.t.map(x=>`<div class="ck${x.done?' d':''}" ${em()?`data-pk="${x.id}"`:''}><i></i><span>${esc(x.text)}</span>${em()?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
+ if(e.n.length)h+='<div class="sec">NOTE</div>'+e.n.map(x=>`<div class="nn"><span>${esc(x.text)}</span>${em()?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
  if(e.p.length)h+='<div class="sec">POSTS</div>'+e.p.map(i=>`<a class="pp" href="#/post/${i.id}">${esc(i.title||'untitled')}</a>`).join('');
- if(!e.t.length&&!e.n.length&&!e.p.length)h+='<p class="sub" style="margin:4px 0 0">nothing</p>';
- if(admin)h+=`<div class="add"><button data-pa="todo" class="${AK==='todo'?'on':''}">TODO</button><button data-pa="note" class="${AK==='note'?'on':''}">NOTE</button><input id="pi" placeholder="add, then press enter" autocomplete="off"></div>`;
+ 
+ if(em())h+=`<div class="add"><button data-pa="todo" class="${AK==='todo'?'on':''}">TODO</button><button data-pa="note" class="${AK==='note'?'on':''}">NOTE</button><input id="pi" aria-label="add" autocomplete="off"></div>`;
  return h+'</div>'}
 const paintCal=()=>{const c=$('#calw');if(c)c.innerHTML=calHtml()};
 async function planAdd(text){const r=await sb.from('plans').insert({day:CAL.sel,kind:AK,text}).select().single();if(r.error)return alert(r.error.message);PLANS.push(r.data);paintCal();$('#pi')&&$('#pi').focus()}
@@ -235,15 +266,30 @@ function blockBody(b){const n=b.n||6;
  if(b.t==='calendar')return`<div id="calw">${calHtml()}</div>`;
  if(b.t==='image')return b.src?`<figure class="fig"><img src="${esc(b.src)}" loading="lazy" alt="">${b.cap?`<figcaption>${esc(b.cap)}</figcaption>`:''}</figure>`:'<div class="ph">NO IMAGE</div>';
  if(b.t==='note')return`<div class="nt">${mdr(b.text)}</div>`;
- if(b.t==='posts')return ITEMS.filter(i=>i.kind==='post').slice(0,n).map(i=>`<a class="row" href="#/post/${i.id}"><small>${dateS(i.created_at)}</small><b>${esc(i.title||'untitled')}${vb(i)}</b></a>`).join('')||'<p class="sub">nothing</p>';
- if(b.t==='memos')return pub('memo').slice(0,n).map(i=>`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}<div class="mt">${esc(i.body||'')}</div></div>`).join('')||'<p class="sub">nothing</p>';
- if(b.t==='lines')return pub('line').slice(0,n).map(i=>`<div class="ln"><time>${dateS(i.created_at)}</time><div class="t"><div class="md">${mdr(i.body)}</div></div></div>`).join('')||'<p class="sub">nothing</p>';
+ if(b.t==='posts')return ITEMS.filter(i=>i.kind==='post').slice(0,n).map(i=>`<a class="row" href="#/post/${i.id}"><small>${dateS(i.created_at)}</small><b>${esc(i.title||'untitled')}${vb(i)}</b></a>`).join('')||'';
+ if(b.t==='memos')return pub('memo').slice(0,n).map(i=>`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}<div class="mt">${esc(i.body||'')}</div></div>`).join('')||'';
+ if(b.t==='lines')return pub('line').slice(0,n).map(i=>`<div class="ln"><time>${dateS(i.created_at)}</time><div class="t"><div class="md">${mdr(i.body)}</div></div></div>`).join('')||'';
  if(b.t==='gallery')return`<div class="gg">${pub('gallery').slice(0,n).map(i=>`<img src="${esc(i.meta?.src)}" data-gi="${i.id}" loading="lazy" alt="">`).join('')}</div>`;
  if(b.t==='links')return(b.text||'').split('\n').map(l=>l.split('|').map(s=>s.trim())).filter(a=>a[0]).map(a=>`<a class="lk" href="${/^(https?:|#)/.test(a[1]||'')?esc(a[1]):'#'}" target="_blank" rel="noopener">${esc(a[0])}<span>↗</span></a>`).join('');return''}
+const SPANS=[[2,'1/3'],[3,'1/2'],[4,'2/3'],[6,'FULL']],sp=b=>b.c||(b.w===2?6:3);
 function blockHtml(b){const lab=b.t==='note'?(b.title||''):b.t==='image'||b.t==='calendar'?'':BT[b.t];
- return`<section class="bl w${b.w}${EDITM?' edit':''}" data-b="${b.id}">${EDITM?`<div class="bc"><button class="bt" data-bm="up">↑</button><button class="bt" data-bm="dn">↓</button><button class="bt" data-bm="w">${b.w===2?'FULL':'HALF'}</button>${b.t!=='calendar'?'<button class="bt" data-bm="ed">EDIT</button>':''}<button class="bt" data-bm="rm">DELETE</button></div>`:''}${lab?`<h6>${esc(lab)}</h6>`:''}${blockBody(b)}</section>`}
-function home(){const used=HOME.blocks.map(b=>b.t);
- app.innerHTML=`<div class="top"><span class="sub" style="margin:0">${HOME.blocks.length} blocks</span>${admin?`<button class="btn${EDITM?' on':''}" data-em>${EDITM?'DONE':'EDIT LAYOUT'}</button>`:''}</div><div class="blocks">${HOME.blocks.map(blockHtml).join('')}</div>${EDITM?`<div class="add2"><select id="at">${Object.keys(BT).filter(t=>t!=='calendar'||!used.includes('calendar')).map(t=>`<option value="${t}">${BT[t]}</option>`).join('')}</select><button class="btn" data-addb>+ ADD BLOCK</button></div>`:''}`}
+ return`<section class="bl${EDITM?' edit':''}" data-b="${b.id}" data-sp="${sp(b)}">${EDITM?`<div class="bc"><button class="bt" data-bm="up">↑</button><button class="bt" data-bm="dn">↓</button>${SPANS.map(([c,l])=>`<button class="bt${sp(b)===c?' pri':''}" data-bm="c" data-c="${c}">${l}</button>`).join('')}${b.t!=='calendar'?'<button class="bt" data-bm="ed">EDIT</button>':''}<button class="bt" data-bm="rm">DELETE</button></div>`:''}${lab?`<h6>${esc(lab)}</h6>`:''}${blockBody(b)}</section>`}
+let MO=null,MR=0;
+function masonry(){const c=$('#bks');if(!c)return;const bl=[...c.children].filter(e=>e.classList.contains('bl'));
+ if(innerWidth<=720){c.style.height='';bl.forEach(e=>e.style.cssText='');return}
+ const N=6,GX=16,GY=16,cw=(c.clientWidth-GX*(N-1))/N,H=new Array(N).fill(0);
+ bl.forEach(e=>{const k=Math.min(N,Math.max(+e.dataset.sp||3,innerWidth<=1024?3:0));
+  e.style.width=(cw*k+GX*(k-1))+'px';
+  let at=0,top=Infinity;for(let i=0;i+k<=N;i++){const t=Math.max(...H.slice(i,i+k));if(t<top){top=t;at=i}}
+  e.style.left=(at*(cw+GX))+'px';e.style.top=top+'px';const h=e.offsetHeight;
+  for(let i=at;i<at+k;i++)H[i]=top+h+GY});
+ c.style.height=Math.max(0,Math.max(...H)-GY)+'px'}
+function masonryInit(){if(MO)MO.disconnect();const c=$('#bks');if(!c)return;masonry();
+ if(window.ResizeObserver){MO=new ResizeObserver(()=>{cancelAnimationFrame(MR);MR=requestAnimationFrame(masonry)});c.querySelectorAll('.bl').forEach(e=>MO.observe(e))}}
+addEventListener('resize',()=>{if($('#bks'))masonry()});
+function home(){home0();masonryInit()}
+function home0(){const used=HOME.blocks.map(b=>b.t);
+ app.innerHTML=`${em()?`<div class="top"><span></span><button class="btn${EDITM?' on':''}" data-em>${EDITM?'DONE':'EDIT LAYOUT'}</button></div>`:''}<div class="blocks" id="bks">${HOME.blocks.map(blockHtml).join('')}</div>${EDITM?`<div class="add2"><select id="at">${Object.keys(BT).filter(t=>t!=='calendar'||!used.includes('calendar')).map(t=>`<option value="${t}">${BT[t]}</option>`).join('')}</select><button class="btn" data-addb>+ ADD BLOCK</button></div>`:''}`}
 function blockForm(b){const t=b.t;openM(`<h3>${BT[t].toUpperCase()}</h3><form id="f">
  ${t==='image'?`<label>Image URL</label><input name="src" value="${esc(b.src||'')}"><label>or upload</label><input type="file" name="file" accept="image/*"><label>Caption</label><input name="cap" value="${esc(b.cap||'')}">`:''}
  ${t==='note'?`<label>Title</label><input name="title" value="${esc(b.title||'')}"><label>Text (markdown)</label><textarea name="text" style="min-height:140px">${esc(b.text||'')}</textarea>`:''}
@@ -272,7 +318,7 @@ function rsClick(b){if(b.dataset.sz)RS.sz=Math.max(0,Math.min(SZ.length-1,RS.sz+
  if(b.dataset.st){const a=STEPS[b.dataset.st];RS[b.dataset.st]=a[Math.max(0,Math.min(a.length-1,idx(a,RS[b.dataset.st])+ +b.dataset.d))]}
  if(b.dataset.r){const v=b.dataset.v;RS[b.dataset.r]=isNaN(+v)?v:+v}}
 function applyRS(){const r=$('#rd'),a=$('#ar'),fn=el=>{el.style.setProperty('--tf',FONTS[RS.fe]+','+FONTS[RS.fk]);el.style.setProperty('--tk',FONTS[RS.fk]);el.style.setProperty('--ts',SZ[RS.sz]+'px');el.style.setProperty('--tlh',RS.l);el.style.setProperty('--tc',RS.c+'em');el.style.setProperty('--tm',RS.m+'px')};
- if(!a&&r.hidden)return;if(a)fn(a);
+ if(!a&&r.hidden)return;if(a){fn(a);layout2()}
  if(!r.hidden){r.dataset.rt=RS.th==='auto'?(isDark()?'ink':'paper'):RS.th;fn(r)}
  try{localStorage.setItem('rs3',JSON.stringify(RS))}catch(e){}
  if(!r.hidden)layout()}
@@ -284,20 +330,31 @@ function wrapKo(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEX
   while(m=HANG.exec(s)){if(m.index>last)f.append(s.slice(last,m.index));const sp=document.createElement('span');sp.className='ko';sp.textContent=m[0];f.append(sp);last=m.index+m[0].length}
   if(last<s.length)f.append(s.slice(last));n.replaceWith(f)})}
 function layout(){const b=$('#bk'),p=$('#pg'),r=$('#rd');if(!b||r.hidden)return;const two=matchMedia('(min-width:900px) and (orientation:landscape)').matches;r.classList.toggle('two',two);p.style.columnCount=two?2:1;p.style.columnGap=GAP+'px';p.style.height=b.clientHeight+'px';pN=Math.max(1,Math.round((p.scrollWidth+GAP)/(b.clientWidth+GAP)));go(pI)}
-function go(i){pI=Math.max(0,Math.min(pN-1,i));const p=$('#pg');if(!p)return;p.style.transform=`translateX(${-pI*($('#bk').clientWidth+GAP)}px)`;$('#pi').textContent=`${pI+1} / ${pN}`;$('#pf').style.width=(pN>1?(pI+1)/pN*100:100)+'%'}
+function go(i){pI=Math.max(0,Math.min(pN-1,i));const p=$('#pg');if(!p)return;p.style.transform=`translateX(${-pI*($('#bk').clientWidth+GAP)}px)`;$('#pi').textContent=`${pI+1} / ${pN}`}
 function reader(it){const i=G(it),r=$('#rd');pI=0;r.hidden=false;document.body.classList.add('ro');r.classList.add('ui');
- r.innerHTML=`<div class="tp"><button class="ib" data-xfs aria-label="Back">←</button><b>${esc(i.title||'')}</b><span style="min-width:28px;text-align:right">${admin?`<button class="bt" data-ed="${i.id}">EDIT</button>`:''}</span></div><div class="bk" id="bk"><div class="pg" id="pg"><h1>${esc(i.title||'')}</h1>${i.meta?.sub?`<p class="sb">${esc(i.meta.sub)}</p>`:''}${marked.parse(i.body||'')}</div></div><div class="bm"><div class="trk"><i id="pf"></i></div><div class="br"><span id="pi"></span><button class="ib" id="aab" aria-label="Typography">Aa</button></div></div><div class="sh" id="sh">${sheet(true)}</div>`;
+ r.innerHTML=`<div class="tp"><button class="ib" data-xfs aria-label="Back">←</button><b>${esc(i.title||'')}</b><span style="min-width:28px;text-align:right">${em()?`<button class="bt" data-ed="${i.id}">EDIT</button>`:''}</span></div><div class="bk" id="bk"><div class="pg" id="pg"><h1>${esc(i.title||'')}</h1>${i.meta?.sub?`<p class="sb">${esc(i.meta.sub)}</p>`:''}${marked.parse(i.body||'')}</div></div><div class="bm"><div class="br"><span id="pi"></span><button class="ib" id="aab" aria-label="Typography">Aa</button></div></div><div class="sh" id="sh">${sheet(true)}</div>`;
  wrapKo($('#pg'));applyRS();document.fonts.ready.then(layout);r.querySelectorAll('img').forEach(m=>m.onload=layout)}
-function article(it){const i=G(it);closeReader();
- app.innerHTML=`<div class="top"><span class="sub" style="margin:0">${date(i.created_at)}</span><span class="acts"><button class="btn" id="aa2" aria-label="Typography">Aa</button><button class="btn" id="fsb">FULL</button>${eb(i)}</span></div><article class="ar" id="ar"><div class="pg" id="pg2"><h1>${esc(i.title||'')}</h1>${i.meta?.sub?`<p class="sb">${esc(i.meta.sub)}</p>`:''}${marked.parse(i.body||'')}</div></article><div class="sh fx" id="sh2">${sheet(false)}</div>`;
- wrapKo($('#pg2'));applyRS()}
+let p2I=0,p2N=1;
+function article(it){const i=G(it);closeReader();p2I=0;
+ app.innerHTML=`<div class="top"><span class="sub" style="margin:0">${date(i.created_at)}</span><span class="acts"><button class="btn" id="aa2" aria-label="Typography">Aa</button><button class="btn" id="fsb">FULL</button>${eb(i)}</span></div><article class="ar" id="ar"><div class="bk2" id="bk2"><div class="pg" id="pg2"><h1>${esc(i.title||'')}</h1>${i.meta?.sub?`<p class="sb">${esc(i.meta.sub)}</p>`:''}${marked.parse(i.body||'')}</div></div><div class="br2"><div class="row2"><button class="ib" data-pp="-1" aria-label="Previous page">‹</button><span id="pi2"></span><button class="ib" data-pp="1" aria-label="Next page">›</button></div></div></article><div class="sh fx" id="sh2">${sheet(false)}</div>`;
+ wrapKo($('#pg2'));applyRS();document.fonts&&document.fonts.ready.then(layout2);$('#ar').querySelectorAll('img').forEach(m=>m.onload=layout2)}
+/* desktop: two pages side by side inside the page; small screens: normal scrolling */
+function layout2(){const a=$('#ar');if(!a){document.body.classList.remove('pgd');return}
+ const b=$('#bk2'),p=$('#pg2'),two=matchMedia('(min-width:900px) and (orientation:landscape)').matches;
+ a.classList.toggle('paged',two);document.body.classList.toggle('pgd',two);
+ if(!two){p.style.height=p.style.columnCount=p.style.columnGap=p.style.transform=b.style.height='';return}
+ const h=Math.max(240,innerHeight-(b.getBoundingClientRect().top+scrollY)-44-16-$('footer').offsetHeight);
+ b.style.height=h+'px';p.style.columnCount=2;p.style.columnGap=GAP+'px';p.style.height=h+'px';
+ p2N=Math.max(1,Math.round((p.scrollWidth+GAP)/(b.clientWidth+GAP)));go2(p2I)}
+function go2(i){const p=$('#pg2'),b=$('#bk2');if(!p||!$('#ar.paged'))return;p2I=Math.max(0,Math.min(p2N-1,i));
+ p.style.transform=`translateX(${-p2I*(b.clientWidth+GAP)}px)`;$('#pi2').textContent=`${p2I+1} / ${p2N}`}
 function closeReader(){$('#rd').hidden=true;$('#rd').innerHTML='';document.body.classList.remove('ro')}
 $('#rd').addEventListener('click',e=>{const r=$('#rd'),sh=$('#sh');if(e.target.closest('.sh')){const b=e.target.closest('button');if(!b)return;rsClick(b);sh.innerHTML=sheet(true);applyRS();return}
  if(e.target.closest('a,button')){if(e.target.closest('#aab'))sh.classList.toggle('on');return}
  if(sh.classList.contains('on')){sh.classList.remove('on');return}const x=e.clientX/innerWidth;if(x<.28)go(pI-1);else if(x>.72)go(pI+1);else r.classList.toggle('ui')});
 {let x0;$('#rd').addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});$('#rd').addEventListener('touchend',e=>{if(e.target.closest('.sh'))return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>50){go(pI+(d<0?1:-1));e.preventDefault()}})}
-addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#lb').hidden)return $('#lb').hidden=true;if(!$('#md').hidden)return closeM();if($('#sh')?.classList.contains('on'))return $('#sh').classList.remove('on');if($('#sh2')?.classList.contains('on'))return $('#sh2').classList.remove('on');if(!$('#ed').hidden)return closeEd();if(!$('#rd').hidden){FS=false;closeReader();if(!$('#ar'))route()}}if(!$('#rd').hidden&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)){if(e.key==='ArrowRight')go(pI+1);if(e.key==='ArrowLeft')go(pI-1)}});
-addEventListener('resize',layout);
+addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#lb').hidden)return $('#lb').hidden=true;if(!$('#md').hidden)return closeM();if($('#sh')?.classList.contains('on'))return $('#sh').classList.remove('on');if($('#sh2')?.classList.contains('on'))return $('#sh2').classList.remove('on');if(!$('#ed').hidden)return closeEd();if(!$('#rd').hidden){FS=false;closeReader();if(!$('#ar'))route()}}if(!$('#rd').hidden&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)){if(e.key==='ArrowRight')go(pI+1);if(e.key==='ArrowLeft')go(pI-1)}else if($('#ar.paged')&&$('#rd').hidden&&$('#md').hidden&&$('#ed').hidden&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&!e.target.isContentEditable){if(e.key==='ArrowRight')go2(p2I+1);if(e.key==='ArrowLeft')go2(p2I-1)}});
+addEventListener('resize',layout);addEventListener('resize',layout2);
 paintTheme();
 /* html -> markdown */
 function h2m(root){const kids=n=>[...n.childNodes].map(nd).join('');
@@ -315,11 +372,11 @@ function closeEd(){$('#ed').hidden=true;$('#ed').innerHTML='';document.body.clas
 function editor(it){const i=it||{visibility:'public',tags:[],meta:{}},nw=!it,hasH=/```html/.test(i.body||'');let mode=hasH?'md':'ed';
  $('#ed').hidden=false;document.body.classList.add('eo');
  $('#ed').innerHTML=`<div class="win"><div class="wh"><b>ARCHIVE ${nw?'NEW':'EDIT'}</b><span class="sv" id="sv"></span>${nw?'':'<button class="bt" id="edel">DELETE</button>'}<button class="bt" id="ecan">CANCEL</button><button class="bt pri" id="esave">SAVE</button></div>
- <div class="em"><select id="ev">${[['public','Public'],['private','Private'],['locked','Locked']].map(([k,t])=>`<option value="${k}"${i.visibility===k?' selected':''}>${t}</option>`).join('')}</select><input id="epw" type="password" placeholder="password (only to change)" autocomplete="new-password" style="${i.visibility==='locked'?'':'display:none'}"><input id="et" placeholder="#tags" value="${esc((i.tags||[]).map(t=>'#'+t).join(' '))}"></div>
- <div class="mn2"><input class="tt" id="eti" placeholder="Title" value="${esc(i.title||'')}"><input class="stt" id="esu" placeholder="Subtitle (optional)" value="${esc(i.meta?.sub||'')}">
+ <div class="em"><select id="ev">${[['public','Public'],['private','Private'],['locked','Locked']].map(([k,t])=>`<option value="${k}"${i.visibility===k?' selected':''}>${t}</option>`).join('')}</select><input id="epw" type="password" placeholder="password" autocomplete="new-password" style="${i.visibility==='locked'?'':'display:none'}"><input id="et" placeholder="#tags" value="${esc((i.tags||[]).map(t=>'#'+t).join(' '))}"></div>
+ <div class="mn2"><input class="tt" id="eti" placeholder="Title" value="${esc(i.title||'')}"><input class="stt" id="esu" placeholder="Subtitle" value="${esc(i.meta?.sub||'')}">
  <div class="tb" id="etb"><span id="tbb" style="display:contents"><button data-c="bold"><b>B</b></button><button data-c="italic"><i>I</i></button><button data-c="underline"><u>U</u></button><button data-c="strikeThrough"><s>S</s></button><s></s><button data-c="formatBlock:h2">H2</button><button data-c="formatBlock:blockquote">“</button><button data-c="insertUnorderedList">•</button><button data-c="insertOrderedList">1.</button><s></s><button data-c="link">link</button><button data-c="img">img</button><button data-c="insertHorizontalRule">—</button><button data-c="undo">↶</button><button data-c="redo">↷</button></span>
  <div class="md" id="emd">${hasH?'':'<button data-m="ed">EDIT</button>'}<button data-m="md">MD</button><button data-m="vw">VIEW</button></div></div>
- <div class="eb2" id="eb" contenteditable="true"></div><textarea class="src" id="em"></textarea><div class="pvw" id="evw"></div><div class="stb"><span id="ec"></span><span id="est">${hasH?'contains html block: markdown mode only':''}</span></div><input type="file" id="ef" accept="image/*" multiple hidden></div></div>`;
+ <div class="eb2" id="eb" contenteditable="true"></div><textarea class="src" id="em"></textarea><div class="pvw" id="evw"></div><div class="stb"><span id="ec"></span><span id="est"></span></div><input type="file" id="ef" accept="image/*" multiple hidden></div></div>`;
  const eb=$('#eb'),em=$('#em'),src=()=>mode==='md'?em.value:h2m(eb);
  const cnt=()=>$('#ec').textContent=(mode==='md'?em.value:eb.innerText).replace(/\s/g,'').length+' chars';
  if(hasH)em.value=i.body||'';else eb.innerHTML=marked.parse(i.body||'');
@@ -346,42 +403,44 @@ function editor(it){const i=it||{visibility:'public',tags:[],meta:{}},nw=!it,has
    closeEd();await load();route()
   }catch(x){btn.disabled=false;$('#sv').textContent='failed: '+(x.message||x)}}}
 /* list views */
-function head(k,t){return`<div class="top"><div><h1>${t}</h1><p class="sub">${ITEMS.filter(i=>i.kind===KIND[k]).length} ITEMS</p></div>${admin?`<button class="btn" data-new="${KIND[k]}">+ NEW</button>`:''}</div>`}
+function head(k,t){return`<div class="top"><span class="sub" style="margin:0">${ITEMS.filter(i=>i.kind===KIND[k]).length} ITEMS</span>${em()?`<button class="btn" data-new="${KIND[k]}">+ NEW</button>`:''}</div>`}
 function chips(list){const all=[...new Set(list.flatMap(i=>i.tags||[]))].sort();return all.length?`<div class="bar"><button class="chip${TAG?'':' on'}" data-tag="">ALL</button>${all.map(t=>`<button class="chip${TAG===t?' on':''}" data-tag="${esc(t)}">#${esc(t)}</button>`).join('')}</div>`:''}
 const match=i=>!Q||[i.title,i.body,(i.tags||[]).join(' ')].join(' ').toLowerCase().includes(Q.toLowerCase());
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
  if(kind==='post')h=L.map(i=>`<a class="row" href="#/post/${i.id}"><small>${date(i.created_at)}</small><b>${esc(i.title||'untitled')}${vb(i)}${i.meta?.sub?`<i>${esc(i.meta.sub)}</i>`:''}</b><span>${tags(i)}</span></a>`).join('');
- if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi" data-gi="${i.id}">${locked(i)?'<div class="empty" style="text-align:center">LOCKED</div>':`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${tags(i)}${vb(i)}</div>`:''}</div>`}).join('')}</div>`;
+ if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi" data-gi="${i.id}">${locked(i)?'<div class="empty" style="text-align:center">LOCKED</div>':`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${em()?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${tags(i)}${vb(i)}</div>`:''}</div>`}).join('')}</div>`;
  if(kind==='memo')h=`<div class="mas m">${L.map(it=>{const i=G(it);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="color:var(--mut)">LOCKED · click to open</span>`:`<div class="mt">${esc(i.body)}</div>`}<div class="ft"><span>${tags(i)}${vb(i)} ${date(i.created_at)}</span>${eb(i)}</div></div>`}).join('')}</div>`;
  if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED</span>`:`<div class="md">${mdr(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${tags(i)}${vb(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
- return L.length?h:'<p class="empty">nothing here</p>'}
+ return L.length?h:''}
 function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind);
- app.innerHTML=head(k,LBL[kind])+`<input id="sq" placeholder="search" value="${esc(Q)}" autocomplete="off">`+(kind==='line'&&admin?`<form id="q" class="lq"><textarea name="t" rows="1" placeholder="write a line… (markdown ok · Enter = new line)"></textarea><button class="btn pri">POST</button></form><p class="st" style="margin:4px 0 0">⌘ / Ctrl + Enter to post</p>`:'')+chips(all)+`<div id="lst">${list(k)}</div>`;
- $('#sq').oninput=e=>{Q=e.target.value;$('#lst').innerHTML=list(k)};
+ app.innerHTML=head(k,LBL[kind])+(kind==='gallery'?'':`<input id="sq" placeholder="search" value="${esc(Q)}" autocomplete="off">`)+(kind==='line'&&em()?`<form id="q" class="lq"><textarea name="t" rows="1" aria-label="write"></textarea><input type="datetime-local" name="dt" aria-label="date"><button class="btn pri">POST</button></form>`:'')+chips(all)+`<div id="lst">${list(k)}</div>`;
+ if($('#sq'))$('#sq').oninput=e=>{Q=e.target.value;$('#lst').innerHTML=list(k)};
  const q=$('#q');if(q){const ta=q.elements.t,grow=()=>{ta.style.height='auto';ta.style.height=ta.scrollHeight+2+'px'};
   ta.oninput=grow;ta.onkeydown=e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();q.requestSubmit()}};
-  q.onsubmit=async e=>{e.preventDefault();const t=ta.value.trim();if(!t)return;await save({kind:'line',body:t,tags:hash(t),visibility:'public'})}}}
+  q.onsubmit=async e=>{e.preventDefault();const t=ta.value.trim();if(!t)return;await save({kind:'line',body:t,tags:hash(t),visibility:'public',...(q.elements.dt.value?{created_at:new Date(q.elements.dt.value).toISOString()}:{})})}}}
 function route(){const h=location.hash.replace('#/','')||'',[a,b]=h.split('/');document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('on',x.dataset.n===(a==='post'?'posts':a)));
  if(a==='post'){const it=ITEMS.find(i=>i.id==b);if(!it){closeReader();return view('posts')}
   if(locked(it)){closeReader();if(!$('#app').innerHTML||$('#ar'))view('posts');return unlock(it.id)}
   if(FS){if(!$('#app').innerHTML)view('posts');return reader(it)}return article(it)}
- FS=false;closeReader();if(!a)return home();view(KIND[a]?a:'posts')}
+ FS=false;closeReader();document.body.classList.remove('pgd');if(!a)return home();view(KIND[a]?a:'posts')}
 /* memo viewer */
 function memoView(id){const it=ITEMS.find(i=>i.id==id);if(!it)return;const i=G(it);if(locked(i))return unlock(i.id);
- openM(`<h3>MEMO</h3>${i.title?`<p style="font-weight:700;font-size:16px;margin:0 0 8px">${esc(i.title)}</p>`:''}<div class="mfull">${esc(i.body)}</div><p class="st" style="margin-top:12px">${tags(i)}${vb(i)} ${date(i.created_at,1)}</p><div class="acts">${admin?`<button class="btn" data-ed="${i.id}">EDIT</button>`:''}<button class="btn" data-x>CLOSE</button></div>`)}
+ openM(`<h3>MEMO</h3>${i.title?`<p style="font-weight:700;font-size:16px;margin:0 0 8px">${esc(i.title)}</p>`:''}<div class="mfull">${esc(i.body)}</div><p class="st" style="margin-top:12px">${tags(i)}${vb(i)} ${date(i.created_at,1)}</p><div class="acts">${em()?`<button class="btn" data-ed="${i.id}">EDIT</button>`:''}<button class="btn" data-x>CLOSE</button></div>`)}
 /* forms (memo / line / gallery) */
 function form(kind,it){if(kind==='post'){closeM();return editor(it)}const i=it||{visibility:'public',tags:[],meta:{}},nw=!it;
  openM(`<h3>${LBL[kind].toUpperCase()} ${nw?'NEW':'EDIT'}</h3><form id="f">
  ${kind==='memo'?`<label>Title</label><input name="title" value="${esc(i.title)}">`:''}
  ${kind==='gallery'?`<label>Image URL (one per line)</label><textarea name="urls">${esc(i.meta?.src||'')}</textarea>${nw?'<label>or upload files</label><input type="file" name="files" accept="image/*" multiple>':''}<label>Caption</label><input name="body" value="${esc(i.body)}">`:`<label>Content${kind==='line'?' (markdown)':''}</label><textarea name="body" style="min-height:${kind==='line'?110:140}px">${esc(i.body)}</textarea>`}
- <label>Tags (space separated)</label><input name="tags" value="${esc((i.tags||[]).join(' '))}">
+ ${kind==='line'?`<label>Date</label><input type="datetime-local" name="dt" value="${nw?'':loc(i.created_at)}">`:''}
+  <label>Tags (space separated)</label><input name="tags" value="${esc((i.tags||[]).join(' '))}">
  <label>Visibility</label><select name="vis">${[['public','Public'],['private','Private'],['locked','Locked']].map(([k,t])=>`<option value="${k}"${i.visibility===k?' selected':''}>${t}</option>`).join('')}</select>
- <input type="password" name="pw" placeholder="password (only to change)" autocomplete="new-password" style="margin-top:6px">
+ <input type="password" name="pw" placeholder="password" autocomplete="new-password" style="margin-top:6px">
  <p id="st" class="st"></p><div class="acts">${nw?'':'<button type="button" class="btn" data-del>DELETE</button>'}<button type="button" class="btn" data-x>CANCEL</button><button class="btn">SAVE</button></div></form>`);
  if($('[data-del]'))$('[data-del]').onclick=async()=>{if(!confirm('Delete?'))return;const r=await sb.from('items').delete().eq('id',i.id);if(r.error)return msg(r.error.message);closeM();await load();route()};
  $('#f').onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target);msg('Saving…');
   const base={kind,title:fd.get('title')||null,tags:[...new Set([...(fd.get('tags')||'').split(/[,\s]+/).map(s=>s.replace(/^#/,'')).filter(Boolean),...(kind==='memo'||kind==='line'?hash(fd.get('body')||''):[])])],visibility:fd.get('vis')},pw=fd.get('pw');
-  if(base.visibility==='locked'&&nw&&!pw)return msg('Locked items need a password');
+  if(kind==='line'&&fd.get('dt'))base.created_at=new Date(fd.get('dt')).toISOString();
+   if(base.visibility==='locked'&&nw&&!pw)return msg('Locked items need a password');
   if(kind==='gallery'){const srcs=(fd.get('urls')||'').split('\n').map(s=>s.trim()).filter(Boolean);
    try{for(const f of fd.getAll('files')){if(f.size)srcs.push(await upload(f))}}catch(x){return msg('Upload failed: '+x.message)}
    if(!srcs.length)return msg('Add an image');
@@ -397,7 +456,9 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(c('#sh2')){const b=t.closest('#sh2 button');if(b){rsClick(b);s2.innerHTML=sheet(false);applyRS()}return}
  if(c('#aa2')){s2.classList.toggle('on');return}
  if(c('#fsb')){FS=true;return route()}
+ if(x=c('[data-pp]'))return go2(p2I+ +x.dataset.pp);
  if(c('[data-xfs]')){FS=false;closeReader();if(!$('#ar'))route();return}
+ if(c('[data-lo]')){closeM();sb.auth.signOut();return}
  if(c('[data-x]'))return closeM();
  if(x=c('[data-cfg]')){CFG[x.dataset.cfg]=+x.dataset.v;try{localStorage.setItem('cfg',JSON.stringify(CFG))}catch(e){}applyCols();return settings()}
  if(x=c('[data-tag]')){TAG=x.dataset.tag===TAG?'':x.dataset.tag;return route()}
@@ -418,18 +479,18 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(c('[data-ireset]')){Object.assign(HOME,IMG_DEF);paintVars();document.querySelectorAll('[data-ia]').forEach(s=>{s.value=HOME[s.dataset.ia];$('#v_'+s.dataset.ia).textContent=s.value+IU[s.dataset.ia]});return}
  if(c('[data-isave]')){ADJ=null;saveHome();closeM();return}
  if(x=c('[data-bm]')){const id=x.closest('[data-b]').dataset.b,B=HOME.blocks,i=B.findIndex(b=>b.id===id),b=B[i],op=x.dataset.bm;
-  if(op==='up'&&i>0)[B[i-1],B[i]]=[B[i],B[i-1]];if(op==='dn'&&i<B.length-1)[B[i+1],B[i]]=[B[i],B[i+1]];if(op==='w')b.w=b.w===2?1:2;
+  if(op==='up'&&i>0)[B[i-1],B[i]]=[B[i],B[i-1]];if(op==='dn'&&i<B.length-1)[B[i+1],B[i]]=[B[i],B[i+1]];if(op==='c'){b.c=+x.dataset.c;b.w=b.c===6?2:1}
   if(op==='rm'){if(!confirm('Delete this block?'))return;B.splice(i,1)}if(op==='ed')return blockForm(b);saveHome();home()}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pi'&&e.target.value.trim()){const v=e.target.value.trim();e.target.value='';planAdd(v)}});
 addEventListener('hashchange',()=>{TAG='';Q='';FS=false;scrollTo(0,0);route()});
 document.addEventListener('input',e=>{const t=e.target,k=t.dataset&&t.dataset.ia;if(!k)return;HOME[k]=+t.value;$('#v_'+k).textContent=t.value+IU[k];paintVars()});
 /* auth */
-const sync=()=>$('#adm').classList.toggle('on',admin);
-$('#adm').onclick=async()=>{if(admin){await sb.auth.signOut();return}
+const sync=()=>{const b=$('#adm');b.classList.toggle('in',admin);b.classList.toggle('on',admin&&EM)};
+$('#adm').onclick=async()=>{if(admin){EM=!EM;if(!EM)EDITM=false;sync();paintImg();route();return}
  openM(`<h3>ADMIN LOGIN</h3><form id="f"><label>Email</label><input type="email" name="email" required autocomplete="username"><label>Password</label><input type="password" name="pw" required autocomplete="current-password"><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn">LOGIN</button></div></form>`);
  $('#f').onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target);msg('Signing in…');const r=await sb.auth.signInWithPassword({email:fd.get('email'),password:fd.get('pw')});if(r.error)return msg('Failed: '+r.error.message);closeM()}};
 /* NOTE: never await supabase calls inside this callback (deadlocks the auth lock -> whole site freezes). Defer with setTimeout. */
-sb.auth.onAuthStateChange((ev,s)=>{const was=admin;admin=!!s;sync();if(!admin)EDITM=false;
+sb.auth.onAuthStateChange((ev,s)=>{const was=admin;admin=!!s;if(ev==='SIGNED_IN'&&!was&&admin)EM=true;if(!admin){EDITM=false;EM=false}sync();
  if(ev==='INITIAL_SESSION'||was===admin)return;
  setTimeout(async()=>{UNL={};if(await load())route()},0)});
 (async()=>{try{const{data}=await sb.auth.getSession();admin=!!data.session;sync();if(await load())route()}catch(x){app.innerHTML='<p class="empty">Load failed: '+esc(x.message||x)+'</p>'}})();
