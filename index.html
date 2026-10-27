@@ -161,6 +161,8 @@ footer{padding:10px 0}
 .mm{padding:9px 11px;margin-bottom:8px}
 .bl{padding-top:8px}.bl.top0{border-top:0;padding-top:0}.bl h6{margin-bottom:5px}
 .cd{min-height:32px;padding:4px 0 8px}
+#calw{container-type:inline-size}.cl{min-width:0}
+@container (min-width:560px){.cs{display:grid;grid-template-columns:260px minmax(0,1fr);gap:0 32px;align-items:start}.cs .dy{border-top:0;margin-top:0;padding-top:0}.cs .dy h5{font-size:15px;font-weight:800;margin-bottom:10px}.cs .dy h5 span{font-weight:600;font-size:10px}.cs .dy .sec{margin:0 0 4px}.cs .dy .sec~.sec{margin-top:16px}}
 input,select,textarea{padding:6px 9px}
 #sq{margin-bottom:10px}
 .lq{gap:6px;align-items:flex-start}
@@ -253,14 +255,14 @@ function calHtml(){const{y,m}=CAL,f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0)
  let h=`<div class="cm"><b>${p2(m+1)}/${String(y).slice(2)}</b><span><button class="ib s" data-cm="-1" aria-label="Previous month">‹</button><button class="ib s" data-cm="0" aria-label="Today">•</button><button class="ib s" data-cm="1" aria-label="Next month">›</button></span></div><div class="cal">${WD.map(w=>`<div class="wd">${w}</div>`).join('')}`;
  for(let i=0;i<f;i++)h+='<div class="cd o"></div>';
  for(let d=1;d<=n;d++){const k=ymd(y,m,d),e=P[k]||{p:[],t:[],n:[]};h+=`<button class="cd${k===TODAY?' t':''}${k===CAL.sel?' s':''}" data-d="${k}">${d}<em>${e.p.length?'<u></u>':''}${e.t.length?'<u class="t"></u>':''}${e.n.length?'<u class="n"></u>':''}</em></button>`}
- h+='</div>';const k=CAL.sel,e=P[k]||{p:[],t:[],n:[]},dt=new Date(k+'T00:00:00');
+ h+='</div>';const hd=h;h='';const k=CAL.sel,e=P[k]||{p:[],t:[],n:[]},dt=new Date(k+'T00:00:00');
  h+=`<div class="dy"><h5>${k.slice(8)}/${k.slice(5,7)}<span>${WD[dt.getDay()]}</span></h5>`;
  if(e.t.length)h+='<div class="sec">TODO</div>'+e.t.map(x=>`<div class="ck${x.done?' d':''}" ${admin?`data-pk="${x.id}"`:''}><i></i><span>${esc(x.text)}</span>${admin?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
  if(e.n.length)h+='<div class="sec">NOTE</div>'+e.n.map(x=>`<div class="nn"><span>${esc(x.text)}</span>${admin?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
  if(e.p.length)h+='<div class="sec">POSTS</div>'+e.p.map(i=>`<a class="pp" href="#/post/${i.id}">${esc(i.title||'untitled')}</a>`).join('');
  
  if(admin)h+=`<div class="add"><button data-pa="todo" class="${AK==='todo'?'on':''}">TODO</button><button data-pa="note" class="${AK==='note'?'on':''}">NOTE</button><input id="pi" aria-label="add" autocomplete="off"></div>`;
- return h+'</div>'}
+ h+='</div>';return`<div class="cs"><div class="cl">${hd}</div>${h}</div>`}
 const paintCal=()=>{const c=$('#calw');if(c)c.innerHTML=calHtml()};
 async function planAdd(text){const r=await sb.from('plans').insert({day:CAL.sel,kind:AK,text}).select().single();if(r.error)return alert(r.error.message);PLANS.push(r.data);paintCal();$('#pi')&&$('#pi').focus()}
 /* blocks */
@@ -276,14 +278,14 @@ function blockBody(b){const n=b.n||6;
  if(b.t==='lines')return pub('line').slice(0,n).map(i=>`<div class="ln"><time>${dateS(i.created_at)}</time><div class="t"><div class="md">${mdr(i.body)}</div></div></div>`).join('')||'';
  if(b.t==='gallery')return`<div class="gg">${pub('gallery').slice(0,n).map(i=>`<img src="${esc(i.meta?.src)}" data-gi="${i.id}" loading="lazy" alt="">`).join('')}</div>`;
  if(b.t==='links')return(b.text||'').split('\n').map(l=>l.split('|').map(s=>s.trim())).filter(a=>a[0]).map(a=>`<a class="lk" href="${/^(https?:|#)/.test(a[1]||'')?esc(a[1]):'#'}" target="_blank" rel="noopener">${esc(a[0])}<span>↗</span></a>`).join('');return''}
-const SPANS=[[2,'1/3'],[3,'1/2'],[4,'2/3'],[6,'FULL']],sp=b=>b.c||(b.w===2?6:3);
+const SPANS=[[3,'1/4'],[4,'1/3'],[6,'1/2'],[8,'2/3'],[9,'3/4'],[12,'FULL']],sp=b=>b.s||(b.c?b.c*2:(b.w===2?12:6));
 function blockHtml(b){const lab=b.t==='note'?(b.title||''):b.t==='image'||b.t==='calendar'?'':BT[b.t];
  return`<section class="bl${EDITM?' edit':''}" data-b="${b.id}" data-sp="${sp(b)}">${EDITM?`<div class="bc"><button class="bt" data-bm="up">↑</button><button class="bt" data-bm="dn">↓</button>${SPANS.map(([c,l])=>`<button class="bt${sp(b)===c?' pri':''}" data-bm="c" data-c="${c}">${l}</button>`).join('')}${b.t!=='calendar'?'<button class="bt" data-bm="ed">EDIT</button>':''}<button class="bt" data-bm="rm">DELETE</button></div>`:''}${lab?`<h6>${esc(lab)}</h6>`:''}${blockBody(b)}</section>`}
 let MO=null,MR=0;
 function masonry(){const c=$('#bks');if(!c)return;const bl=[...c.children].filter(e=>e.classList.contains('bl'));
  if(innerWidth<=720){c.style.height='';bl.forEach(e=>{e.style.cssText='';e.classList.remove('top0')});return}
- const N=6,GX=16,GY=16,cw=(c.clientWidth-GX*(N-1))/N,H=new Array(N).fill(0);
- bl.forEach(e=>{const k=Math.min(N,Math.max(+e.dataset.sp||3,innerWidth<=1024?3:0));
+ const N=12,GX=16,GY=16,cw=(c.clientWidth-GX*(N-1))/N,H=new Array(N).fill(0);
+ bl.forEach(e=>{const k=Math.min(N,Math.max(+e.dataset.sp||6,innerWidth<=1024?6:0));
   e.style.width=(cw*k+GX*(k-1))+'px';
   let at=0,top=Infinity;for(let i=0;i+k<=N;i++){const t=Math.max(...H.slice(i,i+k));if(t<top){top=t;at=i}}
   e.style.left=(at*(cw+GX))+'px';e.style.top=top+'px';e.classList.toggle('top0',top===0);const h=e.offsetHeight;
@@ -496,7 +498,7 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(c('[data-ireset]')){Object.assign(HOME,IMG_DEF);paintVars();document.querySelectorAll('[data-ia]').forEach(s=>{s.value=HOME[s.dataset.ia];$('#v_'+s.dataset.ia).textContent=s.value+IU[s.dataset.ia]});return}
  if(c('[data-isave]')){ADJ=null;saveHome();closeM();return}
  if(x=c('[data-bm]')){const id=x.closest('[data-b]').dataset.b,B=HOME.blocks,i=B.findIndex(b=>b.id===id),b=B[i],op=x.dataset.bm;
-  if(op==='up'&&i>0)[B[i-1],B[i]]=[B[i],B[i-1]];if(op==='dn'&&i<B.length-1)[B[i+1],B[i]]=[B[i],B[i+1]];if(op==='c'){b.c=+x.dataset.c;b.w=b.c===6?2:1}
+  if(op==='up'&&i>0)[B[i-1],B[i]]=[B[i],B[i-1]];if(op==='dn'&&i<B.length-1)[B[i+1],B[i]]=[B[i],B[i+1]];if(op==='c'){b.s=+x.dataset.c;delete b.c;b.w=b.s===12?2:1}
   if(op==='rm'){if(!confirm('Delete this block?'))return;B.splice(i,1)}if(op==='ed')return blockForm(b);saveHome();home()}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pi'&&e.target.value.trim()){const v=e.target.value.trim();e.target.value='';planAdd(v)}});
 addEventListener('hashchange',()=>{TAG='';Q='';FS=false;scrollTo(0,0);route()});
