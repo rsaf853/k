@@ -185,6 +185,29 @@ input,select,textarea{padding:6px 9px}
 </style>
 </head>
 <body>
+<script>
+(function(){
+try{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+ var h=location.hash;if(h&&h!=='#'&&h!=='#/')return;
+ if(sessionStorage.getItem('e4intro'))return;sessionStorage.setItem('e4intro','1')}catch(e){}
+var css='#intro{position:fixed;inset:0;z-index:99999;background:var(--bg);color:var(--fg);display:flex;align-items:center;justify-content:center;cursor:pointer;animation:inFo .55s ease 3.9s forwards}'
++'@keyframes inFo{to{opacity:0;visibility:hidden}}@keyframes inCi{to{opacity:1}}'
++'#intro .st{display:flex;flex-direction:column;align-items:center;gap:14px}'
++'#intro .bd{display:grid;grid-template-columns:repeat(8,14px);grid-template-rows:repeat(8,14px);border:1px solid var(--fg);position:relative}'
++'#intro .bd i{opacity:0;animation:inCi .25s ease forwards}#intro .bd i.d{background:var(--fg)}'
++'#intro .pw,#intro .pb{position:absolute;left:58px;box-sizing:border-box;width:10px;height:10px;border-radius:50%;border:1.5px solid;opacity:0}'
++'#intro .pw{top:86px;background:var(--fg);border-color:var(--bg);animation:inCi .25s ease 1.4s forwards,inUp .6s cubic-bezier(.6,0,.2,1) 1.8s forwards}'
++'#intro .pb{top:16px;background:var(--bg);border-color:var(--fg);animation:inCi .25s ease 1.4s forwards,inDn .6s cubic-bezier(.6,0,.2,1) 2.6s forwards}'
++'@keyframes inUp{to{transform:translateY(-28px)}}@keyframes inDn{to{transform:translateY(28px)}}'
++'#intro .mk{font:500 13px ui-monospace,Menlo,Consolas,monospace;letter-spacing:0;white-space:nowrap;overflow:hidden;width:0;animation:inTy .9s steps(8) 2.4s forwards}'
++'@keyframes inTy{to{width:8ch}}';
+var cells='';for(var r=0;r<8;r++)for(var c=0;c<8;c++)cells+='<i'+((r+c)%2?' class="d"':'')+' style="animation-delay:'+(0.1+r*0.1+c*0.03).toFixed(2)+'s"></i>';
+document.body.insertAdjacentHTML('afterbegin','<style>'+css+'</style><div id="intro" aria-hidden="true"><div class="st"><div class="bd">'+cells+'<div class="pw"></div><div class="pb"></div></div><div class="mk">1. e4 e5</div></div></div>');
+var el=document.getElementById('intro'),gone=function(){el&&el.parentNode&&el.parentNode.removeChild(el)};
+el.addEventListener('click',function(){el.style.animation='inFo .3s ease forwards';setTimeout(gone,350)});
+setTimeout(gone,4600);
+})();
+</script>
 <div class="shell">
 <aside class="side"><div class="im" id="im"></div></aside>
 <div class="col">
