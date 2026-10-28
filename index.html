@@ -65,7 +65,8 @@ h1{font-size:24px;font-weight:800;margin:0;letter-spacing:-.03em}.sub{color:var(
 .mm .ft{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px;color:var(--mut);font:500 11px var(--sans)}
 .mfull{word-break:break-word;max-height:60vh;overflow:auto;line-height:1.7}
 /* lines (txt) */
-.ln{display:grid;grid-template-columns:124px minmax(0,1fr) auto;gap:10px;padding:12px 0;border-top:1px solid var(--line);align-items:baseline}
+.ln{display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:10px;padding:12px 0;border-top:1px solid var(--line);align-items:baseline}
+.bl .ln{border-top:0}.bl .ln~.ln{border-top:1px solid var(--line)}
 .ln time{color:var(--mut);font:500 11.5px var(--sans)}.ln .t{min-width:0;word-break:break-word}.ln .tgs{margin-top:4px}
 .md>:first-child{margin-top:0}.md>:last-child{margin-bottom:0}.md p{margin:0 0 .6em}.md ul,.md ol{margin:0 0 .6em;padding-left:1.3em}.md blockquote{margin:0 0 .6em;padding:.55em .9em;background:var(--hl);color:var(--fg)}.md blockquote>:last-child{margin-bottom:0}.md blockquote+blockquote{margin-top:-.6em;padding-top:.05em}.md code,.md pre{font-family:var(--sans);background:var(--soft);padding:0 4px}.md pre{padding:8px;overflow:auto}.md img{max-width:100%}.md h1,.md h2,.md h3{font-size:1.05em;margin:0 0 .4em}.md a{text-underline-offset:3px}.md hr{border:0;border-top:1px solid var(--line)}.md table{border-collapse:collapse;margin:0 0 .6em;display:block;overflow:auto}.md th,.md td{border:1px solid var(--line);padding:3px 8px}
 .lq{display:flex;gap:8px;align-items:flex-end;margin-top:8px}.lq textarea{min-height:44px;max-height:45vh;resize:none;flex:1;overflow:auto}.lq .btn{padding:9px 16px}
@@ -74,18 +75,18 @@ h1{font-size:24px;font-weight:800;margin:0;letter-spacing:-.03em}.sub{color:var(
 .bl{position:absolute;top:0;left:0;width:100%;border-top:1px solid var(--fg);padding-top:10px;min-width:0}.bl.edit{outline:1px dashed var(--mut);outline-offset:4px}
 .bl h6{margin:0 0 8px;font:700 11px var(--sans);color:var(--mut);text-transform:uppercase;display:flex;justify-content:space-between}
 .bc{display:flex;gap:2px;margin:-2px 0 8px;flex-wrap:wrap}.bc .bt{padding:0 7px;font-size:10px}
-.bl .row{grid-template-columns:50px 1fr}.bl .ln{grid-template-columns:50px minmax(0,1fr)}.bl .ln .md{max-height:7.5em;overflow:hidden}.bl .mm{margin-bottom:8px}.bl .mm .mt{-webkit-line-clamp:5;line-clamp:5}
+.bl .row{grid-template-columns:50px 1fr}.bl .ln{grid-template-columns:40px minmax(0,1fr)}.bl .ln .md{max-height:7.5em;overflow:hidden}.bl .mm{margin-bottom:8px}.bl .mm .mt{-webkit-line-clamp:5;line-clamp:5}
 .fig{margin:0}.fig img{display:block;width:100%}.fig figcaption{font-size:12px;color:var(--mut);padding-top:4px}.ph{border:1px dashed var(--mut);color:var(--mut);font:700 10px var(--sans);padding:26px;text-align:center}
 .lk{display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid var(--line);text-decoration:none;font-weight:500}.lk span{color:var(--mut)}
 .gg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.gg img{aspect-ratio:3/4;object-fit:cover;cursor:zoom-in}
 .nt p{margin:0 0 .7em}.nt img{max-width:100%}
 .add2{display:flex;gap:6px;margin-top:20px;align-items:center}.add2 select{width:auto}
 /* calendar */
-.cm{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.cm b{font:700 15px var(--sans);letter-spacing:.02em}.cm span{display:flex}
+.cm{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding-left:calc(100%/14 - 10px)}.cm b{font:700 13px var(--sans);letter-spacing:-.02em}.cm span{display:flex}
 .cal{display:grid;grid-template-columns:repeat(7,1fr)}.wd{font:700 9.5px var(--sans);color:var(--mut);text-align:center;padding:2px 0 6px}
 .cd{position:relative;text-align:center;padding:6px 0 10px;font:500 12.5px var(--sans);min-height:40px;transition:background .15s}.cd.o{pointer-events:none}.cd.t{font-weight:700;text-decoration:underline;text-underline-offset:3px}.cd.s{background:var(--fg);color:var(--bg)}.cd:hover:not(.s):not(.o){background:var(--soft)}
 .cd em{position:absolute;left:0;right:0;bottom:3px;display:flex;gap:2px;justify-content:center}.cd u{display:block;width:4px;height:4px;background:currentColor}.cd u.t{background:none;border:1px solid currentColor}.cd u.n{height:1px;width:6px;margin-top:2px}
-.dy{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}.dy h5{margin:0 0 4px;font:700 14px var(--sans)}.dy h5.dh{display:flex;align-items:center;gap:10px;margin:0 0 6px}.dh .db{display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:var(--fg);color:var(--bg);font:700 17px var(--sans);font-style:normal;font-variant-numeric:tabular-nums}.dy h5.dh span{margin:0;font:700 14px var(--sans);color:var(--fg)}.dy h5 span{font:500 10.5px var(--sans);color:var(--mut);margin-left:6px}
+.dy{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}.dy h5{margin:0 0 4px;font:700 14px var(--sans)}.dr{display:flex;gap:9px;align-items:flex-start}.db{flex:none;width:36px;height:38px;background:var(--fg);color:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}.db b{font:700 15px/1 var(--sans)}.db i{font:500 8px/1 var(--sans);font-style:normal;letter-spacing:.04em;margin-top:2px}.dl{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;min-height:38px}.dy h5 span{font:500 10.5px var(--sans);color:var(--mut);margin-left:6px}
 .sec{margin:10px 0 2px;font:700 10px var(--sans);color:var(--mut)}
 .ck{display:flex;gap:8px;align-items:center;padding:3px 0}.ck i{width:13px;height:13px;border:2px solid var(--fg);flex:none}.ck.d i{background:var(--fg);box-shadow:inset 0 0 0 2px var(--bg)}.ck.d span{color:var(--mut);text-decoration:line-through}.ck span{flex:1}
 .x{color:var(--mut);width:18px}.x:hover{color:var(--fg)}.nn{display:flex;padding:3px 0;border-bottom:1px solid var(--line)}.nn span{flex:1}.pp{display:block;font-weight:700;padding:3px 0;text-decoration:none}.pp::before{content:"\25AA\FE0E ";}.pp:hover{text-decoration:underline}
@@ -176,7 +177,7 @@ input,select,textarea{padding:6px 9px}
 .nn{border-bottom:0;color:var(--mut)}.nn::before{content:"–";margin-right:6px}.ck+.nn{margin-top:10px}
 /* responsive */
 @media(max-width:1024px){:root{--iw:170px}.shell{gap:0 22px;padding:0 16px}}
-@media(max-width:720px){:root{--iw:0px}.shell{display:block;padding:0 16px}.side{position:static;height:128px;padding:10px 0 0}.col{min-height:0}header{position:sticky}.blocks{grid-template-columns:1fr}.bl.w2{grid-column:auto}.ln{grid-template-columns:minmax(0,1fr) auto}.ln time{grid-column:1/-1}.bl .ln{grid-template-columns:50px minmax(0,1fr)}.bl .ln time{grid-column:auto}.row{grid-template-columns:64px 1fr}.row>span{grid-column:2}.tb .md{margin-left:0}main{padding-top:16px}.mas{column-gap:8px}.mm,.gi{margin-bottom:8px}}
+@media(max-width:720px){:root{--iw:0px}.shell{display:block;padding:0 16px}.side{position:static;height:128px;padding:10px 0 0}.col{min-height:0}header{position:sticky}.blocks{grid-template-columns:1fr}.bl.w2{grid-column:auto}.ln{grid-template-columns:minmax(0,1fr) auto}.ln time{grid-column:1/-1}.bl .ln{grid-template-columns:40px minmax(0,1fr)}.bl .ln time{grid-column:auto}.row{grid-template-columns:64px 1fr}.row>span{grid-column:2}.tb .md{margin-left:0}main{padding-top:16px}.mas{column-gap:8px}.mm,.gi{margin-bottom:8px}}
 @media(max-width:720px){.blocks .bl:first-child{border-top:0;padding-top:0}.bl{position:static;width:auto;margin-bottom:14px}.blocks{height:auto!important}}
 </style>
 </head>
@@ -262,12 +263,12 @@ function calHtml(){const{y,m}=CAL,f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0)
  for(let i=0;i<f;i++)h+='<div class="cd o"></div>';
  for(let d=1;d<=n;d++){const k=ymd(y,m,d),e=P[k]||{p:[],t:[],n:[]};h+=`<button class="cd${k===TODAY?' t':''}${k===CAL.sel?' s':''}" data-d="${k}">${d}<em>${e.p.length?'<u></u>':''}${e.t.length?'<u class="t"></u>':''}${e.n.length?'<u class="n"></u>':''}</em></button>`}
  h+='</div>';const hd=h;h='';const k=CAL.sel,e=P[k]||{p:[],t:[],n:[]},dt=new Date(k+'T00:00:00');
- h+=`<div class="dy"><h5 class="dh"><i class="db">${+k.slice(8)}</i><span>${WDFULL[dt.getDay()]}</span></h5>`;
+ h+=`<div class="dy"><div class="dr"><div class="db"><b>${+k.slice(8)}</b><i>${WD[dt.getDay()]}</i></div><div class="dl">`;
  if(e.t.length)h+=e.t.map(x=>`<div class="ck${x.done?' d':''}" ${admin?`data-pk="${x.id}"`:''}><i></i><span>${esc(x.text)}</span>${admin?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
  if(e.n.length)h+=e.n.map(x=>`<div class="nn"><span>${esc(x.text)}</span>${admin?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
  
  if(admin)h+=`<div class="add"><button class="ic${AK==='todo'?' on':''}" data-pa="todo" title="Todo" aria-label="Todo"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10"/></svg></button><button class="ic${AK==='note'?' on':''}" data-pa="note" title="Note" aria-label="Note"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10"/></svg></button><input id="pi" aria-label="add" autocomplete="off"></div>`;
- h+='</div>';const ph=e.p.length?`<div class="pl">${e.p.map((i,n)=>`<a href="#/post/${i.id}"><span class="n">${p2(n+1)}</span><b>${esc(i.title||'untitled')}</b><small>${date(i.created_at,1).slice(11)}</small></a>`).join('')}</div>`:'';return`<div class="cs"><div class="cl">${hd}${ph}</div>${h}</div>`}
+ h+='</div></div></div>';const ph=e.p.length?`<div class="pl">${e.p.map((i,n)=>`<a href="#/post/${i.id}"><span class="n">${p2(n+1)}</span><b>${esc(i.title||'untitled')}</b><small>${date(i.created_at,1).slice(11)}</small></a>`).join('')}</div>`:'';return`<div class="cs"><div class="cl">${hd}${ph}</div>${h}</div>`}
 const paintCal=()=>{const c=$('#calw');if(c)c.innerHTML=calHtml()};
 async function planAdd(text){const r=await sb.from('plans').insert({day:CAL.sel,kind:AK,text}).select().single();if(r.error)return alert(r.error.message);PLANS.push(r.data);paintCal();$('#pi')&&$('#pi').focus()}
 /* blocks */
@@ -435,7 +436,7 @@ const match=i=>!Q||[i.title,i.body,(i.tags||[]).join(' ')].join(' ').toLowerCase
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
  if(kind==='post')h=L.map(i=>`<a class="row" href="#/post/${i.id}"><small>${date(i.created_at)}</small><b>${esc(i.title||'untitled')}${vb(i)}${i.meta?.sub?`<i>${esc(i.meta.sub)}</i>`:''}</b><span>${tags(i)}</span></a>`).join('');
  if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi" data-gi="${i.id}">${locked(i)?'<div class="empty" style="text-align:center">LOCKED</div>':`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${tags(i)}${vb(i)}</div>`:''}</div>`}).join('')}</div>`;
- if(kind==='memo')h=`<div class="mas m">${L.map(it=>{const i=G(it);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="color:var(--mut)">LOCKED · click to open</span>`:`<div class="mt md">${mdm(i.body)}</div>`}<div class="ft"><span>${tags(i)}${vb(i)} ${date(i.created_at)}</span>${eb(i)}</div></div>`}).join('')}</div>`;
+ if(kind==='memo')h=`<div class="mas m">${L.map(it=>{const i=G(it);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="color:var(--mut)">LOCKED · click to open</span>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${tags(i)}${vb(i)}</span>${eb(i)}</div>`:''}</div>`}).join('')}</div>`;
  if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED</span>`:`<div class="md">${mdr(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${tags(i)}${vb(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
  return L.length?h:''}
 function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind);
