@@ -61,13 +61,13 @@ h1{font-size:24px;font-weight:800;margin:0;letter-spacing:-.03em}.sub{color:var(
 .mm{break-inside:avoid;border:1px solid var(--line);padding:12px 14px;margin:0 0 12px;cursor:pointer;transition:border-color .15s;background:var(--bg)}
 .mm:hover{border-color:var(--fg)}
 .mm>b{display:block;margin-bottom:4px;font-weight:700}
-.mm .mt{white-space:pre-wrap;word-break:break-word;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:8;line-clamp:8;overflow:hidden}
+.mm .mt{word-break:break-word;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:8;line-clamp:8;overflow:hidden}
 .mm .ft{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px;color:var(--mut);font:500 11px var(--sans)}
-.mfull{white-space:pre-wrap;word-break:break-word;max-height:60vh;overflow:auto;line-height:1.7}
+.mfull{word-break:break-word;max-height:60vh;overflow:auto;line-height:1.7}
 /* lines (txt) */
 .ln{display:grid;grid-template-columns:124px minmax(0,1fr) auto;gap:10px;padding:12px 0;border-top:1px solid var(--line);align-items:baseline}
 .ln time{color:var(--mut);font:500 11.5px var(--sans)}.ln .t{min-width:0;word-break:break-word}.ln .tgs{margin-top:4px}
-.md>:first-child{margin-top:0}.md>:last-child{margin-bottom:0}.md p{margin:0 0 .6em}.md ul,.md ol{margin:0 0 .6em;padding-left:1.3em}.md blockquote{margin:0 0 .6em;padding:.55em .9em;background:var(--hl);color:var(--fg)}.md blockquote>:last-child{margin-bottom:0}.md blockquote+blockquote{margin-top:-.6em;padding-top:.05em}.md code,.md pre{font-family:var(--sans);background:var(--soft);padding:0 4px}.md pre{padding:8px;overflow:auto}.md img{max-width:100%}.md h1,.md h2,.md h3{font-size:1.05em;margin:0 0 .4em}.md a{text-underline-offset:3px}.md hr{border:0;border-top:1px solid var(--line)}
+.md>:first-child{margin-top:0}.md>:last-child{margin-bottom:0}.md p{margin:0 0 .6em}.md ul,.md ol{margin:0 0 .6em;padding-left:1.3em}.md blockquote{margin:0 0 .6em;padding:.55em .9em;background:var(--hl);color:var(--fg)}.md blockquote>:last-child{margin-bottom:0}.md blockquote+blockquote{margin-top:-.6em;padding-top:.05em}.md code,.md pre{font-family:var(--sans);background:var(--soft);padding:0 4px}.md pre{padding:8px;overflow:auto}.md img{max-width:100%}.md h1,.md h2,.md h3{font-size:1.05em;margin:0 0 .4em}.md a{text-underline-offset:3px}.md hr{border:0;border-top:1px solid var(--line)}.md table{border-collapse:collapse;margin:0 0 .6em;display:block;overflow:auto}.md th,.md td{border:1px solid var(--line);padding:3px 8px}
 .lq{display:flex;gap:8px;align-items:flex-end;margin-top:8px}.lq textarea{min-height:44px;max-height:45vh;resize:none;flex:1;overflow:auto}.lq .btn{padding:9px 16px}
 /* blocks */
 .blocks{position:relative}
@@ -81,11 +81,11 @@ h1{font-size:24px;font-weight:800;margin:0;letter-spacing:-.03em}.sub{color:var(
 .nt p{margin:0 0 .7em}.nt img{max-width:100%}
 .add2{display:flex;gap:6px;margin-top:20px;align-items:center}.add2 select{width:auto}
 /* calendar */
-.cm{display:flex;justify-content:flex-end;align-items:center;margin-bottom:6px}.cm b{font:700 14px var(--sans)}.cm span{display:flex}
+.cm{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.cm b{font:700 15px var(--sans);letter-spacing:.02em}.cm span{display:flex}
 .cal{display:grid;grid-template-columns:repeat(7,1fr)}.wd{font:700 9.5px var(--sans);color:var(--mut);text-align:center;padding:2px 0 6px}
 .cd{position:relative;text-align:center;padding:6px 0 10px;font:500 12.5px var(--sans);min-height:40px;transition:background .15s}.cd.o{pointer-events:none}.cd.t{font-weight:700;text-decoration:underline;text-underline-offset:3px}.cd.s{background:var(--fg);color:var(--bg)}.cd:hover:not(.s):not(.o){background:var(--soft)}
 .cd em{position:absolute;left:0;right:0;bottom:3px;display:flex;gap:2px;justify-content:center}.cd u{display:block;width:4px;height:4px;background:currentColor}.cd u.t{background:none;border:1px solid currentColor}.cd u.n{height:1px;width:6px;margin-top:2px}
-.dy{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}.dy h5{margin:0 0 4px;font:700 14px var(--sans)}.dy h5 span{font:500 10.5px var(--sans);color:var(--mut);margin-left:6px}
+.dy{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}.dy h5{margin:0 0 4px;font:700 14px var(--sans)}.dy h5.dh{display:flex;align-items:center;gap:10px;margin:0 0 6px}.dh .db{display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:var(--fg);color:var(--bg);font:700 17px var(--sans);font-style:normal;font-variant-numeric:tabular-nums}.dy h5.dh span{margin:0;font:700 14px var(--sans);color:var(--fg)}.dy h5 span{font:500 10.5px var(--sans);color:var(--mut);margin-left:6px}
 .sec{margin:10px 0 2px;font:700 10px var(--sans);color:var(--mut)}
 .ck{display:flex;gap:8px;align-items:center;padding:3px 0}.ck i{width:13px;height:13px;border:2px solid var(--fg);flex:none}.ck.d i{background:var(--fg);box-shadow:inset 0 0 0 2px var(--bg)}.ck.d span{color:var(--mut);text-decoration:line-through}.ck span{flex:1}
 .x{color:var(--mut);width:18px}.x:hover{color:var(--fg)}.nn{display:flex;padding:3px 0;border-bottom:1px solid var(--line)}.nn span{flex:1}.pp{display:block;font-weight:700;padding:3px 0;text-decoration:none}.pp::before{content:"\25AA\FE0E ";}.pp:hover{text-decoration:underline}
@@ -217,9 +217,9 @@ const rid=f=>`${crypto.randomUUID()}.${(f.name.split('.').pop()||'jpg').toLowerC
 async function upload(f){const p=rid(f),u=await sb.storage.from('img').upload(p,f,{contentType:f.type});if(u.error)throw u.error;return sb.storage.from('img').getPublicUrl(p).data.publicUrl}
 /* settings (columns) */
 let CFG={g:3,m:3};try{Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')||'{}'))}catch(e){}
-const applyCols=()=>{const cap=innerWidth<720?2:innerWidth<1024?3:4,r=document.documentElement.style;r.setProperty('--gc',Math.min(CFG.g,cap));r.setProperty('--mc',Math.min(CFG.m,cap))};
+const applyCols=()=>{const cap=innerWidth<720?2:innerWidth<1024?3:4,r=document.documentElement.style;r.setProperty('--gc',innerWidth<720?1:Math.min(CFG.g,cap));r.setProperty('--mc',Math.min(CFG.m,cap))};
 const segCfg=(k,l)=>`<label>${l}</label><div class="sg2">${[2,3,4].map(n=>`<button class="btn${CFG[k]===n?' on':''}" data-cfg="${k}" data-v="${n}">${n}</button>`).join('')}</div>`;
-const settings=()=>openM(`<h3>SETTINGS</h3>${segCfg('g','IMG · columns')}${segCfg('m','MEMO · columns')}<div class="acts" style="margin-top:10px"><button class="btn" data-x>DONE</button></div>`);
+const settings=()=>openM(`<h3>SETTINGS</h3>${segCfg('g','IMG · columns (desktop)')}${segCfg('m','MEMO · columns')}<div class="acts" style="margin-top:10px"><button class="btn" data-x>DONE</button></div>`);
 $('#cfg').onclick=settings;applyCols();addEventListener('resize',applyCols);
 /* theme */
 const BOARD='<span class="bd"><i></i><i></i></span>';
@@ -256,12 +256,13 @@ function unlock(id){openM(`<h3>LOCKED</h3><form id="f"><input type="password" na
  $('#f').onsubmit=async e=>{e.preventDefault();const r=await sb.rpc('unlock',{p_id:id,p_pw:new FormData(e.target).get('pw')});if(r.error||!r.data?.length)return msg('Wrong password');UNL[id]=r.data[0];closeM();route()}}
 /* calendar */
 function pmap(){const m={},g=k=>m[k]||(m[k]={p:[],t:[],n:[]});ITEMS.filter(i=>i.kind==='post').forEach(i=>g(dayOf(i.created_at)).p.push(i));PLANS.forEach(x=>g(String(x.day).slice(0,10))[x.kind==='todo'?'t':'n'].push(x));return m}
+const MONS=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'],WDFULL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 function calHtml(){const{y,m}=CAL,f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),P=pmap();
- let h=`<div class="cm"><span><button class="ib s" data-cm="-1" aria-label="Previous month">‹</button><button class="ib s" data-cm="0" aria-label="Today">•</button><button class="ib s" data-cm="1" aria-label="Next month">›</button></span></div><div class="cal">${WD.map(w=>`<div class="wd">${w}</div>`).join('')}`;
+ let h=`<div class="cm"><b>${MONS[m]} ${y}</b><span><button class="ib s" data-cm="-1" aria-label="Previous month">‹</button><button class="ib s" data-cm="0" aria-label="Today">•</button><button class="ib s" data-cm="1" aria-label="Next month">›</button></span></div><div class="cal">${WD.map(w=>`<div class="wd">${w}</div>`).join('')}`;
  for(let i=0;i<f;i++)h+='<div class="cd o"></div>';
  for(let d=1;d<=n;d++){const k=ymd(y,m,d),e=P[k]||{p:[],t:[],n:[]};h+=`<button class="cd${k===TODAY?' t':''}${k===CAL.sel?' s':''}" data-d="${k}">${d}<em>${e.p.length?'<u></u>':''}${e.t.length?'<u class="t"></u>':''}${e.n.length?'<u class="n"></u>':''}</em></button>`}
  h+='</div>';const hd=h;h='';const k=CAL.sel,e=P[k]||{p:[],t:[],n:[]},dt=new Date(k+'T00:00:00');
- h+=`<div class="dy"><h5>${k.slice(8)}/${k.slice(5,7)}/${k.slice(2,4)}<span>${WD[dt.getDay()]}</span></h5>`;
+ h+=`<div class="dy"><h5 class="dh"><i class="db">${+k.slice(8)}</i><span>${WDFULL[dt.getDay()]}</span></h5>`;
  if(e.t.length)h+=e.t.map(x=>`<div class="ck${x.done?' d':''}" ${admin?`data-pk="${x.id}"`:''}><i></i><span>${esc(x.text)}</span>${admin?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
  if(e.n.length)h+=e.n.map(x=>`<div class="nn"><span>${esc(x.text)}</span>${admin?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
  
@@ -272,13 +273,13 @@ async function planAdd(text){const r=await sb.from('plans').insert({day:CAL.sel,
 /* blocks */
 const BT={calendar:'calendar',image:'image',note:'note',posts:'archive',memos:'memo',lines:'txt',gallery:'img',links:'links'};
 const pub=k=>ITEMS.filter(i=>i.kind===k&&!locked(G(i)));
-const mdr=s=>marked.parse(s||'');
+const mdr=s=>marked.parse(s||''),mdm=s=>mdr(s).replace(/<a /g,'<a target="_blank" rel="noopener" ');
 function blockBody(b){const n=b.n||6;
  if(b.t==='calendar')return`<div id="calw">${calHtml()}</div>`;
  if(b.t==='image')return b.src?`<figure class="fig"><img src="${esc(b.src)}" loading="lazy" alt="">${b.cap?`<figcaption>${esc(b.cap)}</figcaption>`:''}</figure>`:'<div class="ph">NO IMAGE</div>';
  if(b.t==='note')return`<div class="nt">${mdr(b.text)}</div>`;
  if(b.t==='posts')return ITEMS.filter(i=>i.kind==='post').slice(0,n).map(i=>`<a class="row" href="#/post/${i.id}"><small>${dateS(i.created_at)}</small><b>${esc(i.title||'untitled')}${vb(i)}</b></a>`).join('')||'';
- if(b.t==='memos')return pub('memo').slice(0,n).map(i=>`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}<div class="mt">${esc(i.body||'')}</div></div>`).join('')||'';
+ if(b.t==='memos')return pub('memo').slice(0,n).map(i=>`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}<div class="mt md">${mdm(i.body)}</div></div>`).join('')||'';
  if(b.t==='lines')return pub('line').slice(0,n).map(i=>`<div class="ln"><time>${dateS(i.created_at)}</time><div class="t"><div class="md">${mdr(i.body)}</div></div></div>`).join('')||'';
  if(b.t==='gallery')return`<div class="gg">${pub('gallery').slice(0,n).map(i=>`<img src="${esc(i.meta?.src)}" data-gi="${i.id}" loading="lazy" alt="">`).join('')}</div>`;
  if(b.t==='links')return(b.text||'').split('\n').map(l=>l.split('|').map(s=>s.trim())).filter(a=>a[0]).map(a=>`<a class="lk" href="${/^(https?:|#)/.test(a[1]||'')?esc(a[1]):'#'}" target="_blank" rel="noopener">${esc(a[0])}<span>↗</span></a>`).join('');return''}
@@ -434,7 +435,7 @@ const match=i=>!Q||[i.title,i.body,(i.tags||[]).join(' ')].join(' ').toLowerCase
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
  if(kind==='post')h=L.map(i=>`<a class="row" href="#/post/${i.id}"><small>${date(i.created_at)}</small><b>${esc(i.title||'untitled')}${vb(i)}${i.meta?.sub?`<i>${esc(i.meta.sub)}</i>`:''}</b><span>${tags(i)}</span></a>`).join('');
  if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi" data-gi="${i.id}">${locked(i)?'<div class="empty" style="text-align:center">LOCKED</div>':`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${tags(i)}${vb(i)}</div>`:''}</div>`}).join('')}</div>`;
- if(kind==='memo')h=`<div class="mas m">${L.map(it=>{const i=G(it);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="color:var(--mut)">LOCKED · click to open</span>`:`<div class="mt">${esc(i.body)}</div>`}<div class="ft"><span>${tags(i)}${vb(i)} ${date(i.created_at)}</span>${eb(i)}</div></div>`}).join('')}</div>`;
+ if(kind==='memo')h=`<div class="mas m">${L.map(it=>{const i=G(it);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="color:var(--mut)">LOCKED · click to open</span>`:`<div class="mt md">${mdm(i.body)}</div>`}<div class="ft"><span>${tags(i)}${vb(i)} ${date(i.created_at)}</span>${eb(i)}</div></div>`}).join('')}</div>`;
  if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED</span>`:`<div class="md">${mdr(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${tags(i)}${vb(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
  return L.length?h:''}
 function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind);
@@ -450,12 +451,12 @@ function route(){const h=location.hash.replace('#/','')||'',[a,b]=h.split('/');d
  FS=false;closeReader();document.body.classList.remove('pgd');if(!a)return home();view(KIND[a]?a:'posts')}
 /* memo viewer */
 function memoView(id){const it=ITEMS.find(i=>i.id==id);if(!it)return;const i=G(it);if(locked(i))return unlock(i.id);
- openM(`<h3>MEMO</h3>${i.title?`<p style="font-weight:700;font-size:16px;margin:0 0 8px">${esc(i.title)}</p>`:''}<div class="mfull">${esc(i.body)}</div><p class="st" style="margin-top:12px">${tags(i)}${vb(i)} ${date(i.created_at,1)}</p><div class="acts">${admin?`<button class="btn" data-ed="${i.id}">EDIT</button>`:''}<button class="btn" data-x>CLOSE</button></div>`)}
+ openM(`<h3>MEMO</h3>${i.title?`<p style="font-weight:700;font-size:16px;margin:0 0 8px">${esc(i.title)}</p>`:''}<div class="mfull md">${mdm(i.body)}</div><p class="st" style="margin-top:12px">${tags(i)}${vb(i)} ${date(i.created_at,1)}</p><div class="acts">${admin?`<button class="btn" data-ed="${i.id}">EDIT</button>`:''}<button class="btn" data-x>CLOSE</button></div>`)}
 /* forms (memo / line / gallery) */
 function form(kind,it){if(kind==='post'){closeM();return editor(it)}const i=it||{visibility:'public',tags:[],meta:{}},nw=!it;
  openM(`<h3>${LBL[kind].toUpperCase()} ${nw?'NEW':'EDIT'}</h3><form id="f">
  ${kind==='memo'?`<label>Title</label><input name="title" value="${esc(i.title)}">`:''}
- ${kind==='gallery'?`<label>Image URL (one per line)</label><textarea name="urls">${esc(i.meta?.src||'')}</textarea>${nw?'<label>or upload files</label><input type="file" name="files" accept="image/*" multiple>':''}<label>Caption</label><input name="body" value="${esc(i.body)}">`:`<label>Content${kind==='line'?' (markdown)':''}</label><textarea name="body" style="min-height:${kind==='line'?110:140}px">${esc(i.body)}</textarea>`}
+ ${kind==='gallery'?`<label>Image URL (one per line)</label><textarea name="urls">${esc(i.meta?.src||'')}</textarea>${nw?'<label>or upload files</label><input type="file" name="files" accept="image/*" multiple>':''}<label>Caption</label><input name="body" value="${esc(i.body)}">`:`<label>Content${kind==='line'||kind==='memo'?' (markdown)':''}</label><textarea name="body" style="min-height:${kind==='line'?110:140}px">${esc(i.body)}</textarea>`}
  ${kind==='line'?`<label>Date</label><input type="datetime-local" name="dt" value="${nw?'':loc(i.created_at)}">`:''}
   <label>Tags (space separated)</label><input name="tags" value="${esc((i.tags||[]).join(' '))}">
  <label>Visibility</label><select name="vis">${[['public','Public'],['private','Private'],['locked','Locked']].map(([k,t])=>`<option value="${k}"${i.visibility===k?' selected':''}>${t}</option>`).join('')}</select>
@@ -489,6 +490,7 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(x=c('[data-new]'))return form(x.dataset.new);
  if(x=c('[data-ed]')){e.stopPropagation();const i=ITEMS.find(i=>i.id==x.dataset.ed);return form(i.kind,G(i))}
  if(x=c('[data-un]'))return unlock(+x.dataset.un);
+ if(e.target.closest('.mt a,.mfull a'))return;
  if(x=c('[data-mv]'))return memoView(x.dataset.mv);
  if(x=c('[data-gi]')){const i=G(ITEMS.find(i=>i.id==x.dataset.gi));if(locked(i))return unlock(i.id);$('#lb').innerHTML=`<figure><img src="${esc(i.meta.src)}" alt="">${i.body?`<figcaption>${esc(i.body)}</figcaption>`:''}</figure>`;$('#lb').hidden=false;return}
  if(x=c('[data-d]')){CAL.sel=x.dataset.d;return paintCal()}
