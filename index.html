@@ -204,6 +204,26 @@ input,select,textarea{padding:6px 9px}
 .dind{position:absolute;background:var(--fg);z-index:20;pointer-events:none}
 .dghost{position:fixed;pointer-events:none;z-index:99999;background:var(--fg);color:var(--bg);font:700 10px var(--sans);padding:3px 8px;letter-spacing:.04em;text-transform:uppercase}
 body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
+
+.scs .scr{display:grid;grid-template-columns:34px minmax(0,1fr) minmax(0,1fr);gap:0 10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:baseline}
+.scs .scr:last-child{border-bottom:0}
+.scs .sn{font:700 11px var(--sans);color:var(--mut)}
+.scs .sm{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none;font-weight:500;cursor:pointer}
+.scs .sm:hover{text-decoration:underline}.scs .sm .pc{font-size:13px;margin-right:5px}
+.hm{display:grid;grid-template-columns:repeat(8,1fr);border:1px solid var(--fg);max-width:340px}
+.hm i{aspect-ratio:1;display:block}.hm i.d{background:var(--hl2)}.hm i.t{box-shadow:inset 0 0 0 2px var(--fg)}
+.lmk{background:var(--fg);color:var(--bg);padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.lmk .k{font:700 10px var(--sans);letter-spacing:.08em;opacity:.7}
+.lmk .t{font:700 28px/1 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.lmk .w{font:500 12px var(--sans);opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pz .sol{display:none;margin-top:8px;font:700 14px var(--sans)}.pz .sol.on{display:block}
+.rc{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rml{margin-top:8px;font:500 12.5px/1.9 var(--sans);color:var(--mut);max-height:6.2em;overflow:auto}
+.rml span{cursor:pointer;padding:1px 4px}.rml span.on{background:var(--fg);color:var(--bg)}
+.ev .bar{display:flex;height:26px;border:1px solid var(--fg);overflow:hidden}
+.ev .w,.ev .k{display:flex;align-items:center;padding:0 9px;font:700 12px var(--sans);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden}
+.ev .w{background:var(--bg);color:var(--fg);animation:evIn .9s cubic-bezier(.3,0,.2,1) both}.ev .k{background:var(--fg);color:var(--bg);flex:1;justify-content:flex-end}
+@keyframes evIn{from{width:50%}}
 </style>
 </head>
 <body>
@@ -326,7 +346,7 @@ function calHtml(){const{y,m}=CAL,f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0)
 const paintCal=()=>{const c=$('#calw');if(c)c.innerHTML=calHtml()};
 async function planAdd(text){const r=await sb.from('plans').insert({day:CAL.sel,kind:AK,text}).select().single();if(r.error)return alert(r.error.message);PLANS.push(r.data);paintCal();$('#pi')&&$('#pi').focus()}
 /* blocks */
-const BT={calendar:'calendar',image:'image',note:'note',posts:'archive',memos:'memo',lines:'txt',gallery:'img',links:'links',chess960:'chess960',position:'position',tags:'tags',todayline:'today',captured:'captured'};
+const BT={calendar:'calendar',image:'image',note:'note',posts:'archive',memos:'memo',lines:'txt',gallery:'img',links:'links',chess960:'chess960',position:'position',tags:'tags',todayline:'today',captured:'captured',pgn:'scoresheet',heat:'heatmap',lastmove:'last move',puzzle:'puzzle',replay:'replay',eval:'eval bar'};
 const pub=k=>ITEMS.filter(i=>i.kind===k&&!locked(G(i)));
 const mdr=s=>marked.parse(s||''),mdm=s=>mdr(s).replace(/<a /g,'<a target="_blank" rel="noopener" ');
 /* chess blocks */
@@ -350,6 +370,64 @@ const tlInner=(i,btn)=>`<div class="tl"><div class="md">${mdr(i.body)}</div><div
 function tlHtml(){const a=pub('line').sort((x,y)=>x.id-y.id);return a.length?tlInner(a[dayN()%a.length],a.length>1):''}
 function capHtml(){let tot=0;const rows=[['post','♟',1,'archive'],['memo','♞',3,'memo'],['line','♝',3,'txt'],['gallery','♜',5,'img']].map(([k,g,v,l])=>{const n=pub(k).length;tot+=n*v;return`<div class="cr"><span class="pc b">${g}&#xFE0E;</span><b>×${n}</b><small>${l}</small></div>`}).join('');
  return`<div class="cpt">${rows}<div class="cr tt"><span>MATERIAL</span><b>+${tot.toLocaleString()}</b></div></div>`}
+/* chess widgets: scoresheet / heatmap / last move / puzzle / replay */
+const KS=['post','memo','line','gallery'],KG={post:'♟',memo:'♞',line:'♝',gallery:'♜'};
+const allPub=()=>KS.flatMap(k=>pub(k)).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+const plain=h=>{const d=document.createElement('div');d.innerHTML=mdr(h);return(d.textContent||'').trim().replace(/\s+/g,' ')};
+const itName=(i,n)=>{const k=i.kind;return k==='post'?(i.title||'untitled'):k==='gallery'?(i.title||i.meta?.title||'img'):k==='memo'?(i.title||plain(i.body).slice(0,n)):plain(i.body).slice(0,n)};
+function pgnHtml(b){const n=b.n||12,A=allPub(),tot=A.length;if(!tot)return'';const rows=[];
+ const cell=i=>{const k=i.kind,at=k==='post'?`href="#/post/${i.id}"`:k==='memo'?`data-mv="${i.id}"`:k==='gallery'?`data-gi="${i.id}"`:'href="#/lines"';
+  return`<a class="sm" ${at}><span class="pc b">${KG[k]}&#xFE0E;</span>${esc(itName(i,26))}</a>`};
+ for(let k=Math.max(0,tot-n);k<tot;){const mv=Math.floor(k/2)+1;
+  if(k%2===0){rows.push(`<div class="scr"><span class="sn">${mv}.</span>${cell(A[k])}${k+1<tot?cell(A[k+1]):'<span></span>'}</div>`);k+=2}
+  else{rows.push(`<div class="scr"><span class="sn">${mv}…</span><span class="sm" style="color:var(--mut)">…</span>${cell(A[k])}</div>`);k+=1}}
+ return`<div class="scs">${rows.join('')}</div>`}
+function heatHtml(){const m={};allPub().forEach(i=>{const d=dayOf(i.created_at);m[d]=(m[d]||0)+1});let h='',tot=0,act=0;
+ for(let i=0;i<64;i++){const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-(63-i)),k=ymd(d.getFullYear(),d.getMonth(),d.getDate()),c=m[k]||0,lv=Math.min(4,c);if(c){tot+=c;act++}
+  h+=`<i class="${((i>>3)+(i&7))%2?'d':''}${i===63?' t':''}"${lv?` style="background:color-mix(in srgb,var(--fg) ${[0,30,55,78,100][lv]}%,var(--bg))"`:''} title="${k} · ${c}"></i>`}
+ return`<div class="hm">${h}</div><div class="cap"><span>LAST 64 DAYS</span><span>${tot} MOVES · ${act} DAYS</span></div>`}
+const lmFmt=ms=>{let s=Math.max(0,Math.floor(ms/1000));const d=Math.floor(s/86400);s%=86400;return(d?d+'d ':'')+p2(Math.floor(s/3600))+':'+p2(Math.floor(s%3600/60))+':'+p2(s%60)};
+function lmHtml(){const A=allPub();if(!A.length)return'';const l=A[A.length-1],t=+new Date(l.created_at);
+ return`<div class="lmk"><span class="k">LAST MOVE</span><span class="t" data-lm="${t}">${lmFmt(Date.now()-t)}</span><span class="w">${KG[l.kind]}&#xFE0E; ${esc(itName(l,30))}</span></div>`}
+function evHtml(){const K=ITEMS.filter(i=>KS.includes(i.kind)),W=K.filter(i=>!i.visibility||i.visibility==='public').length,B=K.length-W,t=W+B;if(!t)return'';
+ const e=(W-B)/t*10,pc=Math.max(4,Math.min(96,W/t*100)),txt=!B?'1–0':!W?'0–1':(e>0?'+':'')+e.toFixed(1),lead=W>=B;
+ return`<div class="ev"><div class="bar"><div class="w" style="width:${pc.toFixed(1)}%">${lead?txt:''}</div><div class="k">${lead?'':txt}</div></div><div class="cap"><span>PUBLIC ${W}</span><span>HIDDEN ${B}</span></div></div>`}
+setInterval(()=>{document.querySelectorAll('[data-lm]').forEach(e=>e.textContent=lmFmt(Date.now()-(+e.dataset.lm)))},1000);
+/* puzzle */
+const DPZ=[['r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w','Qxf7#','Mate in 1'],['6k1/5ppp/8/8/8/8/5PPP/R5K1 w','Ra8#','Mate in 1'],['6rk/6pp/8/6N1/8/8/8/6K1 w','Nf7#','Mate in 1']],PZ={};
+const pzList=b=>{const L=(b.text||'').split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(a=>a[0]&&a[0].includes('/'));return L.length?L:DPZ};
+function pzHtml(b){const L=pzList(b),st=PZ[b.id]||(PZ[b.id]={i:dayN()%L.length,s:0}),a=L[st.i%L.length],rows=fenRows(a[0]);if(rows.length<8)return'';const f=a[0].split(/\s+/);
+ return`<div class="pz">${boardHtml(rows,8)}<div class="cap"><span>${esc(a[2]||'')}</span><span>${f[1]==='b'?'BLACK TO MOVE':'WHITE TO MOVE'}</span></div><div class="sol${st.s?' on':''}">${esc(a[1]||'')}</div><div class="rc"><button class="bt" data-pz="s">${st.s?'HIDE':'SHOW ANSWER'}</button>${L.length>1?'<button class="bt" data-pz="n">NEXT ↻</button>':''}</div></div>`}
+/* replay: tiny SAN engine */
+const FL='abcdefgh',isW=c=>c!=='.'&&c===c.toUpperCase();
+function reach(b,i,t){const p=b[i].toLowerCase(),r=i>>3,f=i&7,dr=(t>>3)-r,df=(t&7)-f,ar=Math.abs(dr),af=Math.abs(df);
+ if(p==='n')return(ar===1&&af===2)||(ar===2&&af===1);if(p==='k')return Math.max(ar,af)===1;
+ const d=p==='b'?ar===af:p==='r'?(dr===0||df===0):(ar===af||dr===0||df===0);if(!d||(!dr&&!df))return false;
+ const sr=Math.sign(dr),sf=Math.sign(df);let rr=r+sr,ff=f+sf;while(rr*8+ff!==t){if(b[rr*8+ff]!=='.')return false;rr+=sr;ff+=sf}return true}
+function atk(b,t,byW){for(let i=0;i<64;i++){const c=b[i];if(c==='.'||isW(c)!==byW)continue;
+ if(c.toLowerCase()==='p'){const dr=(t>>3)-(i>>3),df=(t&7)-(i&7);if(Math.abs(df)===1&&dr===(byW?-1:1))return true}else if(reach(b,i,t))return true}return false}
+function sanMove(S,m){const s=m.replace(/[+#!?]/g,'').replace(/0-0/g,'O-O'),w=S.w,b=S.b;
+ if(/^O-O(-O)?$/.test(s)){const q=s==='O-O-O',r=w?7:0,k=r*8+4,kt=r*8+(q?2:6),rf=r*8+(q?0:7),rt=r*8+(q?3:5);if(b[k].toLowerCase()!=='k')return null;const nb=b.slice();nb[kt]=nb[k];nb[k]='.';nb[rt]=nb[rf];nb[rf]='.';return{b:nb,w:!w,ep:-1}}
+ const pm=/^([KQRBN])?([a-h])?([1-8])?(x)?([a-h][1-8])(=[QRBN])?$/.exec(s);if(!pm)return null;
+ const P=pm[1]||'P',ff=pm[2]?FL.indexOf(pm[2]):-1,fr=pm[3]?8-+pm[3]:-1,t=(8-+pm[5][1])*8+FL.indexOf(pm[5][0]),pc=w?P:P.toLowerCase(),cand=[];
+ for(let i=0;i<64;i++){if(b[i]!==pc)continue;if(ff>=0&&(i&7)!==ff)continue;if(fr>=0&&(i>>3)!==fr)continue;const tc=b[t];if(tc!=='.'&&isW(tc)===w)continue;let ok=false;
+  if(P==='P'){const dr=(t>>3)-(i>>3),df=(t&7)-(i&7),dir=w?-1:1;
+   if(df===0&&tc==='.'&&(dr===dir||(dr===2*dir&&(i>>3)===(w?6:1)&&b[i+dir*8]==='.')))ok=true;else if(Math.abs(df)===1&&dr===dir&&(tc!=='.'||t===S.ep))ok=true}
+  else ok=reach(b,i,t);if(!ok)continue;
+  const nb=b.slice();nb[t]=nb[i];nb[i]='.';if(P==='P'&&t===S.ep&&b[t]==='.')nb[t+(w?8:-8)]='.';
+  if(atk(nb,nb.indexOf(w?'K':'k'),!w))continue;cand.push([i,nb])}
+ if(cand.length!==1)return null;const[i,nb]=cand[0];let ep=-1;
+ if(P==='P'){if(Math.abs((t>>3)-(i>>3))===2)ep=(i+t)/2;if(pm[6])nb[t]=w?pm[6][1]:pm[6][1].toLowerCase();else if((t>>3)===(w?0:7))nb[t]=w?'Q':'q'}
+ return{b:nb,w:!w,ep}}
+function repGame(txt){const tk=txt.replace(/\{[^}]*\}/g,' ').replace(/\d+\.(\.\.)?/g,' ').split(/\s+/).filter(t=>t&&!/^(1-0|0-1|1\/2-1\/2|\*)$/.test(t));
+ let S={b:('rnbqkbnrpppppppp'+'.'.repeat(32)+'PPPPPPPPRNBQKBNR').split(''),w:true,ep:-1};const P=[S],M=[];
+ for(const t of tk){const n=sanMove(S,t);if(!n)break;S=n;P.push(S);M.push(t)}return{P,M}}
+const DRG=[['King’s Gambit Accepted','1.e4 e5 2.f4 exf4 3.Nf3 g5 4.h4 g4 5.Ne5'],['Fool’s Mate','1.f3 e5 2.g4 Qh4#'],['Scholar’s Mate','1.e4 e5 2.Qh5 Nc6 3.Bc4 Nf6 4.Qxf7#'],['Opera Game','1.e4 e5 2.Nf3 d6 3.d4 Bg4 4.dxe5 Bxf3 5.Qxf3 dxe5 6.Bc4 Nf6 7.Qb3 Qe7 8.Nc3 c6 9.Bg5 b5 10.Nxb5 cxb5 11.Bxb5+ Nbd7 12.O-O-O Rd8 13.Rxd7 Rxd7 14.Rd1 Qe6 15.Bxd7+ Nxd7 16.Qb8+ Nxb8 17.Rd8#']],RP={};
+const repList=b=>{const L=(b.text||'').split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(a=>a[0]&&a[1]);return L.length?L:DRG};
+function repHtml(b){const L=repList(b),st=RP[b.id]||(RP[b.id]={g:dayN()%L.length,p:0}),a=L[st.g%L.length],G=repGame(a[1]),p=Math.min(st.p,G.M.length),rows=[];
+ for(let r=0;r<8;r++)rows.push(G.P[p].b.slice(r*8,r*8+8).join(''));
+ const mv=G.M.map((t,i)=>`<span data-rj="${i+1}"${i+1===p?' class="on"':''}>${i%2?'':(i/2+1)+'.'}${esc(t)}</span>`).join(' ');
+ return`<div class="rep">${boardHtml(rows,8)}<div class="cap"><span>${esc(a[0])}</span><span>${p}/${G.M.length}</span></div><div class="rml">${mv}</div><div class="rc"><button class="bt" data-rp="s">⏮</button><button class="bt" data-rp="-">◀</button><button class="bt" data-rp="+">▶</button><button class="bt" data-rp="e">⏭</button>${L.length>1?'<button class="bt" data-rp="g">GAME ↻</button>':''}</div></div>`}
 function blockBody(b){const n=b.n||6;
  if(b.t==='calendar')return`<div id="calw">${calHtml()}</div>`;
  if(b.t==='image')return b.src?`<figure class="fig"><img src="${esc(b.src)}" loading="lazy" alt="">${b.cap?`<figcaption>${esc(b.cap)}</figcaption>`:''}</figure>`:'<div class="ph">NO IMAGE</div>';
@@ -358,11 +436,11 @@ function blockBody(b){const n=b.n||6;
  if(b.t==='memos')return pub('memo').slice(0,n).map(i=>`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}<div class="mt md">${mdm(i.body)}</div></div>`).join('')||'';
  if(b.t==='lines')return pub('line').slice(0,n).map(i=>`<div class="ln"><time>${dateS(i.created_at)}</time><div class="t"><div class="md">${mdr(i.body)}</div></div></div>`).join('')||'';
  if(b.t==='gallery')return`<div class="gg">${pub('gallery').slice(0,n).map(i=>`<img src="${esc(i.meta?.src)}" data-gi="${i.id}" loading="lazy" alt="">`).join('')}</div>`;
- if(b.t==='links')return(b.text||'').split('\n').map(l=>l.split('|').map(s=>s.trim())).filter(a=>a[0]).map(a=>`<a class="lk" href="${/^(https?:|#)/.test(a[1]||'')?esc(a[1]):'#'}" target="_blank" rel="noopener">${esc(a[0])}<span>↗</span></a>`).join('');if(b.t==='chess960')return c960Html();if(b.t==='position')return posHtml(b);if(b.t==='tags')return tagsHtml(b);if(b.t==='todayline')return tlHtml();if(b.t==='captured')return capHtml();return''}
+ if(b.t==='links')return(b.text||'').split('\n').map(l=>l.split('|').map(s=>s.trim())).filter(a=>a[0]).map(a=>`<a class="lk" href="${/^(https?:|#)/.test(a[1]||'')?esc(a[1]):'#'}" target="_blank" rel="noopener">${esc(a[0])}<span>↗</span></a>`).join('');if(b.t==='chess960')return c960Html();if(b.t==='position')return posHtml(b);if(b.t==='tags')return tagsHtml(b);if(b.t==='todayline')return tlHtml();if(b.t==='captured')return capHtml();if(b.t==='pgn')return pgnHtml(b);if(b.t==='heat')return heatHtml();if(b.t==='lastmove')return lmHtml();if(b.t==='eval')return evHtml();if(b.t==='puzzle')return pzHtml(b);if(b.t==='replay')return repHtml(b);return''}
 const sp=b=>Math.max(1,Math.min(12,b.s||(b.c?b.c*2:(b.w===2?12:6))));
 function blockHtml(b,i){const lab=b.t==='note'?(b.title||''):EDITM&&b.t!=='image'&&b.t!=='calendar'?BT[b.t]:'';
  const first=i===0||HOME.blocks[i-1].r!==b.r;
- return`<section class="bl${EDITM?' edit':''}" data-b="${b.id}" data-r="${b.r|0}" data-sp="${sp(b)}"${first?' data-f="1"':''} data-v="${b.v||''}">${EDITM?`<div class="bc"><button class="bt grip" data-grip title="Drag to move">⠿ MOVE</button><span class="szc">${sp(b)}/12</span><button class="bt mo" data-bm="up">↑</button><button class="bt mo" data-bm="dn">↓</button><button class="bt${b.v?' pri':''}" data-bm="v">SHOW · ${b.v==='pc'?'PC':b.v==='m'?'MOBILE':'ALL'}</button>${!['calendar','chess960','todayline','captured'].includes(b.t)?'<button class="bt" data-bm="ed">EDIT</button>':''}<button class="bt" data-bm="rm">DELETE</button></div><div class="rz" data-rz title="Drag to resize"></div>`:''}${lab?`<h6>${esc(lab)}</h6>`:''}${blockBody(b)}</section>`}
+ return`<section class="bl${EDITM?' edit':''}" data-b="${b.id}" data-r="${b.r|0}" data-sp="${sp(b)}"${first?' data-f="1"':''} data-v="${b.v||''}">${EDITM?`<div class="bc"><button class="bt grip" data-grip title="Drag to move">⠿ MOVE</button><span class="szc">${sp(b)}/12</span><button class="bt mo" data-bm="up">↑</button><button class="bt mo" data-bm="dn">↓</button><button class="bt${b.v?' pri':''}" data-bm="v">SHOW · ${b.v==='pc'?'PC':b.v==='m'?'MOBILE':'ALL'}</button>${!['calendar','chess960','todayline','captured','heat','lastmove','eval'].includes(b.t)?'<button class="bt" data-bm="ed">EDIT</button>':''}<button class="bt" data-bm="rm">DELETE</button></div><div class="rz" data-rz title="Drag to resize"></div>`:''}${lab?`<h6>${esc(lab)}</h6>`:''}${blockBody(b)}</section>`}
 /* fixed row layout: every block belongs to a row (r) and has a column span (s, out of 12) */
 function rowEnt(){const m=new Map();HOME.blocks.forEach(b=>{if(!m.has(b.r))m.set(b.r,[]);m.get(b.r).push(b)});return[...m.entries()].sort((a,b)=>a[0]-b[0]).map(([r,arr])=>({r,arr}))}
 function normRows(){
@@ -422,11 +500,13 @@ function blockForm(b){const t=b.t;openM(`<h3>${BT[t].toUpperCase()}</h3><form id
  ${t==='note'?`<label>Title</label><input name="title" value="${esc(b.title||'')}"><label>Text (markdown)</label><textarea name="text" style="min-height:140px">${esc(b.text||'')}</textarea>`:''}
  ${t==='position'?`<label>One per line: FEN | caption (empty = default positions)</label><textarea name="text" style="min-height:110px">${esc(b.text||'')}</textarea>`:''}
   ${t==='links'?`<label>One per line: label | url</label><textarea name="text" style="min-height:110px">${esc(b.text||'')}</textarea>`:''}
- ${['posts','memos','lines','gallery','tags'].includes(t)?`<label>Items to show</label><input type="number" name="n" min="1" max="30" value="${b.n||6}">`:''}
+ ${t==='puzzle'?`<label>One per line: FEN | solution | caption (empty = default puzzles)</label><textarea name="text" style="min-height:110px">${esc(b.text||'')}</textarea>`:''}
+ ${t==='replay'?`<label>One per line: name | moves (e.g. Fool’s Mate | 1.f3 e5 2.g4 Qh4#). Empty = default games</label><textarea name="text" style="min-height:130px">${esc(b.text||'')}</textarea>`:''}
+ ${['posts','memos','lines','gallery','tags','pgn'].includes(t)?`<label>Items to show</label><input type="number" name="n" min="1" max="30" value="${b.n||6}">`:''}
  <p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn">SAVE</button></div></form>`);
  $('#f').onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target);msg('Saving…');try{
   if(t==='image'){let s=fd.get('src').trim();const f=fd.get('file');if(f&&f.size)s=await upload(f);b.src=s;b.cap=fd.get('cap').trim()}
-  if(t==='note'){b.title=fd.get('title').trim();b.text=fd.get('text')}if(t==='links'||t==='position')b.text=fd.get('text');if(fd.get('n'))b.n=+fd.get('n')}catch(x){return msg('Failed: '+x.message)}
+  if(t==='note'){b.title=fd.get('title').trim();b.text=fd.get('text')}if(t==='links'||t==='position'||t==='puzzle'||t==='replay')b.text=fd.get('text');if(fd.get('n'))b.n=+fd.get('n')}catch(x){return msg('Failed: '+x.message)}
   await saveHome();closeM();home()}}
 /* reader */
 marked.use({breaks:true,renderer:{code(c,l){return(l||'').trim()==='html'?c:false}}});
@@ -603,6 +683,11 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(c('[data-x]'))return closeM();
  if(x=c('[data-cfg]')){CFG[x.dataset.cfg]=+x.dataset.v;try{localStorage.setItem('cfg',JSON.stringify(CFG))}catch(e){}applyCols();return settings()}
  if(x=c('[data-tg2]')){const[tg,h]=x.dataset.tg2.split('|');PEND=tg;location.hash=h;return}
+ if(x=c('[data-rp],[data-rj],[data-pz]')){const bl=x.closest('[data-b]'),b=bl&&HOME.blocks.find(q=>q.id===bl.dataset.b);if(!b)return;
+  if(x.dataset.pz!==undefined){const L=pzList(b),st=PZ[b.id]||(PZ[b.id]={i:dayN()%L.length,s:0});if(x.dataset.pz==='s')st.s=st.s?0:1;else{st.i=(st.i+1)%L.length;st.s=0}x.closest('.pz').outerHTML=pzHtml(b);return}
+  const L=repList(b),st=RP[b.id]||(RP[b.id]={g:dayN()%L.length,p:0}),n=repGame(L[st.g%L.length][1]).M.length;
+  if(x.dataset.rj)st.p=+x.dataset.rj;else{const o=x.dataset.rp;if(o==='s')st.p=0;if(o==='-')st.p=Math.max(0,st.p-1);if(o==='+')st.p=Math.min(n,st.p+1);if(o==='e')st.p=n;if(o==='g'){st.g=(st.g+1)%L.length;st.p=0}}
+  x.closest('.rep').outerHTML=repHtml(b);return}
  if(x=c('[data-rr]')){const a=pub('line');if(a.length)x.closest('.tl').outerHTML=tlInner(a[Math.floor(Math.random()*a.length)],true);return}
  if(x=c('[data-tag]')){TAG=x.dataset.tag===TAG?'':x.dataset.tag;return route()}
  if(x=c('[data-new]'))return form(x.dataset.new);
@@ -617,7 +702,7 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(x=c('[data-pk]')){const p=PLANS.find(p=>p.id==x.dataset.pk);p.done=!p.done;paintCal();sb.from('plans').update({done:p.done}).eq('id',p.id).then(r=>r.error&&alert(r.error.message));return}
  if(x=c('[data-pa]')){AK=x.dataset.pa;return paintCal()}
  if(c('[data-em]')){EDITM=!EDITM;return home()}
- if(c('[data-addb]')){const t=$('#at').value;HOME.blocks.push({id:uid(),t,w:1,s:6,r:1e6,n:t==='tags'?24:6});normRows();saveHome();return home()}
+ if(c('[data-addb]')){const t=$('#at').value;HOME.blocks.push({id:uid(),t,w:1,s:6,r:1e6,n:t==='tags'?24:t==='pgn'?12:6});normRows();saveHome();return home()}
  if(c('[data-himg]')){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;try{HOME.img=await upload(f.files[0]);await saveHome();paintImg()}catch(x){alert('Upload failed: '+x.message)}};f.click();return}
  if(c('[data-iadj]'))return imgAdjust();
  if(c('[data-ireset]')){Object.assign(HOME,IMG_DEF);paintVars();document.querySelectorAll('[data-ia]').forEach(s=>{s.value=HOME[s.dataset.ia];$('#v_'+s.dataset.ia).textContent=s.value+IU[s.dataset.ia]});return}
