@@ -345,7 +345,7 @@ function calHtml(){const{y,m}=CAL,f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0)
  if(e.n.length)h+=e.n.map(x=>`<div class="nn"><span>${esc(x.text)}</span>${admin?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
  
  if(admin)h+=`<div class="add"><button class="ic${AK==='todo'?' on':''}" data-pa="todo" title="Todo" aria-label="Todo"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10"/></svg></button><button class="ic${AK==='note'?' on':''}" data-pa="note" title="Note" aria-label="Note"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10"/></svg></button><input id="pi" aria-label="add" autocomplete="off"></div>`;
- h+='</div></div></div>';const ph=e.p.length?`<div class="pl">${e.p.map((i,n)=>`<a href="#/post/${i.id}"><span class="n">${p2(n+1)}</span><b>${esc(i.title||'untitled')}</b><small>${date(i.created_at,1).slice(11)}</small></a>`).join('')}</div>`:'';return`<div class="cs"><div class="cl">${hd}${ph}</div>${h}</div>`}
+ h+='</div></div></div>';const ph=e.p.length?`<div class="pl">${e.p.map((i,n)=>`<a href="#/post/${i.id}"><span class="n">${p2(n+1)}</span><b>${esc(i.title||'untitled')}</b></a>`).join('')}</div>`:'';return`<div class="cs"><div class="cl">${hd}${ph}</div>${h}</div>`}
 const paintCal=()=>{const c=$('#calw');if(c)c.innerHTML=calHtml()};
 async function planAdd(text){const r=await sb.from('plans').insert({day:CAL.sel,kind:AK,text}).select().single();if(r.error)return alert(r.error.message);PLANS.push(r.data);paintCal();$('#pi')&&$('#pi').focus()}
 /* blocks */
