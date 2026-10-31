@@ -276,7 +276,7 @@ const $=s=>document.querySelector(s),app=$('#app');
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const p2=n=>String(n).padStart(2,'0'),ymd=(y,m,d)=>`${y}-${p2(m+1)}-${p2(d)}`,dayOf=d=>{const x=new Date(d);return ymd(x.getFullYear(),x.getMonth(),x.getDate())};
 /* date: dd/mm/yy (hh:mm) */
-const date=(d,t)=>{const x=new Date(d);return `${p2(x.getDate())}/${p2(x.getMonth()+1)}/${String(x.getFullYear()).slice(2)}`+(t?` (${p2(x.getHours())}:${p2(x.getMinutes())})`:'')};
+const date=(d,t)=>{const x=new Date(d);return `${p2(x.getDate())}/${p2(x.getMonth()+1)}/${String(x.getFullYear()).slice(2)}`+(t?` ${p2(x.getHours())}:${p2(x.getMinutes())}`:'')};
 const dateS=d=>{const x=new Date(d);return `${p2(x.getDate())}/${p2(x.getMonth()+1)}`};
 const loc=d=>{const x=new Date(d);return `${x.getFullYear()}-${p2(x.getMonth()+1)}-${p2(x.getDate())}T${p2(x.getHours())}:${p2(x.getMinutes())}`};
 const uid=()=>Math.random().toString(36).slice(2,8),WD=['SUN','MON','TUE','WED','THU','FRI','SAT'];
@@ -351,7 +351,7 @@ async function planAdd(text){const r=await sb.from('plans').insert({day:CAL.sel,
 /* blocks */
 const BT={calendar:'calendar',image:'image',note:'note',posts:'archive',memos:'memo',lines:'txt',gallery:'img',links:'links',chess960:'chess960',position:'position',tags:'tags',todayline:'today',captured:'captured',pgn:'scoresheet',heat:'heatmap',lastmove:'last move',puzzle:'puzzle',replay:'replay',eval:'eval bar'};
 const pub=k=>ITEMS.filter(i=>i.kind===k&&!locked(G(i)));
-const mdr=s=>marked.parse(s||''),mdm=s=>mdr(s).replace(/<a /g,'<a target="_blank" rel="noopener" ');
+const mdr=s=>marked.parse(s||''),mdn=s=>mdr(String(s||'').replace(/^(\s*)(\d+)\.(?=\s)/gm,'$1$2\\.')),mdm=s=>mdn(s).replace(/<a /g,'<a target="_blank" rel="noopener" ');
 /* chess blocks */
 const dayN=()=>{const d=new Date();return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5)};
 const PG={k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'},pcs=ch=>`<span class="pc ${ch===ch.toUpperCase()?'w':'b'}">${PG[ch.toLowerCase()]}&#xFE0E;</span>`;
@@ -369,7 +369,7 @@ function posHtml(b){let L=(b.text||'').split('\n').map(l=>l.split('|').map(x=>x.
 function tagsHtml(b){const m={};[['post','#/posts'],['gallery','#/gallery'],['memo','#/memo'],['line','#/lines']].forEach(([k,h])=>pub(k).forEach(i=>(i.tags||[]).forEach(t=>{const e=m[t]||(m[t]={c:0,k:{}});e.c++;e.k[h]=(e.k[h]||0)+1})));
  const a=Object.entries(m).sort((x,y)=>y[1].c-x[1].c||x[0].localeCompare(y[0])).slice(0,b.n||24);
  return a.length?`<div class="tcl">${a.map(([t,e])=>`<button class="tc" data-tg2="${esc(t)}|${Object.entries(e.k).sort((x,y)=>y[1]-x[1])[0][0]}">#${esc(t)}<i>${e.c}</i></button>`).join('')}</div>`:''}
-const tlInner=(i,btn)=>`<div class="tl"><div class="md">${mdr(i.body)}</div><div class="tm"><span>${date(i.created_at)}</span>${btn?'<button class="bt" data-rr aria-label="shuffle">↻</button>':''}</div></div>`;
+const tlInner=(i,btn)=>`<div class="tl"><div class="md">${mdn(i.body)}</div><div class="tm"><span>${date(i.created_at)}</span>${btn?'<button class="bt" data-rr aria-label="shuffle">↻</button>':''}</div></div>`;
 function tlHtml(){const a=pub('line').sort((x,y)=>x.id-y.id);return a.length?tlInner(a[dayN()%a.length],a.length>1):''}
 function capHtml(){let tot=0;const rows=[['post','♟',1,'archive'],['memo','♞',3,'memo'],['line','♝',3,'txt'],['gallery','♜',5,'img']].map(([k,g,v,l])=>{const n=pub(k).length;tot+=n*v;return`<div class="cr"><span class="pc b">${g}&#xFE0E;</span><b>×${n}</b><small>${l}</small></div>`}).join('');
  return`<div class="cpt">${rows}<div class="cr tt"><span>MATERIAL</span><b>+${tot.toLocaleString()}</b></div></div>`}
@@ -434,10 +434,10 @@ function repHtml(b){const L=repList(b),st=RP[b.id]||(RP[b.id]={g:dayN()%L.length
 function blockBody(b){const n=b.n||6;
  if(b.t==='calendar')return`<div id="calw">${calHtml()}</div>`;
  if(b.t==='image')return b.src?`<figure class="fig"><img src="${esc(b.src)}" loading="lazy" alt="">${b.cap?`<figcaption>${esc(b.cap)}</figcaption>`:''}</figure>`:'<div class="ph">NO IMAGE</div>';
- if(b.t==='note')return`<div class="nt">${mdr(b.text)}</div>`;
+ if(b.t==='note')return`<div class="nt">${mdn(b.text)}</div>`;
  if(b.t==='posts')return ITEMS.filter(i=>i.kind==='post').slice(0,n).map(i=>`<a class="row" href="#/post/${i.id}"><small>${dateS(i.created_at)}</small><b>${esc(i.title||'untitled')}${vb(i)}</b></a>`).join('')||'';
  if(b.t==='memos')return pub('memo').slice(0,n).map(i=>`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}<div class="mt md">${mdm(i.body)}</div></div>`).join('')||'';
- if(b.t==='lines')return pub('line').slice(0,n).map(i=>`<div class="ln"><time>${dateS(i.created_at)}</time><div class="t"><div class="md">${mdr(i.body)}</div></div></div>`).join('')||'';
+ if(b.t==='lines')return pub('line').slice(0,n).map(i=>`<div class="ln"><time>${dateS(i.created_at)}</time><div class="t"><div class="md">${mdn(i.body)}</div></div></div>`).join('')||'';
  if(b.t==='gallery')return`<div class="gg">${pub('gallery').slice(0,n).map(i=>`<img src="${esc(i.meta?.src)}" data-gi="${i.id}" loading="lazy" alt="">`).join('')}</div>`;
  if(b.t==='links')return(b.text||'').split('\n').map(l=>l.split('|').map(s=>s.trim())).filter(a=>a[0]).map(a=>`<a class="lk" href="${/^(https?:|#)/.test(a[1]||'')?esc(a[1]):'#'}" target="_blank" rel="noopener">${esc(a[0])}<span>↗</span></a>`).join('');if(b.t==='chess960')return c960Html();if(b.t==='position')return posHtml(b);if(b.t==='tags')return tagsHtml(b);if(b.t==='todayline')return tlHtml();if(b.t==='captured')return capHtml();if(b.t==='pgn')return pgnHtml(b);if(b.t==='heat')return heatHtml();if(b.t==='lastmove')return lmHtml();if(b.t==='eval')return evHtml();if(b.t==='puzzle')return pzHtml(b);if(b.t==='replay')return repHtml(b);return''}
 /* free layout: every block has a width (s = columns out of 12) and a place in the order; optional fixed height h (px) */
@@ -623,7 +623,7 @@ function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.t
  if(kind==='post'){let lastD='';h=`<div class="arc">${L.map(i=>{const d=date(i.created_at),g=d!==lastD?(lastD=d,`<div class="gh">${d}</div>`):'';return g+`<a class="row" href="#/post/${i.id}"><b>${esc(i.title||'untitled')}${vb(i)}</b>${i.meta?.sub?`<i>${esc(i.meta.sub)}</i>`:''}<span>${tags(i)}</span></a>`}).join('')}</div>`}
  if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi" data-gi="${i.id}">${locked(i)?'<div class="empty" style="text-align:center">LOCKED</div>':`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${tags(i)}${vb(i)}</div>`:''}</div>`}).join('')}</div>`;
  if(kind==='memo')h=`<div class="mas m">${L.map(it=>{const i=G(it);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="color:var(--mut)">LOCKED · click to open</span>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${tags(i)}${vb(i)}</span>${eb(i)}</div>`:''}</div>`}).join('')}</div>`;
- if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED</span>`:`<div class="md">${mdr(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${tags(i)}${vb(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
+ if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED</span>`:`<div class="md">${mdn(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${tags(i)}${vb(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
  return L.length?h:''}
 function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind);
  app.innerHTML=head(k,LBL[kind])+(kind==='gallery'?'':`<input id="sq" placeholder="search" value="${esc(Q)}" autocomplete="off">`)+(kind==='line'&&admin?`<form id="q" class="lq"><textarea name="t" rows="1" aria-label="write"></textarea><span class="dtw"><button type="button" class="btn" id="dtb" aria-label="date">DATE</button><button type="button" class="btn" id="dtx" aria-label="clear date" hidden>×</button><input type="datetime-local" name="dt" tabindex="-1" aria-hidden="true"></span><button class="btn pri">POST</button></form>`:'')+chips(all)+`<div id="lst">${list(k)}</div>`;
@@ -638,7 +638,7 @@ function route(){const h=location.hash.replace('#/','')||'',[a,b]=h.split('/');d
  FS=false;closeReader();document.body.classList.remove('pgd');if(!a)return home();view(KIND[a]?a:'posts')}
 /* memo viewer */
 function memoView(id){const it=ITEMS.find(i=>i.id==id);if(!it)return;const i=G(it);if(locked(i))return unlock(i.id);
- openM(`<h3>MEMO</h3>${i.title?`<p style="font-weight:700;font-size:16px;margin:0 0 8px">${esc(i.title)}</p>`:''}<div class="mfull md">${mdm(i.body)}</div><p class="st" style="margin-top:12px">${tags(i)}${vb(i)} ${date(i.created_at,1)}</p><div class="acts">${admin?`<button class="btn" data-ed="${i.id}">EDIT</button>`:''}<button class="btn" data-x>CLOSE</button></div>`)}
+ openM(`${i.title?`<p style="font-weight:700;font-size:16px;margin:0 0 8px">${esc(i.title)}</p>`:''}<div class="mfull md">${mdm(i.body)}</div><p class="st" style="margin-top:12px">${tags(i)}${vb(i)} ${date(i.created_at,1)}</p><div class="acts">${admin?`<button class="btn" data-ed="${i.id}">EDIT</button>`:''}<button class="btn" data-x>CLOSE</button></div>`)}
 /* forms (memo / line / gallery) */
 function form(kind,it){if(kind==='post'){closeM();return editor(it)}const i=it||{visibility:'public',tags:[],meta:{}},nw=!it;
  openM(`<h3>${LBL[kind].toUpperCase()} ${nw?'NEW':'EDIT'}</h3><form id="f">
