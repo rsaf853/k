@@ -227,6 +227,12 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .pk{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}
 @media(max-width:720px){.bl.fh{height:auto!important;overflow:visible}.bl .rh{display:none}}
 .bl.tgt{outline:2px solid var(--fg);outline-offset:4px}.bl.tgt::before{content:attr(data-pos);position:absolute;top:-14px;left:0;background:var(--fg);color:var(--bg);font:700 9px var(--sans);padding:2px 6px;z-index:9;letter-spacing:.04em}
+.bl .rz{display:none}
+.bl.edit .rz{display:block;position:absolute;top:0;bottom:0;right:-10px;width:16px;cursor:ew-resize;touch-action:none;z-index:5}
+.bl.edit .rz::after{content:"";position:absolute;left:6px;top:50%;height:30px;margin-top:-15px;width:4px;background:var(--fg);border-radius:2px}
+.bl.edit .rz:hover::after{background:var(--mut)}
+@media(max-width:720px){.bl .rz{display:none!important}}
+.bl.edit.fh .rz{right:0}
 </style>
 </head>
 <body>
@@ -446,7 +452,7 @@ const NOEDIT=['calendar','chess960','todayline','captured','heat','lastmove','ev
 function normLayout(){const C=Array.isArray(HOME.cols)?HOME.cols:null;
  HOME.blocks.forEach(b=>{if(C){b.s=C[Math.min(C.length-1,Math.max(0,b.c|0))]||6;delete b.c;b.w=b.s===12?2:1}delete b.r});if(C)delete HOME.cols}
 function blockHtml(b){const lab=b.t==='note'?(b.title||''):EDITM&&b.t!=='image'&&b.t!=='calendar'?BT[b.t]:'';
- return`<section class="bl${EDITM?' edit':''}${b.h?' fh':''}" data-b="${b.id}" data-sp="${sp(b)}" data-v="${b.v||''}"${b.h?` style="height:${b.h}px"`:''}>${EDITM?`<div class="bc"><button class="bt grip" data-grip title="Drag to move">⠿ MOVE</button><button class="bt" data-bm="up">↑</button><button class="bt" data-bm="dn">↓</button>${SPANS.map(([c,l])=>`<button class="bt${sp(b)===c?' pri':''}" data-bm="c" data-c="${c}">${l}</button>`).join('')}<button class="bt${b.v?' pri':''}" data-bm="v">SHOW · ${b.v==='pc'?'PC':b.v==='m'?'MOBILE':'ALL'}</button>${!NOEDIT.includes(b.t)?'<button class="bt" data-bm="ed">EDIT</button>':''}<button class="bt" data-bm="rm">DELETE</button></div>`:''}${lab?`<h6>${esc(lab)}</h6>`:''}${blockBody(b)}${EDITM?'<div class="rh" data-rh title="Drag = height · double-click = auto"></div>':''}</section>`}
+ return`<section class="bl${EDITM?' edit':''}${b.h?' fh':''}" data-b="${b.id}" data-sp="${sp(b)}" data-v="${b.v||''}"${b.h?` style="height:${b.h}px"`:''}>${EDITM?`<div class="bc"><button class="bt grip" data-grip title="Drag to move">⠿ MOVE</button><span class="szc">${sp(b)}/12</span><button class="bt" data-bm="up">↑</button><button class="bt" data-bm="dn">↓</button>${SPANS.map(([c,l])=>`<button class="bt${sp(b)===c?' pri':''}" data-bm="c" data-c="${c}">${l}</button>`).join('')}<button class="bt${b.v?' pri':''}" data-bm="v">SHOW · ${b.v==='pc'?'PC':b.v==='m'?'MOBILE':'ALL'}</button>${!NOEDIT.includes(b.t)?'<button class="bt" data-bm="ed">EDIT</button>':''}<button class="bt" data-bm="rm">DELETE</button></div>`:''}${lab?`<h6>${esc(lab)}</h6>`:''}${blockBody(b)}${EDITM?'<div class="rh" data-rh title="Drag = height · double-click = auto"></div><div class="rz" data-rz title="Drag = width"></div>':''}</section>`}
 let MO=null,MR=0;
 function masonry(){const c=$('#bks');if(!c)return;const all=[...c.children].filter(e=>e.classList.contains('bl')),vis=e=>getComputedStyle(e).display!=='none',bl=all.filter(vis),rs=e=>{e.style.left=e.style.top=e.style.width='';e.classList.remove('top0')};
  all.filter(e=>!vis(e)).forEach(rs);
@@ -468,16 +474,19 @@ function dropAt(x,y,id){let best=null;document.querySelectorAll('#bks .bl').forE
 function mark(t){document.querySelectorAll('#bks .bl.tgt').forEach(e=>{e.classList.remove('tgt');e.removeAttribute('data-pos')});if(t){t.el.classList.add('tgt');t.el.dataset.pos=t.before?'↖ BEFORE':'AFTER ↘'}}
 function applyDrop(b,t){const rest=HOME.blocks.filter(x=>x!==b),i=rest.findIndex(x=>x.id===t.id);rest.splice(t.before?i:i+1,0,b);HOME.blocks=rest}
 document.addEventListener('pointerdown',e=>{
- const h=e.target.closest('[data-grip],[data-rh]');if(!h||!EDITM||innerWidth<=720)return;
+ const h=e.target.closest('[data-grip],[data-rh],[data-rz]');if(!h||!EDITM||innerWidth<=720)return;
  const el=h.closest('.bl'),b=HOME.blocks.find(q=>q.id===el.dataset.b);if(!b)return;e.preventDefault();
- if(h.hasAttribute('data-rh'))DR={k:'rh',el,b,y0:e.clientY,h0:el.getBoundingClientRect().height,h:null};
+ if(h.hasAttribute('data-rz'))DR={k:'rz',el,b,cw:($('#bks').clientWidth-16*11)/12,left:el.getBoundingClientRect().left,s:sp(b)};
+ else if(h.hasAttribute('data-rh'))DR={k:'rh',el,b,y0:e.clientY,h0:el.getBoundingClientRect().height,h:null};
  else{const gh=document.createElement('div');gh.className='dghost';gh.textContent=BT[b.t]||b.t;gh.style.left=(e.clientX+12)+'px';gh.style.top=(e.clientY+12)+'px';document.body.appendChild(gh);el.classList.add('drag');DR={k:'mv',el,b,gh,t:null}}
  try{h.setPointerCapture(e.pointerId)}catch(_){}document.body.classList.add('dragging')});
 document.addEventListener('pointermove',e=>{if(!DR)return;
+ if(DR.k==='rz'){const n=Math.max(1,Math.min(12,Math.round((e.clientX-DR.left+16)/(DR.cw+16))));if(n!==DR.s){DR.s=n;DR.el.dataset.sp=n;const l=DR.el.querySelector('.szc');if(l)l.textContent=n+'/12';masonry()}return}
  if(DR.k==='rh'){const h=Math.max(60,Math.round((DR.h0+e.clientY-DR.y0)/10)*10);DR.h=h;DR.el.style.height=h+'px';DR.el.classList.add('fh');return}
  DR.gh.style.left=(e.clientX+12)+'px';DR.gh.style.top=(e.clientY+12)+'px';DR.t=dropAt(e.clientX,e.clientY,DR.b.id);mark(DR.t);
  if(e.clientY<70)scrollBy(0,-14);else if(e.clientY>innerHeight-70)scrollBy(0,14)});
 function endDrag(ok){if(!DR)return;const d=DR;DR=null;document.body.classList.remove('dragging');
+ if(d.k==='rz'){if(ok&&d.s!==sp(d.b)){d.b.s=d.s;delete d.b.c;d.b.w=d.s===12?2:1;saveHome()}home();return}
  if(d.k==='rh'){if(ok&&d.h){d.b.h=d.h;saveHome()}home();return}
  d.gh.remove();d.el.classList.remove('drag');mark(null);
  if(ok&&d.t){applyDrop(d.b,d.t);saveHome();home()}}
