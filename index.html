@@ -123,7 +123,7 @@ h1{font-size:24px;font-weight:900;margin:0;letter-spacing:-.055em}.sub{color:var
 .bk{position:absolute;top:calc(58px + env(safe-area-inset-top,0px));bottom:calc(60px + env(safe-area-inset-bottom,0px));left:calc(max(0px,50% - 380px) + var(--tm));right:calc(max(0px,50% - 380px) + var(--tm));overflow:hidden}#rd.two .bk{left:calc(max(0px,50% - 560px) + var(--tm));right:calc(max(0px,50% - 560px) + var(--tm))}
 .pg{font-family:var(--tf);font-size:var(--ts);line-height:var(--tlh);letter-spacing:var(--tc);word-break:keep-all;transition:transform .25s}.pg .ko{font-family:var(--tk)}
 .pg h1{font:900 1.5em/1.25 var(--sans);letter-spacing:-.055em;margin:0 0 .75em}.pg h1.h1s{margin-bottom:.3em}.pg h2,.pg h3{font:700 1.15em/1.4 var(--sans);letter-spacing:-.03em;margin:1.4em 0 .4em}.pg .sb{font:400 .85em var(--sans);color:var(--tmu);margin:0 0 1.4em;letter-spacing:-.03em}
-.pg p{margin:0 0 .9em}.pg img{max-width:100%;max-height:70%;break-inside:avoid}.pg blockquote{margin:1em 0;padding:.8em 1.2em;background:var(--hl);color:var(--tfg)}.pg blockquote>:last-child{margin-bottom:0}.pg blockquote+blockquote{margin-top:-1em;padding-top:.05em}.pg pre,.pg code{font-family:var(--sans);font-size:.9em}.pg pre{padding:10px;overflow:auto;break-inside:avoid;background:var(--tln)}.pg hr{border:0;border-top:1px solid var(--tln);margin:1.5em 0}
+.pg p{margin:0 0 .9em}.pg .page-break{display:block;height:0;break-before:column;-webkit-column-break-before:always;page-break-before:always}.pg img{max-width:100%;max-height:70%;break-inside:avoid}.pg blockquote{margin:1em 0;padding:.8em 1.2em;background:var(--hl);color:var(--tfg)}.pg blockquote>:last-child{margin-bottom:0}.pg blockquote+blockquote{margin-top:-1em;padding-top:.05em}.pg pre,.pg code{font-family:var(--sans);font-size:.9em}.pg pre{padding:10px;overflow:auto;break-inside:avoid;background:var(--tln)}.pg hr{border:0;border-top:1px solid var(--tln);margin:1.5em 0}
 .sh{position:absolute;z-index:5;right:12px;bottom:calc(52px + env(safe-area-inset-bottom,0px));width:min(340px,calc(100% - 24px));max-height:min(72%,460px);overflow:auto;background:var(--tbg);color:var(--tfg);border:1px solid var(--tfg);box-shadow:0 10px 30px rgba(0,0,0,.2);padding:12px 14px;display:none;cursor:default}.sh.on{display:block}
 .sh .fg{grid-template-columns:repeat(3,1fr)}.sh .fg button{font-size:12px;padding:7px 6px}
 .sh h5{margin:14px 0 6px;font:700 10px var(--sans);color:var(--tmu)}.sh h5:first-child{margin-top:0}
@@ -136,7 +136,7 @@ h1{font-size:24px;font-weight:900;margin:0;letter-spacing:-.055em}.sub{color:var
 .ar .pg{max-width:46em;transition:none}
 .ar.paged .pg{max-width:none;transition:transform .25s}.ar.paged .bk2{overflow:hidden;position:relative}
 .ar .br2{display:none}.ar.paged .br2{display:flex;justify-content:space-between;align-items:center;padding-top:4px;margin:0 max(0px,calc(var(--tm) - 28px))}
-.br2 #pi2{font:500 11px var(--sans);color:var(--mut);font-variant-numeric:tabular-nums}.pn{color:var(--mut);opacity:.7;padding:2px 8px;font-size:15px;line-height:1}.pn:hover{opacity:1;color:var(--fg)}.pn:disabled{opacity:.2;cursor:default}
+.br2 #pi2{font:500 11px var(--sans);color:var(--mut);font-variant-numeric:tabular-nums}.pn{color:var(--mut);opacity:.7;padding:2px 8px;font-size:15px;line-height:1;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;touch-action:manipulation}.pn:hover{opacity:1;color:var(--fg)}.pn:disabled{opacity:.2;cursor:default}
 .zn{position:absolute;top:0;bottom:0;width:26%;display:flex;align-items:center;font:300 34px var(--sans);color:var(--fg);opacity:0;transition:opacity .15s;pointer-events:none;z-index:2}.zn.l{left:0}.zn.r{right:0;justify-content:flex-end}.zn.on{opacity:.22}.zn.off{opacity:0!important}.ar:not(.paged) .zn{display:none}
 #lst>.row:first-child,#lst>div>.ln:first-child{border-top:0}
 body.pgd main{padding-bottom:16px}
@@ -238,10 +238,10 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .e5i{display:block;padding:7px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--fg)}
 .e5i .t{display:block;font-weight:600;font-size:13px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.e5i .d{font:500 10.5px var(--sans);color:var(--mut)}
 .e5i.on .t{text-decoration:underline;text-underline-offset:3px}.e5i:hover .t{text-decoration:underline;text-underline-offset:3px}
-.e5r{padding:0 36px;min-width:0;border-left:1px solid var(--line)}
+.e5r{padding:0 36px;min-width:0;min-height:100%;border-left:1px solid var(--line);align-self:stretch}
 .e5t{font:700 20px/1.3 var(--sans);letter-spacing:-.02em;margin:12px 0 6px}
 .e5m{font:500 11px var(--sans);color:var(--mut);margin-bottom:18px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.e5b{font-size:15px;line-height:1.7}.e5b p{margin:0 0 14px}
+.e5b{font:400 15px/1.7 var(--sans);letter-spacing:-.02em}.e5b p{margin:0 0 14px}
 @media(max-width:720px){.e5{display:block;min-height:0}.e5l{padding-right:0;position:static;max-height:none}.e5r{padding:0;border-left:0;border-top:1px solid var(--fg);margin-top:14px}}
 .e5s{font:500 13px var(--sans);color:var(--mut);margin:-2px 0 8px}
 /* banners: rows of 2 (1-2 / 3-4), grayscale -> color on hover, corner tag, scrollbar only while hovering */
@@ -258,6 +258,14 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .brow{border-top:1px solid var(--line);padding:10px 0}.brow:first-child{border-top:0;padding-top:0}
 .brh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font:700 10px var(--sans);color:var(--mut)}.bra{display:flex;gap:2px}
 .brow input{margin-bottom:6px}.brow .bfl{margin-bottom:6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* unified scrollbar: thin, square-edged */
+*{scrollbar-width:thin;scrollbar-color:var(--fg) transparent}
+*::-webkit-scrollbar{width:6px;height:6px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:var(--fg);border:0;border-radius:0}
+*::-webkit-scrollbar-thumb:hover{background:var(--mut)}
+*::-webkit-scrollbar-corner{background:transparent}
 </style>
 </head>
 <body>
@@ -632,7 +640,7 @@ paintTheme();
 /* html -> markdown */
 function h2m(root){const kids=n=>[...n.childNodes].map(nd).join('');
  function nd(n){if(n.nodeType===3)return n.textContent.replace(/\u00a0/g,' ');if(n.nodeType!==1)return'';const t=n.tagName.toLowerCase(),k=()=>kids(n);
-  switch(t){case'h1':case'h2':return`\n\n## ${k().trim()}\n\n`;case'h3':case'h4':return`\n\n### ${k().trim()}\n\n`;case'p':case'div':return`\n\n${k().trim()}\n\n`;case'br':return'\n';
+  switch(t){case'h1':case'h2':return`\n\n## ${k().trim()}\n\n`;case'h3':case'h4':return`\n\n### ${k().trim()}\n\n`;case'div':if(n.classList.contains('page-break'))return`\n\n<div class=\"page-break\"></div>\n\n`;return`\n\n${k().trim()}\n\n`;case'p':return`\n\n${k().trim()}\n\n`;case'br':return'\n';
    case'b':case'strong':return k().trim()?`**${k().trim()}**`:'';case'i':case'em':return k().trim()?`*${k().trim()}*`:'';case'u':return`<u>${k()}</u>`;case's':case'strike':case'del':return`~~${k()}~~`;
    case'a':return`[${k()}](${n.getAttribute('href')||''})`;case'img':return`\n\n![](${n.getAttribute('src')})\n\n`;case'hr':return'\n\n---\n\n';
    case'blockquote':return'\n\n'+k().trim().split('\n').map(l=>'> '+l).join('\n')+'\n\n';
@@ -647,7 +655,7 @@ function editor(it,kind){kind=(it&&it.kind)||kind||'post';const i=it||{visibilit
  $('#ed').innerHTML=`<div class="win"><div class="wh"><b>${kind==='post'?'ARCHIVE':'LOG'} ${nw?'NEW':'EDIT'}</b><span class="sv" id="sv"></span>${nw?'':'<button class="bt" id="edel">DELETE</button>'}<button class="bt" id="ecan">CANCEL</button><button class="bt pri" id="esave">SAVE</button></div>
  <div class="em"><select id="ev">${[['public','Public'],['private','Private'],['locked','Locked']].map(([k,t])=>`<option value="${k}"${i.visibility===k?' selected':''}>${t}</option>`).join('')}</select><input id="epw" type="password" placeholder="password" autocomplete="new-password" style="${i.visibility==='locked'?'':'display:none'}"><input id="et" placeholder="#tags" value="${esc((i.tags||[]).map(t=>'#'+t).join(' '))}"></div>
  <div class="mn2"><input class="tt" id="eti" placeholder="Title" value="${esc(i.title||'')}"><input class="stt" id="esu" placeholder="Subtitle" value="${esc(i.meta?.sub||'')}">
- <div class="tb" id="etb"><span id="tbb" style="display:contents"><button data-c="bold"><b>B</b></button><button data-c="italic"><i>I</i></button><button data-c="underline"><u>U</u></button><button data-c="strikeThrough"><s>S</s></button><s></s><button data-c="formatBlock:h2">H2</button><button data-c="formatBlock:blockquote">“</button><button data-c="insertUnorderedList">•</button><button data-c="insertOrderedList">1.</button><s></s><button data-c="link">link</button><button data-c="img">img</button><button data-c="insertHorizontalRule">—</button><button data-c="undo">↶</button><button data-c="redo">↷</button></span>
+ <div class="tb" id="etb"><span id="tbb" style="display:contents"><button data-c="bold"><b>B</b></button><button data-c="italic"><i>I</i></button><button data-c="underline"><u>U</u></button><button data-c="strikeThrough"><s>S</s></button><s></s><button data-c="formatBlock:h2">H2</button><button data-c="formatBlock:blockquote">“</button><button data-c="insertUnorderedList">•</button><button data-c="insertOrderedList">1.</button><s></s><button data-c="link">link</button><button data-c="img">img</button><button data-c="pagebreak" title="Insert page break">PAGE ↵</button><button data-c="insertHorizontalRule">—</button><button data-c="undo">↶</button><button data-c="redo">↷</button></span>
  <div class="md" id="emd">${hasH?'':'<button data-m="ed">EDIT</button>'}<button data-m="md">MD</button><button data-m="vw">VIEW</button></div></div>
  <div class="eb2" id="eb" contenteditable="true"></div><textarea class="src" id="em"></textarea><div class="pvw" id="evw"></div><div class="stb"><span id="ec"></span><span id="est"></span></div><input type="file" id="ef" accept="image/*" multiple hidden></div></div>`;
  const eb=$('#eb'),em=$('#em'),src=()=>mode==='md'?em.value:h2m(eb);
@@ -659,7 +667,8 @@ function editor(it,kind){kind=(it&&it.kind)||kind||'post';const i=it||{visibilit
  $('#emd').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.m)};show(mode);
  $('#tbb').onmousedown=e=>{if(e.target.closest('button'))e.preventDefault()};
  $('#tbb').onclick=e=>{const b=e.target.closest('button');if(!b)return;const c=b.dataset.c.split(':');eb.focus();
-  if(c[0]==='link'){const u=prompt('URL');if(u)document.execCommand('createLink',false,u)}
+  if(c[0]==='pagebreak'){document.execCommand('insertHTML',false,'<div class=\"page-break\"></div><p><br></p>')}
+  else if(c[0]==='link'){const u=prompt('URL');if(u)document.execCommand('createLink',false,u)}
   else if(c[0]==='img'){const s=getSelection();savedRange=s.rangeCount?s.getRangeAt(0).cloneRange():null;$('#ef').click()}
   else document.execCommand(c[0],false,c[1]||null);cnt()};
  $('#ef').onchange=async e=>{try{for(const f of e.target.files){$('#sv').textContent='uploading…';const u=await upload(f);eb.focus();if(savedRange){const s=getSelection();s.removeAllRanges();s.addRange(savedRange)}document.execCommand('insertHTML',false,`<p><img src="${u}" alt=""></p>`)}$('#sv').textContent='uploaded'}catch(x){$('#sv').textContent='upload failed: '+x.message}e.target.value='';cnt()};
@@ -732,12 +741,13 @@ async function save(row,id,pw,quiet){try{const r=id?await sb.from('items').updat
  if(r.error)return msg('Save failed: '+r.error.message);if(pw)await sb.rpc('set_pw',{p_id:r.data.id,p_pw:pw});if(!quiet)await done()}catch(x){msg('Save failed: '+(x.message||x))}}
 async function done(){closeM();await load();route()}
 /* events */
+document.addEventListener('pointerdown',e=>{if(e.target.closest('.br2')){e.preventDefault();const sel=getSelection();if(sel)sel.removeAllRanges()}},true);
 document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  const s2=$('#sh2');if(s2&&s2.classList.contains('on')&&!c('#sh2')&&!c('#aa2'))s2.classList.remove('on');
  if(c('#sh2')){const b=t.closest('#sh2 button');if(b){rsClick(b);s2.innerHTML=sheet(false);applyRS()}return}
  if(c('#aa2')){s2.classList.toggle('on');return}
  if(c('#fsb')){FS=true;return route()}
- if(x=c('[data-pp]'))return go2(p2I+ +x.dataset.pp);
+ if(x=c('[data-pp]')){e.preventDefault();const sel=getSelection();if(sel)sel.removeAllRanges();return go2(p2I+ +x.dataset.pp)}
  if(c('[data-xfs]')){FS=false;closeReader();if(!$('#ar'))route();return}
  if(c('[data-x]'))return closeM();
  if(x=c('[data-cfg]')){CFG[x.dataset.cfg]=+x.dataset.v;try{localStorage.setItem('cfg',JSON.stringify(CFG))}catch(e){}applyCols();return settings()}
