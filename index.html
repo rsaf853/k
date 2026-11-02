@@ -244,6 +244,20 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .e5b{font-size:15px;line-height:1.7}.e5b p{margin:0 0 14px}
 @media(max-width:720px){.e5{display:block;min-height:0}.e5l{padding-right:0;position:static;max-height:none}.e5r{padding:0;border-left:0;border-top:1px solid var(--fg);margin-top:14px}}
 .e5s{font:500 13px var(--sans);color:var(--mut);margin:-2px 0 8px}
+/* banners: rows of 2 (1-2 / 3-4), grayscale -> color on hover, corner tag, scrollbar only while hovering */
+.bnw{overflow-y:auto;overflow-x:hidden;padding-right:2px;scrollbar-width:thin;scrollbar-color:transparent transparent}
+.bnw:hover{scrollbar-color:var(--fg) transparent}
+.bnw::-webkit-scrollbar{width:4px}.bnw::-webkit-scrollbar-track{background:transparent}.bnw::-webkit-scrollbar-thumb{background:transparent}.bnw:hover::-webkit-scrollbar-thumb{background:var(--fg)}
+.bnc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:start}
+.bn{position:relative;display:block;border:1px solid var(--fg);line-height:0;background:var(--soft);overflow:hidden}
+.bn img{display:block;width:100%;height:auto;filter:grayscale(1);transition:filter .35s}
+.bn:hover img,.bn:active img,.bn:focus-visible img{filter:none}
+.bn .lb{position:absolute;left:6px;top:6px;max-width:calc(100% - 12px);padding:2px 8px;background:var(--fg);color:var(--bg);font:700 11px/1.35 var(--sans);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .25s,transform .25s}
+.bn:hover .lb,.bn:active .lb,.bn:focus-visible .lb{opacity:1;transform:none}
+.bl.fh:has(.bnw){overflow:hidden}
+.brow{border-top:1px solid var(--line);padding:10px 0}.brow:first-child{border-top:0;padding-top:0}
+.brh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font:700 10px var(--sans);color:var(--mut)}.bra{display:flex;gap:2px}
+.brow input{margin-bottom:6px}.brow .bfl{margin-bottom:6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -366,7 +380,7 @@ function calHtml(){const{y,m}=CAL,f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0)
 const paintCal=()=>{const c=$('#calw');if(c)c.innerHTML=calHtml()};
 async function planAdd(text){const r=await sb.from('plans').insert({day:CAL.sel,kind:AK,text}).select().single();if(r.error)return alert(r.error.message);PLANS.push(r.data);paintCal();$('#pi')&&$('#pi').focus()}
 /* blocks */
-const BT={calendar:'calendar',image:'image',note:'note',posts:'archive',memos:'memo',lines:'txt',gallery:'img',links:'links',chess960:'chess960',position:'position',tags:'tags',todayline:'today',captured:'captured',pgn:'scoresheet',heat:'heatmap',lastmove:'last move',puzzle:'puzzle',replay:'replay',eval:'eval bar'};
+const BT={calendar:'calendar',image:'image',note:'note',posts:'archive',memos:'memo',lines:'txt',gallery:'img',links:'links',chess960:'chess960',position:'position',tags:'tags',todayline:'today',captured:'captured',pgn:'scoresheet',heat:'heatmap',lastmove:'last move',puzzle:'puzzle',replay:'replay',eval:'eval bar',banners:'banners'};
 const pub=k=>ITEMS.filter(i=>i.kind===k&&!locked(G(i)));
 const mdr=s=>marked.parse(s||''),mdn=s=>mdr(String(s||'').replace(/^(\s*)(\d+)\.(?=\s)/gm,'$1$2\\.')),mdm=s=>mdn(s).replace(/<a /g,'<a target="_blank" rel="noopener" ');
 /* chess blocks */
@@ -456,7 +470,33 @@ function blockBody(b){const n=b.n||6;
  if(b.t==='memos')return pub('memo').slice(0,n).map(i=>`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}<div class="mt md">${mdm(i.body)}</div></div>`).join('')||'';
  if(b.t==='lines')return pub('line').slice(0,n).map(i=>`<div class="ln"><time>${dateS(i.created_at)}</time><div class="t"><div class="md">${mdn(i.body)}</div></div></div>`).join('')||'';
  if(b.t==='gallery')return`<div class="gg">${pub('gallery').slice(0,n).map(i=>`<img src="${esc(i.meta?.src)}" data-gi="${i.id}" loading="lazy" alt="">`).join('')}</div>`;
- if(b.t==='links')return(b.text||'').split('\n').map(l=>l.split('|').map(s=>s.trim())).filter(a=>a[0]).map(a=>`<a class="lk" href="${/^(https?:|#)/.test(a[1]||'')?esc(a[1]):'#'}" target="_blank" rel="noopener">${esc(a[0])}<span>↗</span></a>`).join('');if(b.t==='chess960')return c960Html();if(b.t==='position')return posHtml(b);if(b.t==='tags')return tagsHtml(b);if(b.t==='todayline')return tlHtml();if(b.t==='captured')return capHtml();if(b.t==='pgn')return pgnHtml(b);if(b.t==='heat')return heatHtml();if(b.t==='lastmove')return lmHtml();if(b.t==='eval')return evHtml();if(b.t==='puzzle')return pzHtml(b);if(b.t==='replay')return repHtml(b);return''}
+ if(b.t==='links')return(b.text||'').split('\n').map(l=>l.split('|').map(s=>s.trim())).filter(a=>a[0]).map(a=>`<a class="lk" href="${/^(https?:|#)/.test(a[1]||'')?esc(a[1]):'#'}" target="_blank" rel="noopener">${esc(a[0])}<span>↗</span></a>`).join('');if(b.t==='chess960')return c960Html();if(b.t==='position')return posHtml(b);if(b.t==='tags')return tagsHtml(b);if(b.t==='todayline')return tlHtml();if(b.t==='captured')return capHtml();if(b.t==='pgn')return pgnHtml(b);if(b.t==='heat')return heatHtml();if(b.t==='lastmove')return lmHtml();if(b.t==='eval')return evHtml();if(b.t==='puzzle')return pzHtml(b);if(b.t==='replay')return repHtml(b);if(b.t==='banners')return banHtml(b);return''}
+/* banners */
+function banHtml(b){const it=(b.items||[]).filter(x=>x&&x.src);if(!it.length)return'<div class="ph">NO BANNERS</div>';
+ const dom=h=>{try{return new URL(h).hostname.replace(/^www\./,'')}catch(e){return''}};
+ const cells=it.map(x=>{const h=x.href||'',ok=!EDITM&&/^(https?:|#)/.test(h),nm=(x.name||'').trim()||(/^https?:/.test(h)?dom(h):'');
+  return(ok?`<a class="bn" href="${esc(h)}"${h[0]==='#'?'':' target="_blank" rel="noopener"'}>`:'<div class="bn">')+`<img src="${esc(x.src)}" loading="lazy" alt="${esc(nm)}">${nm?`<span class="lb">↗ ${esc(nm)}</span>`:''}`+(ok?'</a>':'</div>')}).join('');
+ return`<div class="bnw"${b.h?'':' data-auto'} style="max-height:${b.h?`calc(${b.h}px - ${EDITM?36:0}px)`:'120px'}"><div class="bnc">${cells}</div></div>`}
+/* default height = exactly the first row (banners 1 and 2) */
+function banFit(){document.querySelectorAll('.bnw[data-auto]').forEach(w=>{const it=[...w.querySelectorAll('.bn')].slice(0,2);if(!it.length)return;
+ const fit=()=>{const h=Math.max(...it.map(e=>e.offsetHeight));if(h>4)w.style.maxHeight=h+'px'};
+ if(window.ResizeObserver){const ro=new ResizeObserver(fit);it.forEach(e=>ro.observe(e))}else{fit();it.forEach(e=>{const m=e.querySelector('img');m&&m.addEventListener('load',fit)})}})}
+function banForm(b){let R=(b.items||[]).map(x=>({src:x.src||'',href:x.href||'',name:x.name||'',file:null}));if(!R.length)R.push({src:'',href:'',name:'',file:null});
+ const rowH=(r,i)=>`<div class="brow" data-i="${i}"><div class="brh"><span>${p2(i+1)}</span><span class="bra"><button type="button" class="bt" data-bo="up">↑</button><button type="button" class="bt" data-bo="dn">↓</button><button type="button" class="bt" data-bo="rm">×</button></span></div><input class="bs" placeholder="Image URL" value="${esc(r.src)}"><button type="button" class="btn bfl">${r.file?esc(r.file.name):'or upload image'}</button><input type="file" class="bf" accept="image/*" hidden><input class="bh" placeholder="Link URL (https://…)" value="${esc(r.href)}"><input class="bnm" placeholder="Site name (optional · empty = domain)" value="${esc(r.name)}"></div>`;
+ openM(`<h3>BANNERS</h3><div id="brw"><div id="brs"></div><button type="button" class="btn" id="badd" style="margin-top:10px">+ ADD BANNER</button><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" id="bsave">SAVE</button></div></div>`);
+ const w=$('#brw'),paint=()=>{$('#brs').innerHTML=R.map(rowH).join('')},read=()=>w.querySelectorAll('.brow').forEach((el,i)=>{R[i].src=el.querySelector('.bs').value.trim();R[i].href=el.querySelector('.bh').value.trim();R[i].name=el.querySelector('.bnm').value.trim()}),blank=()=>({src:'',href:'',name:'',file:null});
+ paint();
+ w.addEventListener('change',e=>{const f=e.target.closest('.bf');if(!f)return;read();R[+f.closest('.brow').dataset.i].file=f.files[0]||null;paint()});
+ w.addEventListener('click',async e=>{const t=e.target;
+  if(t.closest('#badd')){read();R.push(blank());paint();return}
+  const o=t.closest('[data-bo]');
+  if(o){read();const i=+o.closest('.brow').dataset.i,op=o.dataset.bo;
+   if(op==='rm')R.splice(i,1);if(op==='up'&&i>0)[R[i-1],R[i]]=[R[i],R[i-1]];if(op==='dn'&&i<R.length-1)[R[i+1],R[i]]=[R[i],R[i+1]];
+   if(!R.length)R.push(blank());paint();return}
+  const up=t.closest('.bfl');if(up){up.nextElementSibling.click();return}
+  if(t.closest('#bsave')){read();msg('Saving…');const out=[];
+   try{for(const r of R){let s=r.src;if(r.file)s=await upload(r.file);if(s)out.push({src:s,href:r.href,name:r.name})}}catch(x){return msg('Failed: '+x.message)}
+   b.items=out;await saveHome();closeM();home()}})}
 /* free layout: every block has a width (s = columns out of 12) and a place in the order; optional fixed height h (px) */
 const SPANS=[[3,'1/4'],[4,'1/3'],[6,'1/2'],[8,'2/3'],[9,'3/4'],[12,'FULL']],sp=b=>b.s||(b.c?b.c*2:(b.w===2?12:6));
 const NOEDIT=['calendar','chess960','todayline','captured','heat','lastmove','eval'];
@@ -503,10 +543,10 @@ function endDrag(ok){if(!DR)return;const d=DR;DR=null;document.body.classList.re
  if(ok&&d.t){applyDrop(d.b,d.t);saveHome();home()}}
 document.addEventListener('pointerup',()=>endDrag(true));document.addEventListener('pointercancel',()=>endDrag(false));
 document.addEventListener('dblclick',e=>{const h=e.target.closest('[data-rh]');if(!h||!EDITM)return;const b=HOME.blocks.find(q=>q.id===h.closest('.bl').dataset.b);if(b){delete b.h;saveHome();home()}});
-function home(){home0();masonryInit()}
+function home(){home0();masonryInit();banFit()}
 function home0(){const used=HOME.blocks.map(b=>b.t);
  app.innerHTML=`${em()?`<div class="top"><span></span><button class="btn${EDITM?' on':''}" data-em>${EDITM?'DONE':'EDIT LAYOUT'}</button></div>`:''}<div class="blocks" id="bks">${HOME.blocks.map(blockHtml).join('')}</div>${EDITM?`<div class="add2"><button class="btn" data-addb>+ ADD BLOCK</button></div>`:''}`}
-function blockForm(b){const t=b.t;openM(`<h3>${BT[t].toUpperCase()}</h3><form id="f">
+function blockForm(b){const t=b.t;if(t==='banners')return banForm(b);openM(`<h3>${BT[t].toUpperCase()}</h3><form id="f">
  ${t==='image'?`<label>Image URL</label><input name="src" value="${esc(b.src||'')}"><label>or upload</label><input type="file" name="file" accept="image/*"><label>Caption</label><input name="cap" value="${esc(b.cap||'')}">`:''}
  ${t==='note'?`<label>Title</label><input name="title" value="${esc(b.title||'')}"><label>Text (markdown)</label><textarea name="text" style="min-height:140px">${esc(b.text||'')}</textarea>`:''}
  ${t==='position'?`<label>One per line: FEN | caption (empty = default positions)</label><textarea name="text" style="min-height:110px">${esc(b.text||'')}</textarea>`:''}
@@ -722,7 +762,7 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(x=c('[data-pa]')){AK=x.dataset.pa;return paintCal()}
  if(c('[data-em]')){EDITM=!EDITM;return home()}
  if(c('[data-addb]')){openM(`<h3>ADD BLOCK</h3><div class="pk">${Object.keys(BT).filter(t=>t!=='calendar'||!HOME.blocks.some(b=>b.t==='calendar')).map(t=>`<button class="btn" data-pick="${t}">${BT[t]}</button>`).join('')}</div>`);return}
- if(x=c('[data-pick]')){const t=x.dataset.pick,b={id:uid(),t,w:1,s:6,n:t==='tags'?24:t==='pgn'?12:6};HOME.blocks.push(b);saveHome();closeM();home();if(['image','note','links','position','puzzle','replay'].includes(t))blockForm(b);return}
+ if(x=c('[data-pick]')){const t=x.dataset.pick,b={id:uid(),t,w:t==='banners'?2:1,s:t==='banners'?12:6,n:t==='tags'?24:t==='pgn'?12:6};HOME.blocks.push(b);saveHome();closeM();home();if(['image','note','links','position','puzzle','replay','banners'].includes(t))blockForm(b);return}
  if(c('[data-himg]')){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;try{HOME.img=await upload(f.files[0]);await saveHome();paintImg()}catch(x){alert('Upload failed: '+x.message)}};f.click();return}
  if(c('[data-iadj]'))return imgAdjust();
  if(c('[data-ireset]')){Object.assign(HOME,IMG_DEF);paintVars();document.querySelectorAll('[data-ia]').forEach(s=>{s.value=HOME[s.dataset.ia];$('#v_'+s.dataset.ia).textContent=s.value+IU[s.dataset.ia]});return}
