@@ -48,7 +48,7 @@ h1{font-size:24px;font-weight:900;margin:0;letter-spacing:-.055em}.sub{color:var
 .bt,.btn{font:600 11.5px/1.5 var(--sans);border:1px solid var(--line);padding:3px 11px;text-decoration:none;display:inline-block;color:var(--fg);transition:background .15s,color .15s,border-color .15s}.bt:hover,.btn:hover,.btn.on,.bt.pri{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .acts{display:flex;gap:6px}.bar{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
 .chip{font:600 11.5px/1.5 var(--sans);border:1px solid var(--line);padding:1px 10px;color:var(--mut);transition:all .15s}.chip:hover{color:var(--fg);border-color:var(--fg)}.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-.tg{font:500 11.5px var(--sans);color:var(--mut);margin-right:6px;cursor:pointer}.tg:hover{color:var(--fg)}.vb{font:700 9px var(--sans);border:1px solid var(--fg);padding:0 4px;margin-left:6px;vertical-align:1px}
+.tg{font:500 11.5px var(--sans);color:var(--mut);margin-right:6px;cursor:pointer}.tg:hover{color:var(--fg)}.vb{font:700 9px var(--sans);border:1px solid var(--fg);padding:0 4px;margin-left:6px;vertical-align:1px;display:inline-block;text-decoration:none}
 .row{display:grid;grid-template-columns:78px 1fr auto;gap:12px;align-items:baseline;padding:10px 0;border-top:1px solid var(--line);text-decoration:none}.row:hover b{text-decoration:underline;text-underline-offset:3px}.row small{font:500 11.5px var(--sans);color:var(--mut)}.row b{font-weight:600}.row i{font-style:normal;color:var(--mut);font-size:12.5px;margin-left:8px;font-weight:400}
 .empty{color:var(--mut);padding:28px 0}
 /* masonry (img / memo) */
@@ -234,15 +234,16 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 @media(max-width:720px){.bl .rz{display:none!important}}
 .bl.edit.fh .rz{right:0}
 .e5{display:grid;grid-template-columns:minmax(150px,210px) minmax(0,1fr);margin-top:14px;border-top:1px solid var(--fg)}
-.e5l{border-right:1px solid var(--line);padding-right:12px;position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto}
+.e5l{padding-right:12px;position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto}
 .e5i{display:block;padding:7px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--fg)}
 .e5i .t{display:block;font-weight:600;font-size:13px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.e5i .d{font:500 10.5px var(--sans);color:var(--mut)}
 .e5i.on .t{text-decoration:underline;text-underline-offset:3px}.e5i:hover .t{text-decoration:underline;text-underline-offset:3px}
-.e5r{padding-left:20px;min-width:0}
+.e5r{padding-left:20px;min-width:0;border-left:1px solid var(--line)}
 .e5t{font:700 20px/1.3 var(--sans);letter-spacing:-.02em;margin:12px 0 6px}
 .e5m{font:500 11px var(--sans);color:var(--mut);margin-bottom:18px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.e5b{font-size:15px;line-height:1.6}.e5b p{margin:0 0 14px}
-@media(max-width:720px){.e5{display:block}.e5l{border-right:0;padding-right:0;position:static;max-height:none}.e5r{padding-left:0;border-top:1px solid var(--fg);margin-top:14px}}
+.e5b{font-size:15px;line-height:1.7}.e5b p{margin:0 0 14px}
+@media(max-width:720px){.e5{display:block}.e5l{padding-right:0;position:static;max-height:none}.e5r{padding-left:0;border-left:0;border-top:1px solid var(--fg);margin-top:14px}}
+.e5s{font:500 13px var(--sans);color:var(--mut);margin:-2px 0 8px}
 </style>
 </head>
 <body>
@@ -349,7 +350,7 @@ const saveHome=async()=>{const r=await sb.from('settings').upsert({key:'home',va
 function unlock(id){openM(`<h3>LOCKED</h3><form id="f"><input type="password" name="pw" placeholder="password" autofocus required><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn">UNLOCK</button></div></form>`);
  $('#f').onsubmit=async e=>{e.preventDefault();const r=await sb.rpc('unlock',{p_id:id,p_pw:new FormData(e.target).get('pw')});if(r.error||!r.data?.length)return msg('Wrong password');UNL[id]=r.data[0];closeM();route()}}
 /* calendar */
-function pmap(){const m={},g=k=>m[k]||(m[k]={p:[],t:[],n:[]});ITEMS.filter(i=>i.kind==='post').forEach(i=>g(dayOf(i.created_at)).p.push(i));PLANS.forEach(x=>g(String(x.day).slice(0,10))[x.kind==='todo'?'t':'n'].push(x));return m}
+function pmap(){const m={},g=k=>m[k]||(m[k]={p:[],t:[],n:[]});ITEMS.filter(i=>i.kind!=='gallery').forEach(i=>g(dayOf(i.created_at)).p.push(i));PLANS.forEach(x=>g(String(x.day).slice(0,10))[x.kind==='todo'?'t':'n'].push(x));return m}
 const MONS=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'],WDFULL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 function calHtml(){const{y,m}=CAL,f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),P=pmap();
  let h=`<div class="cm"><b>${MONS[m]} ${y}</b><span><button class="ib s" data-cm="-1" aria-label="Previous month">‹</button><button class="ib s" data-cm="0" aria-label="Today">•</button><button class="ib s" data-cm="1" aria-label="Next month">›</button></span></div><div class="cal">${WD.map(w=>`<div class="wd">${w}</div>`).join('')}`;
@@ -361,7 +362,7 @@ function calHtml(){const{y,m}=CAL,f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0)
  if(e.n.length)h+=e.n.map(x=>`<div class="nn"><span>${esc(x.text)}</span>${admin?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
  
  if(admin)h+=`<div class="add"><button class="ic${AK==='todo'?' on':''}" data-pa="todo" title="Todo" aria-label="Todo"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10"/></svg></button><button class="ic${AK==='note'?' on':''}" data-pa="note" title="Note" aria-label="Note"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10"/></svg></button><input id="pi" aria-label="add" autocomplete="off"></div>`;
- h+='</div></div></div>';const ph=e.p.length?`<div class="pl">${e.p.map((i,n)=>`<a href="#/post/${i.id}"><span class="n">${p2(n+1)}</span><b>${esc(i.title||'untitled')}</b></a>`).join('')}</div>`:'';return`<div class="cs"><div class="cl">${hd}${ph}</div>${h}</div>`}
+ h+='</div></div></div>';const ph=e.p.length?`<div class="pl">${e.p.map((i,n)=>{const g=G(i),at=i.kind==='post'?`href="#/post/${i.id}"`:i.kind==='log'?`href="#/e5/${i.id}"`:i.kind==='memo'?`href="javascript:void 0" data-mv="${i.id}"`:'href="#/lines"';return`<a ${at}><span class="n">${p2(n+1)}</span><b>${locked(i)?'LOCKED':esc(itName(g,28))}</b></a>`}).join('')}</div>`:'';return`<div class="cs"><div class="cl">${hd}${ph}</div>${h}</div>`}
 const paintCal=()=>{const c=$('#calw');if(c)c.innerHTML=calHtml()};
 async function planAdd(text){const r=await sb.from('plans').insert({day:CAL.sel,kind:AK,text}).select().single();if(r.error)return alert(r.error.message);PLANS.push(r.data);paintCal();$('#pi')&&$('#pi').focus()}
 /* blocks */
@@ -601,9 +602,9 @@ function h2m(root){const kids=n=>[...n.childNodes].map(nd).join('');
 /* editor */
 let savedRange=null;
 function closeEd(){$('#ed').hidden=true;$('#ed').innerHTML='';document.body.classList.remove('eo')}
-function editor(it){const i=it||{visibility:'public',tags:[],meta:{}},nw=!it,hasH=/```html/.test(i.body||'');let mode=hasH?'md':'ed';
+function editor(it,kind){kind=(it&&it.kind)||kind||'post';const i=it||{visibility:'public',tags:[],meta:{}},nw=!it,hasH=/```html/.test(i.body||'');let mode=hasH?'md':'ed';
  $('#ed').hidden=false;document.body.classList.add('eo');
- $('#ed').innerHTML=`<div class="win"><div class="wh"><b>ARCHIVE ${nw?'NEW':'EDIT'}</b><span class="sv" id="sv"></span>${nw?'':'<button class="bt" id="edel">DELETE</button>'}<button class="bt" id="ecan">CANCEL</button><button class="bt pri" id="esave">SAVE</button></div>
+ $('#ed').innerHTML=`<div class="win"><div class="wh"><b>${kind==='post'?'ARCHIVE':'E5'} ${nw?'NEW':'EDIT'}</b><span class="sv" id="sv"></span>${nw?'':'<button class="bt" id="edel">DELETE</button>'}<button class="bt" id="ecan">CANCEL</button><button class="bt pri" id="esave">SAVE</button></div>
  <div class="em"><select id="ev">${[['public','Public'],['private','Private'],['locked','Locked']].map(([k,t])=>`<option value="${k}"${i.visibility===k?' selected':''}>${t}</option>`).join('')}</select><input id="epw" type="password" placeholder="password" autocomplete="new-password" style="${i.visibility==='locked'?'':'display:none'}"><input id="et" placeholder="#tags" value="${esc((i.tags||[]).map(t=>'#'+t).join(' '))}"></div>
  <div class="mn2"><input class="tt" id="eti" placeholder="Title" value="${esc(i.title||'')}"><input class="stt" id="esu" placeholder="Subtitle" value="${esc(i.meta?.sub||'')}">
  <div class="tb" id="etb"><span id="tbb" style="display:contents"><button data-c="bold"><b>B</b></button><button data-c="italic"><i>I</i></button><button data-c="underline"><u>U</u></button><button data-c="strikeThrough"><s>S</s></button><s></s><button data-c="formatBlock:h2">H2</button><button data-c="formatBlock:blockquote">“</button><button data-c="insertUnorderedList">•</button><button data-c="insertOrderedList">1.</button><s></s><button data-c="link">link</button><button data-c="img">img</button><button data-c="insertHorizontalRule">—</button><button data-c="undo">↶</button><button data-c="redo">↷</button></span>
@@ -624,9 +625,9 @@ function editor(it){const i=it||{visibility:'public',tags:[],meta:{}},nw=!it,has
  $('#ef').onchange=async e=>{try{for(const f of e.target.files){$('#sv').textContent='uploading…';const u=await upload(f);eb.focus();if(savedRange){const s=getSelection();s.removeAllRanges();s.addRange(savedRange)}document.execCommand('insertHTML',false,`<p><img src="${u}" alt=""></p>`)}$('#sv').textContent='uploaded'}catch(x){$('#sv').textContent='upload failed: '+x.message}e.target.value='';cnt()};
  eb.oninput=cnt;em.oninput=cnt;$('#ev').onchange=e=>$('#epw').style.display=e.target.value==='locked'?'':'none';
  $('#ecan').onclick=closeEd;
- if($('#edel'))$('#edel').onclick=async()=>{if(!confirm('Delete this post?'))return;const r=await sb.from('items').delete().eq('id',i.id);if(r.error)return $('#sv').textContent=r.error.message;closeEd();await load();location.hash='#/posts';route()};
+ if($('#edel'))$('#edel').onclick=async()=>{if(!confirm('Delete this post?'))return;const r=await sb.from('items').delete().eq('id',i.id);if(r.error)return $('#sv').textContent=r.error.message;closeEd();await load();location.hash=kind==='post'?'#/posts':'#/e5';route()};
  $('#esave').onclick=async()=>{const vis=$('#ev').value,pw=$('#epw').value;if(vis==='locked'&&nw&&!pw)return $('#sv').textContent='locked posts need a password';$('#sv').textContent='saving…';
-  const row={kind:'post',title:$('#eti').value.trim()||null,body:src(),tags:[...new Set($('#et').value.match(/[^\s,#]+/g)||[])],visibility:vis,meta:{...(i.meta||{}),sub:$('#esu').value.trim()}};
+  const row={kind,title:$('#eti').value.trim()||null,body:src(),tags:[...new Set($('#et').value.match(/[^\s,#]+/g)||[])],visibility:vis,meta:{...(i.meta||{}),sub:$('#esu').value.trim()}};
   const btn=$('#esave');if(btn.disabled)return;btn.disabled=true;
   try{
    const r=i.id?await sb.from('items').update(row).eq('id',i.id).select('id').single():await sb.from('items').insert(row).select('id').single();
@@ -646,7 +647,7 @@ function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.t
  return L.length?h:''}
 function essayRows(L,cur){return L.length?L.map(it=>{const i=G(it);return`<a class="e5i${cur&&cur.id===i.id?' on':''}" href="#/e5/${i.id}"><span class="t">${locked(i)?'LOCKED':esc(i.title||'untitled')}${vb(i)}</span><span class="d">${date(i.created_at)}</span></a>`}).join(''):'<p class="empty">no entries</p>'}
 function essayBody(it){if(!it)return'';const i=G(it);if(locked(i))return`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED · click to open</span>`;
- return`<h1 class="e5t">${esc(i.title||'untitled')}</h1><div class="e5m"><span>${date(i.created_at,1)}</span>${tags(i)}${vb(i)}${eb(i)}</div><div class="md e5b">${mdr(i.body)}</div>`}
+ return`<h1 class="e5t">${esc(i.title||'untitled')}</h1>${i.meta?.sub?`<div class="e5s">${esc(i.meta.sub)}</div>`:''}<div class="e5m"><span>${date(i.created_at,1)}</span>${tags(i)}${vb(i)}${eb(i)}</div><div class="md e5b">${mdr(i.body)}</div>`}
 function essayView(){const all=ITEMS.filter(i=>i.kind==='log'),sel=location.hash.replace('#/','').split('/')[1],was=!!$('#e5r'),y=scrollY;
  const get=()=>all.filter(i=>(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let L=get(),cur=L.find(i=>String(i.id)===sel)||L[0];
  app.innerHTML=head('e5')+`<input id="sq" placeholder="search" value="${esc(Q)}" autocomplete="off">`+chips(all)+`<div class="e5"><div class="e5l" id="e5l">${essayRows(L,cur)}</div><div class="e5r" id="e5r">${essayBody(cur)}</div></div>`;
@@ -667,7 +668,7 @@ function route(){const h=location.hash.replace('#/','')||'',[a,b]=h.split('/');d
 function memoView(id){const it=ITEMS.find(i=>i.id==id);if(!it)return;const i=G(it);if(locked(i))return unlock(i.id);
  openM(`${i.title?`<p style="font-weight:700;font-size:16px;margin:0 0 8px">${esc(i.title)}</p>`:''}<div class="mfull md">${mdm(i.body)}</div><p class="st" style="margin-top:12px">${tags(i)}${vb(i)} ${date(i.created_at,1)}</p><div class="acts">${admin?`<button class="btn" data-ed="${i.id}">EDIT</button>`:''}<button class="btn" data-x>CLOSE</button></div>`)}
 /* forms (memo / line / gallery) */
-function form(kind,it){if(kind==='post'){closeM();return editor(it)}const i=it||{visibility:'public',tags:[],meta:{}},nw=!it;
+function form(kind,it){if(kind==='post'||kind==='log'){closeM();return editor(it,kind)}const i=it||{visibility:'public',tags:[],meta:{}},nw=!it;
  openM(`<h3>${LBL[kind].toUpperCase()} ${nw?'NEW':'EDIT'}</h3><form id="f">
  ${kind==='memo'||kind==='log'?`<label>Title</label><input name="title" value="${esc(i.title)}">`:''}
  ${kind==='gallery'?`<label>Image URL (one per line)</label><textarea name="urls">${esc(i.meta?.src||'')}</textarea>${nw?'<label>or upload files</label><input type="file" name="files" accept="image/*" multiple>':''}<label>Caption</label><input name="body" value="${esc(i.body)}">`:`<label>Content${kind==='line'||kind==='memo'||kind==='log'?' (markdown)':''}</label><textarea name="body" style="min-height:${kind==='line'?110:kind==='log'?280:140}px">${esc(i.body)}</textarea>`}
