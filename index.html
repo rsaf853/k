@@ -233,6 +233,16 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .bl.edit .rz:hover::after{background:var(--mut)}
 @media(max-width:720px){.bl .rz{display:none!important}}
 .bl.edit.fh .rz{right:0}
+.e5{display:grid;grid-template-columns:minmax(0,38%) minmax(0,1fr);margin-top:14px;border-top:1px solid var(--fg)}
+.e5l{border-right:1px solid var(--line);padding-right:14px;position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto}
+.e5i{display:block;padding:10px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--fg)}
+.e5i .t{display:block;font-weight:600;font-size:14px;line-height:1.4}.e5i .d{font:500 11px var(--sans);color:var(--mut)}
+.e5i.on .t{text-decoration:underline;text-underline-offset:3px}.e5i:hover .t{text-decoration:underline;text-underline-offset:3px}
+.e5r{padding-left:22px;min-width:0}
+.e5t{font:700 20px/1.3 var(--sans);letter-spacing:-.02em;margin:12px 0 6px}
+.e5m{font:500 11px var(--sans);color:var(--mut);margin-bottom:18px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.e5b{font-size:15px;line-height:1.95}.e5b p{margin:0 0 14px}
+@media(max-width:720px){.e5{display:block}.e5l{border-right:0;padding-right:0;position:static;max-height:none}.e5r{padding-left:0;border-top:1px solid var(--fg);margin-top:14px}}
 </style>
 </head>
 <body>
@@ -268,7 +278,7 @@ setTimeout(step,500);
 <div class="shell">
 <aside class="side"><div class="im" id="im"></div></aside>
 <div class="col">
-<header><nav><a href="#/" data-n="">check</a><a href="#/posts" data-n="posts">e4</a><a href="#/gallery" data-n="gallery">e5</a><a href="#/memo" data-n="memo">f4</a><a href="#/lines" data-n="lines">exf4</a></nav><span class="hr"><button class="ib" id="cfg" aria-label="Settings" title="Settings" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button><button class="ib" id="theme" aria-label="Toggle theme"></button></span></header>
+<header><nav><a href="#/" data-n="">check</a><a href="#/posts" data-n="posts">e4</a><a href="#/e5" data-n="e5">e5</a><a href="#/memo" data-n="memo">f4</a><a href="#/lines" data-n="lines">exf4</a><a href="#/gallery" data-n="gallery">?!</a></nav><span class="hr"><button class="ib" id="cfg" aria-label="Settings" title="Settings" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button><button class="ib" id="theme" aria-label="Toggle theme"></button></span></header>
 <main id="app"></main>
 <footer><button id="mode" class="mode" type="button">checkmate</button><button id="adm" aria-label="Admin"><svg width="13" height="13" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2v5M9.6 4.3h4.8" fill="none"/><path d="M12 8.4C11 6.8 8 6.5 6.5 8.4 5 10.4 6 13 8.2 14.2L7.2 18.2h9.6l-1-4C18 13 19 10.4 17.5 8.4 16 6.5 13 6.8 12 8.4Z"/><path d="M5.8 18.2h12.4v3.4H5.8Z"/></svg></button></footer>
 </div></div>
@@ -286,7 +296,7 @@ const date=(d,t)=>{const x=new Date(d);return `${p2(x.getDate())}/${p2(x.getMont
 const dateS=d=>{const x=new Date(d);return `${p2(x.getDate())}/${p2(x.getMonth()+1)}`};
 const loc=d=>{const x=new Date(d);return `${x.getFullYear()}-${p2(x.getMonth()+1)}-${p2(x.getDate())}T${p2(x.getHours())}:${p2(x.getMinutes())}`};
 const uid=()=>Math.random().toString(36).slice(2,8),WD=['SUN','MON','TUE','WED','THU','FRI','SAT'];
-const KIND={posts:'post',gallery:'gallery',memo:'memo',lines:'line'},LBL={post:'archive',gallery:'img',memo:'memo',line:'txt'};
+const KIND={posts:'post',e5:'log',gallery:'gallery',memo:'memo',lines:'line'},LBL={post:'archive',log:'e5',gallery:'img',memo:'memo',line:'txt'};
 let PEND='',admin=false,EM=false,ITEMS=[],PLANS=[],HOME={img:'',blocks:[]},TAG='',Q='',UNL={},EDITM=false,AK='todo',ADJ=null,FS=false;
 const now=new Date(),TODAY=ymd(now.getFullYear(),now.getMonth(),now.getDate()),CAL={y:now.getFullYear(),m:now.getMonth(),sel:TODAY};
 const G=i=>UNL[i.id]?{...i,...UNL[i.id]}:i,locked=i=>i.visibility==='locked'&&!admin&&!UNL[i.id];
@@ -372,20 +382,20 @@ const fenRows=f=>f.split(' ')[0].split('/').slice(0,8).map(r=>r.replace(/\d/g,d=
 function posHtml(b){let L=(b.text||'').split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(a=>a[0]);if(!L.length)L=DPOS;
  const a=L[dayN()%L.length],f=a[0].split(/\s+/),rows=fenRows(a[0]);if(rows.length<8)return'';
  return boardHtml(rows,8)+`<div class="cap"><span>${esc(a[1]||'')}</span><span>${f[1]==='b'?'BLACK TO MOVE':f[1]==='w'?'WHITE TO MOVE':''}</span></div>`}
-function tagsHtml(b){const m={};[['post','#/posts'],['gallery','#/gallery'],['memo','#/memo'],['line','#/lines']].forEach(([k,h])=>pub(k).forEach(i=>(i.tags||[]).forEach(t=>{const e=m[t]||(m[t]={c:0,k:{}});e.c++;e.k[h]=(e.k[h]||0)+1})));
+function tagsHtml(b){const m={};[['post','#/posts'],['log','#/e5'],['gallery','#/gallery'],['memo','#/memo'],['line','#/lines']].forEach(([k,h])=>pub(k).forEach(i=>(i.tags||[]).forEach(t=>{const e=m[t]||(m[t]={c:0,k:{}});e.c++;e.k[h]=(e.k[h]||0)+1})));
  const a=Object.entries(m).sort((x,y)=>y[1].c-x[1].c||x[0].localeCompare(y[0])).slice(0,b.n||24);
  return a.length?`<div class="tcl">${a.map(([t,e])=>`<button class="tc" data-tg2="${esc(t)}|${Object.entries(e.k).sort((x,y)=>y[1]-x[1])[0][0]}">#${esc(t)}<i>${e.c}</i></button>`).join('')}</div>`:''}
 const tlInner=(i,btn)=>`<div class="tl"><div class="md">${mdn(i.body)}</div><div class="tm"><span>${date(i.created_at)}</span>${btn?'<button class="bt" data-rr aria-label="shuffle">↻</button>':''}</div></div>`;
 function tlHtml(){const a=pub('line').sort((x,y)=>x.id-y.id);return a.length?tlInner(a[dayN()%a.length],a.length>1):''}
-function capHtml(){let tot=0;const rows=[['post','♟',1,'archive'],['memo','♞',3,'memo'],['line','♝',3,'txt'],['gallery','♜',5,'img']].map(([k,g,v,l])=>{const n=pub(k).length;tot+=n*v;return`<div class="cr"><span class="pc b">${g}&#xFE0E;</span><b>×${n}</b><small>${l}</small></div>`}).join('');
+function capHtml(){let tot=0;const rows=[['post','♟',1,'archive'],['log','♛',9,'e5'],['memo','♞',3,'memo'],['line','♝',3,'txt'],['gallery','♜',5,'img']].map(([k,g,v,l])=>{const n=pub(k).length;tot+=n*v;return`<div class="cr"><span class="pc b">${g}&#xFE0E;</span><b>×${n}</b><small>${l}</small></div>`}).join('');
  return`<div class="cpt">${rows}<div class="cr tt"><span>MATERIAL</span><b>+${tot.toLocaleString()}</b></div></div>`}
 /* chess widgets: scoresheet / heatmap / last move / puzzle / replay */
-const KS=['post','memo','line','gallery'],KG={post:'♟',memo:'♞',line:'♝',gallery:'♜'};
+const KS=['post','log','memo','line','gallery'],KG={post:'♟',log:'♛',memo:'♞',line:'♝',gallery:'♜'};
 const allPub=()=>KS.flatMap(k=>pub(k)).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
 const plain=h=>{const d=document.createElement('div');d.innerHTML=mdr(h);return(d.textContent||'').trim().replace(/\s+/g,' ')};
-const itName=(i,n)=>{const k=i.kind;return k==='post'?(i.title||'untitled'):k==='gallery'?(i.title||i.meta?.title||'img'):k==='memo'?(i.title||plain(i.body).slice(0,n)):plain(i.body).slice(0,n)};
+const itName=(i,n)=>{const k=i.kind;return k==='post'||k==='log'?(i.title||'untitled'):k==='gallery'?(i.title||i.meta?.title||'img'):k==='memo'?(i.title||plain(i.body).slice(0,n)):plain(i.body).slice(0,n)};
 function pgnHtml(b){const n=b.n||12,A=allPub(),tot=A.length;if(!tot)return'';const rows=[];
- const cell=i=>{const k=i.kind,at=k==='post'?`href="#/post/${i.id}"`:k==='memo'?`data-mv="${i.id}"`:k==='gallery'?`data-gi="${i.id}"`:'href="#/lines"';
+ const cell=i=>{const k=i.kind,at=k==='post'?`href="#/post/${i.id}"`:k==='log'?`href="#/e5/${i.id}"`:k==='memo'?`data-mv="${i.id}"`:k==='gallery'?`data-gi="${i.id}"`:'href="#/lines"';
   return`<a class="sm" ${at}><span class="pc b">${KG[k]}&#xFE0E;</span>${esc(itName(i,26))}</a>`};
  for(let k=Math.max(0,tot-n);k<tot;){const mv=Math.floor(k/2)+1;
   if(k%2===0){rows.push(`<div class="scr"><span class="sn">${mv}.</span>${cell(A[k])}${k+1<tot?cell(A[k+1]):'<span></span>'}</div>`);k+=2}
@@ -634,7 +644,15 @@ function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.t
  if(kind==='memo')h=`<div class="mas m">${L.map(it=>{const i=G(it);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="color:var(--mut)">LOCKED · click to open</span>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${tags(i)}${vb(i)}</span>${eb(i)}</div>`:''}</div>`}).join('')}</div>`;
  if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED</span>`:`<div class="md">${mdn(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${tags(i)}${vb(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
  return L.length?h:''}
-function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind);
+function essayRows(L,cur){return L.length?L.map(it=>{const i=G(it);return`<a class="e5i${cur&&cur.id===i.id?' on':''}" href="#/e5/${i.id}"><span class="t">${locked(i)?'LOCKED':esc(i.title||'untitled')}${vb(i)}</span><span class="d">${date(i.created_at)}</span></a>`}).join(''):'<p class="empty">no entries</p>'}
+function essayBody(it){if(!it)return'';const i=G(it);if(locked(i))return`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED · click to open</span>`;
+ return`<h1 class="e5t">${esc(i.title||'untitled')}</h1><div class="e5m"><span>${date(i.created_at,1)}</span>${tags(i)}${vb(i)}${eb(i)}</div><div class="md e5b">${mdr(i.body)}</div>`}
+function essayView(){const all=ITEMS.filter(i=>i.kind==='log'),sel=location.hash.replace('#/','').split('/')[1],was=!!$('#e5r'),y=scrollY;
+ const get=()=>all.filter(i=>(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let L=get(),cur=L.find(i=>String(i.id)===sel)||L[0];
+ app.innerHTML=head('e5')+`<input id="sq" placeholder="search" value="${esc(Q)}" autocomplete="off">`+chips(all)+`<div class="e5"><div class="e5l" id="e5l">${essayRows(L,cur)}</div><div class="e5r" id="e5r">${essayBody(cur)}</div></div>`;
+ $('#sq').oninput=e=>{Q=e.target.value;L=get();$('#e5l').innerHTML=essayRows(L,cur)};
+ if(was){scrollTo(0,y);if(sel&&innerWidth<=720)$('#e5r').scrollIntoView({block:'start'})}}
+function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind);if(kind==='log')return essayView();
  app.innerHTML=head(k,LBL[kind])+(kind==='gallery'?'':`<input id="sq" placeholder="search" value="${esc(Q)}" autocomplete="off">`)+(kind==='line'&&admin?`<form id="q" class="lq"><textarea name="t" rows="1" aria-label="write"></textarea><span class="dtw"><button type="button" class="btn" id="dtb" aria-label="date">DATE</button><button type="button" class="btn" id="dtx" aria-label="clear date" hidden>×</button><input type="datetime-local" name="dt" tabindex="-1" aria-hidden="true"></span><button class="btn pri">POST</button></form>`:'')+chips(all)+`<div id="lst">${list(k)}</div>`;
  if($('#sq'))$('#sq').oninput=e=>{Q=e.target.value;$('#lst').innerHTML=list(k)};
  const q=$('#q');if(q){const di=q.elements.dt,db=$('#dtb'),dx=$('#dtx'),sh=()=>{db.textContent=di.value?date(new Date(di.value).toISOString(),1):'DATE';dx.hidden=!di.value;db.classList.toggle('pri',!!di.value)};db.onclick=()=>{try{di.showPicker()}catch(e){di.focus();di.click()}};di.onchange=sh;dx.onclick=()=>{di.value='';sh()};const ta=q.elements.t,grow=()=>{ta.style.height='auto';ta.style.height=ta.scrollHeight+2+'px'};
@@ -651,9 +669,9 @@ function memoView(id){const it=ITEMS.find(i=>i.id==id);if(!it)return;const i=G(i
 /* forms (memo / line / gallery) */
 function form(kind,it){if(kind==='post'){closeM();return editor(it)}const i=it||{visibility:'public',tags:[],meta:{}},nw=!it;
  openM(`<h3>${LBL[kind].toUpperCase()} ${nw?'NEW':'EDIT'}</h3><form id="f">
- ${kind==='memo'?`<label>Title</label><input name="title" value="${esc(i.title)}">`:''}
- ${kind==='gallery'?`<label>Image URL (one per line)</label><textarea name="urls">${esc(i.meta?.src||'')}</textarea>${nw?'<label>or upload files</label><input type="file" name="files" accept="image/*" multiple>':''}<label>Caption</label><input name="body" value="${esc(i.body)}">`:`<label>Content${kind==='line'||kind==='memo'?' (markdown)':''}</label><textarea name="body" style="min-height:${kind==='line'?110:140}px">${esc(i.body)}</textarea>`}
- ${kind==='line'?`<label>Date</label><input type="datetime-local" name="dt" value="${nw?'':loc(i.created_at)}">`:''}
+ ${kind==='memo'||kind==='log'?`<label>Title</label><input name="title" value="${esc(i.title)}">`:''}
+ ${kind==='gallery'?`<label>Image URL (one per line)</label><textarea name="urls">${esc(i.meta?.src||'')}</textarea>${nw?'<label>or upload files</label><input type="file" name="files" accept="image/*" multiple>':''}<label>Caption</label><input name="body" value="${esc(i.body)}">`:`<label>Content${kind==='line'||kind==='memo'||kind==='log'?' (markdown)':''}</label><textarea name="body" style="min-height:${kind==='line'?110:kind==='log'?280:140}px">${esc(i.body)}</textarea>`}
+ ${kind==='line'||kind==='log'?`<label>Date</label><input type="datetime-local" name="dt" value="${nw?'':loc(i.created_at)}">`:''}
   <label>Tags (space separated)</label><input name="tags" value="${esc((i.tags||[]).join(' '))}">
  <label>Visibility</label><select name="vis">${[['public','Public'],['private','Private'],['locked','Locked']].map(([k,t])=>`<option value="${k}"${i.visibility===k?' selected':''}>${t}</option>`).join('')}</select>
  <input type="password" name="pw" placeholder="password" autocomplete="new-password" style="margin-top:6px">
@@ -661,7 +679,7 @@ function form(kind,it){if(kind==='post'){closeM();return editor(it)}const i=it||
  if($('[data-del]'))$('[data-del]').onclick=async()=>{if(!confirm('Delete?'))return;const r=await sb.from('items').delete().eq('id',i.id);if(r.error)return msg(r.error.message);closeM();await load();route()};
  $('#f').onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target);msg('Saving…');
   const base={kind,title:fd.get('title')||null,tags:[...new Set([...(fd.get('tags')||'').split(/[,\s]+/).map(s=>s.replace(/^#/,'')).filter(Boolean),...(kind==='memo'||kind==='line'?hash(fd.get('body')||''):[])])],visibility:fd.get('vis')},pw=fd.get('pw');
-  if(kind==='line'&&fd.get('dt'))base.created_at=new Date(fd.get('dt')).toISOString();
+  if((kind==='line'||kind==='log')&&fd.get('dt'))base.created_at=new Date(fd.get('dt')).toISOString();
    if(base.visibility==='locked'&&nw&&!pw)return msg('Locked items need a password');
   if(kind==='gallery'){const srcs=(fd.get('urls')||'').split('\n').map(s=>s.trim()).filter(Boolean);
    try{for(const f of fd.getAll('files')){if(f.size)srcs.push(await upload(f))}}catch(x){return msg('Upload failed: '+x.message)}
