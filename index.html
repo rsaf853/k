@@ -233,24 +233,24 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .bl.edit .rz:hover::after{background:var(--mut)}
 @media(max-width:720px){.bl .rz{display:none!important}}
 .bl.edit.fh .rz{right:0}
-.e5{display:grid;grid-template-columns:minmax(150px,210px) minmax(0,1fr);min-height:calc(100vh - 150px);min-height:calc(100svh - 150px);margin-top:14px;border-top:1px solid var(--fg);align-items:stretch}
-.e5l{padding-right:12px;position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto}
-.e5i{display:block;padding:7px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--fg)}
-.e5i .t{display:block;font-weight:600;font-size:13px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.e5i .d{font:500 10.5px var(--sans);color:var(--mut)}
-.e5i.on .t{text-decoration:underline;text-underline-offset:3px}.e5i:hover .t{text-decoration:underline;text-underline-offset:3px}
-.e5r{padding:18px 48px 0;min-width:0;min-height:100%;border-left:1px solid var(--line);align-self:stretch}
-.e5t{font:900 24px/1.25 var(--sans);letter-spacing:-.055em;margin:12px 0 12px}
-.e5m{font:500 11px var(--sans);color:var(--mut);margin-bottom:22px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.e5b{font:400 15px/1.7 var(--sans);letter-spacing:-.03em}.e5b p{margin:0 0 14px}
-@media(max-width:720px){.e5{display:block;min-height:0}.e5l{padding-right:0;position:static;max-height:none}.e5r{padding:18px 0 0;border-left:0;border-top:1px solid var(--fg);margin-top:14px}}
+.e5{display:grid;grid-template-columns:minmax(190px,250px) minmax(0,1fr);min-height:calc(100vh - 150px);min-height:calc(100svh - 150px);margin-top:14px;border-top:1px solid var(--fg);align-items:stretch}
+.e5l{margin-left:-10px;position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto}
+.e5i{display:grid;grid-template-columns:58px minmax(0,1fr);gap:8px;padding:12px 14px 12px 10px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--fg);transition:background .15s,color .15s}.e5i:hover{background:var(--soft)}.e5i.on{background:var(--fg);color:var(--bg)}
+.e5i .t{display:block;font-weight:600;font-size:14px;line-height:1.4;min-width:0;overflow-wrap:anywhere}.e5i .d{font:500 11px var(--sans);color:var(--mut);padding-top:2px}
+.e5i.on .d{color:inherit;opacity:.7}.e5i.on .vb{border-color:var(--bg)}
+.e5r{padding:12px 40px 0;min-width:0;min-height:100%;border-left:1px solid var(--line);align-self:stretch}
+.e5t{font:900 28px/1.25 var(--sans);letter-spacing:-.055em;margin:0 0 12px}
+.e5m{font:500 11px var(--sans);color:var(--mut);margin-bottom:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.e5b{font:400 15px/1.7 var(--sans);letter-spacing:-.03em;padding-top:12px}.e5b p{margin:0 0 14px}
+@media(max-width:720px){.e5{display:block;min-height:0}.e5l{margin-left:0;position:static;max-height:none}.e5r{padding:18px 0 0;border-left:0;border-top:1px solid var(--fg);margin-top:14px}}
 .e5s{font:500 13px var(--sans);color:var(--mut);margin:-2px 0 8px}
 /* banner page: Immortal Game board, one banner per piece */
 .bnh{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--fg);margin-bottom:22px}
 .bnh h1{font-size:34px;line-height:1}
 .bnmt{font:500 10px/1.6 var(--sans);letter-spacing:.1em;color:var(--mut);text-align:right;text-transform:uppercase}
-.bng{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:36px;align-items:start}
+.bng{display:grid;grid-template-columns:minmax(0,520px) 290px;gap:48px;align-items:start;justify-content:start}
 @media(max-width:820px){.bng{grid-template-columns:minmax(0,1fr);gap:28px}.bnmt{text-align:left}}
-.bnbx{max-width:680px;width:100%}
+.bnbx{max-width:520px;width:100%}
 .bnbw{display:grid;grid-template-columns:14px minmax(0,1fr);gap:0 6px;container-type:inline-size}
 .bnrk,.bnfl{font:500 9px var(--sans);color:var(--mut);letter-spacing:.1em}
 .bnrk{display:flex;flex-direction:column;justify-content:space-around}
@@ -559,12 +559,12 @@ function bannerPage(){FS=false;closeReader();document.body.classList.remove('pgd
  const D=banData(),S=D.slots,ed=admin&&EM,m=banMine(),fl=BNP.filter(p=>S[p.sq]&&S[p.sq].src),touch=matchMedia('(hover:none)').matches;
  const cell=p=>{const s=S[p.sq],f=s&&s.src;return`<button type="button" class="pc bnp${f?' f':''}${ed&&BSEL===p.sq?' a':''}" style="grid-area:${p.y+1}/${p.x+1}" data-sq="${p.sq}" aria-label="${p.sq}${f?' · '+esc(banName(s)):''}">${BNG[p.c]}&#xFE0E;</button>`};
  const cp=(k,v)=>`<button type="button" class="bncp" data-cp="${esc(v)}"><span>${k}</span><span>${esc(v)||'—'}</span><span>COPY</span></button>`;
- const mine=`<div class="bnpn bnmy"><div class="bnk"><span>MY BANNER</span>${ed?'<button type="button" class="btn" id="bme">EDIT</button>':''}</div>${m.src?`<img src="${esc(m.src)}" alt="${esc(m.title)}">`:'<div class="ph" style="margin-bottom:8px">NO BANNER</div>'}${cp('SITE TITLE',m.title)}${cp('BANNER IMAGE',m.src)}${cp('SITE LINK',m.url)}</div>`;
+ const mine=`<div class="bnmy">${ed?'<div class="bnk" style="justify-content:flex-end"><button type="button" class="btn" id="bme">EDIT</button></div>':''}${m.src?`<img src="${esc(m.src)}" alt="${esc(m.title)}">`:'<div class="ph" style="margin-bottom:8px">NO BANNER</div>'}${cp('SITE TITLE',m.title)}${cp('BANNER IMAGE',m.src)}${cp('SITE LINK',m.url)}</div>`;
  let rest='';
  if(!ed)rest=`<div class="bnl"><div class="bnk" style="min-height:0;padding-bottom:8px">OTHER SITES · ${fl.length} LINKS</div>${fl.map((p,i)=>{const s=S[p.sq],h=s.href||'';return`<a class="bnr" data-sq="${p.sq}" href="${/^(https?:|#)/.test(h)?esc(h):'#'}" target="_blank" rel="noopener"><i>${p2(i+1)}</i><span>${BNG[p.c]}${p.sq}</span><b>${esc(banName(s)||'—')}</b></a>`}).join('')}</div>`;
  else if(BSEL){const s=S[BSEL]||{},p=BNP.find(x=>x.sq===BSEL);rest=`<div class="bnf"><div class="bnk">PLACE A BANNER · ${BNG[p.c]} ${BSEL.toUpperCase()}</div><label>① IMAGE</label><div class="r"><input id="bfs" placeholder="Image URL" value="${esc(s.src||'')}"><button type="button" class="btn" id="bfu">UPLOAD</button><input type="file" id="bff" accept="image/*" hidden></div><label>② LINK</label><input id="bfh" placeholder="https://…" value="${esc(s.href||'')}"><label>③ NAME · EMPTY = DOMAIN</label><input id="bfn" value="${esc(s.name||'')}"><div class="r sv"><button type="button" class="btn pri" id="bsv" style="flex:1">SAVE</button><button type="button" class="btn" id="brm">REMOVE</button></div><p id="st" class="st"></p></div>`}
  else rest='<div class="bnl"><p class="st">Select a piece to place a banner.</p></div>';
- app.innerHTML=`${ed?`<div class="bneb"><span>EDIT MODE · ${fl.length} OF ${BNP.length} PIECES HAVE A BANNER</span><button type="button" class="btn" id="bdone">DONE</button></div>`:''}<div class="bnh"><div><h1>The Immortal Game</h1></div><div class="bnmt">Anderssen — Kieseritzky<br>London · 1851 · 23.Be7#</div></div><div class="bng"><div class="bnbx"><div class="bnbw"><div class="bnrk">${[8,7,6,5,4,3,2,1].map(n=>`<span>${n}</span>`).join('')}</div><div class="bnbd${ed?' ed':''}">${BNP.map(cell).join('')}<div class="bnpop" hidden></div></div><div class="bnfl">${[...'abcdefgh'].map(x=>`<span>${x}</span>`).join('')}</div></div><div class="bnlg"><span>${ed?'Click a piece to edit':touch?'Tap a piece to see its banner':'Hover a piece to see its banner'}</span><span>${fl.length} links · ${BNP.length-fl.length} empty</span></div></div><aside>${mine}${rest}</aside></div>`;
+ app.innerHTML=`${ed?`<div class="bneb"><span>EDIT MODE · ${fl.length} OF ${BNP.length} PIECES HAVE A BANNER</span><button type="button" class="btn" id="bdone">DONE</button></div>`:''}<div class="bnh"><div><h1>The Immortal Game</h1></div><div class="bnmt">Anderssen — Kieseritzky<br>London · 1851 · 23.Be7#</div></div><div class="bng"><div class="bnbx"><div class="bnbw"><div class="bnrk">${[8,7,6,5,4,3,2,1].map(n=>`<span>${n}</span>`).join('')}</div><div class="bnbd${ed?' ed':''}">${BNP.map(cell).join('')}<div class="bnpop" hidden></div></div><div class="bnfl">${[...'abcdefgh'].map(x=>`<span>${x}</span>`).join('')}</div></div></div><aside>${mine}${rest}</aside></div>`;
  const bd=$('.bnbd'),tip=$('.bnpop'),hide=()=>{tip.hidden=true;BTIP=''};
  const place=el=>{const B=bd.getBoundingClientRect(),r=el.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;let l=r.left-B.left+r.width/2-w/2;l=Math.max(0,Math.min(l,B.width-w));let t=r.bottom-B.top+6;if(t+h>B.height)t=r.top-B.top-h-6;tip.style.left=l+'px';tip.style.top=Math.max(0,t)+'px'};
  const show=el=>{const q=el.dataset.sq,s=S[q];if(ed||!s||!s.src)return hide();BTIP=q;const n=banName(s);tip.innerHTML=`<img src="${esc(s.src)}" alt=""><b>${esc(n)}</b><small>${esc(banDom(s.href||''))}</small>`;tip.hidden=false;place(el);tip.querySelector('img').onload=()=>place(el)};
@@ -592,7 +592,7 @@ function banMineForm(){const m=banMine();openM(`<h3>MY BANNER</h3><label>Site ti
 /* free layout: every block has a width (s = columns out of 12) and a place in the order; optional fixed height h (px) */
 const SPANS=[[3,'1/4'],[4,'1/3'],[6,'1/2'],[8,'2/3'],[9,'3/4'],[12,'FULL']],sp=b=>b.s||(b.c?b.c*2:(b.w===2?12:6));
 const NOEDIT=['calendar','chess960','todayline','captured','heat','lastmove','eval'];
-function normLayout(){const C=Array.isArray(HOME.cols)?HOME.cols:null;
+function normLayout(){if(HOME.blocks.some(b=>b.t==='banners')){banData();HOME.blocks=HOME.blocks.filter(b=>b.t!=='banners')}const C=Array.isArray(HOME.cols)?HOME.cols:null;
  HOME.blocks.forEach(b=>{if(C){b.s=C[Math.min(C.length-1,Math.max(0,b.c|0))]||6;delete b.c;b.w=b.s===12?2:1}delete b.r});if(C)delete HOME.cols}
 function blockHtml(b){const lab=b.t==='note'?(b.title||''):EDITM&&b.t!=='image'&&b.t!=='calendar'?BT[b.t]:'';
  return`<section class="bl${EDITM?' edit':''}${b.h?' fh':''}" data-b="${b.id}" data-sp="${sp(b)}" data-v="${b.v||''}"${b.h?` style="height:${b.h}px"`:''}>${EDITM?`<div class="bc"><button class="bt grip" data-grip title="Drag to move">⠿ MOVE</button><span class="szc">${sp(b)}/12</span><button class="bt" data-bm="up">↑</button><button class="bt" data-bm="dn">↓</button>${SPANS.map(([c,l])=>`<button class="bt${sp(b)===c?' pri':''}" data-bm="c" data-c="${c}">${l}</button>`).join('')}<button class="bt${b.v?' pri':''}" data-bm="v">SHOW · ${b.v==='pc'?'PC':b.v==='m'?'MOBILE':'ALL'}</button>${!NOEDIT.includes(b.t)?'<button class="bt" data-bm="ed">EDIT</button>':''}<button class="bt" data-bm="rm">DELETE</button></div>`:''}${lab?`<h6>${esc(lab)}</h6>`:''}${blockBody(b)}${EDITM?'<div class="rh" data-rh title="Drag = height · double-click = auto"></div><div class="rz" data-rz title="Drag = width"></div>':''}</section>`}
@@ -798,9 +798,9 @@ function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.t
  if(kind==='memo')h=`<div class="mas m">${L.map(it=>{const i=G(it);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="color:var(--mut)">LOCKED · click to open</span>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${tags(i)}${vb(i)}</span>${eb(i)}</div>`:''}</div>`}).join('')}</div>`;
  if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED</span>`:`<div class="md">${mdn(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${tags(i)}${vb(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
  return L.length?h:''}
-function essayRows(L,cur){return L.length?L.map(it=>{const i=G(it);return`<a class="e5i${cur&&cur.id===i.id?' on':''}" href="#/log/${i.id}"><span class="t">${locked(i)?'LOCKED':esc(i.title||'untitled')}${vb(i)}</span><span class="d">${date(i.created_at)}</span></a>`}).join(''):'<p class="empty">no entries</p>'}
+function essayRows(L,cur){return L.length?L.map(it=>{const i=G(it);return`<a class="e5i${cur&&cur.id===i.id?' on':''}" href="#/log/${i.id}"><span class="d">${date(i.created_at)}</span><span class="t">${locked(i)?'LOCKED':esc(i.title||'untitled')}${vb(i)}</span></a>`}).join(''):'<p class="empty">no entries</p>'}
 function essayBody(it){if(!it)return'';const i=G(it);if(locked(i))return`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED · click to open</span>`;
- return`<h1 class="e5t">${esc(i.title||'untitled')}</h1>${i.meta?.sub?`<div class="e5s">${esc(i.meta.sub)}</div>`:''}<div class="e5m"><span>${date(i.created_at,1)}</span>${tags(i)}${vb(i)}${eb(i)}</div><div class="md e5b">${mdr(i.body)}</div>`}
+ return`<div class="e5m"><span>${date(i.created_at,1)}</span>${tags(i)}${vb(i)}${eb(i)}</div><h1 class="e5t">${esc(i.title||'untitled')}</h1>${i.meta?.sub?`<div class="e5s">${esc(i.meta.sub)}</div>`:''}<div class="md e5b">${mdr(i.body)}</div>`}
 function essayView(){const all=ITEMS.filter(i=>i.kind==='log'),sel=location.hash.replace('#/','').split('/')[1],was=!!$('#e5r'),y=scrollY;
  const get=()=>all.filter(i=>(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let L=get(),cur=L.find(i=>String(i.id)===sel)||L[0];
  app.innerHTML=head('log')+`<input id="sq" placeholder="search" value="${esc(Q)}" autocomplete="off">`+chips(all)+`<div class="e5"><div class="e5l" id="e5l">${essayRows(L,cur)}</div><div class="e5r" id="e5r">${essayBody(cur)}</div></div>`;
@@ -875,7 +875,7 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(x=c('[data-pk]')){const p=PLANS.find(p=>p.id==x.dataset.pk);p.done=!p.done;paintCal();sb.from('plans').update({done:p.done}).eq('id',p.id).then(r=>r.error&&alert(r.error.message));return}
  if(x=c('[data-pa]')){AK=x.dataset.pa;return paintCal()}
  if(c('[data-em]')){EDITM=!EDITM;return home()}
- if(c('[data-addb]')){openM(`<h3>ADD BLOCK</h3><div class="pk">${Object.keys(BT).filter(t=>t!=='calendar'||!HOME.blocks.some(b=>b.t==='calendar')).map(t=>`<button class="btn" data-pick="${t}">${BT[t]}</button>`).join('')}</div>`);return}
+ if(c('[data-addb]')){openM(`<h3>ADD BLOCK</h3><div class="pk">${Object.keys(BT).filter(t=>t!=='banners'&&(t!=='calendar'||!HOME.blocks.some(b=>b.t==='calendar'))).map(t=>`<button class="btn" data-pick="${t}">${BT[t]}</button>`).join('')}</div>`);return}
  if(x=c('[data-pick]')){const t=x.dataset.pick,b={id:uid(),t,w:t==='banners'?2:1,s:t==='banners'?12:6,n:t==='tags'?24:t==='pgn'?12:6};HOME.blocks.push(b);saveHome();closeM();home();if(['image','note','links','position','puzzle','replay','banners'].includes(t))blockForm(b);return}
  if(c('[data-himg]')){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;try{HOME.img=await upload(f.files[0]);await saveHome();paintImg()}catch(x){alert('Upload failed: '+x.message)}};f.click();return}
  if(c('[data-iadj]'))return imgAdjust();
