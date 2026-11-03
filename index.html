@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-kopubworld@1.0/css/all.css">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=Noto+Serif+KR:wght@400;700&family=Roboto:wght@400;700&family=Orbit&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#fff;--fg:#111;--mut:#8b8b8b;--line:#e9e9e9;--soft:#f6f6f6;--hb:#000;--ht:#fff;--hl:rgba(0,0,0,.055);--hl2:rgba(0,0,0,.11);--iw:300px;--gc:3;--mc:3;--sans:"Pretendard JP Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif}
+:root{--bg:#fff;--fg:#111;--mut:#8b8b8b;--line:#e9e9e9;--soft:#f6f6f6;--hb:#000;--ht:#fff;--hl:rgba(0,0,0,.055);--hl2:rgba(0,0,0,.11);--iw:310px;--gc:3;--mc:3;--sans:"Pretendard JP Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0d0d;--fg:#f2f2f2;--mut:#808080;--line:#262626;--soft:#161616;--hb:#fff;--ht:#000;--hl:rgba(255,255,255,.09);--hl2:rgba(255,255,255,.17)}}
 :root[data-theme="dark"]{--bg:#0d0d0d;--fg:#f2f2f2;--mut:#808080;--line:#262626;--soft:#161616;--hb:#fff;--ht:#000;--hl:rgba(255,255,255,.09);--hl2:rgba(255,255,255,.17)}
 *{box-sizing:border-box;border-radius:0;-webkit-tap-highlight-color:transparent}
@@ -59,6 +59,7 @@ h1{font-size:24px;font-weight:900;margin:0;letter-spacing:-.055em}.sub{color:var
 .mas{column-gap:12px}.mas.g{column-count:var(--gc)}.mas.m{column-count:var(--mc)}
 .gi{position:relative;break-inside:avoid;margin:0 0 12px;cursor:zoom-in;background:var(--soft)}
 .gi img,.gg img{display:block;width:100%;filter:grayscale(1);transition:filter .35s}
+.gi img{border:1px solid var(--fg)}
 .gi:hover img,.gg img:hover,.gi:active img,.gg img:active{filter:none}
 .gi .cp{padding:6px 2px 0;font-size:12px;color:var(--mut);background:var(--bg)}
 .gi .eb{position:absolute;right:6px;top:6px;background:var(--bg);border:1px solid var(--fg);padding:0 7px;font-size:10px;font-weight:700}
@@ -498,20 +499,20 @@ async function load(){const my=++loadSeq;
   const [r,h,p]=await Promise.all([
    sb.from(admin?'items':'feed').select('*').order('created_at',{ascending:false}),
    sb.from('settings').select('value').eq('key','home').maybeSingle(),
-   admin?sb.from('plans').select('*').order('id'):Promise.resolve({data:[]})]);
+   sb.from('plans').select('*').order('id')]);
   if(my!==loadSeq)return false; /* a newer load started; drop this stale result */
   ITEMS=r.data||[];HOME=h.data?.value?.blocks?h.data.value:DEF();normLayout();PLANS=p.data||[];
   paintImg();
   if(r.error){app.innerHTML='<p class="empty">Load failed: '+esc(r.error.message)+'</p>';return false}
   return true
  }catch(x){app.innerHTML='<p class="empty">Load failed: '+esc(x.message||x)+'</p>';return false}}
-const IMG_DEF={iw:250,ix:50,iy:50,iz:100};
-const applyIw=()=>{const r=document.documentElement.style,w=HOME.iw||250;if(innerWidth<=720){r.removeProperty('--iw');return}r.setProperty('--iw',(innerWidth<=1024?Math.round(w*.68):w)+'px')};
+const IMG_DEF={iw:310,ix:50,iy:50,iz:100};
+const applyIw=()=>{const r=document.documentElement.style,w=HOME.iw||310;if(innerWidth<=720){r.removeProperty('--iw');return}r.setProperty('--iw',(innerWidth<=1024?Math.round(w*.68):w)+'px')};
 const paintVars=()=>{const s=$('#im').style;s.setProperty('--himg',HOME.img?`url("${HOME.img}")`:'none');s.setProperty('--ix',(HOME.ix??50)+'%');s.setProperty('--iy',(HOME.iy??50)+'%');s.setProperty('--iz',(HOME.iz||100)/100);applyIw()};
 const paintImg=()=>{paintVars();$('#im').innerHTML='<div class="imi"></div>'+(em()?'<div class="imb"><button class="bt" data-himg>IMAGE</button><button class="bt" data-iadj>ADJUST</button></div>':'')};
 addEventListener('resize',applyIw);
 const IU={iw:'px',ix:'%',iy:'%',iz:'%'};
-function imgAdjust(){ADJ={iw:HOME.iw||250,ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100};
+function imgAdjust(){ADJ={iw:HOME.iw||310,ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100};
  const row=(k,l,min,max)=>`<label>${l} <span id="v_${k}">${ADJ[k]}${IU[k]}</span></label><input type="range" data-ia="${k}" min="${min}" max="${max}" value="${ADJ[k]}">`;
  openM(`<h3>IMAGE ADJUST</h3>${row('iw','Width',120,420)}${row('ix','Position X',0,100)}${row('iy','Position Y',0,100)}${row('iz','Zoom',100,300)}<div class="acts"><button type="button" class="btn" data-ireset>RESET</button><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" data-isave>SAVE</button></div>`)}
 const saveHome=async()=>{const r=await sb.from('settings').upsert({key:'home',value:HOME});if(r.error)msg('Save failed: '+r.error.message)};
@@ -743,7 +744,7 @@ function blockHtml(b){const lab=b.t==='note'?(b.title||''):EDITM&&b.t!=='image'&
 /* ---- widget grid ----
    Square cells: row height = column width, so a block of w x h cells keeps its proportions at every window width.
    >= 760px content width: 12 columns (editable). Narrower: 6 columns, sizes halved automatically. <= 720px viewport: single column. */
-const GX=16,GY=16,MINROW=28; /* rows are square (= column width) but never shorter than MINROW, so text/calendar blocks don't get clipped on narrow windows */
+const GX=8,GY=8,MINROW=28; /* rows are square (= column width) but never shorter than MINROW, so text/calendar blocks don't get clipped on narrow windows */
 let GM={cw:0,rh:0,n:NF,f:1},LAY={},MO=null,MR=0,DR=null;
 const gW=k=>GM.cw*k+GX*(k-1),gH=n=>GM.rh*n+GY*(n-1),gRows=h=>Math.max(1,Math.ceil((h+GY-1)/(GM.rh+GY)));
 function gridMetrics(c){const W=c.clientWidth,n=W>=760?NF:NF/2,cw=(W-GX*(n-1))/n,rh=Math.max(cw,MINROW);GM={cw,rh,n,f:NF/n};c.style.setProperty('--cw',cw+'px');c.style.setProperty('--rh',rh+'px');c.dataset.n=n;return GM}
