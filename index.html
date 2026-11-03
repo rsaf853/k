@@ -497,12 +497,13 @@ const DEF=()=>({img:'',blocks:[{id:uid(),t:'calendar',w:1},{id:uid(),t:'posts',w
 let loadSeq=0;
 async function load(){const my=++loadSeq;
  try{
-  const [r,h,p]=await Promise.all([
+  const [r,h,p,ec]=await Promise.all([
    sb.from(admin?'items':'feed').select('*').order('created_at',{ascending:false}),
    sb.from('settings').select('value').eq('key','home').maybeSingle(),
-   sb.from('plans').select('*').order('id')]);
+   sb.from('plans').select('*').order('id'),
+   admin?Promise.resolve({data:null}):sb.rpc('eval_counts')]);
   if(my!==loadSeq)return false; /* a newer load started; drop this stale result */
-  ITEMS=r.data||[];HOME=h.data?.value?.blocks?h.data.value:DEF();normLayout();PLANS=p.data||[];
+  ITEMS=r.data||[];EVC=null;if(ec&&Array.isArray(ec.data)){EVC={pub:0,hid:0};ec.data.forEach(x=>{if(x.visibility==='public')EVC.pub+=+x.n;else EVC.hid+=+x.n})}HOME=h.data?.value?.blocks?h.data.value:DEF();normLayout();PLANS=p.data||[];
   paintImg();
   if(r.error){app.innerHTML='<p class="empty">Load failed: '+esc(r.error.message)+'</p>';return false}
   return true
@@ -579,7 +580,8 @@ function heatHtml(){const m={};allPub().forEach(i=>{const d=dayOf(i.created_at);
 const lmFmt=ms=>{let s=Math.max(0,Math.floor(ms/1000));const d=Math.floor(s/86400);s%=86400;return(d?d+'d ':'')+p2(Math.floor(s/3600))+':'+p2(Math.floor(s%3600/60))+':'+p2(s%60)};
 function lmHtml(){const A=allPub();if(!A.length)return'';const l=A[A.length-1],t=+new Date(l.created_at);
  return`<div class="lmk"><span class="k">LAST MOVE</span><span class="t" data-lm="${t}">${lmFmt(Date.now()-t)}</span><span class="w">${KG[l.kind]}&#xFE0E; ${esc(itName(l,30))}</span></div>`}
-function evHtml(){const K=ITEMS.filter(i=>KS.includes(i.kind)),W=K.filter(i=>!i.visibility||i.visibility==='public').length,B=K.length-W,t=W+B;if(!t)return'';
+let EVC=null;
+function evHtml(){const K=ITEMS.filter(i=>KS.includes(i.kind));let W=K.filter(i=>!i.visibility||i.visibility==='public').length,B=K.length-W;if(!admin&&EVC){W=EVC.pub;B=EVC.hid}const t=W+B;if(!t)return'';
  const e=(W-B)/t*10,pc=Math.max(4,Math.min(96,W/t*100)),txt=!B?'1–0':!W?'0–1':(e>0?'+':'')+e.toFixed(1),lead=W>=B;
  return`<div class="ev"><div class="bar"><div class="w" style="width:${pc.toFixed(1)}%">${lead?txt:''}</div><div class="k">${lead?'':txt}</div></div><div class="cap"><span>PUBLIC ${W}</span><span>HIDDEN ${B}</span></div></div>`}
 setInterval(()=>{document.querySelectorAll('[data-lm]').forEach(e=>e.textContent=lmFmt(Date.now()-(+e.dataset.lm)))},1000);
