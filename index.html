@@ -238,6 +238,19 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .bl.edit .rz{display:block;position:absolute;top:0;bottom:0;right:-10px;width:16px;cursor:ew-resize;touch-action:none;z-index:5}
 .bl.edit .rz::after{content:"";position:absolute;left:6px;top:50%;height:30px;margin-top:-15px;width:4px;background:var(--fg);border-radius:2px}
 .bl.edit .rz:hover::after{background:var(--mut)}
+/* widget grid */
+.blocks.eg{background-image:linear-gradient(var(--line),var(--line));background-size:var(--cw) var(--rh);background-repeat:space}
+.bl.edit{background:var(--bg)}
+.bl.edit .bc{position:absolute;top:0;left:0;right:0;z-index:7;margin:0;padding:3px;background:color-mix(in srgb,var(--bg) 90%,transparent);border-bottom:1px solid var(--line)}
+.bl.edit h6{margin-top:0}
+.gfoot{position:absolute;z-index:8;pointer-events:none;border:2px dashed var(--fg);background:rgba(128,128,128,.14);box-sizing:border-box}
+.bl .rk{display:none}
+.bl.edit .rk{display:block;position:absolute;right:-6px;bottom:-6px;width:20px;height:20px;cursor:nwse-resize;touch-action:none;z-index:6}
+.bl.edit.fh .rk{right:0;bottom:0}
+.bl.edit .rk::after{content:"";position:absolute;right:5px;bottom:5px;width:8px;height:8px;border-right:3px solid var(--fg);border-bottom:3px solid var(--fg)}
+.bl.fh{scrollbar-width:none}.bl.fh::-webkit-scrollbar{display:none}
+.blocks[data-n="6"] .grip,.blocks[data-n="6"] .rh,.blocks[data-n="6"] .rz,.blocks[data-n="6"] .rk,.blocks[data-n="6"] .szc{display:none!important}
+@media(max-width:720px){.bl .rk{display:none!important}.bl.edit .bc{position:static;margin:-2px 0 8px;padding:0;background:none;border:0}}
 @media(max-width:720px){.bl .rz{display:none!important}}
 .bl.edit.fh .rz{right:0}
 .e5{display:grid;grid-template-columns:minmax(190px,250px) minmax(0,1fr);min-height:calc(100vh - 150px);min-height:calc(100svh - 150px);margin-top:14px;border-top:1px solid var(--fg);align-items:stretch}
@@ -263,8 +276,12 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .bng{--pm:16px}
 @media(max-width:1100px){.bng{--pm:12px}}
 .bnh,.bng{padding-left:6px}
-.bnev{margin-left:1px;width:14px;justify-self:start}
+.bnev{margin-left:var(--evm,4px);width:14px;justify-self:start}
 @media(max-width:820px){.bnh,.bng{padding-left:0}}
+/* header meta: right edge lines up with the banner image (= aside width, which stops --pm short of the grid edge) */
+.bnh{--pm:16px;padding-right:var(--pm)}.bnmt{margin-right:-.1em}
+@media(max-width:1100px){.bnh{--pm:12px}}
+@media(max-width:820px){.bnh{padding-right:0}}
 
 .bns{min-width:0}.bns .lmk{margin-bottom:16px}
 .bnsb{border:1px solid var(--fg)}.bnsh,.bnsr{display:grid;grid-template-columns:28px 1fr 1fr;align-items:center}
@@ -330,11 +347,12 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 /* unified scrollbar: narrow (4px), square-edged, same everywhere */
 ::-webkit-scrollbar{width:4px;height:4px;background:transparent}
 ::-webkit-scrollbar-track{background:transparent;border-radius:0}
-::-webkit-scrollbar-thumb{background:var(--fg);border:0;border-radius:0;min-height:28px;min-width:28px}
+::-webkit-scrollbar-thumb{background:transparent;border:0;border-radius:0;min-height:28px;min-width:28px}
+html.sb ::-webkit-scrollbar-thumb{background:var(--fg)} /* html.sb = scrolled within the last second; idle = hidden */
 ::-webkit-scrollbar-thumb:hover{background:var(--mut)}
 ::-webkit-scrollbar-button{display:none;width:0;height:0}
 ::-webkit-scrollbar-corner{background:transparent}
-@supports not selector(::-webkit-scrollbar){*{scrollbar-width:thin;scrollbar-color:var(--fg) transparent}}
+@supports not selector(::-webkit-scrollbar){*{scrollbar-width:thin;scrollbar-color:transparent transparent}html.sb *{scrollbar-color:var(--fg) transparent}}
 .puzzle-square{overflow:hidden}.puzzle-square.last{background:color-mix(in srgb,var(--fg) 13%,transparent)}.puzzle-square .co{position:absolute;font:600 9px/1 var(--sans);font-style:normal;color:var(--mut);pointer-events:none}.puzzle-square .cr{left:3px;top:3px}.puzzle-square .cf{right:3px;bottom:3px}
 .puzzle-square.dot::after{content:"";position:absolute;width:26%;height:26%;border-radius:50%;background:var(--fg);opacity:.32;pointer-events:none}
 .puzzle-square.pcap::after{content:"";position:absolute;inset:5%;border:3px solid var(--fg);border-radius:50%;opacity:.32;pointer-events:none}
@@ -637,7 +655,10 @@ function bannerPage(){FS=false;closeReader();document.body.classList.remove('pgd
   if(!s||!s.src)return hide();
   if(BPT==='touch'&&BTIP!==q)return show(b);
   if(/^(https?:|#)/.test(s.href||''))window.open(s.href,'_blank','noopener')});
- const L=$('.bnl');if(L&&!ed){L.addEventListener('click',e=>{const r=e.target.closest('.bnr');if(!r||innerWidth<=820)return;const q=r.dataset.sq;if(BTIP!==q){e.preventDefault();const b=bd.querySelector(`[data-sq="${q}"]`);b&&show(b)}});const off=()=>bd.querySelectorAll('.bnp.hv').forEach(x=>x.classList.remove('hv'));L.addEventListener('mouseover',e=>{off();const r=e.target.closest('[data-sq]'),q=r&&bd.querySelector(`[data-sq="${r.dataset.sq}"]`);q&&q.classList.add('hv')});L.addEventListener('mouseleave',off)}
+ const L=$('.bnl');if(L&&!ed){L.addEventListener('pointerdown',e=>{BPT=e.pointerType});L.addEventListener('click',e=>{const r=e.target.closest('.bnr');if(!r||innerWidth<=820)return;const q=r.dataset.sq;if(BTIP!==q){e.preventDefault();const b=bd.querySelector(`[data-sq="${q}"]`);b&&show(b)}});const off=()=>bd.querySelectorAll('.bnp.hv').forEach(x=>x.classList.remove('hv'));L.addEventListener('mouseover',e=>{off();const r=e.target.closest('[data-sq]'),q=r&&bd.querySelector(`[data-sq="${r.dataset.sq}"]`);
+   if(!q){if(BPT!=='touch')hide();return}q.classList.add('hv');
+   if(BPT!=='touch'&&innerWidth>820&&BTIP!==r.dataset.sq)show(q)}); /* hovering a link also pops its banner under the piece on the board */
+  L.addEventListener('mouseleave',()=>{off();if(BPT!=='touch')hide()})}
  app.querySelectorAll('[data-cp]').forEach(b=>b.onclick=async()=>{const v=b.dataset.cp;if(!v)return;try{await navigator.clipboard.writeText(v)}catch(x){const t=document.createElement('textarea');t.value=v;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}const l=b.lastElementChild,o=l.textContent;b.classList.add('ok');l.textContent='COPIED ✓';setTimeout(()=>{b.classList.remove('ok');l.textContent=o},1400)});
  if($('#bdone'))$('#bdone').onclick=()=>$('#mode').click();
  if($('#bme'))$('#bme').onclick=()=>banMineForm();
@@ -655,49 +676,78 @@ const NOEDIT=['calendar','chess960','todayline','captured','heat','lastmove','ev
 function normLayout(){if(HOME.blocks.some(b=>b.t==='banners')){banData();HOME.blocks=HOME.blocks.filter(b=>b.t!=='banners')}const C=Array.isArray(HOME.cols)?HOME.cols:null;
  HOME.blocks.forEach(b=>{if(C){b.s=C[Math.min(C.length-1,Math.max(0,b.c|0))]||6;delete b.c;b.w=b.s===12?2:1}delete b.r});if(C)delete HOME.cols}
 function blockHtml(b){const lab=b.t==='note'?(b.title||''):EDITM&&b.t!=='image'&&b.t!=='calendar'?BT[b.t]:'';
- return`<section class="bl${EDITM?' edit':''}${b.h?' fh':''}" data-b="${b.id}" data-sp="${sp(b)}" data-v="${b.v||''}"${b.h?` style="height:${b.h}px"`:''}>${EDITM?`<div class="bc"><button class="bt grip" data-grip title="Drag to move">⠿ MOVE</button><span class="szc">${sp(b)}/12</span><button class="bt" data-bm="up">↑</button><button class="bt" data-bm="dn">↓</button>${SPANS.map(([c,l])=>`<button class="bt${sp(b)===c?' pri':''}" data-bm="c" data-c="${c}">${l}</button>`).join('')}<button class="bt${b.v?' pri':''}" data-bm="v">SHOW · ${b.v==='pc'?'PC':b.v==='m'?'MOBILE':'ALL'}</button>${!NOEDIT.includes(b.t)?'<button class="bt" data-bm="ed">EDIT</button>':''}<button class="bt" data-bm="rm">DELETE</button></div>`:''}${lab?`<h6>${esc(lab)}</h6>`:''}${blockBody(b)}${EDITM?'<div class="rh" data-rh title="Drag = height · double-click = auto"></div><div class="rz" data-rz title="Drag = width"></div>':''}</section>`}
-let MO=null,MR=0;
-function masonry(){const c=$('#bks');if(!c)return;const all=[...c.children].filter(e=>e.classList.contains('bl')),vis=e=>getComputedStyle(e).display!=='none',bl=all.filter(vis),rs=e=>{e.style.left=e.style.top=e.style.width='';e.classList.remove('top0')};
+ return`<section class="bl${EDITM?' edit':''}${b.rows||b.h?' fh':''}" data-b="${b.id}" data-sp="${sp(b)}" data-v="${b.v||''}">${EDITM?`<div class="bc"><button class="bt grip" data-grip title="Drag to move">⠿ MOVE</button><span class="szc">${sp(b)}×${b.rows||'auto'}</span><button class="bt" data-bm="up">↑</button><button class="bt" data-bm="dn">↓</button>${SPANS.map(([c,l])=>`<button class="bt${sp(b)===c?' pri':''}" data-bm="c" data-c="${c}">${l}</button>`).join('')}<button class="bt${b.v?' pri':''}" data-bm="v">SHOW · ${b.v==='pc'?'PC':b.v==='m'?'MOBILE':'ALL'}</button>${!NOEDIT.includes(b.t)?'<button class="bt" data-bm="ed">EDIT</button>':''}<button class="bt" data-bm="rm">DELETE</button></div>`:''}${lab?`<h6>${esc(lab)}</h6>`:''}${blockBody(b)}${EDITM?'<div class="rh" data-rh title="Drag = height · double-click = auto"></div><div class="rz" data-rz title="Drag = width"></div><div class="rk" data-rk title="Drag = width + height"></div>':''}</section>`}
+/* ---- widget grid ----
+   Square cells: row height = column width, so a block of w x h cells keeps its proportions at every window width.
+   >= 760px content width: 12 columns (editable). Narrower: 6 columns, sizes halved automatically. <= 720px viewport: single column. */
+const GX=16,GY=16,MINROW=72; /* rows are square (= column width) but never shorter than MINROW, so text/calendar blocks don't get clipped on narrow windows */
+let GM={cw:0,rh:0,n:12,f:1},LAY={},MO=null,MR=0,DR=null;
+const gW=k=>GM.cw*k+GX*(k-1),gH=n=>GM.rh*n+GY*(n-1),gRows=h=>Math.max(1,Math.ceil((h+GY-1)/(GM.rh+GY)));
+function gridMetrics(c){const W=c.clientWidth,n=W>=760?12:6,cw=(W-GX*(n-1))/n,rh=Math.max(cw,MINROW);GM={cw,rh,n,f:12/n};c.style.setProperty('--cw',cw+'px');c.style.setProperty('--rh',rh+'px');c.dataset.n=n;return GM}
+/* first-fit / collision-free placement. prio block keeps its own x,y; others are pushed down. */
+function gridPlace(items,free,prio){const out={},R=[];
+ const hit=(x,y,w,h)=>R.some(r=>x<r.x+r.w&&x+w>r.x&&y<r.y+r.h&&y+h>r.y);
+ const put=(it,x,y)=>{x=Math.max(0,Math.min(GM.n-it.w,x));y=Math.max(0,y);while(hit(x,y,it.w,it.h))y++;R.push(out[it.id]={x,y,w:it.w,h:it.h})};
+ const fit=it=>{for(let y=0;;y++)for(let x=0;x<=GM.n-it.w;x++)if(!hit(x,y,it.w,it.h)){R.push(out[it.id]={x,y,w:it.w,h:it.h});return}};
+ const key=it=>[it.y==null?1e6:it.y,it.x==null?0:it.x,it.i];
+ const ord=[...items].sort((a,b)=>{const A=key(a),B=key(b);return A[0]-B[0]||A[1]-B[1]||A[2]-B[2]});
+ if(!free&&prio){const p=items.find(i=>i.id===prio);if(p&&p.y!=null)put(p,p.x,p.y)}
+ ord.forEach(it=>{if(out[it.id])return;if(free||it.y==null)fit(it);else put(it,it.x,it.y)});
+ return out}
+/* ov = {id,w?,h?} -> that block is placed first and keeps its position (used while editing) */
+function masonry(ov){const c=$('#bks');if(!c)return;
+ const all=[...c.children].filter(e=>e.classList.contains('bl')),vis=e=>getComputedStyle(e).display!=='none',bl=all.filter(vis),
+  rs=e=>{e.style.left=e.style.top=e.style.width=e.style.height='';e.classList.remove('top0')};
  all.filter(e=>!vis(e)).forEach(rs);
- if(innerWidth<=720){c.style.height='';all.forEach(rs);if(bl[0])bl[0].classList.add('top0');return}
- const N=12,GX=16,GY=16,cw=(c.clientWidth-GX*(N-1))/N,H=new Array(N).fill(0);
- bl.forEach(e=>{const k=Math.min(N,Math.max(+e.dataset.sp||6,innerWidth<=1024?6:0));
-  e.style.width=(cw*k+GX*(k-1))+'px';
-  let at=0,top=Infinity;for(let i=0;i+k<=N;i++){const t=Math.max(...H.slice(i,i+k));if(t<top){top=t;at=i}}
-  e.style.left=(at*(cw+GX))+'px';e.style.top=top+'px';e.classList.toggle('top0',top===0);const h=e.offsetHeight;
-  for(let i=at;i<at+k;i++)H[i]=top+h+GY});
- c.style.height=Math.max(0,Math.max(...H)-GY)+'px'}
+ if(innerWidth<=720){c.style.height='';c.classList.remove('eg');delete c.dataset.n;all.forEach(rs);if(bl[0])bl[0].classList.add('top0');LAY={};return}
+ const G=gridMetrics(c);if(!(G.cw>0))return;
+ const items=bl.map((e,i)=>{const b=HOME.blocks.find(q=>q.id===e.dataset.b);if(!b)return null;
+  const o=ov&&ov.id===b.id?ov:null;let w=Math.min(G.n,Math.max(1,Math.ceil((o&&o.w||sp(b))/G.f))),rows=o&&o.h!=null?o.h:b.rows;
+  if(rows==null&&b.h&&G.n===12)rows=Math.max(1,Math.round((b.h+GY)/(G.rh+GY)));
+  let h,fixed=rows!=null;e.style.width=gW(w)+'px';
+  if(fixed)h=Math.max(1,Math.ceil(rows/G.f));else{e.style.height='';h=gRows(e.offsetHeight)}
+  return{id:b.id,e,i,w,h,fixed,x:b.x==null?null:b.x,y:b.y==null?null:b.y}}).filter(Boolean);
+ const L=gridPlace(items,G.n!==12,ov?ov.id:null);let maxB=0;
+ items.forEach(it=>{const p=L[it.id],e=it.e;e.style.left=p.x*(G.cw+GX)+'px';e.style.top=p.y*(G.rh+GY)+'px';e.style.width=gW(p.w)+'px';
+  if(it.fixed)e.style.height=gH(p.h)+'px';else e.style.height='';e.classList.toggle('top0',p.y===0);maxB=Math.max(maxB,p.y+p.h)});
+ const ed=EDITM&&G.n===12,R=Math.max(1,maxB+(ed?2:0));c.style.height=gH(R)+'px';c.classList.toggle('eg',ed);LAY=G.n===12?L:{};
+ const hint=$('#gh');if(hint)hint.textContent=EDITM&&G.n!==12?'Window too narrow for grid editing — widen it.':''}
+/* write the resolved layout back into the data (positions + frozen heights) */
+function gridCommit(){if(GM.n!==12)return;for(const id in LAY){const b=HOME.blocks.find(q=>q.id===id),p=LAY[id];if(!b)continue;b.x=p.x;b.y=p.y;if(b.rows==null&&!b.auto)b.rows=p.h;delete b.h}}
+function gridDo(id,mut){const b=HOME.blocks.find(q=>q.id===id);if(!b)return;if(mut)mut(b);masonry({id});gridCommit();saveHome();home()}
 function masonryInit(){if(MO)MO.disconnect();const c=$('#bks');if(!c)return;masonry();
- if(window.ResizeObserver){MO=new ResizeObserver(()=>{cancelAnimationFrame(MR);MR=requestAnimationFrame(masonry)});c.querySelectorAll('.bl').forEach(e=>MO.observe(e))}}
-addEventListener('resize',()=>{if($('#bks'))masonry()});
-/* drag: move a block in the order, or set its height */
-let DR=null;
-function dropAt(x,y,id){let best=null;document.querySelectorAll('#bks .bl').forEach(el=>{if(el.dataset.b===id||getComputedStyle(el).display==='none')return;const r=el.getBoundingClientRect(),dx=Math.max(r.left-x,0,x-r.right),dy=Math.max(r.top-y,0,y-r.bottom),d=dx*dx+dy*dy;if(!best||d<best.d)best={d,el,r}});
- if(!best)return null;const r=best.r;return{id:best.el.dataset.b,before:((y-r.top)/r.height+(x-r.left)/r.width)<1,el:best.el}}
-function mark(t){document.querySelectorAll('#bks .bl.tgt').forEach(e=>{e.classList.remove('tgt');e.removeAttribute('data-pos')});if(t){t.el.classList.add('tgt');t.el.dataset.pos=t.before?'↖ BEFORE':'AFTER ↘'}}
-function applyDrop(b,t){const rest=HOME.blocks.filter(x=>x!==b),i=rest.findIndex(x=>x.id===t.id);rest.splice(t.before?i:i+1,0,b);HOME.blocks=rest}
+ if(window.ResizeObserver){MO=new ResizeObserver(()=>{if(DR)return;cancelAnimationFrame(MR);MR=requestAnimationFrame(()=>masonry())});MO.observe(c);c.querySelectorAll('.bl').forEach(e=>MO.observe(e))}}
+addEventListener('resize',()=>{if($('#bks')&&!DR)masonry()});
+/* drag: move = snap to cells, resize = snap to cells */
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function foot(c,x,y,w,h){let f=$('#gf');if(!f){f=document.createElement('div');f.id='gf';f.className='gfoot';c.appendChild(f)}f.style.left=x*(GM.cw+GX)+'px';f.style.top=y*(GM.rh+GY)+'px';f.style.width=gW(w)+'px';f.style.height=gH(h)+'px'}
 document.addEventListener('pointerdown',e=>{
- const h=e.target.closest('[data-grip],[data-rh],[data-rz]');if(!h||!EDITM||innerWidth<=720)return;
- const el=h.closest('.bl'),b=HOME.blocks.find(q=>q.id===el.dataset.b);if(!b)return;e.preventDefault();
- if(h.hasAttribute('data-rz'))DR={k:'rz',el,b,cw:($('#bks').clientWidth-16*11)/12,left:el.getBoundingClientRect().left,s:sp(b)};
- else if(h.hasAttribute('data-rh'))DR={k:'rh',el,b,y0:e.clientY,h0:el.getBoundingClientRect().height,h:null};
- else{const gh=document.createElement('div');gh.className='dghost';gh.textContent=BT[b.t]||b.t;gh.style.left=(e.clientX+12)+'px';gh.style.top=(e.clientY+12)+'px';document.body.appendChild(gh);el.classList.add('drag');DR={k:'mv',el,b,gh,t:null}}
+ const h=e.target.closest('[data-grip],[data-rh],[data-rz],[data-rk]');if(!h||!EDITM||innerWidth<=720||GM.n!==12)return;
+ const el=h.closest('.bl'),b=HOME.blocks.find(q=>q.id===el.dataset.b),L=b&&LAY[b.id];if(!b||!L)return;e.preventDefault();
+ const r=el.getBoundingClientRect();
+ if(h.hasAttribute('data-rz')||h.hasAttribute('data-rh')||h.hasAttribute('data-rk'))DR={k:'rs',ax:h.hasAttribute('data-rk')?'xy':h.hasAttribute('data-rz')?'x':'y',el,b,x:L.x,w:L.w,h:L.h,w0:L.w,h0:L.h,left:r.left,top:r.top};
+ else{const gh=document.createElement('div');gh.className='dghost';gh.textContent=BT[b.t]||b.t;gh.style.left=(e.clientX+12)+'px';gh.style.top=(e.clientY+12)+'px';document.body.appendChild(gh);el.classList.add('drag');DR={k:'mv',el,b,gh,ox:e.clientX-r.left,oy:e.clientY-r.top,w:L.w,h:L.h,t:null}}
  try{h.setPointerCapture(e.pointerId)}catch(_){}document.body.classList.add('dragging')});
 document.addEventListener('pointermove',e=>{if(!DR)return;
- if(DR.k==='rz'){const n=Math.max(1,Math.min(12,Math.round((e.clientX-DR.left+16)/(DR.cw+16))));if(n!==DR.s){DR.s=n;DR.el.dataset.sp=n;const l=DR.el.querySelector('.szc');if(l)l.textContent=n+'/12';masonry()}return}
- if(DR.k==='rh'){const h=Math.max(60,Math.round((DR.h0+e.clientY-DR.y0)/10)*10);DR.h=h;DR.el.style.height=h+'px';DR.el.classList.add('fh');return}
- DR.gh.style.left=(e.clientX+12)+'px';DR.gh.style.top=(e.clientY+12)+'px';DR.t=dropAt(e.clientX,e.clientY,DR.b.id);mark(DR.t);
+ if(DR.k==='rs'){let w=DR.w,h=DR.h;
+  if(DR.ax.includes('x'))w=clamp(Math.round((e.clientX-DR.left+GX)/(GM.cw+GX)),1,GM.n-DR.x);
+  if(DR.ax.includes('y'))h=Math.max(1,Math.round((e.clientY-DR.top+GY)/(GM.rh+GY)));
+  if(w!==DR.w||h!==DR.h){DR.w=w;DR.h=h;masonry({id:DR.b.id,w,h});const l=DR.el.querySelector('.szc');if(l)l.textContent=w+'×'+h}
+  if(e.clientY>innerHeight-70)scrollBy(0,14);return}
+ const c=$('#bks'),cr=c.getBoundingClientRect();
+ DR.gh.style.left=(e.clientX+12)+'px';DR.gh.style.top=(e.clientY+12)+'px';
+ const x=clamp(Math.round((e.clientX-DR.ox-cr.left)/(GM.cw+GX)),0,GM.n-DR.w),y=Math.max(0,Math.round((e.clientY-DR.oy-cr.top)/(GM.rh+GY)));
+ DR.t={x,y};foot(c,x,y,DR.w,DR.h);
  if(e.clientY<70)scrollBy(0,-14);else if(e.clientY>innerHeight-70)scrollBy(0,14)});
-function endDrag(ok){if(!DR)return;const d=DR;DR=null;document.body.classList.remove('dragging');
- if(d.k==='rz'){if(ok&&d.s!==sp(d.b)){d.b.s=d.s;delete d.b.c;d.b.w=d.s===12?2:1;saveHome()}home();return}
- if(d.k==='rh'){if(ok&&d.h){d.b.h=d.h;saveHome()}home();return}
- d.gh.remove();d.el.classList.remove('drag');mark(null);
- if(ok&&d.t){applyDrop(d.b,d.t);saveHome();home()}}
+function endDrag(ok){if(!DR)return;const d=DR;DR=null;document.body.classList.remove('dragging');const f=$('#gf');if(f)f.remove();
+ if(d.k==='rs'){if(ok&&(d.w!==d.w0||d.h!==d.h0))gridDo(d.b.id,b=>{b.s=d.w;b.w=d.w===12?2:1;delete b.c;b.rows=d.h;delete b.h;delete b.auto});else masonry();return}
+ d.gh.remove();d.el.classList.remove('drag');
+ if(ok&&d.t)gridDo(d.b.id,b=>{b.x=d.t.x;b.y=d.t.y});else masonry()}
 document.addEventListener('pointerup',()=>endDrag(true));document.addEventListener('pointercancel',()=>endDrag(false));
-document.addEventListener('dblclick',e=>{const h=e.target.closest('[data-rh]');if(!h||!EDITM)return;const b=HOME.blocks.find(q=>q.id===h.closest('.bl').dataset.b);if(b){delete b.h;saveHome();home()}});
+document.addEventListener('dblclick',e=>{const h=e.target.closest('[data-rh]');if(!h||!EDITM)return;const b=HOME.blocks.find(q=>q.id===h.closest('.bl').dataset.b);if(b){delete b.rows;delete b.h;b.auto=true;saveHome();home()}});
 function home(){home0();masonryInit();banFit()}
 function home0(){const used=HOME.blocks.map(b=>b.t);
- app.innerHTML=`${em()?`<div class="top"><span></span><button class="btn${EDITM?' on':''}" data-em>${EDITM?'DONE':'EDIT LAYOUT'}</button></div>`:''}<div class="blocks" id="bks">${HOME.blocks.map(blockHtml).join('')}</div>${EDITM?`<div class="add2"><button class="btn" data-addb>+ ADD BLOCK</button></div>`:''}`}
+ app.innerHTML=`${em()?`<div class="top"><span class="sub" id="gh" style="margin:0"></span><span class="acts">${EDITM?'<button class="btn" data-pack title="Close vertical gaps">PACK ↑</button>':''}<button class="btn${EDITM?' on':''}" data-em>${EDITM?'DONE':'EDIT LAYOUT'}</button></span></div>`:''}<div class="blocks" id="bks">${HOME.blocks.map(blockHtml).join('')}</div>${EDITM?`<div class="add2"><button class="btn" data-addb>+ ADD BLOCK</button></div>`:''}`}
 function blockForm(b){const t=b.t;if(t==='banners')return banForm(b);openM(`<h3>${BT[t].toUpperCase()}</h3><form id="f">
  ${t==='image'?`<label>Image URL</label><input name="src" value="${esc(b.src||'')}"><label>or upload</label><input type="file" name="file" accept="image/*"><label>Caption</label><input name="cap" value="${esc(b.cap||'')}">`:''}
  ${t==='note'?`<label>Title</label><input name="title" value="${esc(b.title||'')}"><label>Text (markdown)</label><textarea name="text" style="min-height:140px">${esc(b.text||'')}</textarea>`:''}
@@ -1047,7 +1097,11 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(x=c('[data-pdel]')){const id=+x.dataset.pdel;sb.from('plans').delete().eq('id',id).then(r=>{if(r.error)return alert(r.error.message);PLANS=PLANS.filter(p=>p.id!==id);paintCal()});return}
  if(x=c('[data-pk]')){const p=PLANS.find(p=>p.id==x.dataset.pk);p.done=!p.done;paintCal();sb.from('plans').update({done:p.done}).eq('id',p.id).then(r=>r.error&&alert(r.error.message));return}
  if(x=c('[data-pa]')){AK=x.dataset.pa;return paintCal()}
- if(c('[data-em]')){EDITM=!EDITM;return home()}
+ if(c('[data-pack]')){if(GM.n!==12)return;const it=Object.entries(LAY).map(([id,p])=>({id,...p})).sort((a,b)=>a.y-b.y||a.x-b.x),R=[];
+  it.forEach(t=>{let y=0;while(R.some(r=>t.x<r.x+r.w&&t.x+t.w>r.x&&y<r.y+r.h&&y+t.h>r.y))y++;R.push({x:t.x,y,w:t.w,h:t.h});const b=HOME.blocks.find(q=>q.id===t.id);if(b){b.x=t.x;b.y=y}});
+  masonry();gridCommit();saveHome();return home()}
+ if(c('[data-em]')){if(EDITM&&GM.n===12&&innerWidth>720){gridCommit();saveHome()} /* DONE = lock the current grid layout */
+  EDITM=!EDITM;return home()}
  if(c('[data-addb]')){openM(`<h3>ADD BLOCK</h3><div class="pk">${Object.keys(BT).filter(t=>t!=='banners'&&(t!=='calendar'||!HOME.blocks.some(b=>b.t==='calendar'))).map(t=>`<button class="btn" data-pick="${t}">${BT[t]}</button>`).join('')}</div>`);return}
  if(x=c('[data-pick]')){const t=x.dataset.pick,b={id:uid(),t,w:t==='banners'?2:1,s:t==='banners'?12:6,n:t==='tags'?24:t==='pgn'?12:6};HOME.blocks.push(b);saveHome();closeM();home();if(['image','note','links','position','puzzle','replay','banners'].includes(t))blockForm(b);return}
  if(c('[data-himg]')){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;try{HOME.img=await upload(f.files[0]);await saveHome();paintImg()}catch(x){alert('Upload failed: '+x.message)}};f.click();return}
@@ -1055,9 +1109,12 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(c('[data-ireset]')){Object.assign(HOME,IMG_DEF);paintVars();document.querySelectorAll('[data-ia]').forEach(s=>{s.value=HOME[s.dataset.ia];$('#v_'+s.dataset.ia).textContent=s.value+IU[s.dataset.ia]});return}
  if(c('[data-isave]')){ADJ=null;saveHome();closeM();return}
  if(x=c('[data-bm]')){const id=x.closest('[data-b]').dataset.b,B=HOME.blocks,i=B.findIndex(b=>b.id===id),b=B[i],op=x.dataset.bm;
-  if(op==='up'&&i>0)[B[i-1],B[i]]=[B[i],B[i-1]];if(op==='dn'&&i<B.length-1)[B[i+1],B[i]]=[B[i],B[i+1]];if(op==='c'){b.s=+x.dataset.c;delete b.c;b.w=b.s===12?2:1}if(op==='v')b.v=b.v==='pc'?'m':b.v==='m'?'':'pc';
+  if(op==='up'||op==='dn'||op==='c'){if(GM.n!==12||!LAY[id])return alert('Widen the window to edit the grid.');
+   return gridDo(id,q=>{const p=LAY[id];if(op==='c'){q.s=+x.dataset.c;delete q.c;q.w=q.s===12?2:1}else{q.x=p.x;q.y=Math.max(0,p.y+(op==='up'?-1:1))}})}
+  if(op==='v')b.v=b.v==='pc'?'m':b.v==='m'?'':'pc';
   if(op==='rm'){if(!confirm('Delete this block?'))return;B.splice(i,1)}if(op==='ed')return blockForm(b);saveHome();home()}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pi'&&e.target.value.trim()){const v=e.target.value.trim();e.target.value='';planAdd(v)}});
+{let t=0;addEventListener('scroll',()=>{const h=document.documentElement.classList;h.add('sb');clearTimeout(t);t=setTimeout(()=>h.remove('sb'),900)},{capture:true,passive:true})} /* show scrollbars only while scrolling */
 addEventListener('hashchange',()=>{TAG=PEND;PEND='';Q='';FS=false;scrollTo(0,0);route()});
 document.addEventListener('input',e=>{const t=e.target,k=t.dataset&&t.dataset.ia;if(!k)return;HOME[k]=+t.value;$('#v_'+k).textContent=t.value+IU[k];paintVars()});
 /* auth */
