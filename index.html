@@ -12,7 +12,7 @@
 <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard-jp@1.3.9/dist/web/variable/pretendardvariable-jp-dynamic-subset.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-kopubworld@1.0/css/all.css">
-<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+KR:wght@400;700&family=Roboto:wght@400;700&family=Orbit&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Brygada+1918:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Noto+Serif+KR:wght@400;700&family=Roboto:wght@400;700&family=Orbit&display=swap" rel="stylesheet">
 <style>
 :root{--cw:#fff;--ck:#111;--cwl:#111;--ckl:#111;--bg:#fff;--fg:#111;--mut:#8b8b8b;--line:#e9e9e9;--soft:#f6f6f6;--hb:#000;--ht:#fff;--hl:rgba(0,0,0,.055);--hl2:rgba(0,0,0,.11);--iw:310px;--gc:3;--mc:4;--sans:"Pretendard JP Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--cwl:#fff;--ckl:#e4e4e4;--bg:#0d0d0d;--fg:#f2f2f2;--mut:#808080;--line:#262626;--soft:#161616;--hb:#fff;--ht:#000;--hl:rgba(255,255,255,.09);--hl2:rgba(255,255,255,.17)}}
@@ -912,7 +912,7 @@ marked.use({extensions:[
 {name:'bd',level:'inline',start(x){return x.indexOf('**')},tokenizer(x){const m=/^\*\*(?=\S)([\s\S]*?\S)\*\*(?!\*)/.exec(x);if(m)return{type:'bd',raw:m[0],text:m[1],tokens:this.lexer.inlineTokens(m[1])}},renderer(t){return`<strong>${this.parser.parseInline(t.tokens)}</strong>`}},
 {name:'it',level:'inline',start(x){return x.indexOf('*')},tokenizer(x){const m=/^\*(?=[^\s*])([\s\S]*?[^\s*])\*(?!\*)/.exec(x);if(m)return{type:'it',raw:m[0],text:m[1],tokens:this.lexer.inlineTokens(m[1])}},renderer(t){return`<em>${this.parser.parseInline(t.tokens)}</em>`}}
 ]});
-const FF={sans:{n:'sans-serif',tf:'"Pretendard JP Variable",Pretendard,sans-serif',tk:'"Pretendard JP Variable",Pretendard,sans-serif'},serif:{n:'serif',tf:'"STIX Two Text","KoPubWorld Batang","Noto Serif KR",serif',tk:'"KoPubWorld Batang","Noto Serif KR",serif'},mono:{n:'monospace',tf:'Orbit,"Pretendard JP Variable",sans-serif',tk:'Orbit,"Pretendard JP Variable",sans-serif'}};
+const FF={sans:{n:'sans-serif',tf:'"Pretendard JP Variable",Pretendard,sans-serif',tk:'"Pretendard JP Variable",Pretendard,sans-serif'},serif:{n:'serif',tf:'"Brygada 1918","KoPubWorld Batang","Noto Serif KR",serif',tk:'"KoPubWorld Batang","Noto Serif KR",serif'},mono:{n:'monospace',tf:'Orbit,"Pretendard JP Variable",sans-serif',tk:'Orbit,"Pretendard JP Variable",sans-serif'}};
 const ffo=()=>FF[RS.ff]||FF.serif;
 const SZ=[13,14,15,16,17,18,20,22,24],GAP=48;
 let RS={th:'auto',ff:'serif',sz:2,l:1.8,c:-.03,m:28};try{Object.assign(RS,JSON.parse(localStorage.getItem('rs4')||'{}'))}catch(e){}
