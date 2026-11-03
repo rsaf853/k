@@ -763,7 +763,19 @@ function blockHtml(b){const lab=b.t==='note'?(b.title||''):EDITM&&b.t!=='image'&
 const GX=16,GY=16; /* rows are square (= column width) but never shorter than MINROW, so text/calendar blocks don't get clipped on narrow windows */
 let GM={cw:0,rh:0,n:NF,f:1},LAY={},MO=null,MR=0,DR=null;
 const gW=k=>GM.cw*k+GX*(k-1),gH=n=>GM.rh*n+GY*(n-1),gRows=h=>Math.max(1,Math.ceil((h+GY-1)/(GM.rh+GY)));
-function gridMetrics(c){const W=c.clientWidth,n=W>=760?NF:NF/4,cw=(W-GX*(n-1))/n,rh=Math.max(cw,n===NF?6:28);GM={cw,rh,n,f:NF/n};c.style.setProperty('--cw',cw+'px');c.style.setProperty('--rh',rh+'px');c.dataset.n=n;return GM}
+function gridMetrics(c){
+ const W=c.clientWidth;
+ const n=W>=760?NF:NF/4;
+ const cw=(W-GX*(n-1))/n;
+ // Keep the vertical grid pitch independent from the responsive column width.
+ // At the reference 48-column layout the original row height was about 14px.
+ const rh=14;
+ GM={cw,rh,n,f:NF/n};
+ c.style.setProperty('--cw',cw+'px');
+ c.style.setProperty('--rh',rh+'px');
+ c.dataset.n=n;
+ return GM;
+}
 /* first-fit / collision-free placement. prio block keeps its own x,y; others are pushed down. */
 function gridPlace(items,free,prio){const out={},R=[];
  const hit=(x,y,w,h)=>R.some(r=>x<r.x+r.w&&x+w>r.x&&y<r.y+r.h&&y+h>r.y);
@@ -785,7 +797,7 @@ function masonry(ov){const c=$('#bks');if(!c)return;
   const o=ov&&ov.id===b.id?ov:null;let w=Math.min(G.n,Math.max(1,Math.ceil((o&&o.w||sp(b))/G.f))),rows=o&&o.h!=null?o.h:b.rows;
   if(rows==null&&b.h&&G.n===NF)rows=Math.max(1,Math.round((b.h+GY)/(G.rh+GY)));
   let h,fixed=rows!=null;e.style.width=gW(w)+'px';
-  if(fixed)h=Math.max(1,Math.ceil(rows/G.f));else{e.style.height='';h=gRows(e.offsetHeight)}
+  if(fixed)h=Math.max(1,Math.ceil(rows));else{e.style.height='';h=gRows(e.offsetHeight)}
   return{id:b.id,e,i,w,h,fixed,x:b.x==null?null:b.x,y:b.y==null?null:b.y}}).filter(Boolean);
  const L=gridPlace(items,G.n!==NF,ov?ov.id:null);let maxB=0;
  items.forEach(it=>{const p=L[it.id],e=it.e;e.style.left=p.x*(G.cw+GX)+'px';e.style.top=p.y*(G.rh+GY)+'px';e.style.width=gW(p.w)+'px';
