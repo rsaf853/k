@@ -241,7 +241,7 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .bl.edit .rz::after{content:"";position:absolute;left:6px;top:50%;height:30px;margin-top:-15px;width:4px;background:var(--fg);border-radius:2px}
 .bl.edit .rz:hover::after{background:var(--mut)}
 /* widget grid */
-.blocks.eg{background-image:linear-gradient(var(--line),var(--line));background-size:var(--cw) var(--rh);background-repeat:space}
+.blocks.eg{background-image:linear-gradient(90deg,var(--line) 1px,transparent 1px),linear-gradient(var(--line) 1px,transparent 1px);background-size:calc(var(--cw) + 16px) calc(var(--rh) + 16px);background-repeat:repeat}
 .bl.edit{background:var(--bg)}
 .bl.edit .bc{position:absolute;top:0;left:0;right:0;z-index:7;margin:0;padding:3px;background:color-mix(in srgb,var(--bg) 90%,transparent);border-bottom:1px solid var(--line)}
 .bl.edit h6{margin-top:0}
@@ -736,21 +736,21 @@ function banMineForm(){const m=banMine();openM(`<h3>MY BANNER</h3><label>Site ti
  $('#bmv').onclick=async()=>{let src=$('#bms').value.trim();msg('Saving…');try{if(f.files[0])src=await upload(f.files[0])}catch(x){return msg('Failed: '+x.message)}
   banData().mine={title:$('#bmt').value.trim(),src,url:$('#bmh').value.trim()};await saveHome();closeM();bannerPage()}}
 /* free layout: every block has a width (s = columns out of 12) and a place in the order; optional fixed height h (px) */
-const NF=24,SPANS=[[6,'1/4'],[8,'1/3'],[12,'1/2'],[16,'2/3'],[18,'3/4'],[24,'FULL']],sp=b=>b.s||(b.w===2?NF:NF/2);
+const NF=48,SPANS=[[12,'1/4'],[16,'1/3'],[24,'1/2'],[32,'2/3'],[36,'3/4'],[48,'FULL']],sp=b=>b.s||(b.w===2?NF:NF/2);
 const NOEDIT=['calendar','chess960','todayline','captured','heat','lastmove','eval'];
 function normLayout(){if(HOME.blocks.some(b=>b.t==='banners')){banData();HOME.blocks=HOME.blocks.filter(b=>b.t!=='banners')}const C=Array.isArray(HOME.cols)?HOME.cols:null;
  HOME.blocks.forEach(b=>{if(C){b.s=C[Math.min(C.length-1,Math.max(0,b.c|0))]||6;delete b.c;b.w=b.s===12?2:1}delete b.r});if(C)delete HOME.cols;
  /* grid v2: 24 columns / finer rows. Old 12-column layouts are doubled once so they look the same. */
- if(HOME.gv!==2){HOME.blocks.forEach(b=>{b.s=(b.s||(b.c?b.c*2:(b.w===2?12:6)))*2;delete b.c;if(b.x!=null)b.x*=2;if(b.y!=null)b.y*=2;if(b.rows!=null)b.rows*=2;b.w=b.s>=NF?2:1});HOME.gv=2}}
+ if(HOME.gv!==3){const f=HOME.gv===2?2:4,d=HOME.gv===2?[24,12]:[12,6];HOME.blocks.forEach(b=>{b.s=(b.s||(b.c?b.c*2:(b.w===2?d[0]:d[1])))*f;delete b.c;if(b.x!=null)b.x*=f;if(b.y!=null)b.y*=f;if(b.rows!=null)b.rows*=f;b.w=b.s>=NF?2:1});HOME.gv=3}}
 function blockHtml(b){const lab=b.t==='note'?(b.title||''):EDITM&&b.t!=='image'&&b.t!=='calendar'?BT[b.t]:'';
  return`<section class="bl${EDITM?' edit':''}${b.rows||b.h?' fh':''}" data-b="${b.id}" data-sp="${sp(b)}" data-v="${b.v||''}">${EDITM?`<div class="bc"><button class="bt grip" data-grip title="Drag to move">⠿ MOVE</button><span class="szc">${sp(b)}×${b.rows||'auto'}</span><button class="bt" data-bm="up">↑</button><button class="bt" data-bm="dn">↓</button>${SPANS.map(([c,l])=>`<button class="bt${sp(b)===c?' pri':''}" data-bm="c" data-c="${c}">${l}</button>`).join('')}<button class="bt${b.v?' pri':''}" data-bm="v">SHOW · ${b.v==='pc'?'PC':b.v==='m'?'MOBILE':'ALL'}</button>${!NOEDIT.includes(b.t)?'<button class="bt" data-bm="ed">EDIT</button>':''}<button class="bt" data-bm="rm">DELETE</button></div>`:''}${lab?`<h6>${esc(lab)}</h6>`:''}${blockBody(b)}${EDITM?'<div class="rh" data-rh title="Drag = height · double-click = auto"></div><div class="rz" data-rz title="Drag = width"></div><div class="rk" data-rk title="Drag = width + height"></div>':''}</section>`}
 /* ---- widget grid ----
    Square cells: row height = column width, so a block of w x h cells keeps its proportions at every window width.
    >= 760px content width: 12 columns (editable). Narrower: 6 columns, sizes halved automatically. <= 720px viewport: single column. */
-const GX=8,GY=8,MINROW=28; /* rows are square (= column width) but never shorter than MINROW, so text/calendar blocks don't get clipped on narrow windows */
+const GX=16,GY=16; /* rows are square (= column width) but never shorter than MINROW, so text/calendar blocks don't get clipped on narrow windows */
 let GM={cw:0,rh:0,n:NF,f:1},LAY={},MO=null,MR=0,DR=null;
 const gW=k=>GM.cw*k+GX*(k-1),gH=n=>GM.rh*n+GY*(n-1),gRows=h=>Math.max(1,Math.ceil((h+GY-1)/(GM.rh+GY)));
-function gridMetrics(c){const W=c.clientWidth,n=W>=760?NF:NF/2,cw=(W-GX*(n-1))/n,rh=Math.max(cw,MINROW);GM={cw,rh,n,f:NF/n};c.style.setProperty('--cw',cw+'px');c.style.setProperty('--rh',rh+'px');c.dataset.n=n;return GM}
+function gridMetrics(c){const W=c.clientWidth,n=W>=760?NF:NF/4,cw=(W-GX*(n-1))/n,rh=Math.max(cw,n===NF?6:28);GM={cw,rh,n,f:NF/n};c.style.setProperty('--cw',cw+'px');c.style.setProperty('--rh',rh+'px');c.dataset.n=n;return GM}
 /* first-fit / collision-free placement. prio block keeps its own x,y; others are pushed down. */
 function gridPlace(items,free,prio){const out={},R=[];
  const hit=(x,y,w,h)=>R.some(r=>x<r.x+r.w&&x+w>r.x&&y<r.y+r.h&&y+h>r.y);
@@ -777,7 +777,7 @@ function masonry(ov){const c=$('#bks');if(!c)return;
  const L=gridPlace(items,G.n!==NF,ov?ov.id:null);let maxB=0;
  items.forEach(it=>{const p=L[it.id],e=it.e;e.style.left=p.x*(G.cw+GX)+'px';e.style.top=p.y*(G.rh+GY)+'px';e.style.width=gW(p.w)+'px';
   if(it.fixed)e.style.height=gH(p.h)+'px';else e.style.height='';e.classList.toggle('top0',p.y===0);maxB=Math.max(maxB,p.y+p.h)});
- const ed=EDITM&&G.n===NF,R=Math.max(1,maxB+(ed?2:0));c.style.height=gH(R)+'px';c.classList.toggle('eg',ed);LAY=G.n===NF?L:{};
+ const ed=EDITM&&G.n===NF,R=Math.max(1,maxB+(ed?4:0));c.style.height=gH(R)+'px';c.classList.toggle('eg',ed);LAY=G.n===NF?L:{};
  const hint=$('#gh');if(hint)hint.textContent=EDITM&&G.n!==NF?'Window too narrow for grid editing — widen it.':''}
 /* write the resolved layout back into the data (positions + frozen heights) */
 function gridCommit(){if(GM.n!==NF)return;for(const id in LAY){const b=HOME.blocks.find(q=>q.id===id),p=LAY[id];if(!b)continue;b.x=p.x;b.y=p.y;if(b.rows==null&&!b.auto)b.rows=p.h;delete b.h}}
@@ -1190,7 +1190,7 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(c('[data-isave]')){ADJ=null;saveHome();closeM();return}
  if(x=c('[data-bm]')){const id=x.closest('[data-b]').dataset.b,B=HOME.blocks,i=B.findIndex(b=>b.id===id),b=B[i],op=x.dataset.bm;
   if(op==='up'||op==='dn'||op==='c'){if(GM.n!==NF||!LAY[id])return alert('Widen the window to edit the grid.');
-   return gridDo(id,q=>{const p=LAY[id];if(op==='c'){q.s=+x.dataset.c;delete q.c;q.w=q.s===NF?2:1}else{q.x=p.x;q.y=Math.max(0,p.y+(op==='up'?-2:2))}})}
+   return gridDo(id,q=>{const p=LAY[id];if(op==='c'){q.s=+x.dataset.c;delete q.c;q.w=q.s===NF?2:1}else{q.x=p.x;q.y=Math.max(0,p.y+(op==='up'?-4:4))}})}
   if(op==='v')b.v=b.v==='pc'?'m':b.v==='m'?'':'pc';
   if(op==='rm'){if(!confirm('Delete this block?'))return;B.splice(i,1)}if(op==='ed')return blockForm(b);saveHome();home()}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pi'&&e.target.value.trim()){const v=e.target.value.trim();e.target.value='';planAdd(v)}});
