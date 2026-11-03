@@ -132,12 +132,16 @@ h1{font-size:24px;font-weight:900;margin:0;letter-spacing:-.055em}.sub{color:var
 .pg p{margin:0 0 .9em}.pg .page-break{display:block;height:1px;margin:0;padding:0;border:0;visibility:hidden;break-before:column}.pg img{max-width:100%;max-height:70%;break-inside:avoid}.pg blockquote{margin:1em 0;padding:.8em 1.2em;background:var(--hl);color:var(--tfg)}.pg blockquote>:last-child{margin-bottom:0}.pg blockquote+blockquote{margin-top:-1em;padding-top:.05em}.pg pre,.pg code{font-family:var(--sans);font-size:.9em}.pg pre{padding:10px;overflow:auto;break-inside:avoid;background:var(--tln)}.hb{display:block;margin:1em 0;max-width:100%;overflow-x:auto}.hb img,.hb video,.hb iframe{max-width:100%}.hb iframe{border:0}
 .eb2 pre[data-html]{position:relative;margin:.8em 0;padding:22px 12px 10px;background:var(--soft);border:1px dashed var(--mut);font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-all;color:var(--fg)}.eb2 pre[data-html]::before{content:"HTML";position:absolute;left:8px;top:4px;font:700 9px var(--sans);letter-spacing:.08em;color:var(--mut)}
 .pg hr{border:0;border-top:1px solid var(--tln);margin:1.5em 0}
-.sh{position:absolute;z-index:5;right:12px;bottom:calc(52px + env(safe-area-inset-bottom,0px));width:min(340px,calc(100% - 24px));max-height:min(72%,460px);overflow:auto;background:var(--tbg);color:var(--tfg);border:1px solid var(--tfg);box-shadow:0 10px 30px rgba(0,0,0,.2);padding:12px 14px;display:none;cursor:default}.sh.on{display:block}
-.sh .fg{grid-template-columns:repeat(3,1fr)}.sh .fg button{font-size:12px;padding:7px 6px}
-.sh h5{margin:14px 0 6px;font:700 10px var(--sans);color:var(--tmu)}.sh h5:first-child{margin-top:0}
+.sh{position:absolute;z-index:5;right:12px;bottom:calc(52px + env(safe-area-inset-bottom,0px));width:min(340px,calc(100% - 24px));max-height:min(72%,460px);overflow:auto;background:var(--tbg);color:var(--tfg);border:1px solid var(--tfg);box-shadow:0 10px 30px rgba(0,0,0,.2);padding:0;display:none;cursor:default}.sh.on{display:block}
+.tyf{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--tln)}
+.tyf button{padding:10px 0;border-left:1px solid var(--tln);font-size:14px;color:var(--tfg)}.tyf button:first-child{border-left:0}
+.tyf button:hover{background:rgba(128,128,128,.12)}.tyf button.on,.tyf button.on:hover{background:var(--tfg);color:var(--tbg)}
+.tyr{display:grid;grid-template-columns:70px 1fr 24px 24px;align-items:center;gap:4px;height:34px;padding:0 8px 0 12px;border-bottom:1px solid var(--tln)}.tyr:last-child{border-bottom:0}
+.tyr>span{font:700 9px var(--sans);letter-spacing:.1em;color:var(--tmu)}
+.tyr>b{font:700 12.5px var(--sans);font-variant-numeric:tabular-nums;padding-left:8px;border-left:1px solid var(--tln)}
+.tyr>button{height:22px;border:1px solid var(--tln);font:700 12px/1 var(--sans);color:var(--tfg)}.tyr>button:hover{background:rgba(128,128,128,.14)}
+.tyr .sg{grid-column:2/-1}.tyr .sg button{padding:4px 0;font-size:11.5px}
 .sg{display:flex}.sg button{flex:1;border:1px solid var(--tfg);margin-left:-1px;padding:6px 0;font-weight:600;font-size:12px}.sg button.on{background:var(--tfg);color:var(--tbg)}
-.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:4px}.fg button{border:1px solid var(--tln);padding:7px 8px;text-align:left;font-size:13px}.fg button.on{border-color:var(--tfg);outline:1px solid var(--tfg)}
-.sz{display:flex;align-items:center;gap:10px}.sz button{border:1px solid var(--tfg);width:46px;height:32px;font-weight:700}.sz span{flex:1;display:flex;justify-content:space-between}.sz i{width:6px;height:6px;border:1px solid var(--tfg)}.sz i.on{background:var(--tfg)}
 /* in-page article (default view) */
 .ar{--tbg:var(--bg);--tfg:var(--fg);--tmu:var(--mut);--tln:var(--line);--tf:serif;--tk:serif;--ts:17px;--tlh:1.8;--tc:-.03em;--tm:28px;margin-top:22px}
 .ar .bk2{margin:0 max(0px,calc(var(--tm) - 28px))}
@@ -415,12 +419,12 @@ html{scrollbar-gutter:stable}
 
 /* king profile card (white / black king: no banner, hover shows profile) */
 .bnp.kg{cursor:default}
-.bnp.kp{opacity:1}
 .bnp.kg.a::after{content:none}
-.bnbd:not(.ed) .bnp.kp:hover{background:var(--fg);color:var(--bg);opacity:1}
-.bnbd:not(.ed) .bnp.kp.w:hover{--pf:var(--ck);--ps:var(--ckl);--pe:var(--cw)}
-.bnbd:not(.ed) .bnp.kp.k:hover{--pf:var(--cw);--ps:var(--cwl);--pe:#111}
 .bnbd.ed .bnp.kg{cursor:pointer}
+.bnp.kp{opacity:1}
+.bnbd:not(.ed) .bnp.kp:hover{background:var(--fg);color:var(--bg);opacity:1}
+.bnbd:not(.ed) .bnp.kp.w:hover{--pf:var(--bg);--ps:var(--bg);--pe:var(--fg)}
+.bnbd:not(.ed) .bnp.kp.k:hover{--pf:var(--fg);--ps:var(--bg);--pe:var(--bg)}
 .bnpop.kcd{width:min(270px,78%);padding:0;overflow:hidden}
 .kch{display:flex;justify-content:space-between;align-items:center;height:20px;padding:0 8px;border-bottom:1px solid var(--fg);font:700 9px var(--sans);letter-spacing:.1em}
 .kch.k{background:var(--fg);color:var(--bg)}.kch.w{background:var(--bg);color:var(--fg)}
@@ -920,11 +924,11 @@ const SZ=[13,14,15,16,17,18,20,22,24],GAP=48;
 let RS={th:'auto',ff:'serif',sz:2,l:1.8,c:-.03,m:28};try{Object.assign(RS,JSON.parse(localStorage.getItem('rs4')||'{}'))}catch(e){}
 let pI=0,pN=1;
 const sg=(k,o)=>`<div class="sg">${o.map(x=>`<button data-r="${k}" data-v="${x[0]}" class="${String(RS[k])===String(x[0])?'on':''}">${x[1]}</button>`).join('')}</div>`;
-const fb=()=>`<div class="fg">${Object.keys(FF).map(k=>`<button data-r="ff" data-v="${k}" class="${(RS.ff||'serif')===k?'on':''}" style="font-family:${FF[k].tf}">${FF[k].n}</button>`).join('')}</div>`;
 const LN=[1.4,1.5,1.6,1.7,1.8,1.9,2,2.1,2.2,2.4],TR=[-.06,-.05,-.04,-.03,-.02,-.01,0,.01,.02,.04],MG=[16,22,28,36,44,56,72,96,120],STEPS={l:LN,c:TR,m:MG};
 const idx=(a,v)=>{let b=0;a.forEach((x,i)=>{if(Math.abs(x-v)<Math.abs(a[b]-v))b=i});return b};
-const stp=k=>{const a=STEPS[k],n=idx(a,RS[k]);return`<div class="sz"><button data-st="${k}" data-d="-1">−</button><span>${a.map((_,i)=>`<i class="${i<=n?'on':''}"></i>`).join('')}</span><button data-st="${k}" data-d="1">+</button></div>`};
-function sheet(full){return`<div>${full?`<h5>THEME</h5>${sg('th',[['auto','Auto'],['paper','Light'],['gray','Gray'],['ink','Dark']])}`:''}<h5>FONT</h5>${fb()}<h5>SIZE</h5><div class="sz"><button data-sz="-1">A−</button><span>${SZ.map((x,i)=>`<i class="${i<=RS.sz?'on':''}"></i>`).join('')}</span><button data-sz="1">A+</button></div><h5>LINE</h5>${stp('l')}<h5>TRACKING</h5>${stp('c')}<h5>MARGIN</h5>${stp('m')}</div>`}
+const TFL={sans:'Sans',serif:'Serif',mono:'Mono'},tfmt={sz:()=>SZ[RS.sz]+'px',l:()=>(+RS.l).toFixed(1),c:()=>(RS.c>0?'+':RS.c<0?'−':'')+Math.abs(RS.c).toFixed(2),m:()=>RS.m+'px'};
+const tyr=(lab,val,a,b)=>`<div class="tyr"><span>${lab}</span><b>${val}</b><button ${a} aria-label="${lab} −">−</button><button ${b} aria-label="${lab} +">+</button></div>`;
+function sheet(full){return`<div><div class="tyf">${Object.keys(FF).map(k=>`<button data-r="ff" data-v="${k}" class="${(RS.ff||'serif')===k?'on':''}" style="font-family:${FF[k].tf}">${TFL[k]||k}</button>`).join('')}</div>${full?`<div class="tyr"><span>THEME</span>${sg('th',[['auto','Auto'],['paper','Light'],['gray','Gray'],['ink','Dark']])}</div>`:''}${tyr('SIZE',tfmt.sz(),'data-sz="-1"','data-sz="1"')}${tyr('LINE',tfmt.l(),'data-st="l" data-d="-1"','data-st="l" data-d="1"')}${tyr('TRACK',tfmt.c(),'data-st="c" data-d="-1"','data-st="c" data-d="1"')}${tyr('MARGIN',tfmt.m(),'data-st="m" data-d="-1"','data-st="m" data-d="1"')}</div>`}
 function rsClick(b){if(b.dataset.sz)RS.sz=Math.max(0,Math.min(SZ.length-1,RS.sz+ +b.dataset.sz));
  if(b.dataset.st){const a=STEPS[b.dataset.st];RS[b.dataset.st]=a[Math.max(0,Math.min(a.length-1,idx(a,RS[b.dataset.st])+ +b.dataset.d))]}
  if(b.dataset.r){const v=b.dataset.v;RS[b.dataset.r]=isNaN(+v)?v:+v}}
