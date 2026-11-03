@@ -42,7 +42,7 @@ nav a{white-space:nowrap}nav{display:flex;gap:20px;font:500 13px var(--sans)}nav
 .ib{display:inline-grid;place-items:center;min-width:30px;height:30px;color:var(--mut);font:600 12px var(--sans);text-decoration:none;transition:color .15s}.ib:hover{color:var(--fg)}.ib.s{min-width:24px;height:24px}
 .bd{position:relative;display:block;width:15px;height:15px;border:1px solid currentColor;transition:transform .35s cubic-bezier(.6,0,.2,1)}.bd i{position:absolute;width:6.5px;height:6.5px;background:currentColor}.bd i:first-child{left:0;top:0}.bd i:last-child{right:0;bottom:0}#theme[data-s="dark"] .bd{transform:rotate(90deg)}
 
-#puzzleNav{height:30px;min-width:66px;padding:0 9px;border:1px solid var(--line);font:700 10px/1 var(--sans);letter-spacing:.035em;color:var(--fg)}#puzzleNav:hover,#puzzleNav.on{border-color:var(--fg);background:var(--fg);color:var(--bg)}
+.hr{align-items:center;gap:4px}#puzzleNav,#theme{height:24px;border:1px solid var(--fg);background:none;color:var(--fg)}#puzzleNav{min-width:0;padding:0 10px;font:600 11px/1 var(--sans);letter-spacing:-.02em;transition:background .15s,color .15s}#puzzleNav:hover,#puzzleNav.on{background:var(--fg);color:var(--bg)}#theme{min-width:24px;width:24px}#theme .bd{width:12px;height:12px}
 .puzzle-page{max-width:760px;margin:0 auto}.puzzle-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}.puzzle-head h1{font-size:24px}.puzzle-date{color:var(--mut);font:500 11px var(--sans);letter-spacing:.05em}.puzzle-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(170px,.62fr);gap:22px;align-items:start}.puzzle-board-wrap{container-type:inline-size;min-width:0}.puzzle-board{display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;border:1px solid var(--fg);background:repeating-conic-gradient(var(--hl2) 0 25%,transparent 0 50%) 0 0/25% 25%;overflow:hidden}.puzzle-square{aspect-ratio:1;display:grid;place-items:center;border:0;padding:0;background:transparent;position:relative}.puzzle-square.sel{background:color-mix(in srgb,var(--fg) 26%,transparent)}.puzzle-square.last{box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--fg) 24%,transparent)}.puzzle-square .bnpc{width:88%;height:88%;pointer-events:none}.puzzle-square .bnpc.w{--pf:var(--bg);--ps:var(--fg);--pe:var(--fg)}.puzzle-square .bnpc.k{--pf:var(--fg);--ps:var(--fg);--pe:var(--bg)}.puzzle-square .bnpc.w,.puzzle-square .bnpc.k{stroke-width:1.4}.puzzle-coords{display:flex;justify-content:space-between;padding:5px 3px 0;color:var(--mut);font:500 9px var(--sans);letter-spacing:.08em}.puzzle-info{min-width:0}.puzzle-meta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}.puzzle-tag{border:1px solid var(--line);padding:2px 7px;color:var(--mut);font:600 10px var(--sans)}.puzzle-rating{font:700 12px var(--sans);margin-bottom:10px}.puzzle-instruction{font-size:13px;line-height:1.7;margin:0 0 12px}.puzzle-status{min-height:42px;padding:9px 10px;border:1px solid var(--line);font-size:12px;color:var(--mut);margin:12px 0}.puzzle-status.good{border-color:var(--fg);color:var(--fg)}.puzzle-status.bad{border-color:var(--fg);color:var(--fg)}.puzzle-actions{display:flex;flex-wrap:wrap;gap:6px}.puzzle-actions .btn{padding:6px 10px}.puzzle-foot{border-top:1px solid var(--line);margin-top:18px;padding-top:10px;display:flex;justify-content:space-between;gap:10px;color:var(--mut);font:500 10px var(--sans)}.puzzle-foot a{text-decoration:none}.puzzle-foot a:hover{text-decoration:underline}.puzzle-loading{padding:42px 0;color:var(--mut);font-size:12px}.puzzle-error{padding:24px 0;color:var(--mut)}@media(max-width:620px){.puzzle-layout{grid-template-columns:1fr;gap:14px}.puzzle-info{display:grid;grid-template-columns:1fr;}.puzzle-head{margin-bottom:12px}.puzzle-board-wrap{max-width:560px;margin:0 auto;width:100%}.puzzle-status{margin:8px 0}.puzzle-page{max-width:560px}}
 
 main{flex:1;padding:24px 0 56px}
@@ -327,6 +327,24 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 *::-webkit-scrollbar-thumb{background:var(--fg);border:0;border-radius:0}
 *::-webkit-scrollbar-thumb:hover{background:var(--mut)}
 *::-webkit-scrollbar-corner{background:transparent}
+.puzzle-square{overflow:hidden}.puzzle-square.last{background:color-mix(in srgb,var(--fg) 13%,transparent)}.puzzle-square .co{position:absolute;font:600 9px/1 var(--sans);font-style:normal;color:var(--mut);pointer-events:none}.puzzle-square .cr{left:3px;top:3px}.puzzle-square .cf{right:3px;bottom:3px}
+.puzzle-square.dot::after{content:"";position:absolute;width:26%;height:26%;border-radius:50%;background:var(--fg);opacity:.32;pointer-events:none}
+.puzzle-square.cap::after{content:"";position:absolute;inset:5%;border:3px solid var(--fg);border-radius:50%;opacity:.32;pointer-events:none}
+.puzzle-square.sel{box-shadow:inset 0 0 0 3px var(--fg)}.puzzle-square.chk{box-shadow:inset 0 0 0 4px var(--fg);background:color-mix(in srgb,var(--fg) 20%,transparent)}
+.puzzle-square.hint{box-shadow:inset 0 0 0 3px var(--fg);animation:puzpulse .9s ease-in-out infinite alternate}.puzzle-square.bad{animation:puzshake .35s;background:color-mix(in srgb,var(--fg) 32%,transparent)}
+@keyframes puzpulse{from{background:transparent}to{background:color-mix(in srgb,var(--fg) 22%,transparent)}}@keyframes puzshake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.puzzle-turn{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--fg);margin-bottom:10px;font:600 12px var(--sans)}.puzzle-turn i{width:11px;height:11px;border:1px solid var(--fg);flex:none}.puzzle-turn i.tb{background:var(--fg)}.puzzle-turn span{margin-left:auto;color:var(--mut);font:600 10px var(--sans);letter-spacing:.05em}
+.puzzle-actions .btn:disabled{opacity:.35;cursor:default}
+.puzzle-page{max-width:none;margin:0}
+.puzzle-layout{display:grid;grid-template-columns:minmax(200px,1fr) minmax(0,min(78vh,740px)) minmax(200px,1fr);grid-template-areas:"l b r";gap:28px;align-items:start}
+.pz-l{grid-area:l;justify-self:end;width:100%;max-width:300px}.puzzle-board-wrap{grid-area:b;width:100%}.pz-r{grid-area:r;justify-self:start;width:100%;max-width:340px}
+.pz-h{display:flex;justify-content:space-between;font:600 10px var(--sans);letter-spacing:.06em;color:var(--mut);padding-bottom:6px;border-bottom:1px solid var(--fg)}
+.pz-mv{max-height:min(56vh,480px);overflow:auto;border-bottom:1px solid var(--line)}
+.mr{display:grid;grid-template-columns:34px 1fr 1fr;align-items:stretch}.mr .n{background:var(--soft);color:var(--mut);font:600 11px var(--sans);display:grid;place-items:center;padding:6px 0}
+.mr .m{padding:6px 10px;font:600 13px var(--sans);min-height:30px;border:1px solid transparent}.mr .m.d{color:var(--mut);font-weight:500}.mr .m.cur{border-color:var(--fg);background:var(--hl)}
+.pz-a{display:inline-block;margin-top:10px;color:var(--mut);font:500 10px var(--sans);text-decoration:none}.pz-a:hover{color:var(--fg);text-decoration:underline}
+@media(max-width:1100px){.puzzle-layout{grid-template-columns:minmax(0,min(78vh,740px)) minmax(230px,1fr);grid-template-areas:"b l" "b r"}.pz-l,.pz-r{justify-self:stretch;max-width:none}}
+@media(max-width:720px){.puzzle-layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"b" "l" "r";gap:14px}}
 </style>
 </head>
 <body>
@@ -362,7 +380,7 @@ setTimeout(step,500);
 <div class="shell">
 <aside class="side"><div class="im" id="im"></div></aside>
 <div class="col">
-<header><nav><a href="#/" data-n="">check</a><a href="#/posts" data-n="posts">e4</a><a href="#/log" data-n="log">e5</a><a href="#/memo" data-n="memo">f4</a><a href="#/lines" data-n="lines">exf4</a><a href="#/gallery" data-n="gallery">?!</a><a href="#/banners" data-n="banners">#</a></nav><span class="hr"><button class="ib" id="cfg" aria-label="Settings" title="Settings" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button><button class="ib" id="puzzleNav" aria-label="Puzzle" title="Puzzle">PUZZLE</button><button class="ib" id="theme" aria-label="Toggle theme"></button></span></header>
+<header><nav><a href="#/" data-n="">check</a><a href="#/posts" data-n="posts">e4</a><a href="#/log" data-n="log">e5</a><a href="#/memo" data-n="memo">f4</a><a href="#/lines" data-n="lines">exf4</a><a href="#/gallery" data-n="gallery">?!</a><a href="#/banners" data-n="banners">#</a></nav><span class="hr"><button class="ib" id="cfg" aria-label="Settings" title="Settings" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button><button class="ib" id="puzzleNav" aria-label="Puzzle" title="Puzzle">puzzle</button><button class="ib" id="theme" aria-label="Toggle theme"></button></span></header>
 <main id="app"></main>
 <footer><button id="mode" class="mode" type="button">checkmate</button><button id="adm" aria-label="Admin"><svg width="13" height="13" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2v5M9.6 4.3h4.8" fill="none"/><path d="M12 8.4C11 6.8 8 6.5 6.5 8.4 5 10.4 6 13 8.2 14.2L7.2 18.2h9.6l-1-4C18 13 19 10.4 17.5 8.4 16 6.5 13 6.8 12 8.4Z"/><path d="M5.8 18.2h12.4v3.4H5.8Z"/></svg></button></footer>
 </div></div>
@@ -842,7 +860,7 @@ function route(){const h=location.hash.replace('#/','')||'',[a0,b]=h.split('/'),
   if(FS){if(!$('#app').innerHTML)view('posts');return reader(it)}return article(it)}
  FS=false;closeReader();document.body.classList.remove('pgd');if(!a)return home();if(a==='banners')return bannerPage();if(a==='puzzle')return puzzlePage();view(KIND[a]?a:'posts')}
 /* Lichess puzzle page */
-const PUZ={data:null,board:null,side:'w',cursor:0,selected:-1,loading:false,solved:false,busy:false,daily:true,feedback:'',last:[]};
+const PUZ={data:null,board:null,start:null,hist:[],hist0:0,solN:0,side:'w',cursor:0,selected:-1,legal:[],hint:0,hintSq:[],bad:-1,chk:-1,flip:false,local:false,li:-1,loading:false,solved:false,busy:false,daily:true,feedback:'',last:[]};
 const PUZ_FILES='abcdefgh';
 function puzParseFen(fen){const a=fen.split(/\s+/),rows=a[0].split('/'),sq=[];for(const row of rows)for(const c of row){if(/[1-8]/.test(c))for(let i=0;i<+c;i++)sq.push('.');else sq.push(c)}return{sq,turn:a[1]||'w',castling:a[2]||'-',ep:a[3]||'-',half:+a[4]||0,full:+a[5]||1}}
 function puzApply(st,uci){const from=(8-+uci[1])*8+PUZ_FILES.indexOf(uci[0]),to=(8-+uci[3])*8+PUZ_FILES.indexOf(uci[2]),b={...st,sq:st.sq.slice()},piece=b.sq[from],target=b.sq[to];if(!piece||piece==='.')return st;
@@ -854,19 +872,82 @@ function puzApply(st,uci){const from=(8-+uci[1])*8+PUZ_FILES.indexOf(uci[0]),to=
  if(low==='r'){if(from===63)b.castling=b.castling.replace('K','');if(from===56)b.castling=b.castling.replace('Q','');if(from===7)b.castling=b.castling.replace('k','');if(from===0)b.castling=b.castling.replace('q','')}
  if(to===63)b.castling=b.castling.replace('K','');if(to===56)b.castling=b.castling.replace('Q','');if(to===7)b.castling=b.castling.replace('k','');if(to===0)b.castling=b.castling.replace('q','');
  b.ep=low==='p'&&Math.abs(dr)===2?PUZ_FILES[to&7]+(8-((from+to)/2>>3)):'-';b.turn=st.turn==='w'?'b':'w';b.half=low==='p'||target!=='.'?0:st.half+1;if(b.turn==='w')b.full=st.full+1;return b}
-function puzSquareHtml(index,viewIndex){const ch=PUZ.board.sq[index],sel=PUZ.selected===index,last=PUZ.last.includes(index),name=ch==='.'?'':`<svg class="bnpc ${ch===ch.toUpperCase()?'w':'k'}" viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${ch.toUpperCase()}"/></svg>`;return`<button type="button" class="puzzle-square${sel?' sel':''}${last?' last':''}" data-puz-square="${index}" aria-label="${PUZ_FILES[index&7]}${8-(index>>3)}">${name}</button>`}
-function puzRender(){const d=PUZ.data;if(!d)return;const p=d.puzzle,game=d.game||{},view=PUZ.side==='b',indices=[];for(let r=0;r<8;r++)for(let f=0;f<8;f++)indices.push(view?(7-r)*8+(7-f):r*8+f);
- const tags=(p.themes||[]).slice(0,5).map(t=>`<span class="puzzle-tag">${esc(t.replace(/-/g,' '))}</span>`).join('');
- app.innerHTML=`${BNSYM}<section class="puzzle-page"><div class="puzzle-head"><div><h1>${PUZ.daily?'Today’s Puzzle':'Next Puzzle'}</h1><div class="puzzle-date">${PUZ.daily?new Date().toLocaleDateString('en-CA'):'LICHESS PUZZLE'}</div></div><span class="puzzle-date">${PUZ.daily?'DAILY':'TRAINING'}</span></div><div class="puzzle-layout"><div class="puzzle-board-wrap"><div class="puzzle-board">${indices.map((idx,i)=>puzSquareHtml(idx,i)).join('')}</div><div class="puzzle-coords"><span>${view?'h':'a'} — ${view?'a':'h'}</span><span>${view?'1 — 8':'8 — 1'}</span></div></div><div class="puzzle-info"><div class="puzzle-rating">RATING　${p.rating||'—'}</div><div class="puzzle-meta">${tags}</div><p class="puzzle-instruction">${PUZ.solved?'Puzzle completed. Well played!':`Find the best move for ${PUZ.side==='w'?'White':'Black'}.`}</p><div class="puzzle-status${PUZ.solved?' good':''}${PUZ.feedback==='Not quite. Try again.'?' bad':''}" id="puzStatus">${esc(PUZ.feedback||'Choose a piece, then its destination square.')}</div><div class="puzzle-actions"><button class="btn pri" id="puzNext">${PUZ.solved?'NEXT PUZZLE':'SKIP PUZZLE'}</button><button class="btn" id="puzReset">RESET</button></div></div></div><div class="puzzle-foot"><span>${game.id?`GAME · ${esc(game.id)}`:'LICHESS DAILY PUZZLE'}</span><a href="https://lichess.org/training/${encodeURIComponent(p.id)}" target="_blank" rel="noopener">OPEN ON LICHESS ↗</a></div></section>`;
- app.querySelectorAll('[data-puz-square]').forEach(el=>el.addEventListener('click',()=>puzClick(+el.dataset.puzSquare)));$('#puzNext').onclick=()=>puzLoad(false);$('#puzReset').onclick=()=>puzReset()}
-function puzReset(){if(!PUZ.data)return;PUZ.board=puzParseFen(PUZ.data.puzzle.fen);PUZ.cursor=0;PUZ.selected=-1;PUZ.solved=false;PUZ.busy=false;PUZ.feedback='Puzzle reset.';PUZ.last=[];puzRender()}
-function puzClick(to){if(PUZ.loading||PUZ.busy||PUZ.solved)return;const piece=PUZ.board.sq[to],own=piece!=='.'&&(piece===piece.toUpperCase()?'w':'b')===PUZ.side;
- if(PUZ.selected<0){if(own){PUZ.selected=to;PUZ.feedback='Now choose a destination square.';puzRender()}return}
- if(own){PUZ.selected=to;PUZ.feedback='Choose a destination square.';puzRender();return}
- const from=PUZ.selected,uci=PUZ_FILES[from&7]+(8-(from>>3))+PUZ_FILES[to&7]+(8-(to>>3)),want=(PUZ.data.puzzle.solution||[])[PUZ.cursor];
- if(want&&want.slice(0,4)===uci){PUZ.board=puzApply(PUZ.board,want);PUZ.cursor++;PUZ.last=[from,to];PUZ.selected=-1;PUZ.feedback='Correct!';if(PUZ.cursor>=(PUZ.data.puzzle.solution||[]).length){PUZ.solved=true;puzRender();return}PUZ.busy=true;puzRender();setTimeout(()=>{const reply=(PUZ.data.puzzle.solution||[])[PUZ.cursor];if(reply){const a=(8-+reply[1])*8+PUZ_FILES.indexOf(reply[0]),b=(8-+reply[3])*8+PUZ_FILES.indexOf(reply[2]);PUZ.board=puzApply(PUZ.board,reply);PUZ.last=[a,b];PUZ.cursor++}PUZ.busy=false;PUZ.feedback='Your turn.';if(PUZ.cursor>=(PUZ.data.puzzle.solution||[]).length)PUZ.solved=true;puzRender()},520)}
- else{PUZ.selected=-1;PUZ.feedback='Not quite. Try again.';puzRender()}}
-async function puzLoad(daily){PUZ.loading=true;PUZ.feedback='Loading puzzle…';app.innerHTML=`${BNSYM}<section class="puzzle-page"><div class="puzzle-head"><h1>${daily?'Today’s Puzzle':'Next Puzzle'}</h1></div><p class="puzzle-loading">Loading from Lichess…</p></section>`;try{const url=daily?'https://lichess.org/api/puzzle/daily':'https://lichess.org/api/puzzle/next';const res=await fetch(url,{headers:{Accept:'application/json'}});if(!res.ok)throw new Error(res.status===429?'Lichess is busy. Please wait a moment and try again.':`Lichess returned ${res.status}.`);const data=await res.json();if(!data?.puzzle?.fen||!data?.puzzle?.solution?.length)throw new Error('Puzzle data was incomplete.');PUZ.data=data;PUZ.board=puzParseFen(data.puzzle.fen);PUZ.side=PUZ.board.turn;PUZ.cursor=0;PUZ.selected=-1;PUZ.solved=false;PUZ.busy=false;PUZ.daily=daily;PUZ.loading=false;PUZ.feedback='Choose a piece, then its destination square.';PUZ.last=[];puzRender()}catch(err){PUZ.loading=false;app.innerHTML=`${BNSYM}<section class="puzzle-page"><h1>${daily?'Today’s Puzzle':'Next Puzzle'}</h1><p class="puzzle-error">${esc(err.message||'Could not load the puzzle.')}</p><button class="btn" id="puzRetry">RETRY</button> <a class="btn" href="https://lichess.org/training" target="_blank" rel="noopener">OPEN LICHESS</a></section>`;$('#puzRetry').onclick=()=>puzLoad(daily)}}
+const PZ_N=[[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]],PZ_K=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]],PZ_B=[[-1,-1],[-1,1],[1,-1],[1,1]],PZ_R=[[-1,0],[1,0],[0,-1],[0,1]];
+const puzCol=c=>c==='.'?'':c===c.toUpperCase()?'w':'b',puzIn=(r,f)=>r>=0&&r<8&&f>=0&&f<8,puzUci=(a,b,p)=>PUZ_FILES[a&7]+(8-(a>>3))+PUZ_FILES[b&7]+(8-(b>>3))+(p||''),puzIdx=u=>[(8-+u[1])*8+PUZ_FILES.indexOf(u[0]),(8-+u[3])*8+PUZ_FILES.indexOf(u[2])];
+function puzAtt(sq,i,by){const r=i>>3,f=i&7,up=by==='w',P=up?'P':'p',N=up?'N':'n',K=up?'K':'k',B=up?'B':'b',R=up?'R':'r',Q=up?'Q':'q',pr=up?r+1:r-1;
+ for(const d of[-1,1])if(puzIn(pr,f+d)&&sq[pr*8+f+d]===P)return true;
+ for(const[a,b]of PZ_N)if(puzIn(r+a,f+b)&&sq[(r+a)*8+f+b]===N)return true;
+ for(const[a,b]of PZ_K)if(puzIn(r+a,f+b)&&sq[(r+a)*8+f+b]===K)return true;
+ for(const[dirs,T]of[[PZ_B,B],[PZ_R,R]])for(const[a,b]of dirs){let rr=r+a,ff=f+b;while(puzIn(rr,ff)){const c=sq[rr*8+ff];if(c!=='.'){if(c===T||c===Q)return true;break}rr+=a;ff+=b}}
+ return false}
+function puzLegal(st,from){const sq=st.sq,p=sq[from];if(!p||p==='.')return[];const col=puzCol(p),opp=col==='w'?'b':'w',low=p.toLowerCase(),r=from>>3,f=from&7,t=[];
+ if(low==='p'){const d=col==='w'?-1:1,s0=col==='w'?6:1;
+  if(puzIn(r+d,f)&&sq[(r+d)*8+f]==='.'){t.push((r+d)*8+f);if(r===s0&&sq[(r+2*d)*8+f]==='.')t.push((r+2*d)*8+f)}
+  for(const x of[-1,1])if(puzIn(r+d,f+x)){const i=(r+d)*8+f+x,c=sq[i];if(c!=='.'&&puzCol(c)===opp)t.push(i);else if(c==='.'&&st.ep!=='-'&&PUZ_FILES.indexOf(st.ep[0])===f+x&&8-+st.ep[1]===r+d)t.push(i)}}
+ else if(low==='n'||low==='k'){for(const[a,b]of low==='n'?PZ_N:PZ_K)if(puzIn(r+a,f+b)&&puzCol(sq[(r+a)*8+f+b])!==col)t.push((r+a)*8+f+b);
+  if(low==='k'&&from===(col==='w'?60:4)){const home=col==='w'?56:0,R=col==='w'?'R':'r',rs=st.castling||'';
+   if(rs.includes(col==='w'?'K':'k')&&sq[home+7]===R&&sq[home+5]==='.'&&sq[home+6]==='.'&&![4,5,6].some(x=>puzAtt(sq,home+x,opp)))t.push(home+6);
+   if(rs.includes(col==='w'?'Q':'q')&&sq[home]===R&&sq[home+1]==='.'&&sq[home+2]==='.'&&sq[home+3]==='.'&&![2,3,4].some(x=>puzAtt(sq,home+x,opp)))t.push(home+2)}}
+ else{const dirs=low==='b'?PZ_B:low==='r'?PZ_R:[...PZ_B,...PZ_R];for(const[a,b]of dirs){let rr=r+a,ff=f+b;while(puzIn(rr,ff)){const c=sq[rr*8+ff];if(puzCol(c)!==col)t.push(rr*8+ff);if(c!=='.')break;rr+=a;ff+=b}}}
+ return t.filter(to=>{const nb=puzApply(st,puzUci(from,to,'')),k=nb.sq.indexOf(col==='w'?'K':'k');return k<0||!puzAtt(nb.sq,k,opp)})}
+function puzSan(st,san){san=san.replace(/[+#?!]+$/,'');const w=st.turn==='w',rk=w?1:8;
+ if(/^[O0]-[O0]-[O0]$/.test(san))return`e${rk}c${rk}`;if(/^[O0]-[O0]$/.test(san))return`e${rk}g${rk}`;
+ const m=san.match(/^([NBRQK])?([a-h])?([1-8])?x?([a-h][1-8])(?:=?([NBRQ]))?$/);if(!m)return null;
+ const pc=m[1]||'P',want=w?pc:pc.toLowerCase(),to=(8-+m[4][1])*8+PUZ_FILES.indexOf(m[4][0]);
+ for(let i=0;i<64;i++){if(st.sq[i]!==want)continue;if(m[2]&&PUZ_FILES[i&7]!==m[2])continue;if(m[3]&&8-(i>>3)!==+m[3])continue;if(puzLegal(st,i).includes(to))return puzUci(i,to,m[5]?m[5].toLowerCase():'')}
+ return null}
+/* Lichess's puzzle API often has no FEN: rebuild the start position from game.pgn + initialPly */
+function puzStart(data){const p=data.puzzle,g=data.game||{};
+ if(p.fen){const b=puzParseFen(p.fen);return{board:b,last:p.lastMove&&p.lastMove.length>=4?puzIdx(p.lastMove):[],hist:[],hist0:(b.full-1)*2+(b.turn==='w'?0:1)}}
+ const mv=(g.pgn||'').replace(/\{[^}]*\}|\([^)]*\)/g,' ').split(/\s+/).map(x=>x.replace(/^\d+\.+/,'')).filter(x=>x&&!/^(1-0|0-1|1\/2-1\/2|\*)$/.test(x));
+ let st=puzParseFen('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'),last=[];const n=Math.min(mv.length,(p.initialPly||0)+1);
+ for(let i=0;i<n;i++){const u=puzSan(st,mv[i]);if(!u)throw new Error('Could not read the puzzle position.');last=puzIdx(u);st=puzApply(st,u)}
+ return{board:st,last,hist:mv.slice(0,n),hist0:0}}
+function puzLocal(){PUZ.li=(PUZ.li+1)%DPZ.length;const a=DPZ[PUZ.li],st=puzParseFen(a[0]),u=puzSan(st,a[1]);return{puzzle:{id:'local',fen:a[0],solution:[u],rating:null,themes:[(a[2]||'puzzle').replace(/\s+/g,'-').toLowerCase()]},game:{}}}
+function puzSanOf(st,u){const[f,t]=puzIdx(u),p=st.sq[f],low=p.toLowerCase(),cap=st.sq[t]!=='.'||(low==='p'&&(f&7)!==(t&7));let s;
+ if(low==='k'&&Math.abs((t&7)-(f&7))===2)s=(t&7)>(f&7)?'O-O':'O-O-O';
+ else if(low==='p')s=(cap?PUZ_FILES[f&7]+'x':'')+PUZ_FILES[t&7]+(8-(t>>3))+(u[4]?'='+u[4].toUpperCase():'');
+ else{let dis='';const o=[];for(let i=0;i<64;i++)if(i!==f&&st.sq[i]===p&&puzLegal(st,i).includes(t))o.push(i);
+  if(o.length){const sf=o.every(i=>(i&7)!==(f&7)),sr=o.every(i=>(i>>3)!==(f>>3));dis=sf?PUZ_FILES[f&7]:sr?String(8-(f>>3)):PUZ_FILES[f&7]+(8-(f>>3))}
+  s=p.toUpperCase()+dis+(cap?'x':'')+PUZ_FILES[t&7]+(8-(t>>3))}
+ const nb=puzApply(st,u),opp=nb.turn,k=nb.sq.indexOf(opp==='w'?'K':'k');
+ if(k>=0&&puzAtt(nb.sq,k,opp==='w'?'b':'w')){let any=false;for(let i=0;i<64&&!any;i++)if(nb.sq[i]!=='.'&&puzCol(nb.sq[i])===opp&&puzLegal(nb,i).length)any=true;s+=any?'+':'#'}
+ return s}
+const PZFIG={N:'♘',B:'♗',R:'♖',Q:'♕',K:'♔'},puzFig=x=>x.replace(/^[NBRQK]/,c=>PZFIG[c]);
+function puzMovesHtml(){const h=PUZ.hist,h0=PUZ.hist0,keep=Math.max(0,h.length-24),pre=h0+h.length-PUZ.solN;let rows=[],i=keep;
+ while(i<h.length){const ply=h0+i,w=ply%2===0,n=(ply>>1)+1,row={n,w:'',b:'',wi:-1,bi:-1};
+  if(w){row.w=h[i];row.wi=i;if(i+1<h.length){row.b=h[i+1];row.bi=i+1}i+=2}else{row.b=h[i];row.bi=i;i+=1}rows.push(row)}
+ const cell=(t,idx)=>t?`<span class="m${idx<h.length-PUZ.solN?' d':''}${idx===h.length-1?' cur':''}">${esc(puzFig(t))}</span>`:'<span class="m"></span>';
+ return rows.length?rows.map(r=>`<div class="mr"><span class="n">${r.n}</span>${cell(r.w,r.wi)}${cell(r.b,r.bi)}</div>`).join(''):'<div class="mr"><span class="n"></span><span class="m d">—</span><span class="m"></span></div>'}
+function puzSquareHtml(index,view){const ch=PUZ.board.sq[index],r=index>>3,f=index&7,c=['puzzle-square'];
+ if(PUZ.selected===index)c.push('sel');if(PUZ.last.includes(index))c.push('last');if(PUZ.legal.includes(index))c.push(ch==='.'?'dot':'cap');if(PUZ.chk===index)c.push('chk');if(PUZ.bad===index)c.push('bad');if(PUZ.hintSq.includes(index))c.push('hint');
+ const lf=view?r===0:r===7,lr=view?f===7:f===0,pc=ch==='.'?'':`<svg class="bnpc ${ch===ch.toUpperCase()?'w':'k'}" viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${ch.toUpperCase()}"/></svg>`;
+ return`<button type="button" class="${c.join(' ')}" data-puz-square="${index}" aria-label="${PUZ_FILES[f]}${8-r}">${pc}${lr?`<i class="co cr">${8-r}</i>`:''}${lf?`<i class="co cf">${PUZ_FILES[f]}</i>`:''}</button>`}
+function puzRender(){const d=PUZ.data;if(!d)return;const p=d.puzzle,game=d.game||{},view=(PUZ.side==='b')!==PUZ.flip,indices=[],sol=p.solution||[];for(let r=0;r<8;r++)for(let f=0;f<8;f++)indices.push(view?(7-r)*8+(7-f):r*8+f);
+ const bt=PUZ.board.turn,k=PUZ.board.sq.indexOf(bt==='w'?'K':'k');PUZ.chk=k>=0&&puzAtt(PUZ.board.sq,k,bt==='w'?'b':'w')?k:-1;
+ const tags=(p.themes||[]).slice(0,5).map(t=>`<span class="puzzle-tag">${esc(t.replace(/-/g,' '))}</span>`).join(''),mine=PUZ.side==='w'?'White':'Black',total=Math.ceil(sol.length/2),step=Math.min(total,Math.floor(PUZ.cursor/2)+1);
+ const ttl=PUZ.local?'Practice Puzzle':PUZ.daily?'Today’s Puzzle':'Next Puzzle',sub=PUZ.local?'OFFLINE':PUZ.daily?'DAILY':'TRAINING';
+ app.innerHTML=`${BNSYM}<section class="puzzle-page"><div class="puzzle-head"><div><h1>${ttl}</h1><div class="puzzle-date">${PUZ.daily&&!PUZ.local?new Date().toLocaleDateString('en-CA'):'LICHESS PUZZLE'}</div></div><span class="puzzle-date">${sub}</span></div><div class="puzzle-layout"><aside class="pz-l"><div class="puzzle-turn"><i class="${PUZ.side==='w'?'tw':'tb'}"></i><b>${mine} to move</b><span>${PUZ.solved?'SOLVED':`${step} / ${total}`}</span></div><div class="puzzle-rating">RATING　${p.rating||'—'}</div><div class="puzzle-meta">${tags}</div><p class="puzzle-instruction">${PUZ.solved?'Puzzle completed. Well played!':`Find the best move for ${mine}.`}</p><div class="puzzle-status${PUZ.solved?' good':''}${PUZ.feedback==='Not quite. Try again.'?' bad':''}" id="puzStatus">${esc(PUZ.feedback||'Choose a piece to see where it can move.')}</div><div class="puzzle-actions"><button class="btn pri" id="puzNext">${PUZ.solved?'NEXT PUZZLE':'SKIP'}</button><button class="btn" id="puzHint"${PUZ.solved?' disabled':''}>HINT</button><button class="btn" id="puzFlip">FLIP</button><button class="btn" id="puzReset">RESET</button>${PUZ.daily&&!PUZ.local?'':'<button class="btn" id="puzDaily">DAILY</button>'}</div></aside><div class="puzzle-board-wrap"><div class="puzzle-board">${indices.map(i=>puzSquareHtml(i,view)).join('')}</div></div><aside class="pz-r"><div class="pz-h"><span>MOVES</span><span>${game.id?`GAME · ${esc(game.id)}`:'LICHESS'}</span></div><div class="pz-mv" id="pzMv">${puzMovesHtml()}</div>${p.id&&p.id!=='local'?`<a class="pz-a" href="https://lichess.org/training/${encodeURIComponent(p.id)}" target="_blank" rel="noopener">OPEN ON LICHESS ↗</a>`:''}</aside></div></section>`;
+ {const mv=$('#pzMv');if(mv)mv.scrollTop=mv.scrollHeight}
+ app.querySelectorAll('[data-puz-square]').forEach(el=>el.addEventListener('click',()=>puzClick(+el.dataset.puzSquare)));
+ $('#puzNext').onclick=()=>puzLoad(false);$('#puzReset').onclick=()=>puzReset();$('#puzFlip').onclick=()=>{PUZ.flip=!PUZ.flip;puzRender()};$('#puzHint').onclick=puzHint;if($('#puzDaily'))$('#puzDaily').onclick=()=>puzLoad(true)}
+function puzHint(){if(PUZ.solved||PUZ.busy)return;const u=(PUZ.data.puzzle.solution||[])[PUZ.cursor];if(!u)return;const[a,b]=puzIdx(u);PUZ.hint=Math.min(2,PUZ.hint+1);PUZ.hintSq=PUZ.hint===1?[a]:[a,b];PUZ.selected=-1;PUZ.legal=[];PUZ.feedback=PUZ.hint===1?'Hint: move this piece.':'Hint: this is the move.';puzRender()}
+function puzReset(){if(!PUZ.data)return;PUZ.board=PUZ.start.board;PUZ.last=PUZ.start.last;PUZ.hist=PUZ.start.hist.slice();PUZ.hist0=PUZ.start.hist0;PUZ.solN=0;PUZ.cursor=0;PUZ.selected=-1;PUZ.legal=[];PUZ.hint=0;PUZ.hintSq=[];PUZ.bad=-1;PUZ.solved=false;PUZ.busy=false;PUZ.feedback='Puzzle reset.';puzRender()}
+function puzSel(i,keep){PUZ.selected=i;PUZ.legal=i<0?[]:puzLegal(PUZ.board,i);if(!keep)PUZ.feedback=i<0?'':'Choose a destination square.';puzRender()}
+function puzClick(to){if(PUZ.loading||PUZ.busy||PUZ.solved)return;const piece=PUZ.board.sq[to],own=piece!=='.'&&puzCol(piece)===PUZ.side;
+ if(PUZ.selected===to)return puzSel(-1);if(own)return puzSel(to);if(PUZ.selected<0)return;
+ if(!PUZ.legal.includes(to)){PUZ.feedback='That move is not legal.';return puzSel(-1,true)}
+ const from=PUZ.selected,uci=puzUci(from,to,''),sol=PUZ.data.puzzle.solution||[],want=sol[PUZ.cursor];
+ if(want&&want.slice(0,4)===uci){PUZ.hist.push(puzSanOf(PUZ.board,want));PUZ.solN++;PUZ.board=puzApply(PUZ.board,want);PUZ.cursor++;PUZ.last=[from,to];PUZ.selected=-1;PUZ.legal=[];PUZ.hint=0;PUZ.hintSq=[];PUZ.bad=-1;PUZ.feedback='Correct!';
+  if(PUZ.cursor>=sol.length){PUZ.solved=true;return puzRender()}
+  PUZ.busy=true;puzRender();
+  setTimeout(()=>{const reply=sol[PUZ.cursor];if(reply){PUZ.hist.push(puzSanOf(PUZ.board,reply));PUZ.solN++;PUZ.board=puzApply(PUZ.board,reply);PUZ.last=puzIdx(reply);PUZ.cursor++}PUZ.busy=false;PUZ.feedback='Your turn.';if(PUZ.cursor>=sol.length)PUZ.solved=true;puzRender()},520)}
+ else{PUZ.selected=-1;PUZ.legal=[];PUZ.bad=to;PUZ.feedback='Not quite. Try again.';puzRender();setTimeout(()=>{if(PUZ.bad===to){PUZ.bad=-1;puzRender()}},700)}}
+async function puzLoad(daily){PUZ.loading=true;PUZ.local=false;PUZ.feedback='Loading puzzle…';app.innerHTML=`${BNSYM}<section class="puzzle-page"><div class="puzzle-head"><h1>${daily?'Today’s Puzzle':'Next Puzzle'}</h1></div><p class="puzzle-loading">Loading from Lichess…</p></section>`;
+ let data=null,note='';
+ try{const res=await fetch(daily?'https://lichess.org/api/puzzle/daily':'https://lichess.org/api/puzzle/next',{headers:{Accept:'application/json'},cache:'no-store'});if(!res.ok)throw new Error(res.status===429?'Lichess is busy.':`Lichess returned ${res.status}.`);data=await res.json();if(!data?.puzzle?.solution?.length)throw new Error('Puzzle data was incomplete.');PUZ.start=puzStart(data)}
+ catch(err){data=puzLocal();PUZ.start=puzStart(data);PUZ.local=true;note=`${err.message||'Could not reach Lichess.'} Showing a saved puzzle.`}
+ PUZ.data=data;PUZ.board=PUZ.start.board;PUZ.last=PUZ.start.last;PUZ.hist=PUZ.start.hist.slice();PUZ.hist0=PUZ.start.hist0;PUZ.solN=0;PUZ.side=PUZ.board.turn;PUZ.cursor=0;PUZ.selected=-1;PUZ.legal=[];PUZ.hint=0;PUZ.hintSq=[];PUZ.bad=-1;PUZ.solved=false;PUZ.busy=false;PUZ.daily=daily;PUZ.loading=false;PUZ.flip=false;PUZ.feedback=note||'Choose a piece to see where it can move.';puzRender()}
 function puzzlePage(){puzLoad(true)}
 
 /* memo viewer */
