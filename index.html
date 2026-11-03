@@ -416,6 +416,14 @@ html{scrollbar-gutter:stable}
 
 /* memo: strict N-column grid (reading order 1-2-3-4 / 5-6-7-8, never fewer columns than chosen) */
 .mas.m{column-count:auto;display:grid;grid-template-columns:repeat(var(--mc),minmax(0,1fr));gap:8px;align-items:start}.mas.m .mc{display:flex;flex-direction:column;gap:8px;min-width:0}.mas.m .mm{margin:0}
+
+
+/* page-break divider (the editor's PAGE button) in the single-column article view */
+.ar:not(.paged) .pg .page-break{position:relative;border:0;height:9px;margin:3.4em auto;max-width:15em;opacity:.75;background:linear-gradient(to right,transparent,var(--tmu)) left center/calc(50% - 15px) 1px no-repeat,linear-gradient(to left,transparent,var(--tmu)) right center/calc(50% - 15px) 1px no-repeat}
+.ar:not(.paged) .pg .page-break::after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;transform:rotate(45deg);border:1px solid var(--tmu);background:var(--tbg)}
+/* img: no photo borders; memo popup taller on desktop */
+.gi img{border:0}#lb figure{border:0}
+@media(min-width:721px){.mfull{max-height:60vh;max-height:max(60vh,calc(100vh - 230px));max-height:max(60vh,calc(100svh - 230px))}}
 </style>
 </head>
 <body>
@@ -886,7 +894,7 @@ function wrapKo(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEX
  L.forEach(n=>{const s=n.nodeValue,f=document.createDocumentFragment();let last=0,m;HANG.lastIndex=0;
   while(m=HANG.exec(s)){if(m.index>last)f.append(s.slice(last,m.index));const sp=document.createElement('span');sp.className='ko';sp.textContent=m[0];f.append(sp);last=m.index+m[0].length}
   if(last<s.length)f.append(s.slice(last));n.replaceWith(f)})}
-function layout(){const b=$('#bk'),p=$('#pg'),r=$('#rd');if(!b||r.hidden)return;const two=matchMedia('(min-width:900px) and (orientation:landscape)').matches;r.classList.toggle('two',two);p.style.columnCount=two?2:1;p.style.columnGap=GAP+'px';p.style.height=b.clientHeight+'px';pN=Math.max(1,Math.round((p.scrollWidth+GAP)/(b.clientWidth+GAP)));go(pI)}
+function layout(){const b=$('#bk'),p=$('#pg'),r=$('#rd');if(!b||r.hidden)return;const two=matchMedia('(min-width:900px) and (orientation:landscape)').matches;r.classList.toggle('two',two);p.style.columnCount=two?2:1;p.style.columnGap=GAP+'px';p.style.height=b.clientHeight+'px';pN=pgPages(b,p);go(pI)}
 function go(i){pI=Math.max(0,Math.min(pN-1,i));const p=$('#pg');if(!p)return;p.style.transform=`translateX(${-pI*($('#bk').clientWidth+GAP)}px)`;$('#pi').textContent=`${pI+1} / ${pN}`}
 function reader(it){const i=G(it),r=$('#rd');pI=0;r.hidden=false;document.body.classList.add('ro');r.classList.add('ui');
  r.innerHTML=`<div class="tp"><button class="ib" data-xfs aria-label="Back">←</button><b>${esc(i.title||'')}</b><span style="min-width:28px;text-align:right">${admin?`<button class="bt" data-ed="${i.id}">EDIT</button>`:''}</span></div><div class="bk" id="bk"><div class="pg" id="pg"><h1${i.meta?.sub?' class="h1s"':''}>${esc(i.title||'')}</h1>${i.meta?.sub?`<p class="sb">${esc(i.meta.sub)}</p>`:''}${marked.parse(i.body||'')}</div></div><div class="bm"><div class="br"><span id="pi"></span><button class="ib" id="aab" aria-label="Typography">Aa</button></div></div><div class="sh" id="sh">${sheet(true)}</div>`;
@@ -909,7 +917,8 @@ function layout2(){const a=$('#ar');if(!a){document.body.classList.remove('pgd')
  if(!two){p.style.height=p.style.columnCount=p.style.columnGap=p.style.transform=b.style.height='';return}
  const h=Math.max(240,innerHeight-(b.getBoundingClientRect().top+scrollY)-44-16-$('footer').offsetHeight);
  b.style.height=h+'px';p.style.columnCount=2;p.style.columnGap=GAP+'px';p.style.height=h+'px';
- p2N=Math.max(1,Math.round((p.scrollWidth+GAP)/(b.clientWidth+GAP)));go2(p2I)}
+ p2N=pgPages(b,p);go2(p2I)}
+function pgPages(b,p){let r=p.scrollWidth;const o=p.getBoundingClientRect().left;[...p.children].slice(-8).forEach(c=>[...c.getClientRects()].forEach(q=>{if(q.width||q.height)r=Math.max(r,q.right-o)}));return Math.max(1,Math.ceil((r+GAP)/(b.clientWidth+GAP)-.02))}
 function go2(i){const b=$('#bk2'),p=$('#pg2');if(!p||!$('#ar.paged'))return;p2I=Math.max(0,Math.min(p2N-1,i));p.style.transform=`translateX(${-p2I*(b.clientWidth+GAP)}px)`;upd2()}
 function upd2(){const pi=$('#pi2');if(!pi||!$('#ar.paged'))return;pi.textContent=`${p2I+1} / ${p2N}`;const pv=$('[data-pp="-1"]'),nx=$('[data-pp="1"]');if(pv)pv.disabled=p2I===0;if(nx)nx.disabled=p2I===p2N-1;const l=$('#zl'),r=$('#zr');if(l)l.classList.toggle('off',p2I===0);if(r)r.classList.toggle('off',p2I===p2N-1)}
 function closeReader(){$('#rd').hidden=true;$('#rd').innerHTML='';document.body.classList.remove('ro')}
