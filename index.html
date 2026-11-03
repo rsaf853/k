@@ -413,6 +413,31 @@ html{scrollbar-gutter:stable}
 .eb2 .page-break,.pvw .page-break{display:block;position:relative;height:0;margin:1.6em 0;border-top:1px dashed var(--mut);user-select:none;-webkit-user-select:none}.eb2 .page-break::after,.pvw .page-break::after{content:"PAGE BREAK";position:absolute;right:0;top:-.75em;padding:0 6px;background:var(--bg);font:700 9px/1.4 var(--sans);letter-spacing:.1em;color:var(--mut)}
 .wb{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--line)}.wb .sv{flex:1;font:500 11px var(--sans);color:var(--mut)}
 
+/* king profile card (white / black king: no banner, hover shows profile) */
+.bnp.kg{cursor:default}
+.bnp.kp{opacity:1}
+.bnp.kg.a::after{content:none}
+.bnbd:not(.ed) .bnp.kp:hover{background:var(--fg);color:var(--bg);opacity:1}
+.bnbd:not(.ed) .bnp.kp.w:hover{--pf:var(--ck);--ps:var(--ckl);--pe:var(--cw)}
+.bnbd:not(.ed) .bnp.kp.k:hover{--pf:var(--cw);--ps:var(--cwl);--pe:#111}
+.bnbd.ed .bnp.kg{cursor:pointer}
+.bnpop.kcd{width:min(270px,78%);padding:0;overflow:hidden}
+.kch{display:flex;justify-content:space-between;align-items:center;height:20px;padding:0 8px;border-bottom:1px solid var(--fg);font:700 9px var(--sans);letter-spacing:.1em}
+.kch.k{background:var(--fg);color:var(--bg)}.kch.w{background:var(--bg);color:var(--fg)}
+.kch svg{width:14px;height:14px;fill:currentColor;stroke:currentColor;stroke-width:1.5}
+.kch.w svg{--pe:var(--bg)}.kch.k svg{--pe:var(--fg)}
+.kcb{display:flex;align-items:center;gap:10px;padding:8px}
+.kcp{flex:none;width:58px;height:58px;background:var(--soft);border:1px solid var(--fg);display:grid;place-items:center;overflow:hidden;align-self:flex-start}
+.bnpop.kcd .kcp img{width:100%;height:100%;margin:0;border:0;object-fit:cover;filter:grayscale(1)}
+.kcp svg{width:62%;height:62%;fill:var(--mut);stroke:var(--mut);stroke-width:1.2;--pe:var(--soft);opacity:.55}
+.kct{min-width:0;flex:1;display:flex;flex-direction:column}
+.kcr1{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.kcn{font:800 14.5px/1.25 var(--sans);letter-spacing:-.045em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.kcg{flex:none;border:1px solid var(--fg);padding:0 5px;font:700 10px/1.5 var(--sans)}
+.kcr2{display:flex;justify-content:space-between;align-items:baseline;margin-top:5px}
+.kcl{font:700 9px var(--sans);letter-spacing:.1em;color:var(--mut);text-transform:uppercase}
+.kcv{font:800 22px/1 var(--sans);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.kcbar{height:5px;border:1px solid var(--fg);background:var(--bg);margin-top:4px}.kcbar i{display:block;height:100%;background:var(--fg)}
 /* memo: strict N-column grid (reading order 1-2-3-4 / 5-6-7-8, never fewer columns than chosen) */
 .mas.m{column-count:auto;display:grid;grid-template-columns:repeat(var(--mc),minmax(0,1fr));gap:8px;align-items:start}.mas.m .mc{display:flex;flex-direction:column;gap:8px;min-width:0}.mas.m .mm{margin:0}
 
@@ -678,7 +703,12 @@ const BNFEN='r7/p4p1p/2k1bQ2/2p5/5p2/8/PPP3PP/3R3K',BNG={K:'♔',Q:'♕',R:'♖'
 BNFEN.split('/').forEach((r,y)=>{let x=0;for(const ch of r){if(/[1-8]/.test(ch))x+=+ch;else{BNP.push({c:ch,y,x,sq:'abcdefgh'[x]+(8-y)});x++}}});
 const BNSYM='<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id=\"bnP\" viewBox=\"0 0 40 40\"><circle cx=\"20\" cy=\"11.5\" r=\"5\"/><rect x=\"13.5\" y=\"18\" width=\"13\" height=\"2.6\" rx=\"1.3\"/><path d=\"M15 31.5q.6-8 3-11h4q2.4 3 3 11z\"/><path d=\"M9 34.5h22v3H9z\"/><path d=\"M11.5 31.5h17v3h-17z\"/></symbol><symbol id=\"bnR\" viewBox=\"0 0 40 40\"><path d=\"M12 7h4v3h2.5V7h3v3H24V7h4v8.5l-2.5 2.5v10.5l3 3H11.5l3-3V18L12 15.5z\"/><path d=\"M12.5 18.5h15M14 22h12\" style=\"fill:none;stroke:var(--pe);stroke-width:1.1\"/><path d=\"M9 34.5h22v3H9z\"/><path d=\"M11.5 31.5h17v3h-17z\"/></symbol><symbol id=\"bnN\" viewBox=\"0 0 40 40\"><path d=\"M12 31.5C12 27 13.5 24 17 21.5C14.5 22.5 11.5 23 9.5 21.5Q7.5 20 8.5 17.5C10 15.5 12.5 14 13.5 11.5L14 6.5L17 9C21 8 27 10.5 29.5 17.5C31.5 23 30 28 29.5 31.5z\"/><circle cx=\"15.3\" cy=\"12.9\" r=\"1.1\" style=\"fill:var(--pe);stroke:none\"/><path d=\"M23.5 12.5C26.5 16.5 27 22 25.5 28\" style=\"fill:none;stroke:var(--pe);stroke-width:1.1\"/><path d=\"M9.5 19.5q2 .6 3.8-.4\" style=\"fill:none;stroke:var(--pe);stroke-width:1.1\"/><path d=\"M9 34.5h22v3H9z\"/><path d=\"M11.5 31.5h17v3h-17z\"/></symbol><symbol id=\"bnB\" viewBox=\"0 0 40 40\"><circle cx=\"20\" cy=\"5.5\" r=\"2.2\"/><path d=\"M20 8c-4.5 0-6.5 4-6.5 8 0 3 1.5 5 3 6h7c1.5-1 3-3 3-6 0-4-2-8-6.5-8z\"/><path d=\"M17 23l-1.5 8.5h9L23 23z\"/><path d=\"M20.5 11.5l3 4.5M15 22.5h10\" style=\"fill:none;stroke:var(--pe);stroke-width:1.1\"/><path d=\"M9 34.5h22v3H9z\"/><path d=\"M11.5 31.5h17v3h-17z\"/></symbol><symbol id=\"bnQ\" viewBox=\"0 0 40 40\"><path d=\"M9.5 13l3.7 13.5h13.6L30.5 13l-5.5 6-5-10-5 10z\"/><circle cx=\"9.5\" cy=\"11.5\" r=\"1.9\"/><circle cx=\"14.8\" cy=\"7.8\" r=\"1.9\"/><circle cx=\"20\" cy=\"6.5\" r=\"1.9\"/><circle cx=\"25.2\" cy=\"7.8\" r=\"1.9\"/><circle cx=\"30.5\" cy=\"11.5\" r=\"1.9\"/><path d=\"M12.5 26.5h15l1.5 5H11z\"/><path d=\"M14 23h12\" style=\"fill:none;stroke:var(--pe);stroke-width:1.1\"/><path d=\"M9 34.5h22v3H9z\"/><path d=\"M11.5 31.5h17v3h-17z\"/></symbol><symbol id=\"bnK\" viewBox=\"0 0 40 40\"><path d=\"M18.5 1.5h3v3h3v3h-3V10h-3V7.5h-3v-3h3z\"/><path d=\"M20 11c6.5 0 10 4.5 9 10.5L27.5 27h-15L11 21.5C10 15.5 13.5 11 20 11z\"/><path d=\"M12 27h16l2 4.5H10z\"/><path d=\"M13 20h14M12.5 25h15\" style=\"fill:none;stroke:var(--pe);stroke-width:1.1\"/><path d=\"M9 34.5h22v3H9z\"/><path d=\"M11.5 31.5h17v3h-17z\"/></symbol></defs></svg>';
 let BSEL='',BTIP='',BPT='';
-function banData(){if(!HOME.ban){const L=(HOME.blocks.find(b=>b.t==='banners')||{}).items||[],s={};L.filter(x=>x&&x.src).slice(0,BNP.length).forEach((x,i)=>{s[BNP[i].sq]={src:x.src,href:x.href||'',name:x.name||''}});HOME.ban={mine:{},slots:s}}if(!HOME.ban.slots)HOME.ban.slots={};if(!HOME.ban.mine)HOME.ban.mine={};return HOME.ban}
+/* kings: no banner slot; they carry a profile card instead (HOME.ban.kings = {w:{},k:{}}) */
+const BNB=BNP.filter(p=>p.c.toLowerCase()!=='k'),isK=q=>BNP.some(p=>p.sq===q&&p.c.toLowerCase()==='k'),kKey=q=>BNP.find(p=>p.sq===q).c==='K'?'w':'k';
+const kingHas=q=>{const k=(banData().kings||{})[kKey(q)]||{};return !!(k.name||k.title||k.elo||k.src)};
+function kingCard(q){const key=kKey(q),k=banData().kings[key]||{},e=parseInt(String(k.elo||'').replace(/\D/g,''),10),pc=e?Math.max(0,Math.min(100,(e-1000)/19)):0;
+ return`<div class="kch ${key}"><span>${key==='w'?'WHITE':'BLACK'}</span><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bnK"/></svg></div><div class="kcb"><div class="kcp">${k.src?`<img src="${esc(k.src)}" alt="">`:'<svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bnK"/></svg>'}</div><div class="kct"><div class="kcr1"><span class="kcn">${esc(k.name||'—')}</span><span class="kcg">${esc(k.title||'—')}</span></div><div class="kcr2"><span class="kcl">FIDE Rating:</span><span class="kcv">${esc(k.elo||'—')}</span></div>${e?`<div class="kcbar"><i style="width:${pc.toFixed(1)}%"></i></div>`:''}</div></div>`}
+function banData(){if(!HOME.ban){const L=(HOME.blocks.find(b=>b.t==='banners')||{}).items||[],s={};L.filter(x=>x&&x.src).slice(0,BNB.length).forEach((x,i)=>{s[BNB[i].sq]={src:x.src,href:x.href||'',name:x.name||''}});HOME.ban={mine:{},slots:s}}if(!HOME.ban.slots)HOME.ban.slots={};if(!HOME.ban.mine)HOME.ban.mine={};if(!HOME.ban.kings)HOME.ban.kings={w:{},k:{}};return HOME.ban}
 const banSorted=fl=>{const ix=new Map((banData().order||[]).map((q,i)=>[q,i]));return fl.slice().sort((a,b)=>(ix.has(a.sq)?ix.get(a.sq):1e3+BNP.indexOf(a))-(ix.has(b.sq)?ix.get(b.sq):1e3+BNP.indexOf(b)))};
 const banDom=h=>{try{return new URL(h).hostname.replace(/^www\./,'')}catch(e){return''}},banName=x=>(x.name||'').trim()||banDom(x.href||'');
 function banMine(){const m=banData().mine;return{title:m.title||document.title||location.hostname,src:m.src||'',url:m.url||location.origin+location.pathname}}
@@ -692,17 +722,18 @@ function bnPos(){if(BNPS)return BNPS;let st=puzParseFen('rnbqkbnr/pppppppp/8/8/8
 function bnSheet(){return`<div class="bns">${lmHtml()}<div class="bnsb"><div class="bnsh"><span></span><span>WHITE</span><span>BLACK</span></div>${BNMV.map((m,i)=>{const a=m.split(' ');return`<div class="bnsr${i===BNMV.length-1?' l':''}${(i+1)%5===0?' f':''}"><i>${i+1}</i><span>${a[0]}</span><span>${a[1]||'·'}</span></div>`}).join('')}</div><div class="bnlg"><span>SPENCER ○ / ANDERSON ●</span><span>1–0</span></div></div>`}
 function bnLg(fl){const W=fl.filter(p=>p.c===p.c.toUpperCase()).length;return`<div class="bnlg"><span>EVAL · BANNERS W − B</span><span>W ${W} · B ${fl.length-W}</span></div>`}
 function bannerPage(){FS=false;closeReader();document.body.classList.remove('pgd');
- const D=banData(),S=D.slots,ed=admin&&EM,m=banMine(),fl=BNP.filter(p=>S[p.sq]&&S[p.sq].src),touch=matchMedia('(hover:none)').matches;
- const cell=p=>{const s=S[p.sq],f=s&&s.src;return`<button type="button" class="bnp ${p.c===p.c.toUpperCase()?'w':'k'}${p.y===7?' rb':''}${f?' f':''}${ed&&BSEL===p.sq?' a':''}" style="grid-area:${p.y+1}/${p.x+1}" data-sq="${p.sq}" aria-label="${p.sq}${f?' · '+esc(banName(s)):''}">${'<svg class="bnpc" viewBox="0 0 40 40" aria-hidden="true"><use href="#bn'+p.c.toUpperCase()+'"/></svg>'}</button>`};
+ const D=banData(),S=D.slots,ed=admin&&EM,m=banMine(),fl=BNB.filter(p=>S[p.sq]&&S[p.sq].src),touch=matchMedia('(hover:none)').matches;
+ const cell=p=>{const kg=isK(p.sq),s=kg?null:S[p.sq],f=s&&s.src;return`<button type="button" class="bnp ${p.c===p.c.toUpperCase()?'w':'k'}${p.y===7?' rb':''}${kg?' kg':''}${kg&&kingHas(p.sq)?' kp':''}${f?' f':''}${ed&&BSEL===p.sq?' a':''}" style="grid-area:${p.y+1}/${p.x+1}" data-sq="${p.sq}" aria-label="${p.sq}${f?' · '+esc(banName(s)):''}">${'<svg class="bnpc" viewBox="0 0 40 40" aria-hidden="true"><use href="#bn'+p.c.toUpperCase()+'"/></svg>'}</button>`};
  const cp=(k,v)=>`<button type="button" class="bncp" data-cp="${esc(v)}"><span>${k}</span><span>${esc(v)||'—'}</span><span>COPY</span></button>`;
  const mine=`<div class="bnmy">${ed?'<div class="bnk" style="justify-content:flex-end"><button type="button" class="btn" id="bme">EDIT</button></div>':''}${m.src?`<img src="${esc(m.src)}" alt="${esc(m.title)}">`:'<div class="ph" style="margin-bottom:8px">NO BANNER</div>'}${cp('TITLE',m.title)}${cp('IMAGE',m.src)}${cp('LINK',m.url)}</div>`;
  let rest='';
  if(!ed)rest=`<div class="bnl"><div class="bnk" style="min-height:0;padding-bottom:8px"><span>MATES · ${fl.length} LINKS</span></div>${banSorted(fl).map((p,i)=>{const s=S[p.sq],h=s.href||'';return`<a class="bnr ${p.c===p.c.toUpperCase()?'w':'k'}" data-sq="${p.sq}" href="${/^(https?:|#)/.test(h)?esc(h):'#'}" target="_blank" rel="noopener"><i>${p2(i+1)}</i><span><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${p.c.toUpperCase()}"/></svg></span><b>${esc(banName(s)||'—')}</b></a>`}).join('')}</div>`;
+ else if(BSEL&&isK(BSEL)){const kk=kKey(BSEL),k=D.kings[kk]||{};rest=`<div class="bnf"><div class="bnk">KING PROFILE · ${kk==='w'?'WHITE':'BLACK'} · ${BSEL.toUpperCase()}</div><label>① PHOTO · SQUARE</label><div class="r"><input id="kps" placeholder="Image URL" value="${esc(k.src||'')}"><button type="button" class="btn" id="kpu">UPLOAD</button><input type="file" id="kpf" accept="image/*" hidden></div><label>② NAME</label><input id="kpn" value="${esc(k.name||'')}"><label>③ TITLE</label><input id="kpt" placeholder="GM" value="${esc(k.title||'')}"><label>④ FIDE RATING</label><input id="kpe" inputmode="numeric" placeholder="2745" value="${esc(k.elo||'')}"><div class="r sv"><button type="button" class="btn pri" id="kpv" style="flex:1">SAVE</button><button type="button" class="btn" id="kpr">CLEAR</button></div><p id="st" class="st"></p></div>`}
  else if(BSEL){const s=S[BSEL]||{},p=BNP.find(x=>x.sq===BSEL);rest=`<div class="bnf"><div class="bnk">PLACE A BANNER · ${BSEL.toUpperCase()}</div><label>① IMAGE</label><div class="r"><input id="bfs" placeholder="Image URL" value="${esc(s.src||'')}"><button type="button" class="btn" id="bfu">UPLOAD</button><input type="file" id="bff" accept="image/*" hidden></div><label>② LINK</label><input id="bfh" placeholder="https://…" value="${esc(s.href||'')}"><label>③ NAME · EMPTY = DOMAIN</label><input id="bfn" value="${esc(s.name||'')}"><div class="r sv"><button type="button" class="btn pri" id="bsv" style="flex:1">SAVE</button><button type="button" class="btn" id="brm">REMOVE</button></div><p id="st" class="st"></p></div>`}
  else rest='<div class="bnl"><p class="st">Select a piece to place a banner.</p></div>';
  const ic=p=>`<svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${p.c.toUpperCase()}"/></svg>`;
  const ord=ed&&fl.length?`<div class="bno"><div class="bnk" style="min-height:0;padding-bottom:8px"><span>ORDER · ⠿ DRAG OR ↑ ↓</span></div>${banSorted(fl).map((p,i)=>`<div class="bnr ed bno-r ${p.c===p.c.toUpperCase()?'w':'k'}" data-sq="${p.sq}"><button type="button" class="bngp" data-bgrip aria-label="Drag">⠿</button><i>${p2(i+1)}</i><span>${ic(p)}</span><b>${esc(banName(S[p.sq])||'—')}</b><button type="button" class="btn bnud" data-bmv="-1">↑</button><button type="button" class="btn bnud" data-bmv="1">↓</button></div>`).join('')}</div>`:'';
- app.innerHTML=`${BNSYM}${ed?`<div class="bneb"><span>EDIT MODE · ${fl.length} OF ${BNP.length} PIECES HAVE A BANNER</span><button type="button" class="btn" id="bdone">DONE</button></div>`:''}<div class="bnh"><div><h1>King’s Gambit Accepted</h1></div><div class="bnmt">Spencer — Anderson<br>Eton College · 2008 · 29.Rd1 1–0</div></div><div class="bng"><div class="bnbx"><div class="bnbw">${evBar(fl)}<div class="bnbd${ed?' ed':''}">${BNP.map(cell).join('')}${[0,1,2,3,4,5,6,7].map(y=>`<i class="co cr" style="grid-area:${y+1}/1" aria-hidden="true">${8-y}</i>`).join('')}${[...'abcdefgh'].map((f,x)=>`<i class="co cf" style="grid-area:8/${x+1}" aria-hidden="true">${f}</i>`).join('')}<div class="bnpop" hidden></div></div>${bnLg(fl)}${ed?'':BNRP}</div></div><aside class="bna">${mine}${rest}${ord}</aside></div>`;
+ app.innerHTML=`${BNSYM}${ed?`<div class="bneb"><span>EDIT MODE · ${fl.length} OF ${BNB.length} PIECES HAVE A BANNER · KINGS = PROFILE</span><button type="button" class="btn" id="bdone">DONE</button></div>`:''}<div class="bnh"><div><h1>King’s Gambit Accepted</h1></div><div class="bnmt">Spencer — Anderson<br>Eton College · 2008 · 29.Rd1 1–0</div></div><div class="bng"><div class="bnbx"><div class="bnbw">${evBar(fl)}<div class="bnbd${ed?' ed':''}">${BNP.map(cell).join('')}${[0,1,2,3,4,5,6,7].map(y=>`<i class="co cr" style="grid-area:${y+1}/1" aria-hidden="true">${8-y}</i>`).join('')}${[...'abcdefgh'].map((f,x)=>`<i class="co cf" style="grid-area:8/${x+1}" aria-hidden="true">${f}</i>`).join('')}<div class="bnpop" hidden></div></div>${bnLg(fl)}${ed?'':BNRP}</div></div><aside class="bna">${mine}${rest}${ord}</aside></div>`;
  const O=$('.bno');if(O){
   O.addEventListener('click',e=>{const b=e.target.closest('[data-bmv]');if(!b)return;const sq=b.closest('.bno-r').dataset.sq,o=banSorted(fl).map(p=>p.sq),i=o.indexOf(sq),j=i+ +b.dataset.bmv;if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];banData().order=o;saveHome();bannerPage()});
   O.addEventListener('pointerdown',e=>{const g=e.target.closest('[data-bgrip]');if(!g)return;e.preventDefault();const row=g.closest('.bno-r');row.classList.add('mv');try{g.setPointerCapture(e.pointerId)}catch(_){}
@@ -711,13 +742,16 @@ function bannerPage(){FS=false;closeReader();document.body.classList.remove('pgd
    g.addEventListener('pointermove',mv);g.addEventListener('pointerup',up);g.addEventListener('pointercancel',up)})}
  const bd=$('.bnbd'),tip=$('.bnpop'),hide=()=>{tip.hidden=true;BTIP=''};
  const place=el=>{const B=bd.getBoundingClientRect(),r=el.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;let l=r.left-B.left+r.width/2-w/2;l=Math.max(0,Math.min(l,B.width-w));let t=r.bottom-B.top+6;if(t+h>B.height)t=r.top-B.top-h-6;tip.style.left=l+'px';tip.style.top=Math.max(0,t)+'px'};
- const show=el=>{const q=el.dataset.sq,s=S[q];if(ed||!s||!s.src)return hide();BTIP=q;const n=banName(s);tip.innerHTML=`<img src="${esc(s.src)}" alt=""><b>${esc(n)}</b><small>${esc(banDom(s.href||''))}</small>`;tip.hidden=false;place(el);tip.querySelector('img').onload=()=>place(el)};
+ const show=el=>{const q=el.dataset.sq;if(ed)return hide();
+  if(isK(q)){if(!kingHas(q))return hide();BTIP=q;tip.className='bnpop kcd';tip.innerHTML=kingCard(q);tip.hidden=false;place(el);const im=tip.querySelector('img');if(im)im.onload=()=>place(el);return}
+  const s=S[q];if(!s||!s.src)return hide();BTIP=q;tip.className='bnpop';const n=banName(s);tip.innerHTML=`<img src="${esc(s.src)}" alt=""><b>${esc(n)}</b><small>${esc(banDom(s.href||''))}</small>`;tip.hidden=false;place(el);tip.querySelector('img').onload=()=>place(el)};
  bd.addEventListener('pointerdown',e=>{BPT=e.pointerType});
  bd.addEventListener('mouseover',e=>{if(BPT==='touch')return;const b=e.target.closest('.bnp');b?show(b):hide()});
  bd.addEventListener('mouseleave',()=>{if(BPT!=='touch')hide()});
  bd.addEventListener('focusin',e=>{const b=e.target.closest('.bnp');b&&BPT!=='mouse'&&show(b)});bd.addEventListener('focusout',()=>{if(BPT!=='touch')hide()});
  bd.addEventListener('click',e=>{const b=e.target.closest('.bnp');if(!b)return hide();const q=b.dataset.sq,s=S[q];
   if(ed){BSEL=q;bannerPage();return}
+  if(isK(q)){if(BPT==='touch'&&BTIP!==q&&kingHas(q))show(b);return}
   if(!s||!s.src)return hide();
   if(BPT==='touch'&&BTIP!==q)return show(b);
   if(/^(https?:|#)/.test(s.href||''))window.open(s.href,'_blank','noopener')});
@@ -745,6 +779,10 @@ function bannerPage(){FS=false;closeReader();document.body.classList.remove('pgd
   document.addEventListener('keydown',window.BNKEY);info()}
  if($('#bdone'))$('#bdone').onclick=()=>$('#mode').click();
  if($('#bme'))$('#bme').onclick=()=>banMineForm();
+ if(ed&&BSEL&&$('#kpv')){const f=$('#kpf'),u=$('#kpu'),key=kKey(BSEL);u.onclick=()=>f.click();f.onchange=()=>{u.textContent=f.files[0]?f.files[0].name:'UPLOAD'};
+  $('#kpv').onclick=async()=>{let src=$('#kps').value.trim();msg('Saving…');try{if(f.files[0])src=await upload(f.files[0])}catch(x){return msg('Failed: '+x.message)}
+   D.kings[key]={src,name:$('#kpn').value.trim(),title:$('#kpt').value.trim(),elo:$('#kpe').value.trim()};await saveHome();bannerPage()};
+  $('#kpr').onclick=async()=>{D.kings[key]={};await saveHome();bannerPage()}}
  if(ed&&BSEL&&$('#bsv')){const f=$('#bff'),u=$('#bfu');u.onclick=()=>f.click();f.onchange=()=>{u.textContent=f.files[0]?f.files[0].name:'UPLOAD'};
   $('#bsv').onclick=async()=>{let src=$('#bfs').value.trim();msg('Saving…');try{if(f.files[0])src=await upload(f.files[0])}catch(x){return msg('Failed: '+x.message)}
    if(!src)return msg('Image is required');S[BSEL]={src,href:$('#bfh').value.trim(),name:$('#bfn').value.trim()};await saveHome();bannerPage()};
