@@ -111,7 +111,7 @@ h1{font-size:24px;font-weight:900;margin:0;letter-spacing:-.055em}.sub{color:var
 .em{display:flex;flex-wrap:wrap;gap:6px 10px;padding:8px 16px;border-bottom:1px solid var(--line);align-items:center}.em select,.em input{width:auto;padding:3px 8px;font-size:12.5px;flex:0 1 auto}.em input#et{flex:1;min-width:140px}
 .mn2{padding:12px 16px}.tt,.stt{width:100%;border:0;padding:0;background:none}.tt{font:700 22px/1.3 var(--sans)}.stt{font:400 13px/1.5 var(--sans);color:var(--mut);padding:0 0 8px}
 .tb{display:flex;flex-wrap:wrap;gap:1px;padding:3px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);align-items:center;position:sticky;top:0;background:var(--bg);z-index:2}
-.tb button{min-width:26px;height:24px;font:700 11px var(--sans);padding:0 6px;color:var(--mut)}.tb button:hover{color:var(--fg)}.tb s{width:1px;height:12px;background:var(--line);margin:0 3px}.tb .md{margin-left:auto;display:flex}.tb .md button{height:20px;border:1px solid var(--line);margin-left:-1px;font:700 9.5px var(--sans)}.tb .md .on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.tb button{min-width:26px;height:24px;font:700 11px var(--sans);padding:0 6px;color:var(--mut)}.tb button:hover{color:var(--fg)}.tb button mark{padding:0 4px;font:inherit}.tb s{width:1px;height:12px;background:var(--line);margin:0 3px}.tb .md{margin-left:auto;display:flex}.tb .md button{height:20px;border:1px solid var(--line);margin-left:-1px;font:700 9.5px var(--sans)}.tb .md .on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .eb2,.pvw{min-height:320px;padding:14px 2px;outline:0;font:15px/1.8 var(--sans);word-break:keep-all}
 .eb2 h2,.pvw h2{font:700 18px/1.4 var(--sans);margin:1em 0 .3em}.eb2 blockquote,.pvw blockquote{margin:.8em 0;padding:.6em .9em;background:var(--hl);color:var(--fg)}.eb2 blockquote>:last-child,.pvw blockquote>:last-child{margin-bottom:0}.eb2 blockquote+blockquote,.pvw blockquote+blockquote{margin-top:-.8em;padding-top:.05em}.eb2 p,.pvw p{margin:0 0 .7em}.eb2 img,.pvw img{max-width:100%}.eb2 hr,.pvw hr{border:0;border-top:1px solid var(--fg)}
 .src{display:none;min-height:320px;font:13px/1.7 var(--sans);background:var(--soft);resize:vertical;border:0;padding:12px}.pvw{display:none}.stb{display:flex;justify-content:space-between;font:11px var(--sans);color:var(--mut);padding-top:4px}
@@ -127,7 +127,9 @@ h1{font-size:24px;font-weight:900;margin:0;letter-spacing:-.055em}.sub{color:var
 .bk{position:absolute;top:calc(58px + env(safe-area-inset-top,0px));bottom:calc(60px + env(safe-area-inset-bottom,0px));left:calc(max(0px,50% - 380px) + var(--tm));right:calc(max(0px,50% - 380px) + var(--tm));overflow:hidden}#rd.two .bk{left:calc(max(0px,50% - 560px) + var(--tm));right:calc(max(0px,50% - 560px) + var(--tm))}
 .pg{font-family:var(--tf);font-size:var(--ts);line-height:var(--tlh);letter-spacing:var(--tc);word-break:keep-all;transition:transform .25s}.pg .ko{font-family:var(--tk)}
 .pg h1{font:900 1.5em/1.25 var(--sans);letter-spacing:-.055em;margin:0 0 .75em}.pg h1.h1s{margin-bottom:.3em}.pg h2,.pg h3{font:700 1.15em/1.4 var(--sans);letter-spacing:-.03em;margin:1.4em 0 .4em}.pg .sb{font:400 .85em var(--sans);color:var(--tmu);margin:0 0 1.4em;letter-spacing:-.03em}
-.pg p{margin:0 0 .9em}.pg .page-break{display:block;height:0;break-before:column;-webkit-column-break-before:always;page-break-before:always}.pg img{max-width:100%;max-height:70%;break-inside:avoid}.pg blockquote{margin:1em 0;padding:.8em 1.2em;background:var(--hl);color:var(--tfg)}.pg blockquote>:last-child{margin-bottom:0}.pg blockquote+blockquote{margin-top:-1em;padding-top:.05em}.pg pre,.pg code{font-family:var(--sans);font-size:.9em}.pg pre{padding:10px;overflow:auto;break-inside:avoid;background:var(--tln)}.pg hr{border:0;border-top:1px solid var(--tln);margin:1.5em 0}
+.pg p{margin:0 0 .9em}.pg .page-break{display:block;height:0;break-before:column;-webkit-column-break-before:always;page-break-before:always}.pg img{max-width:100%;max-height:70%;break-inside:avoid}.pg blockquote{margin:1em 0;padding:.8em 1.2em;background:var(--hl);color:var(--tfg)}.pg blockquote>:last-child{margin-bottom:0}.pg blockquote+blockquote{margin-top:-1em;padding-top:.05em}.pg pre,.pg code{font-family:var(--sans);font-size:.9em}.pg pre{padding:10px;overflow:auto;break-inside:avoid;background:var(--tln)}.hb{display:block;margin:1em 0;max-width:100%;overflow-x:auto}.hb img,.hb video,.hb iframe{max-width:100%}.hb iframe{border:0}
+.eb2 pre[data-html]{position:relative;margin:.8em 0;padding:22px 12px 10px;background:var(--soft);border:1px dashed var(--mut);font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-all;color:var(--fg)}.eb2 pre[data-html]::before{content:"HTML";position:absolute;left:8px;top:4px;font:700 9px var(--sans);letter-spacing:.08em;color:var(--mut)}
+.pg hr{border:0;border-top:1px solid var(--tln);margin:1.5em 0}
 .sh{position:absolute;z-index:5;right:12px;bottom:calc(52px + env(safe-area-inset-bottom,0px));width:min(340px,calc(100% - 24px));max-height:min(72%,460px);overflow:auto;background:var(--tbg);color:var(--tfg);border:1px solid var(--tfg);box-shadow:0 10px 30px rgba(0,0,0,.2);padding:12px 14px;display:none;cursor:default}.sh.on{display:block}
 .sh .fg{grid-template-columns:repeat(3,1fr)}.sh .fg button{font-size:12px;padding:7px 6px}
 .sh h5{margin:14px 0 6px;font:700 10px var(--sans);color:var(--tmu)}.sh h5:first-child{margin-top:0}
@@ -141,6 +143,7 @@ h1{font-size:24px;font-weight:900;margin:0;letter-spacing:-.055em}.sub{color:var
 .ar.paged .pg{max-width:none;transition:transform .25s}.ar.paged .bk2{overflow:hidden;position:relative}
 .ar .br2{display:none}.ar.paged .br2{display:flex;justify-content:space-between;align-items:center;padding-top:4px;margin:0 max(0px,calc(var(--tm) - 28px))}
 .br2 #pi2{font:500 11px var(--sans);color:var(--mut);font-variant-numeric:tabular-nums}.pn{color:var(--mut);opacity:.7;padding:2px 8px;font-size:15px;line-height:1;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;touch-action:manipulation}.pn:hover{opacity:1;color:var(--fg)}.pn:disabled{opacity:.2;cursor:default}
+.ar .br2,.zn,.pn{-webkit-user-select:none;user-select:none}.ar.paged img{-webkit-user-drag:none}
 .zn{position:absolute;top:0;bottom:0;width:26%;display:flex;align-items:center;font:300 34px var(--sans);color:var(--fg);opacity:0;transition:opacity .15s;pointer-events:none;z-index:2}.zn.l{left:0}.zn.r{right:0;justify-content:flex-end}.zn.on{opacity:.22}.zn.off{opacity:0!important}.ar:not(.paged) .zn{display:none}
 #lst>.row:first-child,#lst>div>.ln:first-child{border-top:0}
 body.pgd main{padding-bottom:16px}
@@ -224,7 +227,7 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .ev .w{background:var(--bg);color:var(--fg);animation:evIn .9s cubic-bezier(.3,0,.2,1) both}.ev .k{background:var(--fg);color:var(--bg);flex:1;justify-content:flex-end}
 @keyframes evIn{from{width:50%}}
 
-.bl.fh{overflow:auto;scrollbar-width:thin;scrollbar-color:var(--fg) transparent}
+.bl.fh{overflow:auto}
 .bl .rh{display:none}
 .bl.edit .rh{display:block;position:absolute;left:0;right:0;bottom:0;height:12px;cursor:row-resize;touch-action:none;z-index:5}
 .bl.edit .rh::after{content:"";position:absolute;left:50%;margin-left:-16px;bottom:3px;width:32px;height:4px;background:var(--fg);border-radius:2px}
@@ -312,9 +315,7 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .bnf .r.sv{margin-top:16px}
 .bneb{display:flex;justify-content:space-between;align-items:center;border:1px dashed var(--mut);padding:6px 12px;margin-bottom:18px;font:600 10px var(--sans);letter-spacing:.1em}
 /* banners: rows of 2 (1-2 / 3-4), grayscale -> color on hover, corner tag, scrollbar only while hovering */
-.bnw{overflow-y:auto;overflow-x:hidden;padding-right:2px;scrollbar-width:thin;scrollbar-color:transparent transparent}
-.bnw:hover{scrollbar-color:var(--fg) transparent}
-.bnw::-webkit-scrollbar{width:4px}.bnw::-webkit-scrollbar-track{background:transparent}.bnw::-webkit-scrollbar-thumb{background:transparent}.bnw:hover::-webkit-scrollbar-thumb{background:var(--fg)}
+.bnw{overflow-y:auto;overflow-x:hidden;padding-right:2px}
 .bnc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:start}
 .bn{position:relative;display:block;border:1px solid var(--fg);line-height:0;background:var(--soft);overflow:hidden}
 .bn img{display:block;width:100%;height:auto;filter:grayscale(1);transition:filter .35s}
@@ -326,13 +327,14 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .brh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font:700 10px var(--sans);color:var(--mut)}.bra{display:flex;gap:2px}
 .brow input{margin-bottom:6px}.brow .bfl{margin-bottom:6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* unified scrollbar: thin, square-edged */
-*{scrollbar-width:thin;scrollbar-color:var(--fg) transparent}
-*::-webkit-scrollbar{width:6px;height:6px}
-*::-webkit-scrollbar-track{background:transparent}
-*::-webkit-scrollbar-thumb{background:var(--fg);border:0;border-radius:0}
-*::-webkit-scrollbar-thumb:hover{background:var(--mut)}
-*::-webkit-scrollbar-corner{background:transparent}
+/* unified scrollbar: narrow (4px), square-edged, same everywhere */
+::-webkit-scrollbar{width:4px;height:4px;background:transparent}
+::-webkit-scrollbar-track{background:transparent;border-radius:0}
+::-webkit-scrollbar-thumb{background:var(--fg);border:0;border-radius:0;min-height:28px;min-width:28px}
+::-webkit-scrollbar-thumb:hover{background:var(--mut)}
+::-webkit-scrollbar-button{display:none;width:0;height:0}
+::-webkit-scrollbar-corner{background:transparent}
+@supports not selector(::-webkit-scrollbar){*{scrollbar-width:thin;scrollbar-color:var(--fg) transparent}}
 .puzzle-square{overflow:hidden}.puzzle-square.last{background:color-mix(in srgb,var(--fg) 13%,transparent)}.puzzle-square .co{position:absolute;font:600 9px/1 var(--sans);font-style:normal;color:var(--mut);pointer-events:none}.puzzle-square .cr{left:3px;top:3px}.puzzle-square .cf{right:3px;bottom:3px}
 .puzzle-square.dot::after{content:"";position:absolute;width:26%;height:26%;border-radius:50%;background:var(--fg);opacity:.32;pointer-events:none}
 .puzzle-square.pcap::after{content:"";position:absolute;inset:5%;border:3px solid var(--fg);border-radius:50%;opacity:.32;pointer-events:none}
@@ -710,7 +712,21 @@ function blockForm(b){const t=b.t;if(t==='banners')return banForm(b);openM(`<h3>
   if(t==='note'){b.title=fd.get('title').trim();b.text=fd.get('text')}if(t==='links'||t==='position'||t==='puzzle'||t==='replay')b.text=fd.get('text');if(fd.get('n'))b.n=+fd.get('n')}catch(x){return msg('Failed: '+x.message)}
   await saveHome();closeM();home()}}
 /* reader */
-marked.use({breaks:true,renderer:{code(c,l){return(l||'').trim()==='html'?c:false}}});
+/* ```html fenced blocks render as live (sanitized, style-scoped) HTML; inside the editor they stay editable code */
+let HB_ED=false,HB_N=0;
+function hbScope(css,id){const kf=[];css=css.replace(/@keyframes[^{]+\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g,m=>{kf.push(m);return''});
+ css=css.replace(/@import[^;]*;?/gi,'').replace(/expression\s*\(|javascript:|behavior\s*:|-moz-binding/gi,'');return kf.join('\n')+`.${id}{${css}}`}
+function hbClean(src){const t=document.createElement('template');t.innerHTML=src;const id='hb'+(++HB_N);
+ t.content.querySelectorAll('script,object,embed,meta,link,base,form,noscript,template').forEach(n=>n.remove());
+ t.content.querySelectorAll('*').forEach(n=>{[...n.attributes].forEach(a=>{const k=a.name.toLowerCase(),v=a.value.toLowerCase().replace(/[\s\u0000-\u001f]/g,'');
+   if(k.startsWith('on')||k==='srcdoc'||k==='formaction'||(/^(href|src|xlink:href|action|poster)$/.test(k)&&/^(javascript|vbscript|data:text\/html)/.test(v)))n.removeAttribute(a.name)});
+  if(n.tagName==='IFRAME'){let ok=false;try{const u=new URL(n.getAttribute('src')||'',location.href);ok=u.protocol==='https:'&&u.origin!==location.origin}catch(e){}
+   if(!ok){n.remove();return}n.setAttribute('sandbox','allow-scripts allow-same-origin allow-popups allow-presentation');n.setAttribute('loading','lazy')}
+  if(n.tagName==='A'&&n.getAttribute('target')==='_blank')n.setAttribute('rel','noopener')});
+ t.content.querySelectorAll('style').forEach(st=>{st.textContent=hbScope(st.textContent,id)});
+ const d=document.createElement('div');d.appendChild(t.content);return`<div class="hb ${id}">${d.innerHTML}</div>`}
+const mdE=s=>{HB_ED=true;try{return marked.parse(s||'')}finally{HB_ED=false}};
+marked.use({breaks:true,renderer:{code(c,l){if(String(l||'').trim().split(/\s/)[0]!=='html')return false;return HB_ED?`<pre class="hbx" data-html>${esc(c)}</pre>`:hbClean(c)}}});
 /* highlight (nesting ok) + bold/italic that still apply when syntax overlaps */
 marked.use({extensions:[
 {name:'hl',level:'inline',start(x){return x.indexOf('==')},tokenizer(x){
@@ -758,7 +774,11 @@ let p2I=0,p2N=1;
 function article(it){const i=G(it);closeReader();p2I=0;
  app.innerHTML=`<div class="top"><span class="sub" style="margin:0">${date(i.created_at)}</span><span class="acts"><button class="btn" id="aa2" aria-label="Typography">Aa</button><button class="btn" id="fsb">FULL</button>${eb(i)}</span></div><article class="ar" id="ar"><div class="bk2" id="bk2"><div class="zn l" id="zl">‹</div><div class="zn r" id="zr">›</div><div class="pg" id="pg2"><h1${i.meta?.sub?' class="h1s"':''}>${esc(i.title||'')}</h1>${i.meta?.sub?`<p class="sb">${esc(i.meta.sub)}</p>`:''}${marked.parse(i.body||'')}</div></div><div class="br2"><button class="pn" data-pp="-1" aria-label="Previous page">‹</button><span id="pi2"></span><button class="pn" data-pp="1" aria-label="Next page">›</button></div></article><div class="sh fx" id="sh2">${sheet(false)}</div>`;
  wrapKo($('#pg2'));applyRS();document.fonts&&document.fonts.ready.then(layout2);$('#ar').querySelectorAll('img').forEach(m=>m.onload=layout2);const bk=$('#bk2'),zone=e=>{const r=bk.getBoundingClientRect(),x=(e.clientX-r.left)/r.width;return x<.26?-1:x>.74?1:0};
- bk.addEventListener('click',e=>{if(!$('#ar.paged')||e.target.closest('a,button,img')||String(getSelection()))return;const z=zone(e);if(z)go2(p2I+z)});
+ let md0=null;const noSel=()=>{const s=getSelection();s&&s.rangeCount&&s.removeAllRanges()};
+ bk.addEventListener('mousedown',e=>{md0=[e.clientX,e.clientY];if(!$('#ar.paged')||e.target.closest('a,button,img'))return;if(zone(e)){e.preventDefault();noSel()}});
+ bk.addEventListener('dblclick',e=>{if($('#ar.paged')&&zone(e)){e.preventDefault();noSel()}});
+ bk.addEventListener('dragstart',e=>{if($('#ar.paged'))e.preventDefault()});
+ bk.addEventListener('click',e=>{if(!$('#ar.paged')||e.target.closest('a,button,img'))return;if(md0&&Math.hypot(e.clientX-md0[0],e.clientY-md0[1])>5)return;const z=zone(e);if(z){noSel();go2(p2I+z)}});
  bk.addEventListener('mousemove',e=>{if(!$('#ar.paged'))return;const z=zone(e);bk.style.cursor=z<0&&p2I>0?'w-resize':z>0&&p2I<p2N-1?'e-resize':'';$('#zl').classList.toggle('on',z<0&&p2I>0);$('#zr').classList.toggle('on',z>0&&p2I<p2N-1)});
  bk.addEventListener('mouseleave',()=>{$('#zl').classList.remove('on');$('#zr').classList.remove('on')})}
 /* desktop: two pages side by side inside the page; small screens: normal scrolling */
@@ -787,29 +807,31 @@ function h2m(root){const kids=n=>[...n.childNodes].map(nd).join('');
    case'a':return`[${k()}](${n.getAttribute('href')||''})`;case'img':return`\n\n![](${n.getAttribute('src')})\n\n`;case'hr':return'\n\n---\n\n';
    case'blockquote':return'\n\n'+k().trim().split('\n').map(l=>'> '+l).join('\n')+'\n\n';
    case'ul':case'ol':return'\n\n'+[...n.children].map((li,i)=>(t==='ul'?'- ':`${i+1}. `)+kids(li).trim().replace(/\n+/g,' ')).join('\n')+'\n\n';
-   case'mark':return k().trim()?`==${k().trim()}==`:'';case'pre':return'\n\n```\n'+n.textContent+'\n```\n\n';case'code':return'`'+n.textContent+'`';default:return k()}}
+   case'mark':return k().trim()?`==${k().trim()}==`:'';case'pre':if(n.hasAttribute('data-html'))return'\n\n```html\n'+(n.innerText||n.textContent).replace(/\u00a0/g,' ').replace(/\n+$/,'')+'\n```\n\n';return'\n\n```\n'+n.textContent+'\n```\n\n';case'code':return'`'+n.textContent+'`';default:return k()}}
  return kids(root).replace(/\n{3,}/g,'\n\n').trim()}
 /* editor */
 let savedRange=null;
 function closeEd(){$('#ed').hidden=true;$('#ed').innerHTML='';document.body.classList.remove('eo')}
-function editor(it,kind){kind=(it&&it.kind)||kind||'post';const i=it||{visibility:'public',tags:[],meta:{}},nw=!it,hasH=/```html/.test(i.body||'');let mode=hasH?'md':'ed';
+function editor(it,kind){kind=(it&&it.kind)||kind||'post';const i=it||{visibility:'public',tags:[],meta:{}},nw=!it,hasH=false;let mode=hasH?'md':'ed';
  $('#ed').hidden=false;document.body.classList.add('eo');
  $('#ed').innerHTML=`<div class="win"><div class="wh"><b>${kind==='post'?'ARCHIVE':'LOG'} ${nw?'NEW':'EDIT'}</b><span class="sv" id="sv"></span>${nw?'':'<button class="bt" id="edel">DELETE</button>'}<button class="bt" id="ecan">CANCEL</button><button class="bt pri" id="esave">SAVE</button></div>
  <div class="em"><select id="ev">${[['public','Public'],['private','Private'],['locked','Locked']].map(([k,t])=>`<option value="${k}"${i.visibility===k?' selected':''}>${t}</option>`).join('')}</select><input id="epw" type="password" placeholder="password" autocomplete="new-password" style="${i.visibility==='locked'?'':'display:none'}"><input id="et" placeholder="#tags" value="${esc((i.tags||[]).map(t=>'#'+t).join(' '))}"></div>
  <div class="mn2"><input class="tt" id="eti" placeholder="Title" value="${esc(i.title||'')}"><input class="stt" id="esu" placeholder="Subtitle" value="${esc(i.meta?.sub||'')}">
- <div class="tb" id="etb"><span id="tbb" style="display:contents"><button data-c="bold"><b>B</b></button><button data-c="italic"><i>I</i></button><button data-c="underline"><u>U</u></button><button data-c="strikeThrough"><s>S</s></button><s></s><button data-c="formatBlock:h2">H2</button><button data-c="formatBlock:blockquote">“</button><button data-c="insertUnorderedList">•</button><button data-c="insertOrderedList">1.</button><s></s><button data-c="link">link</button><button data-c="highlight" title="Highlight selected text">HIGHLIGHT</button><button data-c="img">img</button><button data-c="pagebreak" title="Insert page break">PAGE ↵</button><button data-c="insertHorizontalRule">—</button><button data-c="undo">↶</button><button data-c="redo">↷</button></span>
+ <div class="tb" id="etb"><span id="tbb" style="display:contents"><button data-c="bold"><b>B</b></button><button data-c="italic"><i>I</i></button><button data-c="underline"><u>U</u></button><button data-c="strikeThrough"><s>S</s></button><s></s><button data-c="formatBlock:h2">H2</button><button data-c="formatBlock:blockquote">“</button><button data-c="insertUnorderedList">•</button><button data-c="insertOrderedList">1.</button><s></s><button data-c="link">link</button><button data-c="highlight" title="Highlight selected text"><mark>H</mark></button><button data-c="img">img</button><button data-c="htmlblock" title="Insert an HTML block (shown as rendered HTML in the post)">HTML</button><button data-c="pagebreak" title="Insert page break">PAGE ↵</button><button data-c="insertHorizontalRule">—</button><button data-c="undo">↶</button><button data-c="redo">↷</button></span>
  <div class="md" id="emd">${hasH?'':'<button data-m="ed">EDIT</button>'}<button data-m="md">MD</button><button data-m="vw">VIEW</button></div></div>
  <div class="eb2" id="eb" contenteditable="true"></div><textarea class="src" id="em"></textarea><div class="pvw" id="evw"></div><div class="stb"><span id="ec"></span><span id="est"></span></div><input type="file" id="ef" accept="image/*" multiple hidden></div></div>`;
  const eb=$('#eb'),em=$('#em'),src=()=>mode==='md'?em.value:h2m(eb);
  const cnt=()=>$('#ec').textContent=(mode==='md'?em.value:eb.innerText).replace(/\s/g,'').length+' chars';
- if(hasH)em.value=i.body||'';else eb.innerHTML=marked.parse(i.body||'');
- const show=m=>{const cur=src();if(m==='ed'&&mode!=='ed')eb.innerHTML=marked.parse(cur);if(m==='md'&&mode!=='md')em.value=cur;mode=m==='vw'?mode:m;
+ if(hasH)em.value=i.body||'';else eb.innerHTML=mdE(i.body);
+ const show=m=>{const cur=src();if(m==='ed'&&mode!=='ed')eb.innerHTML=mdE(cur);if(m==='md'&&mode!=='md')em.value=cur;mode=m==='vw'?mode:m;
   eb.style.display=m==='ed'?'':'none';em.style.display=m==='md'?'block':'none';$('#evw').style.display=m==='vw'?'block':'none';$('#tbb').style.display=m==='ed'?'contents':'none';
   if(m==='vw')$('#evw').innerHTML=marked.parse(src());$('#emd').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));cnt()};
  $('#emd').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.m)};show(mode);
  $('#tbb').onmousedown=e=>{if(e.target.closest('button'))e.preventDefault()};
+ eb.addEventListener('paste',e=>{if(e.target.closest&&e.target.closest('pre[data-html]')){e.preventDefault();document.execCommand('insertText',false,(e.clipboardData||window.clipboardData).getData('text/plain'))}});
  $('#tbb').onclick=e=>{const b=e.target.closest('button');if(!b)return;const c=b.dataset.c.split(':');eb.focus();
   if(c[0]==='pagebreak'){document.execCommand('insertHTML',false,'<div class="page-break"></div><p><br></p>')}
+  else if(c[0]==='htmlblock'){document.execCommand('insertHTML',false,'<pre class="hbx" data-html>&lt;div style="padding:12px;border:1px solid currentColor"&gt;HTML&lt;/div&gt;</pre><p><br></p>')}
   else if(c[0]==='highlight'){
    const s=getSelection();
    if(s&&s.rangeCount){
