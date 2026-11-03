@@ -249,12 +249,12 @@ body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .bl.edit.fh .rk{right:0;bottom:0}
 .bl.edit .rk::after{content:"";position:absolute;right:5px;bottom:5px;width:8px;height:8px;border-right:3px solid var(--fg);border-bottom:3px solid var(--fg)}
 .bl.fh{scrollbar-width:none}.bl.fh::-webkit-scrollbar{display:none}
-.blocks[data-n="6"] .grip,.blocks[data-n="6"] .rh,.blocks[data-n="6"] .rz,.blocks[data-n="6"] .rk,.blocks[data-n="6"] .szc{display:none!important}
+.blocks[data-n="12"] .grip,.blocks[data-n="12"] .rh,.blocks[data-n="12"] .rz,.blocks[data-n="12"] .rk,.blocks[data-n="12"] .szc{display:none!important}
 @media(max-width:720px){.bl .rk{display:none!important}.bl.edit .bc{position:static;margin:-2px 0 8px;padding:0;background:none;border:0}}
 @media(max-width:720px){.bl .rz{display:none!important}}
 .bl.edit.fh .rz{right:0}
 .e5{display:grid;grid-template-columns:minmax(190px,250px) minmax(0,1fr);min-height:calc(100vh - 150px);min-height:calc(100svh - 150px);margin-top:14px;border-top:1px solid var(--fg);align-items:stretch}
-.e5l{margin-left:-10px;position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto}
+.e5l{margin-left:0;position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto}
 .e5i{display:grid;grid-template-columns:58px minmax(0,1fr);gap:8px;padding:12px 14px 12px 10px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--fg);transition:background .15s,color .15s}.e5i:hover{background:var(--soft)}.e5i.on{background:var(--fg);color:var(--bg)}
 .e5i .t{display:block;font-weight:600;font-size:14px;line-height:1.4;min-width:0;overflow-wrap:anywhere}.e5i .d{font:500 11px var(--sans);color:var(--mut);padding-top:2px}
 .e5i.on .d{color:inherit;opacity:.7}.e5i.on .vb{border-color:var(--bg)}
@@ -381,6 +381,12 @@ html.sb ::-webkit-scrollbar-thumb{background:var(--fg)} /* html.sb = scrolled wi
 html:has(body.pzpg){scrollbar-gutter:stable}
 
 .puzzle-head{margin-bottom:36px;flex-wrap:wrap}.puzzle-head h1{font-size:34px;line-height:1}
+.bnr.w svg{fill:var(--bg);stroke:var(--fg);--pe:var(--fg)}.bnr.k svg{fill:var(--fg);stroke:var(--fg);--pe:var(--bg)}.bnr svg{width:18px;height:18px}
+.bno{margin-top:28px}
+.bnr.ed{grid-template-columns:18px 24px 24px minmax(0,1fr) auto auto;gap:4px;align-items:center;padding:4px 0}
+.bnr.ed.mv{background:var(--soft);outline:1px dashed var(--mut)}
+.bngp{border:0;background:none;color:var(--mut);cursor:grab;padding:0;font-size:14px;touch-action:none}
+.bnud{padding:1px 7px;font-size:11px;min-width:0}
 </style>
 </head>
 <body>
@@ -627,6 +633,7 @@ BNFEN.split('/').forEach((r,y)=>{let x=0;for(const ch of r){if(/[1-8]/.test(ch))
 const BNSYM='<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id=\"bnP\" viewBox=\"0 0 40 40\"><circle cx=\"20\" cy=\"11.5\" r=\"5\"/><rect x=\"13.5\" y=\"18\" width=\"13\" height=\"2.6\" rx=\"1.3\"/><path d=\"M15 31.5q.6-8 3-11h4q2.4 3 3 11z\"/><path d=\"M9 34.5h22v3H9z\"/><path d=\"M11.5 31.5h17v3h-17z\"/></symbol><symbol id=\"bnR\" viewBox=\"0 0 40 40\"><path d=\"M12 7h4v3h2.5V7h3v3H24V7h4v8.5l-2.5 2.5v10.5l3 3H11.5l3-3V18L12 15.5z\"/><path d=\"M12.5 18.5h15M14 22h12\" style=\"fill:none;stroke:var(--pe);stroke-width:1.1\"/><path d=\"M9 34.5h22v3H9z\"/><path d=\"M11.5 31.5h17v3h-17z\"/></symbol><symbol id=\"bnN\" viewBox=\"0 0 40 40\"><path d=\"M12 31.5C12 27 13.5 24 17 21.5C14.5 22.5 11.5 23 9.5 21.5Q7.5 20 8.5 17.5C10 15.5 12.5 14 13.5 11.5L14 6.5L17 9C21 8 27 10.5 29.5 17.5C31.5 23 30 28 29.5 31.5z\"/><circle cx=\"15.3\" cy=\"12.9\" r=\"1.1\" style=\"fill:var(--pe);stroke:none\"/><path d=\"M23.5 12.5C26.5 16.5 27 22 25.5 28\" style=\"fill:none;stroke:var(--pe);stroke-width:1.1\"/><path d=\"M9.5 19.5q2 .6 3.8-.4\" style=\"fill:none;stroke:var(--pe);stroke-width:1.1\"/><path d=\"M9 34.5h22v3H9z\"/><path d=\"M11.5 31.5h17v3h-17z\"/></symbol><symbol id=\"bnB\" viewBox=\"0 0 40 40\"><circle cx=\"20\" cy=\"5.5\" r=\"2.2\"/><path d=\"M20 8c-4.5 0-6.5 4-6.5 8 0 3 1.5 5 3 6h7c1.5-1 3-3 3-6 0-4-2-8-6.5-8z\"/><path d=\"M17 23l-1.5 8.5h9L23 23z\"/><path d=\"M20.5 11.5l3 4.5M15 22.5h10\" style=\"fill:none;stroke:var(--pe);stroke-width:1.1\"/><path d=\"M9 34.5h22v3H9z\"/><path d=\"M11.5 31.5h17v3h-17z\"/></symbol><symbol id=\"bnQ\" viewBox=\"0 0 40 40\"><path d=\"M9.5 13l3.7 13.5h13.6L30.5 13l-5.5 6-5-10-5 10z\"/><circle cx=\"9.5\" cy=\"11.5\" r=\"1.9\"/><circle cx=\"14.8\" cy=\"7.8\" r=\"1.9\"/><circle cx=\"20\" cy=\"6.5\" r=\"1.9\"/><circle cx=\"25.2\" cy=\"7.8\" r=\"1.9\"/><circle cx=\"30.5\" cy=\"11.5\" r=\"1.9\"/><path d=\"M12.5 26.5h15l1.5 5H11z\"/><path d=\"M14 23h12\" style=\"fill:none;stroke:var(--pe);stroke-width:1.1\"/><path d=\"M9 34.5h22v3H9z\"/><path d=\"M11.5 31.5h17v3h-17z\"/></symbol><symbol id=\"bnK\" viewBox=\"0 0 40 40\"><path d=\"M18.5 1.5h3v3h3v3h-3V10h-3V7.5h-3v-3h3z\"/><path d=\"M20 11c6.5 0 10 4.5 9 10.5L27.5 27h-15L11 21.5C10 15.5 13.5 11 20 11z\"/><path d=\"M12 27h16l2 4.5H10z\"/><path d=\"M13 20h14M12.5 25h15\" style=\"fill:none;stroke:var(--pe);stroke-width:1.1\"/><path d=\"M9 34.5h22v3H9z\"/><path d=\"M11.5 31.5h17v3h-17z\"/></symbol></defs></svg>';
 let BSEL='',BTIP='',BPT='';
 function banData(){if(!HOME.ban){const L=(HOME.blocks.find(b=>b.t==='banners')||{}).items||[],s={};L.filter(x=>x&&x.src).slice(0,BNP.length).forEach((x,i)=>{s[BNP[i].sq]={src:x.src,href:x.href||'',name:x.name||''}});HOME.ban={mine:{},slots:s}}if(!HOME.ban.slots)HOME.ban.slots={};if(!HOME.ban.mine)HOME.ban.mine={};return HOME.ban}
+const banSorted=fl=>{const ix=new Map((banData().order||[]).map((q,i)=>[q,i]));return fl.slice().sort((a,b)=>(ix.has(a.sq)?ix.get(a.sq):1e3+BNP.indexOf(a))-(ix.has(b.sq)?ix.get(b.sq):1e3+BNP.indexOf(b)))};
 const banDom=h=>{try{return new URL(h).hostname.replace(/^www\./,'')}catch(e){return''}},banName=x=>(x.name||'').trim()||banDom(x.href||'');
 function banMine(){const m=banData().mine;return{title:m.title||document.title||location.hostname,src:m.src||'',url:m.url||location.origin+location.pathname}}
 function evBar(fl){const W=fl.filter(p=>p.c===p.c.toUpperCase()).length,B=fl.length-W,t=W+B,pc=t?Math.max(4,Math.min(96,W/t*100)):50,d=W-B,txt=(d>0?'+':'')+d.toFixed(1),wl=W>=B;return`<div class="bnev" title="WHITE ${W} · BLACK ${B}"><i style="height:${pc.toFixed(1)}%"></i><b style="${wl?'bottom:0;color:var(--fg)':'top:0;color:var(--bg)'}">${t?txt:'0.0'}</b></div>`}
@@ -639,10 +646,18 @@ function bannerPage(){FS=false;closeReader();document.body.classList.remove('pgd
  const cp=(k,v)=>`<button type="button" class="bncp" data-cp="${esc(v)}"><span>${k}</span><span>${esc(v)||'—'}</span><span>COPY</span></button>`;
  const mine=`<div class="bnmy">${ed?'<div class="bnk" style="justify-content:flex-end"><button type="button" class="btn" id="bme">EDIT</button></div>':''}${m.src?`<img src="${esc(m.src)}" alt="${esc(m.title)}">`:'<div class="ph" style="margin-bottom:8px">NO BANNER</div>'}${cp('SITE TITLE',m.title)}${cp('BANNER IMAGE',m.src)}${cp('SITE LINK',m.url)}</div>`;
  let rest='';
- if(!ed)rest=`<div class="bnl"><div class="bnk" style="min-height:0;padding-bottom:8px">OTHER SITES · ${fl.length} LINKS</div>${fl.map((p,i)=>{const s=S[p.sq],h=s.href||'';return`<a class="bnr" data-sq="${p.sq}" href="${/^(https?:|#)/.test(h)?esc(h):'#'}" target="_blank" rel="noopener"><i>${p2(i+1)}</i><span><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${p.c.toUpperCase()}"/></svg></span><b>${esc(banName(s)||'—')}</b></a>`}).join('')}</div>`;
+ if(!ed)rest=`<div class="bnl"><div class="bnk" style="min-height:0;padding-bottom:8px"><span>OTHER SITES · ${fl.length} LINKS</span><span>○ WHITE · ● BLACK</span></div>${banSorted(fl).map((p,i)=>{const s=S[p.sq],h=s.href||'';return`<a class="bnr ${p.c===p.c.toUpperCase()?'w':'k'}" data-sq="${p.sq}" href="${/^(https?:|#)/.test(h)?esc(h):'#'}" target="_blank" rel="noopener"><i>${p2(i+1)}</i><span><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${p.c.toUpperCase()}"/></svg></span><b>${esc(banName(s)||'—')}</b></a>`}).join('')}</div>`;
  else if(BSEL){const s=S[BSEL]||{},p=BNP.find(x=>x.sq===BSEL);rest=`<div class="bnf"><div class="bnk">PLACE A BANNER · ${BSEL.toUpperCase()}</div><label>① IMAGE</label><div class="r"><input id="bfs" placeholder="Image URL" value="${esc(s.src||'')}"><button type="button" class="btn" id="bfu">UPLOAD</button><input type="file" id="bff" accept="image/*" hidden></div><label>② LINK</label><input id="bfh" placeholder="https://…" value="${esc(s.href||'')}"><label>③ NAME · EMPTY = DOMAIN</label><input id="bfn" value="${esc(s.name||'')}"><div class="r sv"><button type="button" class="btn pri" id="bsv" style="flex:1">SAVE</button><button type="button" class="btn" id="brm">REMOVE</button></div><p id="st" class="st"></p></div>`}
  else rest='<div class="bnl"><p class="st">Select a piece to place a banner.</p></div>';
- app.innerHTML=`${BNSYM}${ed?`<div class="bneb"><span>EDIT MODE · ${fl.length} OF ${BNP.length} PIECES HAVE A BANNER</span><button type="button" class="btn" id="bdone">DONE</button></div>`:''}<div class="bnh"><div><h1>The Immortal Game</h1></div><div class="bnmt">Anderssen — Kieseritzky<br>London · 1851 · 23.Be7#</div></div><div class="bng"><div class="bnbx"><div class="bnbw">${evBar(fl)}<div class="bnrk">${[8,7,6,5,4,3,2,1].map(n=>`<span>${n}</span>`).join('')}</div><div class="bnbd${ed?' ed':''}">${BNP.map(cell).join('')}<div class="bnpop" hidden></div></div><div class="bnfl">${[...'abcdefgh'].map(x=>`<span>${x}</span>`).join('')}</div>${bnLg(fl)}</div></div><aside class="bna">${mine}${rest}</aside></div>`;
+ const ic=p=>`<svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${p.c.toUpperCase()}"/></svg>`;
+ const ord=ed&&fl.length?`<div class="bno"><div class="bnk" style="min-height:0;padding-bottom:8px"><span>ORDER · ⠿ DRAG OR ↑ ↓</span><span>○ WHITE · ● BLACK</span></div>${banSorted(fl).map((p,i)=>`<div class="bnr ed bno-r ${p.c===p.c.toUpperCase()?'w':'k'}" data-sq="${p.sq}"><button type="button" class="bngp" data-bgrip aria-label="Drag">⠿</button><i>${p2(i+1)}</i><span>${ic(p)}</span><b>${esc(banName(S[p.sq])||'—')}</b><button type="button" class="btn bnud" data-bmv="-1">↑</button><button type="button" class="btn bnud" data-bmv="1">↓</button></div>`).join('')}</div>`:'';
+ app.innerHTML=`${BNSYM}${ed?`<div class="bneb"><span>EDIT MODE · ${fl.length} OF ${BNP.length} PIECES HAVE A BANNER</span><button type="button" class="btn" id="bdone">DONE</button></div>`:''}<div class="bnh"><div><h1>The Immortal Game</h1></div><div class="bnmt">Anderssen — Kieseritzky<br>London · 1851 · 23.Be7#</div></div><div class="bng"><div class="bnbx"><div class="bnbw">${evBar(fl)}<div class="bnrk">${[8,7,6,5,4,3,2,1].map(n=>`<span>${n}</span>`).join('')}</div><div class="bnbd${ed?' ed':''}">${BNP.map(cell).join('')}<div class="bnpop" hidden></div></div><div class="bnfl">${[...'abcdefgh'].map(x=>`<span>${x}</span>`).join('')}</div>${bnLg(fl)}</div></div><aside class="bna">${mine}${rest}${ord}</aside></div>`;
+ const O=$('.bno');if(O){
+  O.addEventListener('click',e=>{const b=e.target.closest('[data-bmv]');if(!b)return;const sq=b.closest('.bno-r').dataset.sq,o=banSorted(fl).map(p=>p.sq),i=o.indexOf(sq),j=i+ +b.dataset.bmv;if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];banData().order=o;saveHome();bannerPage()});
+  O.addEventListener('pointerdown',e=>{const g=e.target.closest('[data-bgrip]');if(!g)return;e.preventDefault();const row=g.closest('.bno-r');row.classList.add('mv');try{g.setPointerCapture(e.pointerId)}catch(_){}
+   const mv=ev=>{for(const r of O.querySelectorAll('.bno-r')){if(r===row)continue;const b=r.getBoundingClientRect();if(ev.clientY>b.top&&ev.clientY<b.bottom){if(ev.clientY<b.top+b.height/2)r.before(row);else r.after(row);break}}};
+   const up=()=>{g.removeEventListener('pointermove',mv);g.removeEventListener('pointerup',up);g.removeEventListener('pointercancel',up);row.classList.remove('mv');banData().order=[...O.querySelectorAll('.bno-r')].map(r=>r.dataset.sq);saveHome();bannerPage()};
+   g.addEventListener('pointermove',mv);g.addEventListener('pointerup',up);g.addEventListener('pointercancel',up)})}
  const bd=$('.bnbd'),tip=$('.bnpop'),hide=()=>{tip.hidden=true;BTIP=''};
  const place=el=>{const B=bd.getBoundingClientRect(),r=el.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;let l=r.left-B.left+r.width/2-w/2;l=Math.max(0,Math.min(l,B.width-w));let t=r.bottom-B.top+6;if(t+h>B.height)t=r.top-B.top-h-6;tip.style.left=l+'px';tip.style.top=Math.max(0,t)+'px'};
  const show=el=>{const q=el.dataset.sq,s=S[q];if(ed||!s||!s.src)return hide();BTIP=q;const n=banName(s);tip.innerHTML=`<img src="${esc(s.src)}" alt=""><b>${esc(n)}</b><small>${esc(banDom(s.href||''))}</small>`;tip.hidden=false;place(el);tip.querySelector('img').onload=()=>place(el)};
@@ -671,19 +686,21 @@ function banMineForm(){const m=banMine();openM(`<h3>MY BANNER</h3><label>Site ti
  $('#bmv').onclick=async()=>{let src=$('#bms').value.trim();msg('Saving…');try{if(f.files[0])src=await upload(f.files[0])}catch(x){return msg('Failed: '+x.message)}
   banData().mine={title:$('#bmt').value.trim(),src,url:$('#bmh').value.trim()};await saveHome();closeM();bannerPage()}}
 /* free layout: every block has a width (s = columns out of 12) and a place in the order; optional fixed height h (px) */
-const SPANS=[[3,'1/4'],[4,'1/3'],[6,'1/2'],[8,'2/3'],[9,'3/4'],[12,'FULL']],sp=b=>b.s||(b.c?b.c*2:(b.w===2?12:6));
+const NF=24,SPANS=[[6,'1/4'],[8,'1/3'],[12,'1/2'],[16,'2/3'],[18,'3/4'],[24,'FULL']],sp=b=>b.s||(b.w===2?NF:NF/2);
 const NOEDIT=['calendar','chess960','todayline','captured','heat','lastmove','eval'];
 function normLayout(){if(HOME.blocks.some(b=>b.t==='banners')){banData();HOME.blocks=HOME.blocks.filter(b=>b.t!=='banners')}const C=Array.isArray(HOME.cols)?HOME.cols:null;
- HOME.blocks.forEach(b=>{if(C){b.s=C[Math.min(C.length-1,Math.max(0,b.c|0))]||6;delete b.c;b.w=b.s===12?2:1}delete b.r});if(C)delete HOME.cols}
+ HOME.blocks.forEach(b=>{if(C){b.s=C[Math.min(C.length-1,Math.max(0,b.c|0))]||6;delete b.c;b.w=b.s===12?2:1}delete b.r});if(C)delete HOME.cols;
+ /* grid v2: 24 columns / finer rows. Old 12-column layouts are doubled once so they look the same. */
+ if(HOME.gv!==2){HOME.blocks.forEach(b=>{b.s=(b.s||(b.c?b.c*2:(b.w===2?12:6)))*2;delete b.c;if(b.x!=null)b.x*=2;if(b.y!=null)b.y*=2;if(b.rows!=null)b.rows*=2;b.w=b.s>=NF?2:1});HOME.gv=2}}
 function blockHtml(b){const lab=b.t==='note'?(b.title||''):EDITM&&b.t!=='image'&&b.t!=='calendar'?BT[b.t]:'';
  return`<section class="bl${EDITM?' edit':''}${b.rows||b.h?' fh':''}" data-b="${b.id}" data-sp="${sp(b)}" data-v="${b.v||''}">${EDITM?`<div class="bc"><button class="bt grip" data-grip title="Drag to move">⠿ MOVE</button><span class="szc">${sp(b)}×${b.rows||'auto'}</span><button class="bt" data-bm="up">↑</button><button class="bt" data-bm="dn">↓</button>${SPANS.map(([c,l])=>`<button class="bt${sp(b)===c?' pri':''}" data-bm="c" data-c="${c}">${l}</button>`).join('')}<button class="bt${b.v?' pri':''}" data-bm="v">SHOW · ${b.v==='pc'?'PC':b.v==='m'?'MOBILE':'ALL'}</button>${!NOEDIT.includes(b.t)?'<button class="bt" data-bm="ed">EDIT</button>':''}<button class="bt" data-bm="rm">DELETE</button></div>`:''}${lab?`<h6>${esc(lab)}</h6>`:''}${blockBody(b)}${EDITM?'<div class="rh" data-rh title="Drag = height · double-click = auto"></div><div class="rz" data-rz title="Drag = width"></div><div class="rk" data-rk title="Drag = width + height"></div>':''}</section>`}
 /* ---- widget grid ----
    Square cells: row height = column width, so a block of w x h cells keeps its proportions at every window width.
    >= 760px content width: 12 columns (editable). Narrower: 6 columns, sizes halved automatically. <= 720px viewport: single column. */
-const GX=16,GY=16,MINROW=72; /* rows are square (= column width) but never shorter than MINROW, so text/calendar blocks don't get clipped on narrow windows */
-let GM={cw:0,rh:0,n:12,f:1},LAY={},MO=null,MR=0,DR=null;
+const GX=16,GY=16,MINROW=28; /* rows are square (= column width) but never shorter than MINROW, so text/calendar blocks don't get clipped on narrow windows */
+let GM={cw:0,rh:0,n:NF,f:1},LAY={},MO=null,MR=0,DR=null;
 const gW=k=>GM.cw*k+GX*(k-1),gH=n=>GM.rh*n+GY*(n-1),gRows=h=>Math.max(1,Math.ceil((h+GY-1)/(GM.rh+GY)));
-function gridMetrics(c){const W=c.clientWidth,n=W>=760?12:6,cw=(W-GX*(n-1))/n,rh=Math.max(cw,MINROW);GM={cw,rh,n,f:12/n};c.style.setProperty('--cw',cw+'px');c.style.setProperty('--rh',rh+'px');c.dataset.n=n;return GM}
+function gridMetrics(c){const W=c.clientWidth,n=W>=760?NF:NF/2,cw=(W-GX*(n-1))/n,rh=Math.max(cw,MINROW);GM={cw,rh,n,f:NF/n};c.style.setProperty('--cw',cw+'px');c.style.setProperty('--rh',rh+'px');c.dataset.n=n;return GM}
 /* first-fit / collision-free placement. prio block keeps its own x,y; others are pushed down. */
 function gridPlace(items,free,prio){const out={},R=[];
  const hit=(x,y,w,h)=>R.some(r=>x<r.x+r.w&&x+w>r.x&&y<r.y+r.h&&y+h>r.y);
@@ -703,17 +720,17 @@ function masonry(ov){const c=$('#bks');if(!c)return;
  const G=gridMetrics(c);if(!(G.cw>0))return;
  const items=bl.map((e,i)=>{const b=HOME.blocks.find(q=>q.id===e.dataset.b);if(!b)return null;
   const o=ov&&ov.id===b.id?ov:null;let w=Math.min(G.n,Math.max(1,Math.ceil((o&&o.w||sp(b))/G.f))),rows=o&&o.h!=null?o.h:b.rows;
-  if(rows==null&&b.h&&G.n===12)rows=Math.max(1,Math.round((b.h+GY)/(G.rh+GY)));
+  if(rows==null&&b.h&&G.n===NF)rows=Math.max(1,Math.round((b.h+GY)/(G.rh+GY)));
   let h,fixed=rows!=null;e.style.width=gW(w)+'px';
   if(fixed)h=Math.max(1,Math.ceil(rows/G.f));else{e.style.height='';h=gRows(e.offsetHeight)}
   return{id:b.id,e,i,w,h,fixed,x:b.x==null?null:b.x,y:b.y==null?null:b.y}}).filter(Boolean);
- const L=gridPlace(items,G.n!==12,ov?ov.id:null);let maxB=0;
+ const L=gridPlace(items,G.n!==NF,ov?ov.id:null);let maxB=0;
  items.forEach(it=>{const p=L[it.id],e=it.e;e.style.left=p.x*(G.cw+GX)+'px';e.style.top=p.y*(G.rh+GY)+'px';e.style.width=gW(p.w)+'px';
   if(it.fixed)e.style.height=gH(p.h)+'px';else e.style.height='';e.classList.toggle('top0',p.y===0);maxB=Math.max(maxB,p.y+p.h)});
- const ed=EDITM&&G.n===12,R=Math.max(1,maxB+(ed?2:0));c.style.height=gH(R)+'px';c.classList.toggle('eg',ed);LAY=G.n===12?L:{};
- const hint=$('#gh');if(hint)hint.textContent=EDITM&&G.n!==12?'Window too narrow for grid editing — widen it.':''}
+ const ed=EDITM&&G.n===NF,R=Math.max(1,maxB+(ed?2:0));c.style.height=gH(R)+'px';c.classList.toggle('eg',ed);LAY=G.n===NF?L:{};
+ const hint=$('#gh');if(hint)hint.textContent=EDITM&&G.n!==NF?'Window too narrow for grid editing — widen it.':''}
 /* write the resolved layout back into the data (positions + frozen heights) */
-function gridCommit(){if(GM.n!==12)return;for(const id in LAY){const b=HOME.blocks.find(q=>q.id===id),p=LAY[id];if(!b)continue;b.x=p.x;b.y=p.y;if(b.rows==null&&!b.auto)b.rows=p.h;delete b.h}}
+function gridCommit(){if(GM.n!==NF)return;for(const id in LAY){const b=HOME.blocks.find(q=>q.id===id),p=LAY[id];if(!b)continue;b.x=p.x;b.y=p.y;if(b.rows==null&&!b.auto)b.rows=p.h;delete b.h}}
 function gridDo(id,mut){const b=HOME.blocks.find(q=>q.id===id);if(!b)return;if(mut)mut(b);masonry({id});gridCommit();saveHome();home()}
 function masonryInit(){if(MO)MO.disconnect();const c=$('#bks');if(!c)return;masonry();
  if(window.ResizeObserver){MO=new ResizeObserver(()=>{if(DR)return;cancelAnimationFrame(MR);MR=requestAnimationFrame(()=>masonry())});MO.observe(c);c.querySelectorAll('.bl').forEach(e=>MO.observe(e))}}
@@ -722,7 +739,7 @@ addEventListener('resize',()=>{if($('#bks')&&!DR)masonry()});
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function foot(c,x,y,w,h){let f=$('#gf');if(!f){f=document.createElement('div');f.id='gf';f.className='gfoot';c.appendChild(f)}f.style.left=x*(GM.cw+GX)+'px';f.style.top=y*(GM.rh+GY)+'px';f.style.width=gW(w)+'px';f.style.height=gH(h)+'px'}
 document.addEventListener('pointerdown',e=>{
- const h=e.target.closest('[data-grip],[data-rh],[data-rz],[data-rk]');if(!h||!EDITM||innerWidth<=720||GM.n!==12)return;
+ const h=e.target.closest('[data-grip],[data-rh],[data-rz],[data-rk]');if(!h||!EDITM||innerWidth<=720||GM.n!==NF)return;
  const el=h.closest('.bl'),b=HOME.blocks.find(q=>q.id===el.dataset.b),L=b&&LAY[b.id];if(!b||!L)return;e.preventDefault();
  const r=el.getBoundingClientRect();
  if(h.hasAttribute('data-rz')||h.hasAttribute('data-rh')||h.hasAttribute('data-rk'))DR={k:'rs',ax:h.hasAttribute('data-rk')?'xy':h.hasAttribute('data-rz')?'x':'y',el,b,x:L.x,w:L.w,h:L.h,w0:L.w,h0:L.h,left:r.left,top:r.top};
@@ -740,7 +757,7 @@ document.addEventListener('pointermove',e=>{if(!DR)return;
  DR.t={x,y};foot(c,x,y,DR.w,DR.h);
  if(e.clientY<70)scrollBy(0,-14);else if(e.clientY>innerHeight-70)scrollBy(0,14)});
 function endDrag(ok){if(!DR)return;const d=DR;DR=null;document.body.classList.remove('dragging');const f=$('#gf');if(f)f.remove();
- if(d.k==='rs'){if(ok&&(d.w!==d.w0||d.h!==d.h0))gridDo(d.b.id,b=>{b.s=d.w;b.w=d.w===12?2:1;delete b.c;b.rows=d.h;delete b.h;delete b.auto});else masonry();return}
+ if(d.k==='rs'){if(ok&&(d.w!==d.w0||d.h!==d.h0))gridDo(d.b.id,b=>{b.s=d.w;b.w=d.w===NF?2:1;delete b.c;b.rows=d.h;delete b.h;delete b.auto});else masonry();return}
  d.gh.remove();d.el.classList.remove('drag');
  if(ok&&d.t)gridDo(d.b.id,b=>{b.x=d.t.x;b.y=d.t.y});else masonry()}
 document.addEventListener('pointerup',()=>endDrag(true));document.addEventListener('pointercancel',()=>endDrag(false));
@@ -1097,20 +1114,20 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(x=c('[data-pdel]')){const id=+x.dataset.pdel;sb.from('plans').delete().eq('id',id).then(r=>{if(r.error)return alert(r.error.message);PLANS=PLANS.filter(p=>p.id!==id);paintCal()});return}
  if(x=c('[data-pk]')){const p=PLANS.find(p=>p.id==x.dataset.pk);p.done=!p.done;paintCal();sb.from('plans').update({done:p.done}).eq('id',p.id).then(r=>r.error&&alert(r.error.message));return}
  if(x=c('[data-pa]')){AK=x.dataset.pa;return paintCal()}
- if(c('[data-pack]')){if(GM.n!==12)return;const it=Object.entries(LAY).map(([id,p])=>({id,...p})).sort((a,b)=>a.y-b.y||a.x-b.x),R=[];
+ if(c('[data-pack]')){if(GM.n!==NF)return;const it=Object.entries(LAY).map(([id,p])=>({id,...p})).sort((a,b)=>a.y-b.y||a.x-b.x),R=[];
   it.forEach(t=>{let y=0;while(R.some(r=>t.x<r.x+r.w&&t.x+t.w>r.x&&y<r.y+r.h&&y+t.h>r.y))y++;R.push({x:t.x,y,w:t.w,h:t.h});const b=HOME.blocks.find(q=>q.id===t.id);if(b){b.x=t.x;b.y=y}});
   masonry();gridCommit();saveHome();return home()}
- if(c('[data-em]')){if(EDITM&&GM.n===12&&innerWidth>720){gridCommit();saveHome()} /* DONE = lock the current grid layout */
+ if(c('[data-em]')){if(EDITM&&GM.n===NF&&innerWidth>720){gridCommit();saveHome()} /* DONE = lock the current grid layout */
   EDITM=!EDITM;return home()}
  if(c('[data-addb]')){openM(`<h3>ADD BLOCK</h3><div class="pk">${Object.keys(BT).filter(t=>t!=='banners'&&(t!=='calendar'||!HOME.blocks.some(b=>b.t==='calendar'))).map(t=>`<button class="btn" data-pick="${t}">${BT[t]}</button>`).join('')}</div>`);return}
- if(x=c('[data-pick]')){const t=x.dataset.pick,b={id:uid(),t,w:t==='banners'?2:1,s:t==='banners'?12:6,n:t==='tags'?24:t==='pgn'?12:6};HOME.blocks.push(b);saveHome();closeM();home();if(['image','note','links','position','puzzle','replay','banners'].includes(t))blockForm(b);return}
+ if(x=c('[data-pick]')){const t=x.dataset.pick,b={id:uid(),t,w:t==='banners'?2:1,s:t==='banners'?NF:NF/2,n:t==='tags'?24:t==='pgn'?12:6};HOME.blocks.push(b);saveHome();closeM();home();if(['image','note','links','position','puzzle','replay','banners'].includes(t))blockForm(b);return}
  if(c('[data-himg]')){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;try{HOME.img=await upload(f.files[0]);await saveHome();paintImg()}catch(x){alert('Upload failed: '+x.message)}};f.click();return}
  if(c('[data-iadj]'))return imgAdjust();
  if(c('[data-ireset]')){Object.assign(HOME,IMG_DEF);paintVars();document.querySelectorAll('[data-ia]').forEach(s=>{s.value=HOME[s.dataset.ia];$('#v_'+s.dataset.ia).textContent=s.value+IU[s.dataset.ia]});return}
  if(c('[data-isave]')){ADJ=null;saveHome();closeM();return}
  if(x=c('[data-bm]')){const id=x.closest('[data-b]').dataset.b,B=HOME.blocks,i=B.findIndex(b=>b.id===id),b=B[i],op=x.dataset.bm;
-  if(op==='up'||op==='dn'||op==='c'){if(GM.n!==12||!LAY[id])return alert('Widen the window to edit the grid.');
-   return gridDo(id,q=>{const p=LAY[id];if(op==='c'){q.s=+x.dataset.c;delete q.c;q.w=q.s===12?2:1}else{q.x=p.x;q.y=Math.max(0,p.y+(op==='up'?-1:1))}})}
+  if(op==='up'||op==='dn'||op==='c'){if(GM.n!==NF||!LAY[id])return alert('Widen the window to edit the grid.');
+   return gridDo(id,q=>{const p=LAY[id];if(op==='c'){q.s=+x.dataset.c;delete q.c;q.w=q.s===NF?2:1}else{q.x=p.x;q.y=Math.max(0,p.y+(op==='up'?-2:2))}})}
   if(op==='v')b.v=b.v==='pc'?'m':b.v==='m'?'':'pc';
   if(op==='rm'){if(!confirm('Delete this block?'))return;B.splice(i,1)}if(op==='ed')return blockForm(b);saveHome();home()}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pi'&&e.target.value.trim()){const v=e.target.value.trim();e.target.value='';planAdd(v)}});
