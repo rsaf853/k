@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-kopubworld@1.0/css/all.css">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=Noto+Serif+KR:wght@400;700&family=Roboto:wght@400;700&family=Orbit&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#fff;--fg:#111;--mut:#8b8b8b;--line:#e9e9e9;--soft:#f6f6f6;--hb:#000;--ht:#fff;--hl:rgba(0,0,0,.055);--hl2:rgba(0,0,0,.11);--iw:310px;--gc:3;--mc:3;--sans:"Pretendard JP Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif}
+:root{--bg:#fff;--fg:#111;--mut:#8b8b8b;--line:#e9e9e9;--soft:#f6f6f6;--hb:#000;--ht:#fff;--hl:rgba(0,0,0,.055);--hl2:rgba(0,0,0,.11);--iw:310px;--gc:3;--mc:4;--sans:"Pretendard JP Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0d0d;--fg:#f2f2f2;--mut:#808080;--line:#262626;--soft:#161616;--hb:#fff;--ht:#000;--hl:rgba(255,255,255,.09);--hl2:rgba(255,255,255,.17)}}
 :root[data-theme="dark"]{--bg:#0d0d0d;--fg:#f2f2f2;--mut:#808080;--line:#262626;--soft:#161616;--hb:#fff;--ht:#000;--hl:rgba(255,255,255,.09);--hl2:rgba(255,255,255,.17)}
 *{box-sizing:border-box;border-radius:0;-webkit-tap-highlight-color:transparent}
@@ -460,7 +460,7 @@ setTimeout(step,500);
 <div class="shell">
 <aside class="side"><div class="im" id="im"></div></aside>
 <div class="col">
-<header><nav><a href="#/" data-n="">check</a><a href="#/posts" data-n="posts">e4</a><a href="#/log" data-n="log">e5</a><a href="#/memo" data-n="memo">f4</a><a href="#/lines" data-n="lines">exf4</a><a href="#/gallery" data-n="gallery">?!</a></nav><span class="hr"><button class="ib" id="cfg" aria-label="Settings" title="Settings" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button><span class="seg"><button class="ib" id="mateNav" aria-label="Mate" title="Mate"><span>m</span><span class="r">ate</span></button><button class="ib" id="puzzleNav" aria-label="Puzzle" title="Puzzle"><span>p</span><span class="r">uzzle</span></button></span><button class="ib" id="theme" aria-label="Toggle theme"></button></span></header>
+<header><nav><a href="#/" data-n="">check</a><a href="#/posts" data-n="posts">e4</a><a href="#/log" data-n="log">e5</a><a href="#/memo" data-n="memo">f4</a><a href="#/lines" data-n="lines">exf4</a><a href="#/gallery" data-n="gallery">?!</a></nav><span class="hr"><span class="seg"><button class="ib" id="mateNav" aria-label="Mate" title="Mate"><span>m</span><span class="r">ate</span></button><button class="ib" id="puzzleNav" aria-label="Puzzle" title="Puzzle"><span>p</span><span class="r">uzzle</span></button></span><button class="ib" id="theme" aria-label="Toggle theme"></button></span></header>
 <main id="app"></main>
 <footer><button id="mode" class="mode" type="button">checkmate</button><button id="adm" aria-label="Admin"><svg width="13" height="13" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2v5M9.6 4.3h4.8" fill="none"/><path d="M12 8.4C11 6.8 8 6.5 6.5 8.4 5 10.4 6 13 8.2 14.2L7.2 18.2h9.6l-1-4C18 13 19 10.4 17.5 8.4 16 6.5 13 6.8 12 8.4Z"/><path d="M5.8 18.2h12.4v3.4H5.8Z"/></svg></button></footer>
 </div></div>
@@ -492,12 +492,12 @@ const msg=t=>{const e=$('#st');if(e)e.textContent=t;else alert(t)};
 const rid=f=>`${crypto.randomUUID()}.${(f.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg'}`;
 async function upload(f){const p=rid(f),u=await sb.storage.from('img').upload(p,f,{contentType:f.type});if(u.error)throw u.error;return sb.storage.from('img').getPublicUrl(p).data.publicUrl}
 /* settings (columns) */
-let CFG={g:3,m:3};try{Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')||'{}'))}catch(e){}
+let CFG={g:3,m:4};try{Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')||'{}'))}catch(e){}CFG.m=4;
 const applyCols=()=>{const cap=innerWidth<720?2:4,r=document.documentElement.style;r.setProperty('--gc',innerWidth<720?1:Math.min(CFG.g,cap));r.setProperty('--mc',Math.min(CFG.m,cap))};
 const segCfg=(k,l)=>`<label>${l}</label><div class="sg2">${[2,3,4].map(n=>`<button class="btn${CFG[k]===n?' on':''}" data-cfg="${k}" data-v="${n}">${n}</button>`).join('')}</div>`;
-const settings=()=>openM(`<h3>SETTINGS</h3>${segCfg('g','IMG · columns (desktop)')}${segCfg('m','MEMO · columns')}<div class="acts" style="margin-top:10px"><button class="btn" data-x>DONE</button></div>`);
-const memoRe=()=>{const m=document.querySelector('.mas.m');if(m&&$('#lst')&&m.children.length!==(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||3))$('#lst').innerHTML=list('memo')};
-$('#cfg').onclick=settings;applyCols();addEventListener('resize',()=>{applyCols();memoRe()});
+const settings=()=>openM(`<h3>SETTINGS</h3>${segCfg('g','IMG · columns (desktop)')}<div class="acts" style="margin-top:10px"><button class="btn" data-x>DONE</button></div>`);
+const memoRe=()=>{const m=document.querySelector('.mas.m');if(m&&$('#lst')&&m.children.length!==(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4))$('#lst').innerHTML=list('memo')};
+applyCols();addEventListener('resize',()=>{applyCols();memoRe()});
 /* theme */
 const BOARD='<span class="bd"><i></i><i></i></span>';
 const isDark=()=>{const r=document.documentElement;return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches};
@@ -1019,7 +1019,7 @@ const match=i=>!Q||[i.title,i.body,(i.tags||[]).join(' ')].join(' ').toLowerCase
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
  if(kind==='post'){let lastD='';h=`<div class="arc">${L.map(i=>{const d=date(i.created_at),g=d!==lastD?(lastD=d,`<div class="gh">${d}</div>`):'';return g+`<a class="row" href="#/post/${i.id}"><b>${esc(i.title||'untitled')}${vb(i)}</b>${i.meta?.sub?`<i>${esc(i.meta.sub)}</i>`:''}<span>${tags(i)}</span></a>`}).join('')}</div>`}
  if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi" data-gi="${i.id}">${locked(i)?'<div class="empty" style="text-align:center">LOCKED</div>':`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${tags(i)}${vb(i)}</div>`:''}</div>`}).join('')}</div>`;
- if(kind==='memo'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||3),cs=L.map(it=>{const i=G(it);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="color:var(--mut)">LOCKED · click to open</span>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${tags(i)}${vb(i)}</span>${eb(i)}</div>`:''}</div>`}),cols=Array.from({length:N},()=>[]);cs.forEach((c,i)=>cols[i%N].push(c));h=`<div class="mas m">${cols.map(c=>`<div class="mc">${c.join('')}</div>`).join('')}</div>`}
+ if(kind==='memo'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4),cs=L.map(it=>{const i=G(it);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="color:var(--mut)">LOCKED · click to open</span>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${tags(i)}${vb(i)}</span>${eb(i)}</div>`:''}</div>`}),cols=Array.from({length:N},()=>[]);cs.forEach((c,i)=>cols[i%N].push(c));h=`<div class="mas m">${cols.map(c=>`<div class="mc">${c.join('')}</div>`).join('')}</div>`}
  if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED</span>`:`<div class="md">${mdn(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${tags(i)}${vb(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
  return L.length?h:''}
 function essayRows(L,cur){return L.length?L.map(it=>{const i=G(it);return`<a class="e5i${cur&&cur.id===i.id?' on':''}" href="#/log/${i.id}"><span class="d">${date(i.created_at)}</span><span class="t">${locked(i)?'LOCKED':esc(i.title||'untitled')}${vb(i)}</span></a>`}).join(''):'<p class="empty">no entries</p>'}
@@ -1212,7 +1212,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pi'&&
 addEventListener('hashchange',()=>{TAG=PEND;PEND='';Q='';FS=false;scrollTo(0,0);route()});
 document.addEventListener('input',e=>{const t=e.target,k=t.dataset&&t.dataset.ia;if(!k)return;HOME[k]=+t.value;$('#v_'+k).textContent=t.value+IU[k];paintVars()});
 /* auth */
-const sync=()=>{$('#adm').classList.toggle('on',admin);const m=$('#mode');m.textContent=EM?'stalemate':'checkmate';m.classList.toggle('ok',admin);m.classList.toggle('on',admin&&EM);$('#cfg').style.display=em()?'':'none'};
+const sync=()=>{$('#adm').classList.toggle('on',admin);const m=$('#mode');m.textContent=EM?'stalemate':'checkmate';m.classList.toggle('ok',admin);m.classList.toggle('on',admin&&EM)};
 $('#mode').onclick=()=>{if(!admin)return;EM=!EM;if(!EM)EDITM=false;sync();paintImg();route()};
 $('#adm').onclick=async()=>{if(admin){await sb.auth.signOut();return}
  openM(`<h3>ADMIN LOGIN</h3><form id="f"><label>Email</label><input type="email" name="email" required autocomplete="username"><label>Password</label><input type="password" name="pw" required autocomplete="current-password"><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn">LOGIN</button></div></form>`);
