@@ -23,7 +23,7 @@ body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.6 var(--sans);let
 body.ro,body.eo{overflow:hidden}
 a{color:inherit}
 ::selection{background:var(--hb);color:var(--ht)}
-mark{background:var(--hl);color:inherit;padding:.1em .3em;box-shadow:inset 0 -.14em 0 var(--hl2);-webkit-box-decoration-break:clone;box-decoration-break:clone}mark mark{background:none;box-shadow:none;padding:0}.pg mark{padding:max(0em,min(.14em,calc((var(--tlh) - 1.3)*.5em))) .3em}
+mark{background:linear-gradient(to bottom,transparent var(--mkv,16%),var(--hl) var(--mkv,16%),var(--hl) calc(100% - var(--mkv,16%) - .12em),var(--hl2) calc(100% - var(--mkv,16%) - .12em),var(--hl2) calc(100% - var(--mkv,16%)),transparent calc(100% - var(--mkv,16%)));color:inherit;padding:0 .3em;-webkit-box-decoration-break:clone;box-decoration-break:clone}mark mark{background:none;box-shadow:none;padding:0}.pg mark{padding:0 .3em}
 button,input,select,textarea{font:inherit;letter-spacing:inherit;color:inherit}
 button{background:none;border:0;padding:0;cursor:pointer}
 button:focus-visible,a:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
@@ -486,13 +486,22 @@ body.pgd #top,body.ro #top,body.eo #top{display:none}
 .arx .agh b{font:700 10px var(--sans);letter-spacing:.1em}
 .arx .agh span{display:inline-block;min-width:18px;text-align:center;border:1px solid var(--fg);padding:0 5px;font:700 10px var(--sans)}
 .arx .ai{display:block;padding:7px 0;text-decoration:none}
-.arx .ai>b{display:block;font:800 20px/1.25 var(--sans);letter-spacing:-.05em;overflow-wrap:anywhere}
+.arx .ai>b{display:block;font:800 18px/1.25 var(--sans);letter-spacing:-.05em;overflow-wrap:anywhere}
 .arx .ai .as{display:block;font-size:13px;color:var(--mut);margin-top:2px}
 .arx .ai .at{display:block;margin-top:3px}
 .arx .ai:hover>b{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
-@media(max-width:720px){.arx .ai>b{font-size:18px}}
+@media(max-width:720px){.arx .ai>b{font-size:16px}}
 /* home: extra space under the header border */
 #bks{margin-top:5px}
+.uf{display:flex;border:1px solid var(--fg);background:var(--bg);margin-top:8px}
+.uf input{flex:1;min-width:0;border:0!important;outline:0;background:none!important;padding:7px 10px;font:inherit;color:var(--fg);letter-spacing:inherit;box-shadow:none}
+.uf input::placeholder{color:var(--mut)}
+.uf button{align-self:stretch;border:0;border-left:1px solid var(--fg);background:none;color:var(--fg);padding:0 14px;font:600 15px var(--sans);cursor:pointer}.uf button:hover{background:var(--fg);color:var(--bg)}
+.uer{margin:3px 0 0;min-height:1.3em;font:600 11px var(--sans);color:var(--mut)}
+.shake{animation:ush .3s}@keyframes ush{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.lk{cursor:pointer}.lk .lkb{display:none;cursor:default}.lk.open .lkb{display:block}
+.arx .ai.lk.open{background:var(--soft);margin:0 -10px;padding:7px 10px}.mm.lk.open{background:var(--soft);border-color:var(--fg)}
+.e5r .uf,.lkp .uf{max-width:360px}
 </style>
 </head>
 <body>
@@ -548,12 +557,14 @@ const dateS=d=>{const x=new Date(d);return `${p2(x.getDate())}/${p2(x.getMonth()
 const loc=d=>{const x=new Date(d);return `${x.getFullYear()}-${p2(x.getMonth()+1)}-${p2(x.getDate())}T${p2(x.getHours())}:${p2(x.getMinutes())}`};
 const uid=()=>Math.random().toString(36).slice(2,8),WD=['SUN','MON','TUE','WED','THU','FRI','SAT'];
 const KIND={posts:'post',log:'log',gallery:'gallery',memo:'memo',lines:'line'},LBL={post:'archive',log:'log',gallery:'img',memo:'memo',line:'txt'};
-let PEND='',admin=false,EM=false,ITEMS=[],PLANS=[],HOME={img:'',blocks:[]},TAG='',Q='',UNL={},EDITM=false,AK='todo',ADJ=null,FS=false;
+let OPENLK=null,PEND='',admin=false,EM=false,ITEMS=[],PLANS=[],HOME={img:'',blocks:[]},TAG='',Q='',UNL={},EDITM=false,AK='todo',ADJ=null,FS=false;
 const now=new Date(),TODAY=ymd(now.getFullYear(),now.getMonth(),now.getDate()),CAL={y:now.getFullYear(),m:now.getMonth(),sel:TODAY};
 const G=i=>UNL[i.id]?{...i,...UNL[i.id]}:i,locked=i=>i.visibility==='locked'&&!admin&&!UNL[i.id];
 const vb=i=>i.visibility==='public'?'':`<span class="vb">${i.visibility==='private'?'PRIVATE':'LOCKED'}</span>`;
 const tags=i=>(i.tags||[]).map(t=>`<span class="tg" data-tag="${esc(t)}">#${esc(t)}</span>`).join('');
 const em=()=>admin&&EM,eb=i=>admin?`<button class="btn" data-ed="${i.id}">EDIT</button>`:'';
+const lkc=i=>OPENLK==i.id?' open':'';
+const ulf=id=>`<form class="uf" data-uf="${id}" autocomplete="off"><input type="password" name="pw" placeholder="password" aria-label="password"><button aria-label="Unlock">→</button></form><p class="uer"></p>`;
 const hash=t=>[...t.matchAll(/(?:^|\s)#([^\s#]+)/g)].map(m=>m[1]);
 const openM=h=>{$('#mb').innerHTML=h;$('#md').hidden=false},closeM=()=>{$('#md').hidden=true;if(ADJ){Object.assign(HOME,ADJ);ADJ=null;paintVars()}};
 $('#md').onclick=e=>{if(e.target.id==='md')closeM()};$('#lb').onclick=()=>$('#lb').hidden=true;
@@ -600,8 +611,14 @@ function imgAdjust(){ADJ={iw:HOME.iw||310,ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.
  const row=(k,l,min,max)=>`<label>${l} <span id="v_${k}">${ADJ[k]}${IU[k]}</span></label><input type="range" data-ia="${k}" min="${min}" max="${max}" value="${ADJ[k]}">`;
  openM(`<h3>IMAGE ADJUST</h3>${row('iw','Width',120,420)}${row('ix','Position X',0,100)}${row('iy','Position Y',0,100)}${row('iz','Zoom',100,300)}<div class="acts"><button type="button" class="btn" data-ireset>RESET</button><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" data-isave>SAVE</button></div>`)}
 const saveHome=async()=>{const r=await sb.from('settings').upsert({key:'home',value:HOME});if(r.error)msg('Save failed: '+r.error.message)};
-function unlock(id){openM(`<h3>LOCKED</h3><form id="f"><input type="password" name="pw" placeholder="password" autofocus required><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn">UNLOCK</button></div></form>`);
- $('#f').onsubmit=async e=>{e.preventDefault();const r=await sb.rpc('unlock',{p_id:id,p_pw:new FormData(e.target).get('pw')});if(r.error||!r.data?.length)return msg('Wrong password');UNL[id]=r.data[0];closeM();route()}}
+/* locked items: the title stays visible and the password field opens in place (no popup) */
+function unlock(id){const it=ITEMS.find(x=>x.id==id);if(!it)return;const k=it.kind,to=(h,fn)=>{OPENLK=id;if(location.hash!==h)location.hash=h;else fn()};
+ if(k==='post')to('#/post/'+id,()=>view('posts'));else if(k==='log')to('#/log/'+id,()=>view('log'));else if(k==='memo')to('#/memo',()=>view('memo'));else if(k==='gallery')to('#/gallery',()=>view('gallery'));else to('#/lines',()=>view('lines'));
+ setTimeout(()=>{const o=document.querySelector('.lk.open .uf input,.e5r .uf input');if(o)o.focus();OPENLK=null},120)}
+document.addEventListener('submit',async e=>{const f=e.target.closest&&e.target.closest('.uf');if(!f)return;e.preventDefault();const id=+f.dataset.uf,inp=f.querySelector('input'),er=f.nextElementSibling;if(!inp.value)return;
+ const r=await sb.rpc('unlock',{p_id:id,p_pw:inp.value});
+ if(r.error||!r.data?.length){if(er)er.textContent='Wrong password';inp.value='';f.classList.remove('shake');void f.offsetWidth;f.classList.add('shake');inp.focus();return}
+ UNL[id]=r.data[0];OPENLK=null;const it=ITEMS.find(x=>x.id==id);if(it&&it.kind==='post'){const h='#/post/'+id;if(location.hash===h)route();else location.hash=h}else route()});
 /* calendar */
 function pmap(){const m={},g=k=>m[k]||(m[k]={p:[],t:[],n:[]});ITEMS.filter(i=>i.kind==='post'||i.kind==='log').forEach(i=>g(dayOf(i.created_at)).p.push(i));PLANS.forEach(x=>g(String(x.day).slice(0,10))[x.kind==='todo'?'t':'n'].push(x));return m}
 const MONS=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'],WDFULL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -615,7 +632,7 @@ function calHtml(){const{y,m}=CAL,f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0)
  if(e.n.length)h+=e.n.map(x=>`<div class="nn"><span>${esc(x.text)}</span>${admin?`<button class="x" data-pdel="${x.id}" aria-label="Delete">×</button>`:''}</div>`).join('');
  
  if(admin)h+=`<div class="add"><button class="ic${AK==='todo'?' on':''}" data-pa="todo" title="Todo" aria-label="Todo"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10"/></svg></button><button class="ic${AK==='note'?' on':''}" data-pa="note" title="Note" aria-label="Note"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10"/></svg></button><input id="pi" aria-label="add" autocomplete="off"></div>`;
- h+='</div></div></div>';const ph=e.p.length?`<div class="pl">${e.p.map((i,n)=>{const g=G(i),at=i.kind==='post'?`href="#/post/${i.id}"`:i.kind==='log'?`href="#/log/${i.id}"`:i.kind==='memo'?`href="javascript:void 0" data-mv="${i.id}"`:'href="#/lines"';return`<a ${at}><span class="n">${p2(n+1)}</span><b>${locked(i)?'LOCKED':esc(itName(g,28))}</b></a>`}).join('')}</div>`:'';return`<div class="cs"><div class="cl">${hd}${ph}</div>${h}</div>`}
+ h+='</div></div></div>';const ph=e.p.length?`<div class="pl">${e.p.map((i,n)=>{const g=G(i),at=i.kind==='post'?`href="#/post/${i.id}"`:i.kind==='log'?`href="#/log/${i.id}"`:i.kind==='memo'?`href="javascript:void 0" data-mv="${i.id}"`:'href="#/lines"';return`<a ${at}><span class="n">${p2(n+1)}</span><b>${locked(i)?esc(i.title||'LOCKED'):esc(itName(g,28))}</b></a>`}).join('')}</div>`:'';return`<div class="cs"><div class="cl">${hd}${ph}</div>${h}</div>`}
 const paintCal=()=>{const c=$('#calw');if(c)c.innerHTML=calHtml()};
 async function planAdd(text){const r=await sb.from('plans').insert({day:CAL.sel,kind:AK,text}).select().single();if(r.error)return alert(r.error.message);PLANS.push(r.data);paintCal();$('#pi')&&$('#pi').focus()}
 /* blocks */
@@ -707,7 +724,7 @@ function blockBody(b){const n=b.n||6;
  if(b.t==='image')return b.src?`<figure class="fig"><img src="${esc(b.src)}" loading="lazy" alt="">${b.cap?`<figcaption>${esc(b.cap)}</figcaption>`:''}</figure>`:'<div class="ph">NO IMAGE</div>';
  if(b.t==='note')return`<div class="nt">${mdn(b.text)}</div>`;
  if(b.t==='posts')return ITEMS.filter(i=>i.kind==='post').slice(0,n).map(i=>`<a class="row" href="#/post/${i.id}"><small>${dateS(i.created_at)}</small><b>${esc(i.title||'untitled')}${vb(i)}</b></a>`).join('')||'';
- if(b.t==='memos')return pub('memo').slice(0,n).map(i=>`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}<div class="mt md">${mdm(i.body)}</div></div>`).join('')||'';
+ if(b.t==='memos')return ITEMS.filter(i=>i.kind==='memo').slice(0,n).map(it=>{const i=G(it),lk=locked(i);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${lk?`<div class="mt" style="color:var(--mut)">LOCKED</div>`:`<div class="mt md">${mdm(i.body)}</div>`}</div>`}).join('')||'';
  if(b.t==='lines')return pub('line').slice(0,n).map(i=>`<div class="ln"><time>${dateS(i.created_at)}</time><div class="t"><div class="md">${mdn(i.body)}</div></div></div>`).join('')||'';
  if(b.t==='gallery')return`<div class="gg">${pub('gallery').slice(0,n).map(i=>`<img src="${esc(i.meta?.src)}" data-gi="${i.id}" loading="lazy" alt="">`).join('')}</div>`;
  if(b.t==='links')return(b.text||'').split('\n').map(l=>l.split('|').map(s=>s.trim())).filter(a=>a[0]).map(a=>`<a class="lk" href="${/^(https?:|#)/.test(a[1]||'')?esc(a[1]):'#'}" target="_blank" rel="noopener">${esc(a[0])}<span>↗</span></a>`).join('');if(b.t==='chess960')return c960Html();if(b.t==='position')return posHtml(b);if(b.t==='tags')return tagsHtml(b);if(b.t==='todayline')return tlHtml();if(b.t==='captured')return capHtml();if(b.t==='pgn')return pgnHtml(b);if(b.t==='heat')return heatHtml();if(b.t==='lastmove')return lmHtml();if(b.t==='eval')return evHtml();if(b.t==='puzzle')return pzHtml(b);if(b.t==='replay')return repHtml(b);if(b.t==='banners')return banHtml(b);return''}
@@ -1107,13 +1124,13 @@ function head(k,t){return`<div class="top"><span class="sub" style="margin:0">${
 function chips(list){const all=[...new Set(list.flatMap(i=>i.tags||[]))].sort();return all.length?`<div class="bar"><button class="chip${TAG?'':' on'}" data-tag="">ALL</button>${all.map(t=>`<button class="chip${TAG===t?' on':''}" data-tag="${esc(t)}">#${esc(t)}</button>`).join('')}</div>`:''}
 const match=i=>!Q||[i.title,i.body,(i.tags||[]).join(' ')].join(' ').toLowerCase().includes(Q.toLowerCase());
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
- if(kind==='post'){const G2=[];L.forEach(i=>{const d=date(i.created_at),g=G2[G2.length-1];if(g&&g.d===d)g.a.push(i);else G2.push({d,a:[i]})});h=`<div class="arx">${G2.map(g=>`<div class="ag"><div class="agh"><b>${g.d}</b><i></i><span>${g.a.length}</span></div>${g.a.map(i=>`<a class="ai" href="#/post/${i.id}"><b>${esc(i.title||'untitled')}${vb(i)}</b>${i.meta?.sub?`<span class="as">${esc(i.meta.sub)}</span>`:''}${(i.tags||[]).length?`<span class="at">${tags(i)}</span>`:''}</a>`).join('')}</div>`).join('')}</div>`}
- if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi" data-gi="${i.id}">${locked(i)?'<div class="empty" style="text-align:center">LOCKED</div>':`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${tags(i)}${vb(i)}</div>`:''}</div>`}).join('')}</div>`;
- if(kind==='memo'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4),cs=L.map(it=>{const i=G(it);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="color:var(--mut)">LOCKED · click to open</span>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${tags(i)}${vb(i)}</span>${eb(i)}</div>`:''}</div>`}),cols=Array.from({length:N},()=>[]);cs.forEach((c,i)=>cols[i%N].push(c));h=`<div class="mas m">${cols.map(c=>`<div class="mc">${c.join('')}</div>`).join('')}</div>`}
- if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED</span>`:`<div class="md">${mdn(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${tags(i)}${vb(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
+ if(kind==='post'){const G2=[];L.forEach(i=>{const d=date(i.created_at),g=G2[G2.length-1];if(g&&g.d===d)g.a.push(i);else G2.push({d,a:[i]})});h=`<div class="arx">${G2.map(g=>`<div class="ag"><div class="agh"><b>${g.d}</b><i></i><span>${g.a.length}</span></div>${g.a.map(i=>{const inn=`<b>${esc(i.title||'untitled')}${vb(i)}</b>${i.meta?.sub?`<span class="as">${esc(i.meta.sub)}</span>`:''}${(i.tags||[]).length?`<span class="at">${tags(i)}</span>`:''}`;return locked(i)?`<div class="ai lk${lkc(i)}" data-lk="${i.id}">${inn}<div class="lkb">${ulf(i.id)}</div></div>`:`<a class="ai" href="#/post/${i.id}">${inn}</a>`}).join('')}</div>`).join('')}</div>`}
+ if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-gi="${i.id}"`}>${locked(i)?`<div class="empty" style="text-align:center">LOCKED</div><div class="lkb" style="padding:0 8px 8px">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${tags(i)}${vb(i)}</div>`:''}</div>`}).join('')}</div>`;
+ if(kind==='memo'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4),cs=L.map(it=>{const i=G(it);return`<div class="mm${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-mv="${i.id}"`}>${i.title?`<b>${esc(i.title)}</b>`:locked(i)?'<b style="color:var(--mut)">untitled</b>':''}${locked(i)?`<div class="lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${tags(i)}${vb(i)}</span>${eb(i)}</div>`:''}</div>`}),cols=Array.from({length:N},()=>[]);cs.forEach((c,i)=>cols[i%N].push(c));h=`<div class="mas m">${cols.map(c=>`<div class="mc">${c.join('')}</div>`).join('')}</div>`}
+ if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<div class="lk${lkc(i)}" data-lk="${i.id}"><span class="lkh" style="color:var(--mut)">LOCKED</span><div class="lkb">${ulf(i.id)}</div></div>`:`<div class="md">${mdn(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${tags(i)}${vb(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
  return L.length?h:''}
-function essayRows(L,cur){return L.length?L.map(it=>{const i=G(it);return`<a class="e5i${cur&&cur.id===i.id?' on':''}" href="#/log/${i.id}"><span class="d">${date(i.created_at)}<span class="tm"> ${date(i.created_at,1).slice(-5)}</span></span><span class="t">${locked(i)?'LOCKED':esc(i.title||'untitled')}${vb(i)}</span></a>`}).join(''):'<p class="empty">no entries</p>'}
-function essayBody(it){if(!it)return'';const i=G(it);if(locked(i))return`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED · click to open</span>`;
+function essayRows(L,cur){return L.length?L.map(it=>{const i=G(it);return`<a class="e5i${cur&&cur.id===i.id?' on':''}" href="#/log/${i.id}"><span class="d">${date(i.created_at)}<span class="tm"> ${date(i.created_at,1).slice(-5)}</span></span><span class="t">${esc(i.title||'untitled')}${vb(i)}</span></a>`}).join(''):'<p class="empty">no entries</p>'}
+function essayBody(it){if(!it)return'';const i=G(it);if(locked(i))return`<div class="e5m"></div><h1 class="e5t">${esc(i.title||'untitled')}</h1><div class="e5s">LOCKED</div><div class="lkp">${ulf(i.id)}</div>`;
  return`${eb(i)?`<div class="e5ed">${eb(i)}</div>`:''}<div class="e5m">${tags(i)}</div><h1 class="e5t">${esc(i.title||'untitled')}</h1>${i.meta?.sub?`<div class="e5s">${esc(i.meta.sub)}</div>`:''}<div class="md e5b">${mdr(i.body)}</div>`}
 function essayView(){const all=ITEMS.filter(i=>i.kind==='log'),sel=location.hash.replace('#/','').split('/')[1],was=!!$('#e5r'),y=scrollY;
  const get=()=>all.filter(i=>(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let L=get(),cur=L.find(i=>String(i.id)===sel)||L[0];
@@ -1273,7 +1290,7 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(x=c('[data-tag]')){TAG=x.dataset.tag===TAG?'':x.dataset.tag;return route()}
  if(x=c('[data-new]'))return form(x.dataset.new);
  if(x=c('[data-ed]')){e.stopPropagation();const i=ITEMS.find(i=>i.id==x.dataset.ed);return form(i.kind,G(i))}
- if(x=c('[data-un]'))return unlock(+x.dataset.un);
+ if(x=c('[data-lk]')){if(c('.lkb'))return;x.classList.toggle('open');const o=x.querySelector('.uf input');if(x.classList.contains('open')&&o)o.focus();return}
  if(e.target.closest('.mt a,.mfull a'))return;
  if(x=c('[data-mv]'))return memoView(x.dataset.mv);
  if(x=c('[data-gi]')){const i=G(ITEMS.find(i=>i.id==x.dataset.gi));if(locked(i))return unlock(i.id);$('#lb').innerHTML=`<figure><img src="${esc(i.meta.src)}" alt="">${i.body?`<figcaption>${esc(i.body)}</figcaption>`:''}</figure>`;$('#lb').hidden=false;return}
