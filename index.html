@@ -12,7 +12,7 @@
 <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard-jp@1.3.9/dist/web/variable/pretendardvariable-jp-dynamic-subset.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-kopubworld@1.0/css/all.css">
-<link href="https://fonts.googleapis.com/css2?family=Brygada+1918:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Noto+Serif+KR:wght@400;700&family=Roboto:wght@400;700&family=Orbit&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+KR:wght@400;700&family=Roboto:wght@400;700&family=Orbit&display=swap" rel="stylesheet">
 <style>
 :root{--cw:#fff;--ck:#111;--cwl:#111;--ckl:#111;--bg:#fff;--fg:#111;--mut:#8b8b8b;--line:#e9e9e9;--soft:#f6f6f6;--hb:#000;--ht:#fff;--hl:rgba(0,0,0,.055);--hl2:rgba(0,0,0,.11);--iw:310px;--gc:3;--mc:4;--sans:"Pretendard JP Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--cwl:#fff;--ckl:#e4e4e4;--bg:#0d0d0d;--fg:#f2f2f2;--mut:#808080;--line:#262626;--soft:#161616;--hb:#fff;--ht:#000;--hl:rgba(255,255,255,.09);--hl2:rgba(255,255,255,.17)}}
@@ -469,6 +469,14 @@ html{scrollbar-gutter:stable}
 .lmk .bnpc.ic{--pf:var(--bg);--ps:var(--bg);--pe:var(--fg)}
 /* memo: same line-height / paragraph gap as log body */
 .mm .mt,.mfull{line-height:1.65}.mm .md p,.mfull.md p{margin:0 0 11px}.mm .md p:last-child,.mfull.md p:last-child{margin-bottom:0}
+@media(max-width:720px){.bng:not(:has(.bnbd.ed)) .bnmy{display:none}}
+/* back to top: fills left-to-right with scroll progress */
+#top{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:35;height:22px;padding:0;border:1px solid var(--fg);background:var(--bg);color:var(--fg);font:700 11px/20px var(--sans);letter-spacing:.02em;font-variant-numeric:tabular-nums;overflow:hidden;opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .25s,transform .25s;--p:0%}
+#top.on{opacity:1;pointer-events:auto;transform:none}
+#top .t0,#top .t1{display:flex;align-items:center;justify-content:center;gap:3px;height:100%;min-width:50px;padding:0 8px}
+#top .t1{position:absolute;inset:0;background:var(--fg);color:var(--bg);clip-path:inset(0 calc(100% - var(--p)) 0 0)}
+#top i,#top b{font-style:normal;font-weight:700}
+body.pgd #top,body.ro #top,body.eo #top{display:none}
 /* home: extra space under the header border */
 #bks{margin-top:5px}
 </style>
@@ -511,6 +519,7 @@ setTimeout(step,500);
 <footer><button id="mode" class="mode" type="button">checkmate</button><button id="adm" aria-label="Admin"><svg width="13" height="13" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2v5M9.6 4.3h4.8" fill="none"/><path d="M12 8.4C11 6.8 8 6.5 6.5 8.4 5 10.4 6 13 8.2 14.2L7.2 18.2h9.6l-1-4C18 13 19 10.4 17.5 8.4 16 6.5 13 6.8 12 8.4Z"/><path d="M5.8 18.2h12.4v3.4H5.8Z"/></svg></button></footer>
 </div></div>
 <div id="rd" hidden></div><div id="ed" hidden></div><div id="md" hidden><div class="mb" id="mb"></div></div><div id="lb" hidden></div>
+<button id="top" type="button" aria-label="Back to top"><span class="t0"><i>↑</i><b id="tpa">0%</b></span><span class="t1" aria-hidden="true"><i>↑</i><b id="tpb">0%</b></span></button>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script>
@@ -730,6 +739,7 @@ const banDom=h=>{try{return new URL(h).hostname.replace(/^www\./,'')}catch(e){re
 function banMine(){const m=banData().mine;return{title:m.title||document.title||location.hostname,src:m.src||'',url:m.url||location.origin+location.pathname}}
 const BNVAL={p:1,n:3,b:3,r:5,q:9},BNEVAL=null; /* BNEVAL = optional engine eval per ply in centipawns (white +), length = plies+1 */
 function evCalc(fl,ply){const T=bnPlies().length;
+ if(ply===T)return{pc:100,txt:'1\u20130',wl:true,title:'RESULT 1\u20130'};
  if(BNEVAL&&ply!=null&&BNEVAL[ply]!=null){const d=BNEVAL[ply]/100;return{pc:Math.max(4,Math.min(96,50+46*Math.tanh(d/4))),txt:(d>0?'+':'')+d.toFixed(1),wl:d>=0,title:'EVAL '+(d>0?'+':'')+d.toFixed(1)}}
  if(ply!=null&&ply<T){let d=0;bnPos()[ply].sq.forEach(c=>{if(c==='.')return;const v=BNVAL[c.toLowerCase()]||0;d+=c===c.toUpperCase()?v:-v});
   return{pc:Math.max(4,Math.min(96,50+46*Math.tanh(d/6))),txt:(d>0?'+':'')+d.toFixed(1),wl:d>=0,title:'MATERIAL '+(d>0?'+':'')+d}}
@@ -756,7 +766,7 @@ function bannerPage(){FS=false;closeReader();document.body.classList.remove('pgd
  else rest='<div class="bnl"><p class="st">Select a piece to place a banner.</p></div>';
  const ic=p=>`<svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${p.c.toUpperCase()}"/></svg>`;
  const ord=ed&&fl.length?`<div class="bno"><div class="bnk" style="min-height:0;padding-bottom:8px"><span>ORDER · ⠿ DRAG OR ↑ ↓</span></div>${banSorted(fl).map((p,i)=>`<div class="bnr ed bno-r ${p.c===p.c.toUpperCase()?'w':'k'}" data-sq="${p.sq}"><button type="button" class="bngp" data-bgrip aria-label="Drag">⠿</button><i>${p2(i+1)}</i><span>${ic(p)}</span><b>${esc(banName(S[p.sq])||'—')}</b><button type="button" class="btn bnud" data-bmv="-1">↑</button><button type="button" class="btn bnud" data-bmv="1">↓</button></div>`).join('')}</div>`:'';
- app.innerHTML=`${ed?`<div class="bneb"><span>EDIT MODE · ${fl.length} OF ${BNB.length} PIECES HAVE A BANNER · KINGS = PROFILE</span><button type="button" class="btn" id="bdone">DONE</button></div>`:''}<div class="bnh"><div><h1>King’s Gambit Accepted</h1></div><div class="bnmt">Spencer — Anderson<br>Eton College · 2008 · 29.Rd1 1–0</div></div><div class="bng"><div class="bnbx"><div class="bnbw">${evBar(fl)}<div class="bnbd${ed?' ed':''}">${BNP.map(cell).join('')}${[0,1,2,3,4,5,6,7].map(y=>`<i class="co cr" style="grid-area:${y+1}/1" aria-hidden="true">${8-y}</i>`).join('')}${[...'abcdefgh'].map((f,x)=>`<i class="co cf" style="grid-area:8/${x+1}" aria-hidden="true">${f}</i>`).join('')}<div class="bnpop" hidden></div></div>${ed?'':BNRP}</div></div><aside class="bna">${mine}${rest}${ord}</aside></div>`;
+ app.innerHTML=`${ed?`<div class="bneb"><span>EDIT MODE · ${fl.length} OF ${BNB.length} PIECES HAVE A BANNER · KINGS = PROFILE</span><button type="button" class="btn" id="bdone">DONE</button></div>`:''}<div class="bnh"><div><h1>King’s Gambit Accepted</h1></div><div class="bnmt">Spencer — Anderson<br>Eton College · 2008 · 29.Rd1 1–0</div></div><div class="bng"><div class="bnbx"><div class="bnbw">${evBar(fl,ed?null:bnPlies().length)}<div class="bnbd${ed?' ed':''}">${BNP.map(cell).join('')}${[0,1,2,3,4,5,6,7].map(y=>`<i class="co cr" style="grid-area:${y+1}/1" aria-hidden="true">${8-y}</i>`).join('')}${[...'abcdefgh'].map((f,x)=>`<i class="co cf" style="grid-area:8/${x+1}" aria-hidden="true">${f}</i>`).join('')}<div class="bnpop" hidden></div></div>${ed?'':BNRP}</div></div><aside class="bna">${mine}${rest}${ord}</aside></div>`;
  const O=$('.bno');if(O){
   O.addEventListener('click',e=>{const b=e.target.closest('[data-bmv]');if(!b)return;const sq=b.closest('.bno-r').dataset.sq,o=banSorted(fl).map(p=>p.sq),i=o.indexOf(sq),j=i+ +b.dataset.bmv;if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];banData().order=o;saveHome();bannerPage()});
   O.addEventListener('pointerdown',e=>{const g=e.target.closest('[data-bgrip]');if(!g)return;e.preventDefault();const row=g.closest('.bno-r');row.classList.add('mv');try{g.setPointerCapture(e.pointerId)}catch(_){}
@@ -935,7 +945,7 @@ marked.use({extensions:[
 {name:'bd',level:'inline',start(x){return x.indexOf('**')},tokenizer(x){const m=/^\*\*(?=\S)([\s\S]*?\S)\*\*(?!\*)/.exec(x);if(m)return{type:'bd',raw:m[0],text:m[1],tokens:this.lexer.inlineTokens(m[1])}},renderer(t){return`<strong>${this.parser.parseInline(t.tokens)}</strong>`}},
 {name:'it',level:'inline',start(x){return x.indexOf('*')},tokenizer(x){const m=/^\*(?=[^\s*])([\s\S]*?[^\s*])\*(?!\*)/.exec(x);if(m)return{type:'it',raw:m[0],text:m[1],tokens:this.lexer.inlineTokens(m[1])}},renderer(t){return`<em>${this.parser.parseInline(t.tokens)}</em>`}}
 ]});
-const FF={sans:{n:'sans-serif',tf:'"Pretendard JP Variable",Pretendard,sans-serif',tk:'"Pretendard JP Variable",Pretendard,sans-serif'},serif:{n:'serif',tf:'"Brygada 1918","KoPubWorld Batang","Noto Serif KR",serif',tk:'"KoPubWorld Batang","Noto Serif KR",serif'},mono:{n:'monospace',tf:'Orbit,"Pretendard JP Variable",sans-serif',tk:'Orbit,"Pretendard JP Variable",sans-serif'}};
+const FF={sans:{n:'sans-serif',tf:'"Pretendard JP Variable",Pretendard,sans-serif',tk:'"Pretendard JP Variable",Pretendard,sans-serif'},serif:{n:'serif',tf:'"PT Serif","KoPubWorld Batang","Noto Serif KR",serif',tk:'"KoPubWorld Batang","Noto Serif KR",serif'},mono:{n:'monospace',tf:'Orbit,"Pretendard JP Variable",sans-serif',tk:'Orbit,"Pretendard JP Variable",sans-serif'}};
 const ffo=()=>FF[RS.ff]||FF.serif;
 const SZ=[13,14,15,16,17,18,20,22,24],GAP=48;
 let RS={th:'auto',ff:'serif',sz:2,l:1.8,c:-.03,m:28};try{Object.assign(RS,JSON.parse(localStorage.getItem('rs4')||'{}'))}catch(e){}
@@ -1095,7 +1105,7 @@ function essayView(){const all=ITEMS.filter(i=>i.kind==='log'),sel=location.hash
  const get=()=>all.filter(i=>(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let L=get(),cur=L.find(i=>String(i.id)===sel)||L[0];
  app.innerHTML=head('log')+`<input id="sq" placeholder="search" value="${esc(Q)}" autocomplete="off">`+chips(all)+`<div class="e5"><div class="e5l" id="e5l">${essayRows(L,cur)}</div><div class="e5r" id="e5r">${essayBody(cur)}</div></div>`;
  $('#sq').oninput=e=>{Q=e.target.value;L=get();$('#e5l').innerHTML=essayRows(L,cur)};
- if(was){scrollTo(0,y);if(sel&&innerWidth<=720)$('#e5r').scrollIntoView({block:'start'})}}
+ if(was){scrollTo(0,y);}}
 function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind);if(kind==='log')return essayView();
  app.innerHTML=head(k,LBL[kind])+(kind==='gallery'?'':`<input id="sq" placeholder="search" value="${esc(Q)}" autocomplete="off">`)+(kind==='line'&&admin?`<form id="q" class="lq"><textarea name="t" rows="1" aria-label="write"></textarea><span class="dtw"><button type="button" class="btn" id="dtb" aria-label="date">DATE</button><button type="button" class="btn" id="dtx" aria-label="clear date" hidden>×</button><input type="datetime-local" name="dt" tabindex="-1" aria-hidden="true"></span><button class="btn pri">POST</button></form>`:'')+chips(all)+`<div id="lst">${list(k)}</div>`;
  if($('#sq'))$('#sq').oninput=e=>{Q=e.target.value;$('#lst').innerHTML=list(k)};
@@ -1276,7 +1286,10 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
   if(op==='rm'){if(!confirm('Delete this block?'))return;B.splice(i,1)}if(op==='ed')return blockForm(b);saveHome();home()}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pi'&&e.target.value.trim()){const v=e.target.value.trim();e.target.value='';planAdd(v)}});
 {let t=0;addEventListener('scroll',()=>{const h=document.documentElement.classList;h.add('sb');clearTimeout(t);t=setTimeout(()=>h.remove('sb'),900)},{capture:true,passive:true})} /* show scrollbars only while scrolling */
-addEventListener('hashchange',()=>{TAG=PEND;PEND='';Q='';FS=false;scrollTo(0,0);route()});
+{const tb=$('#top'),ta=$('#tpa'),tc=$('#tpb'),up=()=>{const mx=document.documentElement.scrollHeight-innerHeight,p=mx>0?Math.min(1,Math.max(0,scrollY/mx)):0,v=Math.round(p*100)+'%';tb.classList.toggle('on',scrollY>400);tb.style.setProperty('--p',v);ta.textContent=v;tc.textContent=v};
+ addEventListener('scroll',up,{passive:true});addEventListener('resize',up);if(window.ResizeObserver)new ResizeObserver(up).observe(app);
+ tb.onclick=()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});up()}
+addEventListener('hashchange',()=>{TAG=PEND;PEND='';Q='';FS=false;if(!(/^#\/(log|e5)\b/.test(location.hash)&&$('#e5r')))scrollTo(0,0);route()});
 document.addEventListener('input',e=>{const t=e.target,k=t.dataset&&t.dataset.ia;if(!k)return;HOME[k]=+t.value;$('#v_'+k).textContent=t.value+IU[k];paintVars()});
 /* auth */
 const sync=()=>{$('#adm').classList.toggle('on',admin);const m=$('#mode');m.textContent=EM?'stalemate':'checkmate';m.classList.toggle('ok',admin);m.classList.toggle('on',admin&&EM)};
