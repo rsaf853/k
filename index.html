@@ -479,6 +479,18 @@ html{scrollbar-gutter:stable}
 body.pgd #top,body.ro #top,body.eo #top{display:none}
 /* memo page grid only */
 .mas.m .mm{font-size:13px}.mas.m .mm .mt{line-height:1.55}.mas.m .mm .md p{margin:0 0 10px}.mas.m .mm .md p:last-child{margin-bottom:0}
+/* archive list: big titles, date on a rule with entry count */
+.arx .ag{margin-bottom:8px}
+.arx .agh{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.arx .agh i{flex:1;height:1px;background:var(--fg)}
+.arx .agh b{font:700 10px var(--sans);letter-spacing:.1em}
+.arx .agh span{display:inline-block;min-width:18px;text-align:center;border:1px solid var(--fg);padding:0 5px;font:700 10px var(--sans)}
+.arx .ai{display:block;padding:7px 0;text-decoration:none}
+.arx .ai>b{display:block;font:800 20px/1.25 var(--sans);letter-spacing:-.05em;overflow-wrap:anywhere}
+.arx .ai .as{display:block;font-size:13px;color:var(--mut);margin-top:2px}
+.arx .ai .at{display:block;margin-top:3px}
+.arx .ai:hover>b{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+@media(max-width:720px){.arx .ai>b{font-size:18px}}
 /* home: extra space under the header border */
 #bks{margin-top:5px}
 </style>
@@ -1095,7 +1107,7 @@ function head(k,t){return`<div class="top"><span class="sub" style="margin:0">${
 function chips(list){const all=[...new Set(list.flatMap(i=>i.tags||[]))].sort();return all.length?`<div class="bar"><button class="chip${TAG?'':' on'}" data-tag="">ALL</button>${all.map(t=>`<button class="chip${TAG===t?' on':''}" data-tag="${esc(t)}">#${esc(t)}</button>`).join('')}</div>`:''}
 const match=i=>!Q||[i.title,i.body,(i.tags||[]).join(' ')].join(' ').toLowerCase().includes(Q.toLowerCase());
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
- if(kind==='post'){let lastD='';h=`<div class="arc">${L.map(i=>{const d=date(i.created_at),g=d!==lastD?(lastD=d,`<div class="gh">${d}</div>`):'';return g+`<a class="row" href="#/post/${i.id}"><b>${esc(i.title||'untitled')}${vb(i)}</b>${i.meta?.sub?`<i>${esc(i.meta.sub)}</i>`:''}<span>${tags(i)}</span></a>`}).join('')}</div>`}
+ if(kind==='post'){const G2=[];L.forEach(i=>{const d=date(i.created_at),g=G2[G2.length-1];if(g&&g.d===d)g.a.push(i);else G2.push({d,a:[i]})});h=`<div class="arx">${G2.map(g=>`<div class="ag"><div class="agh"><b>${g.d}</b><i></i><span>${g.a.length}</span></div>${g.a.map(i=>`<a class="ai" href="#/post/${i.id}"><b>${esc(i.title||'untitled')}${vb(i)}</b>${i.meta?.sub?`<span class="as">${esc(i.meta.sub)}</span>`:''}${(i.tags||[]).length?`<span class="at">${tags(i)}</span>`:''}</a>`).join('')}</div>`).join('')}</div>`}
  if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi" data-gi="${i.id}">${locked(i)?'<div class="empty" style="text-align:center">LOCKED</div>':`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${tags(i)}${vb(i)}</div>`:''}</div>`}).join('')}</div>`;
  if(kind==='memo'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4),cs=L.map(it=>{const i=G(it);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${locked(i)?`<span data-un="${i.id}" style="color:var(--mut)">LOCKED · click to open</span>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${tags(i)}${vb(i)}</span>${eb(i)}</div>`:''}</div>`}),cols=Array.from({length:N},()=>[]);cs.forEach((c,i)=>cols[i%N].push(c));h=`<div class="mas m">${cols.map(c=>`<div class="mc">${c.join('')}</div>`).join('')}</div>`}
  if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<span data-un="${i.id}" style="cursor:pointer;color:var(--mut)">LOCKED</span>`:`<div class="md">${mdn(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${tags(i)}${vb(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
