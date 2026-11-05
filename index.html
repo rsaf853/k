@@ -658,6 +658,28 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .epvi{max-width:640px;margin:0 auto;padding:48px 28px 90px}.eplab{font:700 9px var(--sans);letter-spacing:.16em;color:var(--mut);margin-bottom:16px}
 .epar{--tbg:var(--soft)}.epar .pg{max-width:none}
 @media(max-width:700px){.win .escr.pvon{grid-template-columns:0fr minmax(0,1fr)}.win .escr.pvon .epv{border-left-width:0}.epvi{padding:24px 18px 60px}}
+
+/* LOCKED · ROOK */
+.rkw{display:flex;flex-direction:column;align-items:flex-start;gap:0}
+.rkt{display:flex;align-items:center;gap:6px;font:800 10px var(--sans);letter-spacing:.16em;color:var(--fg)}.rkt b{font-weight:800}
+.rki{width:15px;height:15px;flex:none;fill:currentColor;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round;--pe:var(--bg)}
+.rkw .uf{width:min(100%,260px);margin-top:7px;border:1px solid var(--line)}.rkw .uf:focus-within{border-color:var(--fg)}
+.rkw .uf input{padding:6px 9px}.rkw .uf button{background:var(--fg);color:var(--bg);border-left:1px solid var(--fg);padding:0 11px}.rkw .uf button:hover{opacity:.85;background:var(--fg);color:var(--bg)}
+.rkw .uer{min-height:0}.rkw .uer:not(:empty){margin-top:5px}
+.rkph{display:inline-block;width:72px;height:8px;background:currentColor;opacity:.2;vertical-align:1px}
+.rkm{color:var(--mut);margin-top:2px}
+.mm.lk .lkb,.ln .lk .lkb,.gi.lk .lkb{display:block}.mm.lk.open,.mm.lk{background:var(--bg)}
+.gi.lk{display:grid;place-items:center;aspect-ratio:3/4;padding:10px;background:var(--soft);cursor:default}.gi.lk .uf{width:100%}
+.lkpg,.lkcen{display:flex;align-items:center;justify-content:center;text-align:center}
+.lkpg{flex-direction:column;gap:10px;min-height:calc(100vh - 240px);min-height:calc(100svh - 240px)}
+.lkcen{min-height:calc(100vh - 300px);min-height:calc(100svh - 300px)}.lkin{display:flex;flex-direction:column;align-items:center;gap:10px}
+.lkpg .rkt,.lkcen .rkt{display:none}.lkpg .rkw,.lkcen .rkw{align-items:center}.lkpg .uf,.lkcen .uf{width:260px;margin-top:0}
+.rkbig{width:46px;height:46px;fill:var(--fg);stroke:var(--fg);stroke-width:1.5;stroke-linejoin:round;--pe:var(--bg)}
+.lkpm{font:700 9.5px var(--sans);letter-spacing:.14em;color:var(--mut)}
+.lkbk{font:600 11px var(--sans);color:var(--mut);text-decoration:none;margin-top:6px}.lkbk:hover{color:var(--fg)}
+@media(max-width:720px){.lkcen{min-height:240px}}
+
+.lkh1{margin:0 0 4px;font:900 24px/1.25 var(--sans);letter-spacing:-.055em;color:var(--fg)}
 </style>
 </head>
 <body>
@@ -720,7 +742,9 @@ const vb=i=>i.visibility==='public'?'':`<span class="vb ${i.visibility==='privat
 const tags=i=>(i.tags||[]).map(t=>`<span class="tg" data-tag="${esc(t)}">#${esc(t)}</span>`).join('');
 const em=()=>admin&&EM,eb=i=>admin?`<button class="btn" data-ed="${i.id}">EDIT</button>`:'';
 const lkc=i=>OPENLK==i.id?' open':'';
-const ulf=id=>`<form class="uf" data-uf="${id}" autocomplete="off"><input type="password" name="pw" placeholder="password" aria-label="password"><button aria-label="Unlock">→</button></form><p class="uer"></p>`;
+const RKI='<svg class="rki" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnR"/></svg>';
+const ulf=id=>`<div class="rkw"><span class="rkt">${RKI}<b>LOCKED</b></span><form class="uf" data-uf="${id}" autocomplete="off"><input type="password" name="pw" placeholder="password" aria-label="password"><button aria-label="Unlock">→</button></form><p class="uer"></p></div>`;
+function lockPage(it){const lg=it.kind==='log';app.innerHTML=`<div class="lkpg"><svg class="rkbig" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnR"/></svg><div class="lkpm">${lg?'LOG':'ARCHIVE'} · ${date(it.created_at)}</div><h1 class="lkh1">${esc(it.title||'untitled')}</h1>${ulf(it.id)}<a class="lkbk" href="#/${lg?'log':'posts'}">← ${lg?'log':'archive'}</a></div>`;setTimeout(()=>{const o=app.querySelector('.uf input');if(o)o.focus()},60)}
 const hash=t=>[...t.matchAll(/(?:^|\s)#([^\s#]+)/g)].map(m=>m[1]);
 const openM=h=>{$('#mb').innerHTML=h;$('#md').hidden=false},closeM=()=>{$('#md').hidden=true;if(ADJ){Object.assign(HOME,ADJ);ADJ=null;paintVars()}};
 $('#md').onclick=e=>{if(e.target.id==='md')closeM()};$('#lb').onclick=()=>$('#lb').hidden=true;
@@ -769,11 +793,11 @@ function imgAdjust(){ADJ={iw:HOME.iw||310,ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.
 const saveHome=async()=>{const r=await sb.from('settings').upsert({key:'home',value:HOME});if(r.error)msg('Save failed: '+r.error.message)};
 /* locked items: the title stays visible and the password field opens in place (no popup) */
 function unlock(id){const it=ITEMS.find(x=>x.id==id);if(!it)return;const k=it.kind,to=(h,fn)=>{OPENLK=id;if(location.hash!==h)location.hash=h;else fn()};
- if(k==='post')to('#/post/'+id,()=>view('posts'));else if(k==='log')to('#/log/'+id,()=>view('log'));else if(k==='memo')to('#/memo',()=>view('memo'));else if(k==='gallery')to('#/gallery',()=>view('gallery'));else to('#/lines',()=>view('lines'));
- setTimeout(()=>{const o=document.querySelector('.lk.open .uf input,.e5r .uf input');if(o)o.focus();OPENLK=null},120)}
+ if(k==='post')to('#/post/'+id,()=>route());else if(k==='log')to('#/log/'+id,()=>view('log'));else if(k==='memo')to('#/memo',()=>view('memo'));else if(k==='gallery')to('#/gallery',()=>view('gallery'));else to('#/lines',()=>view('lines'));
+ setTimeout(()=>{const o=document.querySelector('.lk.open .uf input,.e5r .uf input,.lkpg .uf input');if(o)o.focus();OPENLK=null},120)}
 document.addEventListener('submit',async e=>{const f=e.target.closest&&e.target.closest('.uf');if(!f)return;e.preventDefault();const id=+f.dataset.uf,inp=f.querySelector('input'),er=f.nextElementSibling;if(!inp.value)return;
  const r=await sb.rpc('unlock',{p_id:id,p_pw:inp.value});
- if(r.error||!r.data?.length){if(er)er.textContent='Wrong password';inp.value='';f.classList.remove('shake');void f.offsetWidth;f.classList.add('shake');inp.focus();return}
+ if(r.error||!r.data?.length){if(er)er.textContent='비밀번호가 맞지 않아요';inp.value='';f.classList.remove('shake');void f.offsetWidth;f.classList.add('shake');inp.focus();return}
  UNL[id]=r.data[0];OPENLK=null;const it=ITEMS.find(x=>x.id==id);if(it&&it.kind==='post'){const h='#/post/'+id;if(location.hash===h)route();else location.hash=h}else route()});
 /* calendar */
 function pmap(){const m={},g=k=>m[k]||(m[k]={p:[],t:[],n:[]});ITEMS.filter(i=>i.kind==='post'||i.kind==='log').forEach(i=>g(dayOf(i.created_at)).p.push(i));PLANS.forEach(x=>g(String(x.day).slice(0,10))[x.kind==='todo'?'t':'n'].push(x));return m}
@@ -880,7 +904,7 @@ function blockBody(b){const n=b.n||6;
  if(b.t==='image')return b.src?`<figure class="fig"><img src="${esc(b.src)}" loading="lazy" alt="">${b.cap?`<figcaption>${esc(b.cap)}</figcaption>`:''}</figure>`:'<div class="ph">NO IMAGE</div>';
  if(b.t==='note')return`<div class="nt">${mdn(b.text)}</div>`;
  if(b.t==='posts')return ITEMS.filter(i=>i.kind==='post').slice(0,n).map(i=>`<a class="row" href="#/post/${i.id}"><small>${dateS(i.created_at)}</small><b>${vb(i)}${esc(i.title||'untitled')}</b></a>`).join('')||'';
- if(b.t==='memos')return ITEMS.filter(i=>i.kind==='memo').slice(0,n).map(it=>{const i=G(it),lk=locked(i);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${lk?`<div class="mt" style="color:var(--mut)">LOCKED</div>`:`<div class="mt md">${mdm(i.body)}</div>`}</div>`}).join('')||'';
+ if(b.t==='memos')return ITEMS.filter(i=>i.kind==='memo').slice(0,n).map(it=>{const i=G(it),lk=locked(i);return`<div class="mm" data-mv="${i.id}">${i.title?`<b>${esc(i.title)}</b>`:''}${lk?`<div class="rkt rkm">${RKI}<b>LOCKED</b></div>`:`<div class="mt md">${mdm(i.body)}</div>`}</div>`}).join('')||'';
  if(b.t==='lines')return pub('line').slice(0,n).map(i=>`<div class="ln"><time>${dateS(i.created_at)}</time><div class="t"><div class="md">${mdn(i.body)}</div></div></div>`).join('')||'';
  if(b.t==='gallery')return`<div class="gg">${pub('gallery').slice(0,n).map(i=>`<img src="${esc(i.meta?.src)}" data-gi="${i.id}" loading="lazy" alt="">`).join('')}</div>`;
  if(b.t==='links')return(b.text||'').split('\n').map(l=>l.split('|').map(s=>s.trim())).filter(a=>a[0]).map(a=>`<a class="lk" href="${/^(https?:|#)/.test(a[1]||'')?esc(a[1]):'#'}" target="_blank" rel="noopener">${esc(a[0])}<span>↗</span></a>`).join('');if(b.t==='chess960')return c960Html();if(b.t==='position')return posHtml(b);if(b.t==='tags')return tagsHtml(b);if(b.t==='todayline')return tlHtml();if(b.t==='captured')return capHtml();if(b.t==='pgn')return pgnHtml(b);if(b.t==='heat')return heatHtml();if(b.t==='lastmove')return lmHtml();if(b.t==='eval')return evHtml();if(b.t==='puzzle')return pzHtml(b);if(b.t==='replay')return repHtml(b);if(b.t==='banners')return banHtml(b);return''}
@@ -1430,12 +1454,12 @@ function chips(list){const all=[...new Set(list.flatMap(i=>i.tags||[]))].sort();
 const match=i=>!Q||[i.title,i.body,(i.tags||[]).join(' ')].join(' ').toLowerCase().includes(Q.toLowerCase());
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
  if(kind==='post'){const G2=[];L.forEach(i=>{const x=new Date(i.created_at),k=x.getFullYear()+'-'+x.getMonth(),g=G2[G2.length-1];if(g&&g.k===k)g.a.push(i);else G2.push({k,l:MONS[x.getMonth()]+' '+x.getFullYear(),a:[i]})});h=`<div class="arx mon">${G2.map(g=>`<div class="ag"><div class="agh"><b>${g.l}</b><i></i><span>${g.a.length}</span></div>${g.a.map(i=>{const inn=`<span class="dn">${p2(new Date(i.created_at).getDate())}</span><b>${vb(i)}${esc(i.title||'untitled')}</b>${i.meta?.sub?`<span class="as">${esc(i.meta.sub)}</span>`:''}${(i.tags||[]).length?`<span class="at">${tags(i)}</span>`:''}`;return locked(i)?`<div class="ai lk${lkc(i)}" data-lk="${i.id}" data-tip="${i.id}">${inn}<div class="lkb">${ulf(i.id)}</div></div>`:`<a class="ai" href="#/post/${i.id}" data-tip="${i.id}">${inn}</a>`}).join('')}</div>`).join('')}</div>`}
- if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-gi="${i.id}"`}>${locked(i)?`<div class="empty" style="text-align:center">LOCKED</div><div class="lkb" style="padding:0 8px 8px">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`}).join('')}</div>`;
+ if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-gi="${i.id}"`}>${locked(i)?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`}).join('')}</div>`;
  if(kind==='memo'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4),cs=L.map(it=>{const i=G(it);return`<div class="mm${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-mv="${i.id}"`}>${i.title?`<b>${esc(i.title)}</b>`:locked(i)?'<b style="color:var(--mut)">untitled</b>':''}${locked(i)?`<div class="lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${vb(i)}${tags(i)}</span>${eb(i)}</div>`:''}</div>`}),cols=Array.from({length:N},()=>[]);cs.forEach((c,i)=>cols[i%N].push(c));h=`<div class="mas m">${cols.map(c=>`<div class="mc">${c.join('')}</div>`).join('')}</div>`}
- if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<div class="lk${lkc(i)}" data-lk="${i.id}"><span class="lkh" style="color:var(--mut)">LOCKED</span><div class="lkb">${ulf(i.id)}</div></div>`:`<div class="md">${mdn(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${vb(i)}${tags(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
+ if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<div class="lk${lkc(i)}" data-lk="${i.id}"><div class="lkb">${ulf(i.id)}</div></div>`:`<div class="md">${mdn(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${vb(i)}${tags(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
  return L.length?h:''}
 function essayRows(L,cur){return L.length?L.map(it=>{const i=G(it);return`<a class="e5i${cur&&cur.id===i.id?' on':''}" href="#/log/${i.id}"><span class="d">${date(i.created_at)}<span class="tm"> ${date(i.created_at,1).slice(-5)}</span></span><span class="t">${vb(i)}${esc(i.title||'untitled')}</span></a>`}).join(''):'<p class="empty">no entries</p>'}
-function essayBody(it){if(!it)return'';const i=G(it);if(locked(i))return`<div class="e5m"></div><h1 class="e5t">${esc(i.title||'untitled')}</h1><div class="e5s">LOCKED</div><div class="lkp">${ulf(i.id)}</div>`;
+function essayBody(it){if(!it)return'';const i=G(it);if(locked(i))return`<div class="lkcen"><div class="lkin"><svg class="rkbig" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnR"/></svg><div class="lkpm">LOG · ${date(i.created_at)}</div><div class="lkh1">${esc(i.title||'untitled')}</div>${ulf(i.id)}</div></div>`;
  return`${eb(i)?`<div class="e5ed">${eb(i)}</div>`:''}<div class="e5m">${tags(i)}</div><h1 class="e5t">${esc(i.title||'untitled')}</h1>${i.meta?.sub?`<div class="e5s">${esc(i.meta.sub)}</div>`:''}<div class="md e5b">${mdr(i.body)}</div>`}
 function essayView(){const all=ITEMS.filter(i=>i.kind==='log'),sel=location.hash.replace('#/','').split('/')[1],was=!!$('#e5r'),y=scrollY;
  const get=()=>all.filter(i=>(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let L=get(),cur=L.find(i=>String(i.id)===sel)||L[0];
@@ -1450,7 +1474,7 @@ function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind);if(kind==
   q.onsubmit=async e=>{e.preventDefault();const t=ta.value.trim();if(!t)return;await save({kind:'line',body:t,tags:hash(t),visibility:'public',...(q.elements.dt.value?{created_at:new Date(q.elements.dt.value).toISOString()}:{})})}}}
 function route(){const h=location.hash.replace('#/','')||'',[a0,b]=h.split('/'),a=a0==='e5'?'log':a0;document.body.classList.toggle('bnpg',a==='banners');document.body.classList.toggle('pzpg',a==='puzzle');$('#puzzleNav').classList.toggle('on',a==='puzzle');$('#mateNav').classList.toggle('on',a==='banners');{const H=$('.hr');H.dataset.cur=a==='banners'?'mate':a==='puzzle'?'puzzle':'';delete H.dataset.h}document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('on',x.dataset.n===(a==='post'?'posts':a)));
  if(a==='post'){const it=ITEMS.find(i=>i.id==b);if(!it){closeReader();return view('posts')}
-  if(locked(it)){closeReader();if(!$('#app').innerHTML||$('#ar'))view('posts');return unlock(it.id)}
+  if(locked(it)){closeReader();document.body.classList.remove('pgd');return lockPage(it)}
   if(FS){if(!$('#app').innerHTML)view('posts');return reader(it)}return article(it)}
  FS=false;closeReader();document.body.classList.remove('pgd');if(!a)return home();if(a==='banners')return bannerPage();if(a==='puzzle')return puzzlePage();view(KIND[a]?a:'posts')}
 
