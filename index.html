@@ -413,7 +413,7 @@ html{scrollbar-gutter:stable}
 .kct{min-width:0;flex:1;display:flex;flex-direction:column}
 .kcr1{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .kcn{font:800 14.5px/1.25 var(--sans);letter-spacing:-.045em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.kcg{flex:none;border:1px solid var(--fg);padding:0 5px;font:700 10px/1.5 var(--sans)}
+.kcg{flex:none;border:1px solid var(--fg);padding:0 3px;font:700 10px/1.3 var(--sans);letter-spacing:0}
 .kcr2{display:flex;justify-content:space-between;align-items:baseline;margin-top:5px}
 .kcl{font:700 9px var(--sans);letter-spacing:.1em;color:var(--mut);text-transform:uppercase}
 .kcv{font:800 22px/1 var(--sans);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
@@ -618,22 +618,33 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 
 /* ---------- HOME · live broadcast ---------- */
 .lv{padding-top:2px}
-.lvhd{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--fg);padding-bottom:5px;margin-bottom:12px}.lvhd b{font:800 11px var(--sans);letter-spacing:.16em;white-space:nowrap}.lvhd span{flex:1;text-align:right;font:600 10px var(--sans);letter-spacing:.1em;color:var(--mut);text-transform:uppercase}.lvhd .btn{flex:none}
-.lvg{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,1fr);gap:22px;align-items:start}
-.lvbar{display:grid;grid-template-columns:54px minmax(0,1fr) auto;align-items:center;gap:12px;padding:7px 0}
-.lvpi{width:54px;height:54px;background:center/cover var(--soft);filter:grayscale(1);transition:filter .3s}.lvbar.turn .lvpi{filter:none}
-.lvnm{min-width:0}.lvnm b{font:800 17px/1.2 var(--sans);letter-spacing:-.05em}.lvnm i{font-style:normal;font:700 9.5px/1 var(--sans);letter-spacing:.08em;border:1px solid var(--fg);padding:2px 5px;margin-left:7px;vertical-align:3px}.lvnm small{display:block;margin-top:2px;font:600 10px var(--sans);letter-spacing:.06em;color:var(--mut)}
-.lvclk{font:700 16px/1 var(--sans);font-variant-numeric:tabular-nums;padding:9px 11px;border:1px solid var(--line);text-align:right;white-space:nowrap;min-width:104px}.lvbar.turn .lvclk{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.lvg{display:grid;grid-template-columns:minmax(280px,1fr) minmax(0,1.1fr);grid-template-areas:"t b" "p b";grid-template-rows:auto 1fr;column-gap:22px;align-items:start}
+.lvt{grid-area:t;margin-bottom:14px}.lvlft{grid-area:b}.lvrgt{grid-area:p}
+.lvt1{display:flex;align-items:center;gap:10px}
+.lvchip{display:inline-flex;align-items:center;gap:6px;background:var(--fg);color:var(--bg);font:800 9.5px/1 var(--sans);letter-spacing:.14em;padding:5px 7px;text-transform:uppercase}.lvchip::before{content:"";width:6px;height:6px;background:var(--bg);animation:lvbk 1.4s steps(1) infinite}@keyframes lvbk{50%{opacity:0}}@media(prefers-reduced-motion:reduce){.lvchip::before{animation:none}}
+.lvcn{margin-left:auto;font:700 10.5px var(--sans);letter-spacing:.06em;color:var(--mut);font-variant-numeric:tabular-nums;text-transform:uppercase}.lvt1 .btn{flex:none}
+.lvt h3{margin:8px 0 0;font:900 36px/1.05 var(--sans);letter-spacing:-.07em}.lvt p{margin:3px 0 0;font:500 14px var(--sans);color:var(--mut)}
+.lvbar{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:10px;padding:6px 0}
+.lvpi{width:38px;height:38px;background:center/cover var(--soft);filter:grayscale(1);transition:filter .3s}.lvbar.turn .lvpi{filter:none}
+.lvnm{min-width:0}.lvnm b{display:flex;align-items:center;gap:8px;font:800 15.5px/1.2 var(--sans);letter-spacing:-.05em}.lvnm small{display:block;margin-top:1px;font:600 10px var(--sans);letter-spacing:.06em;color:var(--mut)}
+.lvsq{display:inline-block;width:11px;height:11px;border:2px solid var(--fg);flex:none}.lvsq.k{background:var(--fg)}
+.lvclk{font:700 14px/1 var(--sans);font-variant-numeric:tabular-nums;padding:7px 9px;border:1px solid var(--line);text-align:right;white-space:nowrap;min-width:88px}.lvbar.turn .lvclk{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .lvbx{margin:0;max-width:none;user-select:none;-webkit-user-select:none}
 .lvctr{display:flex;align-items:center;gap:4px;margin-top:8px}.lvctr .bt{height:28px;min-width:32px;padding:0 9px}.lvctr .bt.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .lvpr{flex:1;height:22px;display:flex;align-items:center;margin:0 6px;cursor:pointer}.lvpr s{display:block;width:100%;height:3px;background:var(--line);position:relative;text-decoration:none}.lvpr i{position:absolute;left:0;top:0;bottom:0;background:var(--fg)}
 .lvpg{font:600 11px var(--sans);color:var(--mut);font-variant-numeric:tabular-nums;min-width:52px;text-align:right}
-.lvtabs{display:flex;border-bottom:1px solid var(--fg)}.lvtabs button{padding:6px 12px;font:800 10.5px var(--sans);letter-spacing:.12em;color:var(--mut)}.lvtabs button.on{background:var(--fg);color:var(--bg)}
+.lvtabs{display:flex;gap:4px;margin:2px 0 12px}
+.lvtabs button{position:relative;height:36px;min-width:36px;padding:0;border:1px solid var(--fg);display:inline-flex;align-items:center;justify-content:center;gap:8px;color:var(--fg);transition:padding .2s}
+.lvtabs button:nth-child(odd){background:var(--hl2)}
+.lvti{width:20px;height:20px;flex:none;fill:currentColor;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round;--pe:var(--bg)}
+.lvtx{display:none;font:800 10.5px var(--sans);letter-spacing:.12em;text-transform:uppercase}
+.lvtabs button.on{background:var(--fg);color:var(--bg);padding:0 14px}.lvtabs button.on .lvtx{display:inline}.lvtabs button.on .lvti{fill:var(--bg);stroke:var(--bg);--pe:var(--fg)}
 .lvpn{display:none}.lvpn.on{display:block}
 .lvmv{max-height:340px;overflow:auto;border-bottom:1px solid var(--line)}
-.lvr2{display:grid;grid-template-columns:30px minmax(0,1fr) minmax(0,1fr);border-bottom:1px solid var(--line)}.lvr2 .n{padding:7px 0;font:600 11px var(--sans);color:var(--mut);font-variant-numeric:tabular-nums}
+.lvmh{display:grid;grid-template-columns:30px minmax(0,1fr) minmax(0,1fr);border-bottom:2px solid var(--fg);font:800 10px var(--sans);letter-spacing:.14em;position:sticky;top:0;background:var(--bg);z-index:1}.lvmh span{padding:7px 8px;display:flex;align-items:center;gap:7px}.lvmh span+span{border-left:1px solid var(--line)}
+.lvr2{display:grid;grid-template-columns:30px minmax(0,1fr) minmax(0,1fr);border-bottom:1px solid var(--line)}.lvr2 .n{padding:7px 0 7px 8px;font:800 11px var(--sans);font-variant-numeric:tabular-nums}
 .lvm{display:flex;flex-direction:column;padding:5px 8px;border-left:1px solid var(--line);min-width:0;cursor:pointer;transition:background .15s}.lvm:hover{background:var(--hl)}.lvm.on{background:var(--fg);color:var(--bg)}.lvm.fut{opacity:.55}
-.lvm .san{font:700 10px var(--sans);letter-spacing:.04em;color:var(--mut)}.lvm.on .san{color:var(--bg);opacity:.65}.lvm b{font:700 13px/1.3 var(--sans);letter-spacing:-.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lvm .san{font:800 10px var(--sans);letter-spacing:.04em;opacity:.55}.lvm.on .san{opacity:.7}.lvm b{font:700 13px/1.3 var(--sans);letter-spacing:-.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lvpv{margin-top:12px;border:1px solid var(--fg)}.lvpv:empty{display:none}.lvpv .hd{display:flex;justify-content:space-between;align-items:center;padding:4px 10px;background:var(--fg);color:var(--bg);font:700 9.5px/1.4 var(--sans);letter-spacing:.08em;text-transform:uppercase}
 .lvpv .ck{width:10px;height:10px;border:1px solid var(--bg);background:conic-gradient(var(--bg) 25%,transparent 0 50%,var(--bg) 0 75%,transparent 0)}
 .lvpv h4{margin:10px 10px 2px;font:800 16px/1.25 var(--sans);letter-spacing:-.05em}.lvpv p{margin:0 10px;font-size:12.5px;line-height:1.6;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
@@ -648,9 +659,8 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .lvph{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding-top:8px}.lvpt{position:relative;display:block;aspect-ratio:3/4;background:center/cover var(--soft);filter:grayscale(1);transition:filter .3s;cursor:zoom-in}.lvpt:hover{filter:none}
 .lvpt i{position:absolute;right:4px;top:4px;width:20px;height:20px;display:grid;place-items:center;background:var(--fg);color:var(--bg);font:700 13px/1 var(--sans);font-style:normal;cursor:pointer}
 .lvadd{grid-column:1/-1;display:flex;gap:4px;margin-top:4px}
-.lvpgn{margin-top:24px;padding-top:8px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:4px 14px;font:600 10.5px var(--sans);color:var(--mut)}
-@media(max-width:1080px){.lvg{grid-template-columns:1fr}}
-@media(max-width:720px){.lvbar{grid-template-columns:46px minmax(0,1fr) auto}.lvpi{width:46px;height:46px}.lvhd span{display:none}}
+@media(max-width:1080px){.lvg{grid-template-columns:1fr;grid-template-areas:"t" "b" "p"}.lvlft{margin-bottom:14px}}
+@media(max-width:720px){.lvt h3{font-size:28px}}
 
 /* phones: 16px+ text in fields so iOS doesn't zoom in when typing (password etc.) */
 @media(hover:none) and (pointer:coarse){input,textarea,select{font-size:16px!important}}
@@ -1163,12 +1173,14 @@ const lvAgo=t=>{if(!t)return'—';let x=Math.max(0,Math.floor((Date.now()-t)/100
 const lvLast=s=>{const Z=LVZ;if(!Z)return 0;for(let j=Z.seq.length;j>=1;j--)if((j%2?'w':'b')===s)return+new Date(Z.seq[j-1].created_at);return 0};
 function lvClock(){document.querySelectorAll('.lvclk').forEach(e=>e.textContent=lvAgo(lvLast(e.dataset.side)))}
 setInterval(lvClock,1000);
-const lvBar=s=>{const p=lvData().players[s]||{};return`<div class="lvpi"${p.src?` style="background-image:url('${esc(p.src)}')"`:''}></div><div class="lvnm"><b>${esc(p.name||(s==='w'?'White':'Black'))}</b>${p.title?`<i>${esc(p.title)}</i>`:''}<small>${[p.en,p.elo,s==='w'?'WHITE':'BLACK'].filter(Boolean).map(esc).join(' · ')}</small></div><div class="lvclk" data-side="${s}"></div>`};
+const lvBar=s=>{const p=lvData().players[s]||{};return`<div class="lvpi"${p.src?` style="background-image:url('${esc(p.src)}')"`:''}></div><div class="lvnm"><b><i class="lvsq${s==='b'?' k':''}"></i>${esc(p.name||(s==='w'?'White':'Black'))}</b><small>${[p.en,p.elo,p.title].filter(Boolean).map(esc).join(' · ')}</small></div><div class="lvclk" data-side="${s}"></div>`};
 const lvLines=g=>String(g.body||'').split(/\n+/).map(x=>x.trim()).filter(Boolean).map(l=>{const pf=lvSideOfPrefix(l);return plain(pf?pf[1]:l)});
 const lvTitle=i=>{const g=G(i);if(i.kind==='line'&&!locked(g)){const t=lvLines(g)[0]||'';return esc(t.length>40?t.slice(0,40)+'…':t)}return`${vb(i)}${esc(itName(g,40)||LVK[i.kind])}`};
 function lvMoves(){const Z=LVZ,c=j=>j>Z.seq.length?'<span></span>':`<div class="lvm${j===LVS.sel?' on':''}${j>LVS.cur?' fut':''}" data-j="${j}"><span class="san">${esc(Z.G.M[j-1]||'')}</span><b>${lvTitle(Z.seq[j-1])}</b></div>`;let h='';
+ const P=lvData().players,hn=s=>esc(String((P[s]||{}).en||(P[s]||{}).name||(s==='w'?'WHITE':'BLACK')).toUpperCase());
+ h=`<div class="lvmh"><span>#</span><span><i class="lvsq"></i>${hn('w')}</span><span><i class="lvsq k"></i>${hn('b')}</span></div>`;
  for(let k=1;k<=Z.seq.length;k+=2)h+=`<div class="lvr2"><span class="n">${(k+1)/2}.</span>${c(k)}${c(k+1)}</div>`;
- const m=$('#lvmv');m.innerHTML=h||'<p class="empty">아직 둔 수가 없어요.</p>';const on=m.querySelector('.lvm.on');if(on)m.scrollTop=Math.max(0,on.offsetTop-m.clientHeight/2)}
+ const m=$('#lvmv');m.innerHTML=Z.seq.length?h:'<p class="empty">아직 둔 수가 없어요.</p>';const on=m.querySelector('.lvm.on');if(on)m.scrollTop=Math.max(0,on.offsetTop-m.clientHeight/2)}
 function lvPv(){const Z=LVZ,j=LVS.sel,el=$('#lvpv');if(!el)return;if(!j||!Z.seq[j-1]){el.innerHTML='';return}const i=Z.seq[j-1],g=G(i),lk=locked(g),pl=lvData().players[j%2?'w':'b']||{};
  const tx=lk?'LOCKED · 비밀번호를 넣어야 볼 수 있어요':i.kind==='gallery'?(g.body||''):i.kind==='line'?lvLines(g).join(' / ').slice(0,220):plain(g.body||'').slice(0,220);
  const open=i.kind==='post'?`href="#/post/${i.id}"`:i.kind==='log'?`href="#/log/${i.id}"`:i.kind==='line'?'href="#/lines"':i.kind==='memo'?`href="javascript:void 0" data-mv="${i.id}"`:`href="javascript:void 0" data-gi="${i.id}"`;
@@ -1190,12 +1202,12 @@ function lvEdit(){const L=lvData(),P=L.players,f=(s,lab)=>{const p=P[s]||{};retu
  $('#f').onsubmit=async e=>{e.preventDefault();const F=e.target,np={};msg('Saving…');try{for(const s of['w','b']){let src=F.elements[s+'src'].value.trim();const fl=F.elements[s+'file'].files[0];if(fl)src=await upload(fl);np[s]={name:F.elements[s+'name'].value.trim(),en:F.elements[s+'en'].value.trim(),title:F.elements[s+'title'].value.trim(),elo:F.elements[s+'elo'].value.trim(),src,tags:F.elements[s+'tags'].value.trim()}}}catch(x){return msg('Upload failed: '+x.message)}
   const pg=F.elements.pgn.value.trim(),G2=cxPlay(cxSpec(pg||LV_PGN));if(G2.bad)return msg('기보를 읽지 못했어요: '+G2.bad+' ('+G2.M.length+'수 뒤)');
   L.players=np;L.pgn=pg||LV_PGN;await saveHome();closeM();home()}}
-function lvHome(){lvStop();lvData();LVZ=lvGame();LVS.cur=LVZ.seq.length;LVS.sel=LVS.cur;const o=LVZ.o,done=LVZ.seq.length>=LVZ.n;
- app.innerHTML=`<section class="lv"><div class="lvhd"><b>LIVE · GAME ${LVZ.game}</b><span>${[o.h.Opening,o.h.Variation].filter(Boolean).map(esc).join(' · ')||'GAME'} · ${done?esc(o.h.Result||o.result||'')+' · FINISHED':LVZ.seq.length+' / '+LVZ.n+' MOVES'}</span>${em()?'<button class="btn" id="lvedit">EDIT</button>':''}</div>
- <div class="lvg"><div class="lvlft"><div class="lvbar" id="lvpb"></div><div id="lvbd"></div><div class="lvbar" id="lvpw"></div><div class="lvctr"><button class="bt" data-lv="s" aria-label="start">⏮</button><button class="bt" data-lv="-" aria-label="back">◀</button><button class="bt" data-lv="p" id="lvplay" aria-label="play">▶</button><button class="bt" data-lv="+" aria-label="next">▶|</button><div class="lvpr" id="lvpr"><s><i></i></s></div><span class="lvpg" id="lvpg"></span></div></div>
- <div class="lvrgt"><div class="lvtabs"><button class="on" data-lt="moves">MOVES</button><button data-lt="chat">CHAT</button><button data-lt="notes">NOTES</button><button data-lt="photos">PHOTOS</button></div>
- <div class="lvpn on" data-lp="moves"><div class="lvmv" id="lvmv"></div><div class="lvpv" id="lvpv"></div></div><div class="lvpn" data-lp="chat"><div class="lvch" id="lvch"></div></div><div class="lvpn" data-lp="notes"><div class="lvnt" id="lvnt"></div></div><div class="lvpn" data-lp="photos"><div class="lvph" id="lvph"></div></div></div></div>
- </section>`;
+function lvHome(){lvStop();lvData();LVZ=lvGame();LVS.cur=LVZ.seq.length;LVS.sel=LVS.cur;const o=LVZ.o,done=LVZ.seq.length>=LVZ.n,vp=String(o.h.Variation||'').split(/\s*,\s*/).filter(Boolean),tt=[o.h.Opening,vp[0]].filter(Boolean).join(' ')||o.h.Event||'Game',ts=vp.slice(1).join(', ');
+ const TB=(t,pc,nm,on)=>`<button${on?' class="on"':''} data-lt="${t}" aria-label="${nm}"><svg class="lvti" viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${pc}"/></svg><span class="lvtx">${nm}</span></button>`;
+ app.innerHTML=`<section class="lv"><div class="lvg"><div class="lvt"><div class="lvt1"><span class="lvchip">LIVE · GAME ${LVZ.game}</span><span class="lvcn">${done?esc(o.h.Result||o.result||'')+' · FINISHED':LVZ.seq.length+' / '+LVZ.n+' MOVES'}</span>${em()?'<button class="btn" id="lvedit">EDIT</button>':''}</div><h3>${esc(tt)}</h3>${ts?`<p>${esc(ts)}</p>`:''}</div>
+ <div class="lvlft"><div class="lvbar" id="lvpb"></div><div id="lvbd"></div><div class="lvbar" id="lvpw"></div><div class="lvctr"><button class="bt" data-lv="s" aria-label="start">⏮</button><button class="bt" data-lv="-" aria-label="back">◀</button><button class="bt" data-lv="p" id="lvplay" aria-label="play">▶</button><button class="bt" data-lv="+" aria-label="next">▶|</button><div class="lvpr" id="lvpr"><s><i></i></s></div><span class="lvpg" id="lvpg"></span></div></div>
+ <div class="lvrgt"><div class="lvtabs">${TB('moves','P','Moves',1)}${TB('chat','N','Chat')}${TB('notes','R','Notes')}${TB('photos','B','Photos')}</div>
+ <div class="lvpn on" data-lp="moves"><div class="lvmv" id="lvmv"></div><div class="lvpv" id="lvpv"></div></div><div class="lvpn" data-lp="chat"><div class="lvch" id="lvch"></div></div><div class="lvpn" data-lp="notes"><div class="lvnt" id="lvnt"></div></div><div class="lvpn" data-lp="photos"><div class="lvph" id="lvph"></div></div></div></div></section>`;
  lvPaint();lvChat();lvNotes();lvPhotos()}
 document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('.lv'))return;const t=e.target;let x;
  if(x=t.closest('[data-lv]')){const a=x.dataset.lv;if(a==='s'){lvStop();lvGo(0)}if(a==='-'){lvStop();lvGo(LVS.cur-1)}if(a==='+'){lvStop();lvGo(LVS.cur+1)}if(a==='p'){if(LVS.tm)return lvStop();if(LVS.cur>=LVZ.seq.length)lvGo(0);x.textContent='❚❚';x.classList.add('on');LVS.tm=setInterval(()=>{if(!$('.lv')||LVS.cur>=LVZ.seq.length)return lvStop();lvGo(LVS.cur+1)},1100)}return}
