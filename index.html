@@ -792,6 +792,30 @@ p.tsub{font-size:.8em;line-height:1.45;color:var(--tmu,var(--mut));margin-top:.2
 #tpk{padding:6px 12px;border-top:1px solid var(--line);flex:none}
 #ftpk{margin-top:6px}
 .lq .tpk{margin-top:6px}
+
+/* ---------- batch tweaks ---------- */
+.lv{padding-top:8px}
+.lvm.fut{opacity:.3}
+.lvclk{text-align:center}
+.lvph{grid-template-columns:repeat(3,1fr)}.lvpt{aspect-ratio:1/1;background-size:cover}
+.lvpt .lvfc{position:absolute;left:4px;bottom:4px;top:auto;right:auto;width:20px;height:20px;display:grid;place-items:center;background:var(--fg);color:var(--bg);font:700 12px/1 var(--sans);font-style:normal;cursor:pointer}
+.lvfp{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:12px;align-items:start}
+.lvfa{position:relative;cursor:crosshair;touch-action:none;user-select:none;-webkit-user-select:none}.lvfa img{display:block;width:100%;max-height:52vh;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
+.lvfx{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border:2px solid #fff;box-shadow:0 0 0 1px #000;pointer-events:none}
+.lvfv{aspect-ratio:1;background:center/cover var(--soft);border:1px solid var(--fg)}
+/* log */
+.e5b{font:400 15px/1.7 var(--sans)}.e5b p{margin:0 0 11px}
+.e5t{margin:0 0 4px}.e5t:has(+.e5b){margin-bottom:20px}.e5s{margin:0 0 22px}
+.e5band .m i{display:none}
+@media(max-width:720px){
+ .e5x{justify-content:center;padding:9px 0}.e5x .e5n,.e5x b{display:none}
+ .e5x em::after{content:"▾";font-size:12px;letter-spacing:0}.e5.open .e5x em::after{content:"▴"}
+}
+/* txt */
+.xr .md{font:500 13.5px/1.4 var(--sans)}.xm{font-size:10px}
+@media(max-width:720px){.xr .md{font:400 13.5px/1.5 var(--sans)}.xm{font-size:9px}}
+/* no back-to-top on home / img / quiz / banners */
+body[data-pg=""] #top,body[data-pg="gallery"] #top,body[data-pg="puzzle"] #top,body[data-pg="banners"] #top{display:none!important}
 </style>
 </head>
 <body>
@@ -1209,7 +1233,7 @@ class CxPlayer{constructor(root,o,G){this.root=root;this.o=o;this.G=G;this.p=Mat
   r.addEventListener('keydown',e=>{const k=e.key;if(k==='ArrowLeft')this.go(this.p-1);else if(k==='ArrowRight')this.go(this.p+1);else if(k==='Home')this.go(0);else if(k==='End')this.go(this.G.M.length);else if(k===' ')this.auto();else return;e.preventDefault();e.stopPropagation()})}
  render(){const G=this.G,o=this.o,p=this.p,n=G.M.length,h=o.h,names=(h.White||h.Black)?`${esc(h.White||'?')} – ${esc(h.Black||'?')}`:esc(o.caption||'');
   const mv=G.M.map((t,i)=>`<span data-j="${i+1}"${i+1===p?' class="on"':''}>${i%2?'':(i/2+1)+'.'}${esc(t)}</span>`).join(' ');
-  this.root.innerHTML=`${cxBoard(G.P[p].b,{flip:this.flip,last:cxLast(G,p),coords:true})}<div class="bar"><button class="bt" data-a="s" aria-label="Start">|◀</button><button class="bt" data-a="-" aria-label="Back">◀</button><button class="bt${this.t?' on':''}" data-a="p" aria-label="Play">${this.t?'❚❚':'▶'}</button><button class="bt" data-a="+" aria-label="Next">▶|</button><div class="pr"><s><i style="width:${n?p/n*100:0}%"></i></s></div><button class="bt" data-a="f" aria-label="Flip">⇅</button></div><div class="lbl"><span>${p?esc(cxLbl(G,p)):(names||'start')}</span><span>${p}/${n}</span></div>${cxErr(G)}<div class="mvs">${mv}</div>`;
+  this.root.innerHTML=`${cxBoard(G.P[p].b,{flip:this.flip,last:cxLast(G,p),coords:true})}<div class="bar"><button class="bt" data-a="s" aria-label="Start">⏮</button><button class="bt" data-a="-" aria-label="Back">◀</button><button class="bt${this.t?' on':''}" data-a="p" aria-label="Play">${this.t?'❚❚':'▶'}</button><button class="bt" data-a="+" aria-label="Next">▶|</button><div class="pr"><s><i style="width:${n?p/n*100:0}%"></i></s></div><button class="bt" data-a="f" aria-label="Flip">⇅</button></div><div class="lbl"><span>${p?esc(cxLbl(G,p)):(names||'start')}</span><span>${p}/${n}</span></div>${cxErr(G)}<div class="mvs">${mv}</div>`;
   const on=this.root.querySelector('.mvs .on');if(on){const c=on.closest('.mvs');c.scrollTop=Math.max(0,on.offsetTop-c.offsetTop-c.clientHeight/2)}}}
 function cxDiagram(root,o,G){const p=o.ply?Math.max(0,Math.min(+o.ply||0,G.M.length)):G.M.length,st=G.P[p];root.classList.add('dg');
  root.innerHTML=cxBoard(st.b,{flip:o.view==='black',coords:true,marks:o.marks,arrows:o.arrows,last:cxLast(G,p)})+`<div class="cap"><span>${esc(o.caption||'')}</span><span>${st.w?'White to move':'Black to move'}</span></div>`+cxErr(G)}
@@ -1272,7 +1296,7 @@ const LVK={post:'ARCHIVE',log:'LOG',memo:'MEMO',line:'TXT',gallery:'IMG'};
 const LVS={cur:0,sel:0,tm:null};let LVZ=null;
 const lvDay=t=>{const d=new Date(t);return d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate()};
 function lvData(){if(!HOME.live)HOME.live={};const L=HOME.live,K=(banData().kings)||{};
- if(!L.players)L.players={w:{name:K.w?.name||'카이',en:'KAI',title:K.w?.title||'',elo:K.w?.elo||'',src:K.w?.src||'',tags:'K, Kai'},b:{name:K.k?.name||'레이',en:'RAY',title:K.k?.title||'',elo:K.k?.elo||'',src:K.k?.src||'',tags:'R, Ray'}};
+ if(!L.players)L.players={w:{name:K.w?.name||'Kai',en:'KAI',title:K.w?.title||'',elo:K.w?.elo||'',src:K.w?.src||'',tags:'K, Kai'},b:{name:K.k?.name||'Ray',en:'RAY',title:K.k?.title||'',elo:K.k?.elo||'',src:K.k?.src||'',tags:'R, Ray'}};
  if(!L.pgn)L.pgn=LV_PGN;if(!Array.isArray(L.photos))L.photos=[];return L}
 const lvKeys=s=>{const p=lvData().players[s]||{};return[p.name,p.en,...String(p.tags||'').split(',')].map(x=>String(x||'').replace(/^#/,'').trim().toLowerCase()).filter(Boolean)};
 const lvSideOfTag=i=>{const T=(i.tags||[]).map(t=>String(t).replace(/^#/,'').toLowerCase()),w=lvKeys('w'),b=lvKeys('b'),hw=T.some(t=>w.includes(t)),hb=T.some(t=>b.includes(t));return hw&&!hb?'w':hb&&!hw?'b':null};
@@ -1294,32 +1318,39 @@ function lvMoves(){const Z=LVZ,c=j=>j>Z.seq.length?'<span></span>':`<div class="
  const P=lvData().players,hn=s=>esc(String((P[s]||{}).en||(P[s]||{}).name||(s==='w'?'WHITE':'BLACK')).toUpperCase());
  h=`<div class="lvmh"><span>#</span><span>${hn('w')}</span><span>${hn('b')}</span></div>`;
  for(let k=1;k<=Z.seq.length;k+=2)h+=`<div class="lvr2"><span class="n">${(k+1)/2}.</span>${c(k)}${c(k+1)}</div>`;
- const m=$('#lvmv');m.innerHTML=Z.seq.length?h:'<p class="empty">아직 둔 수가 없어요.</p>';const on=m.querySelector('.lvm.on');if(on)m.scrollTop=Math.max(0,on.offsetTop-m.clientHeight/2)}
+ const m=$('#lvmv');m.innerHTML=Z.seq.length?h:'<p class="empty">No moves yet.</p>';const on=m.querySelector('.lvm.on');if(on)m.scrollTop=Math.max(0,on.offsetTop-m.clientHeight/2)}
 function lvPv(){const Z=LVZ,j=LVS.sel,el=$('#lvpv');if(!el)return;if(!j||!Z.seq[j-1]){el.innerHTML='';return}const i=Z.seq[j-1],g=G(i),lk=locked(g),pl=lvData().players[j%2?'w':'b']||{};
- const tx=lk?'LOCKED · 비밀번호를 넣어야 볼 수 있어요':i.kind==='gallery'?(g.body||''):i.kind==='line'?lvLines(g).join(' / ').slice(0,220):plain(g.body||'').slice(0,220);
+ const tx=lk?'LOCKED':i.kind==='gallery'?(g.body||''):i.kind==='line'?lvLines(g).join(' / ').slice(0,220):plain(g.body||'').slice(0,220);
  const open=i.kind==='post'?`href="#/post/${i.id}"`:i.kind==='log'?`href="#/log/${i.id}"`:i.kind==='line'?'href="#/lines"':i.kind==='memo'?`href="javascript:void 0" data-mv="${i.id}"`:`href="javascript:void 0" data-gi="${i.id}"`;
- el.innerHTML=`<div class="hd"><span>No. ${Z.base+j} · ${lvLbl(j)}${esc(Z.G.M[j-1]||'')} · ${date(i.created_at)}</span><span class="ck"></span></div><h4>${lvTitle(i)}</h4>${tx?`<p>${esc(tx)}</p>`:''}<div class="ft"><span>${LVK[i.kind]} · ${esc(pl.name||'')}의 수</span><a ${open}>OPEN →</a></div>`}
+ el.innerHTML=`<div class="hd"><span>No. ${Z.base+j} · ${lvLbl(j)}${esc(Z.G.M[j-1]||'')} · ${date(i.created_at)}</span><span class="ck"></span></div><h4>${lvTitle(i)}</h4>${tx?`<p>${esc(tx)}</p>`:''}<div class="ft"><span>${LVK[i.kind]}</span><a ${open}>OPEN →</a></div>`}
 function lvPaint(){const Z=LVZ;$('#lvbd').innerHTML=`<div class="cx lvbx">${cxBoard(Z.G.P[Math.min(LVS.cur,Z.G.P.length-1)].b,{coords:true,last:cxLast(Z.G,Math.min(LVS.cur,Z.G.M.length))})}</div>`;
- $('#lvpb').innerHTML=lvBar('b');$('#lvpw').innerHTML=lvBar('w');$('#lvpb').classList.toggle('turn',lvTurn()==='b');$('#lvpw').classList.toggle('turn',lvTurn()==='w');
+ $('#lvpb').innerHTML=lvBar('b');$('#lvpw').innerHTML=lvBar('w');{const lit=LVS.cur>0?(LVS.cur%2?'w':'b'):'';$('#lvpb').classList.toggle('turn',lit==='b');$('#lvpw').classList.toggle('turn',lit==='w')}
  $('#lvpr i').style.width=(Z.seq.length?LVS.cur/Z.seq.length*100:0)+'%';$('#lvpg').textContent=`${LVS.cur} / ${Z.seq.length}`;lvMoves();lvPv();lvClock()}
 function lvGo(n){LVS.cur=Math.max(0,Math.min(LVZ.seq.length,n));LVS.sel=Math.max(1,LVS.cur);lvPaint()}
 function lvStop(){clearInterval(LVS.tm);LVS.tm=null;const b=$('#lvplay');if(b){b.textContent='▶';b.classList.remove('on')}}
 function lvChat(){const L=ITEMS.filter(i=>i.kind==='line'&&!locked(G(i))).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).slice(-60),M=[];let alt=0;
  L.forEach(i=>{const ts=lvSideOfTag(i);String(G(i).body||'').split(/\n+/).map(x=>x.trim()).filter(Boolean).forEach(line=>{const pf=lvSideOfPrefix(line);let s,t;if(pf){s=pf[0];t=pf[1]}else{s=ts||(alt++%2?'b':'w');t=line}M.push({s,t:plain(t),at:i.created_at})})});
  const P=lvData().players,gr=[];M.forEach(m=>{const l=gr[gr.length-1];if(l&&l.s===m.s&&lvDay(l.at)===lvDay(m.at)){l.a.push(m);l.at=m.at}else gr.push({s:m.s,at:m.at,a:[m]})});
- $('#lvch').innerHTML=gr.length?gr.map(g=>{const p=P[g.s]||{};return`<div class="lvgr${g.s==='b'?' r':''}"><i class="lvav"${p.src?` style="background-image:url('${esc(p.src)}')"`:''} title="${esc(p.name||'')}"></i><div class="lvls">${g.a.map(m=>`<span class="lvbb">${esc(m.t)}</span>`).join('')}<span class="lvtm">${date(g.at,1)}</span></div></div>`}).join(''):'<p class="empty">아직 대화가 없어요.</p>'}
-function lvNotes(){const L=ITEMS.filter(i=>i.kind==='memo').slice(0,20);$('#lvnt').innerHTML=L.length?L.map(i=>{const g=G(i),lk=locked(g);return`<a class="lvno" href="javascript:void 0" data-mv="${i.id}"><b>${vb(i)}${esc(g.title||'')}</b><p>${lk?'LOCKED':esc(plain(g.body||'').slice(0,140))}</p></a>`}).join(''):'<p class="empty">아직 메모가 없어요.</p>'}
-function lvPhotos(){const L=lvData().photos,ed=em();$('#lvph').innerHTML=L.map((u,k)=>`<button class="lvpt" data-lvimg="${k}" style="background-image:url('${esc(u)}')" aria-label="photo">${ed?`<i data-lvdel="${k}" title="삭제">×</i>`:''}</button>`).join('')+(ed?'<span class="lvadd"><button class="btn" data-lvadd="f">+ UPLOAD</button><button class="btn" data-lvadd="u">+ URL</button></span>':'')+(!L.length&&!ed?'<p class="empty">아직 사진이 없어요.</p>':'')}
-function lvEdit(){const L=lvData(),P=L.players,f=(s,lab)=>{const p=P[s]||{};return`<h3 style="margin-top:14px">${lab}</h3><label>이름</label><input name="${s}name" value="${esc(p.name||'')}"><label>영문 이름</label><input name="${s}en" value="${esc(p.en||'')}"><label>타이틀 · 레이팅</label><div style="display:flex;gap:6px"><input name="${s}title" placeholder="GM" value="${esc(p.title||'')}"><input name="${s}elo" placeholder="2700" value="${esc(p.elo||'')}"></div><label>사진 URL</label><input name="${s}src" value="${esc(p.src||'')}"><label>또는 업로드</label><input type="file" name="${s}file" accept="image/*"><label>태그 (쉼표로 구분)</label><input name="${s}tags" value="${esc(p.tags||'')}">`};
- openM(`<h3>HOME · PLAYERS</h3><form id="f">${f('w','WHITE')}${f('b','BLACK')}<div style="margin-top:12px"><button type="button" class="btn" id="lvswap">⇄ 백·흑 바꾸기</button></div><label>기보 (PGN)</label><textarea name="pgn" style="min-height:120px;font-size:12px">${esc(L.pgn||'')}</textarea><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn pri">SAVE</button></div></form>`);
+ $('#lvch').innerHTML=gr.length?gr.map(g=>{const p=P[g.s]||{};return`<div class="lvgr${g.s==='b'?' r':''}"><i class="lvav"${p.src?` style="background-image:url('${esc(p.src)}')"`:''} title="${esc(p.name||'')}"></i><div class="lvls">${g.a.map(m=>`<span class="lvbb">${esc(m.t)}</span>`).join('')}<span class="lvtm">${date(g.at,1)}</span></div></div>`}).join(''):'<p class="empty">No messages yet.</p>'}
+function lvNotes(){const L=ITEMS.filter(i=>i.kind==='memo').slice(0,20);$('#lvnt').innerHTML=L.length?L.map(i=>{const g=G(i),lk=locked(g);return`<a class="lvno" href="javascript:void 0" data-mv="${i.id}"><b>${vb(i)}${esc(g.title||'')}</b><p>${lk?'LOCKED':esc(plain(g.body||'').slice(0,140))}</p></a>`}).join(''):'<p class="empty">No notes yet.</p>'}
+const lvPh=o=>typeof o==='string'?{u:o,x:50,y:50}:{u:o.u,x:o.x??50,y:o.y??50};
+function lvPhotos(){const L=lvData().photos,ed=em();$('#lvph').innerHTML=L.map((o0,k)=>{const o=lvPh(o0);return`<button class="lvpt" data-lvimg="${k}" style="background-image:url('${esc(o.u)}');background-position:${o.x}% ${o.y}%" aria-label="photo">${ed?`<i data-lvdel="${k}" title="Delete">×</i><i class="lvfc" data-lvfocus="${k}" title="Set thumbnail focus">◎</i>`:''}</button>`}).join('')+(ed?'<span class="lvadd"><button class="btn" data-lvadd="f">+ UPLOAD</button><button class="btn" data-lvadd="u">+ URL</button></span>':'')+(!L.length&&!ed?'<p class="empty">No photos yet.</p>':'')}
+function lvFocus(k){const L=lvData().photos,o=lvPh(L[k]);
+ openM(`<h3>PHOTO · THUMBNAIL FOCUS</h3><div class="lvfp"><div class="lvfa" id="lvfa"><img src="${esc(o.u)}" alt="" draggable="false"><i class="lvfx" id="lvfx"></i></div><div class="lvfv" id="lvfv" style="background-image:url('${esc(o.u)}')"></div></div><p class="st">Click or drag on the photo to choose the center of the square thumbnail.</p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" id="lvfs">SAVE</button></div>`);
+ const a=$('#lvfa'),x=$('#lvfx'),v=$('#lvfv'),set=(px,py)=>{o.x=Math.round(Math.max(0,Math.min(100,px)));o.y=Math.round(Math.max(0,Math.min(100,py)));x.style.left=o.x+'%';x.style.top=o.y+'%';v.style.backgroundPosition=o.x+'% '+o.y+'%'};
+ const mv=e=>{const r=a.getBoundingClientRect();set((e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*100)};
+ set(o.x,o.y);a.onpointerdown=e=>{e.preventDefault();a.setPointerCapture(e.pointerId);mv(e);a.onpointermove=mv};a.onpointerup=()=>{a.onpointermove=null};
+ $('#lvfs').onclick=async()=>{L[k]={u:o.u,x:o.x,y:o.y};await saveHome();closeM();lvPhotos()}}
+function lvEdit(){const L=lvData(),P=L.players,f=(s,lab)=>{const p=P[s]||{};return`<h3 style="margin-top:14px">${lab}</h3><label>Name</label><input name="${s}name" value="${esc(p.name||'')}"><label>Short name (English)</label><input name="${s}en" value="${esc(p.en||'')}"><label>Title · Rating</label><div style="display:flex;gap:6px"><input name="${s}title" placeholder="GM" value="${esc(p.title||'')}"><input name="${s}elo" placeholder="2700" value="${esc(p.elo||'')}"></div><label>Photo URL</label><input name="${s}src" value="${esc(p.src||'')}"><label>or upload</label><input type="file" name="${s}file" accept="image/*"><label>Tags (comma separated)</label><input name="${s}tags" value="${esc(p.tags||'')}">`};
+ openM(`<h3>HOME · PLAYERS</h3><form id="f">${f('w','WHITE')}${f('b','BLACK')}<div style="margin-top:12px"><button type="button" class="btn" id="lvswap">⇄ Swap White / Black</button></div><label>PGN</label><textarea name="pgn" style="min-height:120px;font-size:12px">${esc(L.pgn||'')}</textarea><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn pri">SAVE</button></div></form>`);
  $('#lvswap').onclick=()=>{const F=$('#f');['name','en','title','elo','src','tags'].forEach(k=>{const a=F.elements['w'+k],b=F.elements['b'+k],t=a.value;a.value=b.value;b.value=t})};
  $('#f').onsubmit=async e=>{e.preventDefault();const F=e.target,np={};msg('Saving…');try{for(const s of['w','b']){let src=F.elements[s+'src'].value.trim();const fl=F.elements[s+'file'].files[0];if(fl)src=await upload(fl);np[s]={name:F.elements[s+'name'].value.trim(),en:F.elements[s+'en'].value.trim(),title:F.elements[s+'title'].value.trim(),elo:F.elements[s+'elo'].value.trim(),src,tags:F.elements[s+'tags'].value.trim()}}}catch(x){return msg('Upload failed: '+x.message)}
-  const pg=F.elements.pgn.value.trim(),G2=cxPlay(cxSpec(pg||LV_PGN));if(G2.bad)return msg('기보를 읽지 못했어요: '+G2.bad+' ('+G2.M.length+'수 뒤)');
+  const pg=F.elements.pgn.value.trim(),G2=cxPlay(cxSpec(pg||LV_PGN));if(G2.bad)return msg('Could not read the PGN: '+G2.bad+' (after '+G2.M.length+' plies)');
   L.players=np;L.pgn=pg||LV_PGN;await saveHome();closeM();home()}}
 function lvHome(){lvStop();lvData();LVZ=lvGame();LVS.cur=LVZ.seq.length;LVS.sel=LVS.cur;const o=LVZ.o,done=LVZ.seq.length>=LVZ.n,vp=String(o.h.Variation||'').split(/\s*,\s*/).filter(Boolean),op=[o.h.Opening,vp[0]].filter(Boolean).join(' '),full=op?op+(vp.length>1?', '+vp.slice(1).join(', '):''):'',tt=o.h.Site||op||o.h.Event||'Game',ts=o.h.Site?full:vp.slice(1).join(', ');
  const TB=(t,pc,nm,on)=>`<button${on?' class="on"':''} data-lt="${t}" aria-label="${nm}"><svg class="lvti" viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${pc}"/></svg><span class="lvtx">${nm}</span></button>`;
  app.innerHTML=`<section class="lv"><div class="lvg"><div class="lvt"><div class="lvt1"><span class="lvchip">LIVE · GAME ${LVZ.game}</span><span class="lvcn">${done?esc(o.h.Result||o.result||'')+' · FINISHED':LVZ.seq.length+' / '+LVZ.n+' MOVES'}</span>${em()?'<button class="btn" id="lvedit">EDIT</button>':''}</div><h3>${esc(tt)}</h3>${ts?`<p>${esc(ts)}</p>`:''}</div>
- <div class="lvlft"><div class="lvbar lvbk" id="lvpb"></div><div id="lvbd"></div><div class="lvbar lvwh" id="lvpw"></div><div class="lvctr"><button class="bt" data-lv="s" aria-label="start">|◀</button><button class="bt" data-lv="-" aria-label="back">◀</button><button class="bt" data-lv="p" id="lvplay" aria-label="play">▶</button><button class="bt" data-lv="+" aria-label="next">▶|</button><div class="lvpr" id="lvpr"><s><i></i></s></div><span class="lvpg" id="lvpg"></span></div></div>
+ <div class="lvlft"><div class="lvbar lvbk" id="lvpb"></div><div id="lvbd"></div><div class="lvbar lvwh" id="lvpw"></div><div class="lvctr"><button class="bt" data-lv="s" aria-label="start">⏮</button><button class="bt" data-lv="-" aria-label="back">◀</button><button class="bt" data-lv="p" id="lvplay" aria-label="play">▶</button><button class="bt" data-lv="+" aria-label="next">▶|</button><div class="lvpr" id="lvpr"><s><i></i></s></div><span class="lvpg" id="lvpg"></span></div></div>
  <div class="lvrgt"><div class="lvtabs">${TB('moves','P','Moves',1)}${TB('chat','N','Chat')}${TB('notes','R','Notes')}${TB('photos','B','Photos')}</div>
  <div class="lvpn on" data-lp="moves"><div class="lvmv" id="lvmv"></div><div class="lvpv" id="lvpv"></div></div><div class="lvpn" data-lp="chat"><div class="lvch" id="lvch"></div></div><div class="lvpn" data-lp="notes"><div class="lvnt" id="lvnt"></div></div><div class="lvpn" data-lp="photos"><div class="lvph" id="lvph"></div></div></div></div></section>`;
  lvPaint();lvChat();lvNotes();lvPhotos()}
@@ -1329,8 +1360,9 @@ document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('.
  if(x=t.closest('.lvm[data-j]')){lvStop();lvGo(+x.dataset.j);return}
  if(x=t.closest('[data-lt]')){document.querySelectorAll('.lvtabs button').forEach(b=>b.classList.toggle('on',b===x));document.querySelectorAll('.lvpn').forEach(p=>p.classList.toggle('on',p.dataset.lp===x.dataset.lt));if(x.dataset.lt==='chat'){const c=$('#lvch');c.scrollTop=c.scrollHeight}return}
  if(t.closest('#lvedit'))return lvEdit();
+ if(x=t.closest('[data-lvfocus]')){e.stopPropagation();return lvFocus(+x.dataset.lvfocus)}
  if(x=t.closest('[data-lvdel]')){e.stopPropagation();const L=lvData();L.photos.splice(+x.dataset.lvdel,1);saveHome();return lvPhotos()}
- if(x=t.closest('[data-lvimg]')){const u=lvData().photos[+x.dataset.lvimg];if(u){$('#lb').innerHTML=`<figure><img src="${esc(u)}" alt=""></figure>`;$('#lb').hidden=false}return}
+ if(x=t.closest('[data-lvimg]')){const u=lvPh(lvData().photos[+x.dataset.lvimg]||'').u;if(u){$('#lb').innerHTML=`<figure><img src="${esc(u)}" alt=""></figure>`;$('#lb').hidden=false}return}
  if(x=t.closest('[data-lvadd]')){const L=lvData();if(x.dataset.lvadd==='u'){const u=(prompt('Image URL')||'').trim();if(u){L.photos.push(u);saveHome();lvPhotos()}return}
   const f=document.createElement('input');f.type='file';f.accept='image/*';f.multiple=true;f.onchange=async()=>{try{for(const fl of f.files)L.photos.push(await upload(fl));await saveHome();lvPhotos()}catch(x2){alert('Upload failed: '+x2.message)}};f.click()}});
 document.addEventListener('mouseover',e=>{const m=e.target.closest&&e.target.closest('.lv .lvm[data-j]');if(!m||+m.dataset.j===LVS.sel)return;LVS.sel=+m.dataset.j;document.querySelectorAll('.lv .lvm').forEach(x=>x.classList.toggle('on',x===m));lvPv()});
@@ -1515,7 +1547,7 @@ function essayRows(L,cur){const ord=logOrd();return L.length?L.map(it=>{const i=
 function essayBody(it){if(!it)return'';const i=G(it);if(locked(i))return`<div class="lkcen"><div class="lkin"><svg class="rkbig" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnR"/></svg><div class="lkpm">LOG · ${date(i.created_at)}</div><div class="lkh1">${esc(i.title||'untitled')}</div>${ulf(i.id)}</div></div>`;
  const ord=logOrd(),k=ord.findIndex(x=>x.id===i.id),n=k+1,pv=ord[k-1],nx=ord[k+1],g1=(i.tags||[])[0];
  const nk=(x,lab,cls,num)=>x?`<a class="e5nk ${cls}" href="#/log/${x.id}"><span class="e5n">${num}</span><span class="t"><small>${lab}</small><b>${esc(G(x).title||'untitled')}</b></span></a>`:'<span></span>';
- return`<div class="e5band"><span class="k">${n}</span><span class="m"><span>${date(i.created_at)}${g1?' · '+esc(g1).toUpperCase():''}</span><i></i></span></div><div class="e5box">${eb(i)?`<div class="e5ed">${eb(i)}</div>`:''}<div class="e5m">${tags(i)}</div><h1 class="e5t">${esc(i.title||'untitled')}</h1>${i.meta?.sub?`<div class="e5s">${esc(i.meta.sub)}</div>`:''}<div class="md e5b">${mdr(i.body)}</div></div><div class="e5pn">${nk(pv,'PREV','p',n-1)}${nk(nx,'NEXT','n',n+1)}</div>`}
+ return`<div class="e5band"><span class="k">${n}</span><span class="m"><span>${date(i.created_at)}${g1?' · '+esc(g1).toUpperCase():''}</span></span></div><div class="e5box">${eb(i)?`<div class="e5ed">${eb(i)}</div>`:''}<div class="e5m">${tags(i)}</div><h1 class="e5t">${esc(i.title||'untitled')}</h1>${i.meta?.sub?`<div class="e5s">${esc(i.meta.sub)}</div>`:''}<div class="md e5b">${mdr(i.body)}</div></div><div class="e5pn">${nk(pv,'PREV','p',n-1)}${nk(nx,'NEXT','n',n+1)}</div>`}
 function essayView(){const all=ITEMS.filter(i=>i.kind==='log'),sel=location.hash.replace('#/','').split('/')[1],was=!!$('#e5r'),y=scrollY;
  const get=()=>all.filter(i=>(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let L=get(),cur=L.find(i=>String(i.id)===sel)||L[0];
  app.innerHTML=head('log')+`<input id="sq" placeholder="search" value="${esc(Q)}" autocomplete="off">`+chips(all)+`<div class="e5"><button class="e5x" id="e5x" type="button"><span class="e5n">${cur?logOrd().findIndex(x=>x.id===cur.id)+1:''}</span><b>${esc(cur?(G(cur).title||'untitled'):'')}</b><em></em></button><div class="e5l" id="e5l">${essayRows(L,cur)}</div><div class="e5r" id="e5r">${essayBody(cur)}</div></div>`;
@@ -1542,7 +1574,7 @@ const skel=()=>{const h=location.hash.replace('#/','').split('/')[0],b=(w,hh,m)=
 const sweepImgs=()=>{if(typeof app!=='undefined')app.querySelectorAll('img').forEach(i=>{if(i.complete)i.classList.add('ld')})};
 const fade=()=>{app.classList.remove('fx');void app.offsetWidth;app.classList.add('fx');sweepImgs()};
 let LASTP=null;
-function route(){const pg=location.hash.replace('#/','').split('/')[0],first=LASTP===null||LASTP!==pg;LASTP=pg;const r=route0();if(first)fade();else sweepImgs();return r}
+function route(){const pg=location.hash.replace('#/','').split('/')[0],first=LASTP===null||LASTP!==pg;LASTP=pg;document.body.dataset.pg=pg;const r=route0();if(first)fade();else sweepImgs();return r}
 ['load','error'].forEach(t=>document.addEventListener(t,e=>{if(e.target&&e.target.tagName==='IMG')e.target.classList.add('ld')},true));
 
 /* Lichess puzzle page */
