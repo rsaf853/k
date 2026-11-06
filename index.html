@@ -539,7 +539,7 @@ mark.hv13{background:linear-gradient(var(--vf,var(--fg)),var(--vf,var(--fg))) 0 
 .cx .lbl{display:flex;justify-content:space-between;margin-top:6px;font:700 12px var(--sans)}.cx .lbl span:last-child{color:var(--cm);font-weight:600;font-variant-numeric:tabular-nums}
 .cx .mvs{margin-top:10px;font:500 12.5px/1.9 var(--sans);color:var(--cm);max-height:5.7em;overflow:auto;border-top:1px solid var(--cl);padding-top:6px}
 .cx .mvs span{cursor:pointer;padding:1px 4px}.cx .mvs span:hover{background:var(--hl)}.cx .mvs span.on{background:var(--cf);color:var(--cb)}
-.cxc{font-weight:700;border-bottom:2px dotted currentColor;cursor:pointer;white-space:nowrap}.cxc:hover,.cxc.on{background:var(--tfg,var(--fg));color:var(--tbg,var(--bg));border-bottom-color:transparent}
+.cxc{font-weight:inherit;box-shadow:inset 0 0 0 1px currentColor;padding:0 6px;box-decoration-break:clone;-webkit-box-decoration-break:clone;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s}.cxc:hover,.cxc.on{background:var(--tfg,var(--fg));color:var(--tbg,var(--bg))}
 .cxpop{position:fixed;z-index:80;width:206px;background:var(--bg);color:var(--fg);border:1px solid var(--fg);padding:8px;pointer-events:none;font-family:var(--sans);letter-spacing:-.02em}
 .cxpop[hidden]{display:none}.cxpop.pin{pointer-events:auto}.cxpop .rc{display:flex;gap:4px;margin-top:6px}.cxpop .rc .bt{height:24px;min-width:26px;padding:0 8px}
 .eb2 pre[data-chess]{font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--soft);padding:10px 12px;border:1px dashed var(--mut);white-space:pre-wrap;margin:.8em 0}
@@ -808,14 +808,30 @@ p.tsub{font-size:.8em;line-height:1.45;color:var(--tmu,var(--mut));margin-top:.2
 .e5t{margin:0 0 4px}.e5t:has(+.e5b){margin-bottom:20px}.e5s{margin:0 0 22px}
 .e5band .m i{display:none}
 @media(max-width:720px){
- .e5x{justify-content:center;padding:9px 0}.e5x .e5n,.e5x b{display:none}
- .e5x em::after{content:"▾";font-size:12px;letter-spacing:0}.e5.open .e5x em::after{content:"▴"}
+ .e5x em{position:relative;width:18px;height:18px;flex:none;font-size:0}
+ .e5x em::after,.e5.open .e5x em::after{content:"";position:absolute;left:4px;top:3px;width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform .2s,top .2s}
+ .e5.open .e5x em::after{top:7px;transform:rotate(225deg)}
 }
 /* txt */
 .xr .md{font:500 13.5px/1.4 var(--sans)}.xm{font-size:10px}
 @media(max-width:720px){.xr .md{font:400 13.5px/1.5 var(--sans)}.xm{font-size:9px}}
 /* no back-to-top on home / img / quiz / banners */
 body[data-pg=""] #top,body[data-pg="gallery"] #top,body[data-pg="puzzle"] #top,body[data-pg="banners"] #top{display:none!important}
+
+/* txt: regular weight; on desktop the date/tags/EDIT slide down when the cell is hovered */
+.xr .md{font:400 13.5px/1.4 var(--sans)}
+@media(hover:hover) and (min-width:721px){
+ .xm{max-height:0;opacity:0;overflow:hidden;transform:translateY(-4px);transition:max-height .22s ease,opacity .2s ease,transform .22s ease}
+ .xr>div:hover .xm,.xr>div:focus-within .xm{max-height:22px;opacity:1;transform:none}
+}
+@media(prefers-reduced-motion:reduce){.xm{transition:none}}
+
+/* ---------- tag filter chips: total count + slash list ---------- */
+.tgbar{display:flex;flex-wrap:wrap;align-items:center;gap:0;margin:9px 0 6px;padding:2px 0}
+.tgbar .chip{border:0;background:none;padding:0;font:700 11px/1.5 var(--sans);letter-spacing:.04em;color:var(--mut);transition:color .15s;cursor:pointer}
+.tgbar .chip:hover{color:var(--fg);border:0}
+.tgbar .chip.on{background:none;color:var(--fg);font-weight:900;border:0}
+.tgbar .chip+.chip::before{content:"/";margin:0 5px;color:var(--mut);opacity:.55;font-weight:400}
 </style>
 </head>
 <body>
@@ -1512,7 +1528,7 @@ function editor(it,kind){kind=(it&&it.kind)||kind||'post';const i=it||{visibilit
   }catch(x){btn.disabled=false;$('#sv').textContent='failed: '+(x.message||x)}}}
 /* list views */
 function head(k,t){return`<div class="top"><span class="sub" style="margin:0">${ITEMS.filter(i=>i.kind===KIND[k]).length} ITEMS</span>${admin?`<button class="btn" data-new="${KIND[k]}">+ NEW</button>`:''}</div>`}
-function chips(list){const all=[...new Set(list.flatMap(i=>i.tags||[]))].sort();return all.length?`<div class="bar"><button class="chip${TAG?'':' on'}" data-tag="">ALL</button>${all.map(t=>`<button class="chip${TAG===t?' on':''}" data-tag="${esc(t)}">#${esc(t)}</button>`).join('')}</div>`:''}
+function chips(list){const all=[...new Set(list.flatMap(i=>i.tags||[]))].sort();return all.length?`<div class="bar tgbar"><button class="chip${TAG?'':' on'}" data-tag="" title="All" aria-label="All">${list.length}</button>${all.map(t=>`<button class="chip${TAG===t?' on':''}" data-tag="${esc(t)}">#${esc(t)}</button>`).join('')}</div>`:''}
 const match=i=>!Q||[i.title,i.body,(i.tags||[]).join(' ')].join(' ').toLowerCase().includes(Q.toLowerCase());
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
  if(kind==='post'){const G2=[];L.forEach(i=>{const x=new Date(i.created_at),k=x.getFullYear()+'-'+x.getMonth(),g=G2[G2.length-1];if(g&&g.k===k)g.a.push(i);else G2.push({k,l:MONS[x.getMonth()]+' '+x.getFullYear(),a:[i]})});h=`<div class="arx mon">${G2.map(g=>`<div class="ag"><div class="agh"><b>${g.l}</b><i></i><span>${g.a.length}</span></div>${g.a.map(i=>{const inn=`<span class="dn">${p2(new Date(i.created_at).getDate())}</span><b>${vb(i)}${esc(i.title||'untitled')}</b>${i.meta?.sub?`<span class="as">${esc(i.meta.sub)}</span>`:''}${(i.tags||[]).length?`<span class="at">${tags(i)}</span>`:''}`;return`<a class="ai" href="#/post/${i.id}" data-tip="${i.id}">${inn}</a>`}).join('')}</div>`).join('')}</div>`}
