@@ -43,7 +43,7 @@ nav a{white-space:nowrap;display:inline-flex;flex-direction:column;align-items:f
 #theme{color:var(--fg)}
 .bd{position:relative;display:block;width:15px;height:15px;border:1px solid currentColor;transition:transform .35s cubic-bezier(.6,0,.2,1)}.bd i{position:absolute;width:6.5px;height:6.5px;background:currentColor}.bd i:first-child{left:0;top:0}.bd i:last-child{right:0;bottom:0}#theme[data-s="dark"] .bd{transform:rotate(90deg)}
 
-.hr{align-items:center;gap:0;height:100%}.hpcs{display:flex;height:100%}.hp{position:relative;display:grid;place-items:center;width:20px;height:100%;padding:0;color:var(--fg)}.hp svg{width:16px;height:16px;stroke:var(--fg);stroke-width:1.5;stroke-linejoin:round;fill:var(--bg);--pe:var(--fg);transition:fill .15s}.hp.on svg,.hp:hover svg{fill:var(--fg);--pe:var(--bg)}.hp:focus-visible{outline:1px solid var(--fg);outline-offset:-3px}.hcap{display:block;position:relative;height:100%;width:60px;margin-right:6px}.hcap span{position:absolute;right:0;top:50%;transform:translateY(-50%);font:700 9px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;opacity:0;transition:opacity .15s;pointer-events:none}.hr[data-cur=mate]:not([data-h]) .hcap [data-k=mate],.hr[data-cur=puzzle]:not([data-h]) .hcap [data-k=puzzle],.hr[data-h=mate] .hcap [data-k=mate],.hr[data-h=puzzle] .hcap [data-k=puzzle]{opacity:1}@media(max-width:720px){.hcap{display:none}}
+.hr{align-items:center;gap:0;height:100%}.hpcs{display:flex;height:100%}.hp{position:relative;display:grid;place-items:center;width:20px;height:100%;padding:0;color:var(--fg)}.hp svg{width:16px;height:16px;stroke:var(--fg);stroke-width:1.5;stroke-linejoin:round;fill:var(--bg);--pe:var(--fg);transition:fill .15s}.hp.on svg,.hp:hover svg{fill:var(--fg);--pe:var(--bg)}.hp:focus-visible{outline:1px solid var(--fg);outline-offset:-3px}.hcap{display:block;position:relative;height:100%;width:64px;margin-right:6px}.hcap span{position:absolute;right:0;top:50%;transform:translate(6px,-50%);font:500 12.5px/1 var(--sans);letter-spacing:-.03em;text-transform:none;color:var(--fg);white-space:nowrap;opacity:0;transition:opacity .18s,transform .18s;pointer-events:none}.hr[data-cur=mate]:not([data-h]) .hcap [data-k=mate],.hr[data-cur=puzzle]:not([data-h]) .hcap [data-k=puzzle],.hr[data-h=mate] .hcap [data-k=mate],.hr[data-h=puzzle] .hcap [data-k=puzzle]{opacity:1;transform:translate(0,-50%);font-weight:700}@media(max-width:720px){.hcap{display:none}}
 .puzzle-page{max-width:760px;margin:0 auto}.puzzle-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}.puzzle-head h1{font-size:24px}.puzzle-date{color:var(--mut);font:500 11px var(--sans);letter-spacing:.05em}.puzzle-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(170px,.62fr);gap:22px;align-items:start}.puzzle-board-wrap{container-type:inline-size;min-width:0}.puzzle-board{display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;border:1px solid var(--fg);background:repeating-conic-gradient(var(--hl2) 0 25%,transparent 0 50%) 0 0/25% 25%;overflow:hidden}.puzzle-square{aspect-ratio:1;display:grid;place-items:center;border:0;padding:0;background:transparent;position:relative}.puzzle-square.sel{background:color-mix(in srgb,var(--fg) 26%,transparent)}.puzzle-square.last{box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--fg) 24%,transparent)}.puzzle-square .bnpc{width:88%;height:88%;pointer-events:none}.puzzle-square .bnpc.w{--pf:var(--cw);--ps:var(--cwl);--pe:#111}.puzzle-square .bnpc.k{--pf:var(--ck);--ps:var(--ckl);--pe:var(--cw)}.puzzle-square .bnpc.w,.puzzle-square .bnpc.k{stroke-width:1.4}.puzzle-coords{display:flex;justify-content:space-between;padding:5px 3px 0;color:var(--mut);font:500 9px var(--sans);letter-spacing:.08em}.puzzle-info{min-width:0}.puzzle-meta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}.puzzle-tag{border:1px solid var(--line);padding:2px 7px;color:var(--mut);font:600 10px var(--sans)}.puzzle-rating{font:700 12px var(--sans);margin-bottom:10px}.puzzle-instruction{font-size:13px;line-height:1.7;margin:0 0 12px}.puzzle-status{min-height:42px;padding:9px 10px;border:1px solid var(--line);font-size:12px;color:var(--mut);margin:12px 0}.puzzle-status.good{border-color:var(--fg);color:var(--fg)}.puzzle-status.bad{border-color:var(--fg);color:var(--fg)}.puzzle-actions{display:flex;flex-wrap:wrap;gap:6px}.puzzle-actions .btn{padding:6px 10px}.puzzle-foot{border-top:1px solid var(--line);margin-top:18px;padding-top:10px;display:flex;justify-content:space-between;gap:10px;color:var(--mut);font:500 10px var(--sans)}.puzzle-foot a{text-decoration:none}.puzzle-foot a:hover{text-decoration:underline}.puzzle-loading{display:grid;place-items:center;min-height:min(58vh,520px);margin:0;padding:0;text-align:center;color:var(--mut);font:500 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;animation:puzpulse 1.4s ease-in-out infinite}@keyframes puzpulse{50%{opacity:.35}}.puzzle-error{padding:24px 0;color:var(--mut)}@media(max-width:620px){.puzzle-layout{grid-template-columns:1fr;gap:14px}.puzzle-info{display:grid;grid-template-columns:1fr;}.puzzle-head{margin-bottom:12px}.puzzle-board-wrap{max-width:560px;margin:0 auto;width:100%}.puzzle-status{margin:8px 0}.puzzle-page{max-width:560px}}
 
 main{flex:1;padding:24px 0 56px}
@@ -677,6 +677,76 @@ p.tsub{font-size:.8em;line-height:1.45;color:var(--tmu,var(--mut));margin-top:.2
 .srcw .srch{position:absolute;inset:0;pointer-events:none;color:var(--fg);overflow:hidden}
 .srcw .mk{color:var(--mut)}.srcw .mdim{color:var(--mut)}
 @media(max-width:720px),(hover:none) and (pointer:coarse){.srcw .srch,.srcw .src{font-size:16px!important}}
+/* ---------- LOG: number blocks + notation band + number-key prev/next ---------- */
+.e5{display:grid;grid-template-columns:240px minmax(0,1fr);gap:0 22px;min-height:0;margin-top:14px;border-top:0;align-items:start}
+.e5x{display:none}
+.e5l{position:static;max-height:none;overflow:visible;border-top:2px solid var(--fg)}
+.e5i{display:grid;grid-template-columns:30px minmax(0,1fr);grid-template-rows:auto;gap:10px;padding:9px 0;align-items:start;border-bottom:1px solid var(--line);background:none;color:var(--fg)}
+.e5i:hover{background:var(--hl)}.e5i.on{background:none;color:var(--fg)}
+.e5n{width:30px;height:30px;display:grid;place-items:center;font:800 12.5px var(--sans);font-variant-numeric:tabular-nums;background:var(--bg);color:var(--fg);box-shadow:inset 0 0 0 1px var(--fg);flex:none}
+.e5i.on .e5n{background:var(--fg);color:var(--bg)}
+.e5x2{display:flex;flex-direction:column;justify-content:space-between;height:30px;min-width:0}
+.e5x2 b{font:800 14px/1.1 var(--sans);letter-spacing:-.045em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.e5i.on .e5x2 b{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.e5x2 small{display:block;font:500 10.5px/1.1 var(--sans);color:var(--mut)}
+.e5r{padding:0;border:0;margin:0;min-height:0;position:static}
+.e5band{display:grid;grid-template-columns:44px minmax(0,1fr)}
+.e5band .k{background:var(--fg);color:var(--bg);display:grid;place-items:center;padding:6px 0;font:800 12.5px var(--sans);font-variant-numeric:tabular-nums}
+.e5band .m{border:1px solid var(--fg);border-left:0;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;font:700 9.5px var(--sans);letter-spacing:.08em;text-transform:uppercase}
+.e5band .m i{width:10px;height:10px;border:1px solid var(--fg);background:conic-gradient(var(--fg) 25%,transparent 0 50%,var(--fg) 0 75%,transparent 0)}
+.e5box{position:relative;border:1px solid var(--fg);border-top:0;padding:16px 18px 18px}
+.e5ed{position:absolute;top:12px;right:14px;z-index:2}.e5ed~.e5t{padding-right:0}
+.e5t{font:900 25px/1.2 var(--sans);letter-spacing:-.065em;margin:0 0 4px}
+.e5s{font:400 14px var(--sans);color:var(--mut);margin:0 0 16px}
+.e5b{padding-top:0;font:400 15px/1.9 var(--sans)}.e5b p{margin:0 0 .85em}
+.e5pn{display:flex;justify-content:space-between;gap:14px;margin-top:10px}
+.e5nk{display:flex;align-items:center;gap:10px;min-width:0;max-width:48%;text-decoration:none;color:var(--fg)}.e5nk.n{flex-direction:row-reverse;text-align:right;margin-left:auto}
+.e5nk:hover .e5n{background:var(--fg);color:var(--bg)}
+.e5nk .t{min-width:0}.e5nk small{display:block;font:800 9px/1.2 var(--sans);letter-spacing:.14em;color:var(--mut)}.e5nk b{display:block;font:800 13px/1.2 var(--sans);letter-spacing:-.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:720px){
+ .e5{display:block}
+ .e5x{display:flex;align-items:center;gap:10px;width:100%;background:var(--fg);color:var(--bg);padding:6px 10px 6px 6px;text-align:left}
+ .e5x .e5n{background:var(--bg);color:var(--fg);box-shadow:none;width:28px;height:28px}
+ .e5x b{flex:1;min-width:0;font:800 12.5px var(--sans);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .e5x em{font:800 9px var(--sans);letter-spacing:.14em;font-style:normal}.e5x em::after{content:"INDEX ▾"}.e5.open .e5x em::after{content:"INDEX ▴"}
+ .e5l{display:none;border:1px solid var(--fg);border-top:0;padding:0 12px}.e5.open .e5l{display:block}
+ .e5i:last-child{border-bottom:0}
+ .e5r{margin-top:12px}.e5box{padding:14px}.e5t{font-size:22px}.e5b{font-size:15.5px}
+}
+/* ---------- TXT: scoresheet ---------- */
+.xs{display:grid;grid-template-columns:1fr 1fr;gap:18px 22px;margin-top:6px}
+.xsh{border-top:2px solid var(--fg);align-self:start}
+.xh,.xr{display:grid;grid-template-columns:24px minmax(0,1fr) minmax(0,1fr)}
+.xh{border-bottom:1px solid var(--fg);font:700 9px var(--sans);letter-spacing:.14em}.xh span{padding:4px 6px}
+.xr{border-bottom:1px solid var(--line);min-height:32px}.xr:hover{background:var(--hl)}
+.xn{padding:7px 0 0 6px;font:700 10px var(--sans);font-variant-numeric:tabular-nums}
+.xr>div{padding:4px 7px 3px;border-left:1px solid var(--line);min-width:0;word-break:break-word}
+.xr .md{font:500 12.5px/1.4 var(--sans);letter-spacing:-.03em}.xr .md p{margin:0}
+.xm{display:block;font:500 9.5px var(--sans);color:var(--mut);font-variant-numeric:tabular-nums}.xm .btn{margin-left:6px;vertical-align:1px}
+.xr .lk{display:block;border:0;padding:0}.xr .lk .lkb{display:block}
+@media(max-width:900px){.xs{grid-template-columns:1fr}}
+@media(max-width:720px){
+ .xs{display:block}.xsh+.xsh{border-top:0}.xsh+.xsh .xh{display:none}
+ .xh{grid-template-columns:22px 1fr 1fr}.xh span:last-child{text-align:right}
+ .xr{grid-template-columns:22px minmax(0,1fr)}
+ .xn{grid-row:1/span 2;padding:11px 0 0 6px;font-size:11.5px}
+ .xr>div{grid-column:2;border-left:0;padding:6px 8px 6px 2px}.xr>div:empty{display:none}
+ .xr .k{margin-right:22px}.xr .o{margin-left:22px;text-align:right;border-right:3px solid var(--fg)}
+ .xr .md{font-size:15.5px;line-height:1.5}
+}
+
+/* ---------- final tweaks: log list text, scoresheet numbers/header, phone text ---------- */
+.e5x2{justify-content:center;gap:2px}
+.e5x2 b{font:800 13px/1.1 var(--sans)}
+.e5x2 small{font:500 9.5px/1.1 var(--sans)}
+.xn{color:var(--mut);font-weight:600}
+.xh span{display:flex;align-items:center;gap:7px}
+.xh span:nth-child(2),.xh span:nth-child(3){border-left:1px solid var(--line)}
+.xk{width:13px;height:13px;flex:none;stroke-width:1.6;stroke-linejoin:round}.xk.w{fill:var(--bg);stroke:var(--fg);--pe:var(--fg)}.xk.b{fill:var(--fg);stroke:var(--fg);--pe:var(--bg)}
+@media(max-width:720px){
+ .xh span:nth-child(2){border-left:0}.xh span:nth-child(3){border-left:0;justify-content:flex-end}
+ .xr .md{font:400 13.5px/1.5 var(--sans)}
+ .xm{font-size:9px;font-weight:400}
+}
 </style>
 </head>
 <body>
@@ -1370,14 +1440,27 @@ function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.t
  if(kind==='post'){const G2=[];L.forEach(i=>{const x=new Date(i.created_at),k=x.getFullYear()+'-'+x.getMonth(),g=G2[G2.length-1];if(g&&g.k===k)g.a.push(i);else G2.push({k,l:MONS[x.getMonth()]+' '+x.getFullYear(),a:[i]})});h=`<div class="arx mon">${G2.map(g=>`<div class="ag"><div class="agh"><b>${g.l}</b><i></i><span>${g.a.length}</span></div>${g.a.map(i=>{const inn=`<span class="dn">${p2(new Date(i.created_at).getDate())}</span><b>${vb(i)}${esc(i.title||'untitled')}</b>${i.meta?.sub?`<span class="as">${esc(i.meta.sub)}</span>`:''}${(i.tags||[]).length?`<span class="at">${tags(i)}</span>`:''}`;return`<a class="ai" href="#/post/${i.id}" data-tip="${i.id}">${inn}</a>`}).join('')}</div>`).join('')}</div>`}
  if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-gi="${i.id}"`}>${locked(i)?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`}).join('')}</div>`;
  if(kind==='memo'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4),cs=L.map(it=>{const i=G(it);return`<div class="mm${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-mv="${i.id}"`}>${i.title?`<b>${esc(i.title)}</b>`:locked(i)?'<b style="color:var(--mut)">untitled</b>':''}${locked(i)?`<div class="lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${vb(i)}${tags(i)}</span>${eb(i)}</div>`:''}</div>`}),cols=Array.from({length:N},()=>[]);cs.forEach((c,i)=>cols[i%N].push(c));h=`<div class="mas m">${cols.map(c=>`<div class="mc">${c.join('')}</div>`).join('')}</div>`}
- if(kind==='line')h=`<div>${L.map(it=>{const i=G(it);return`<div class="ln"><time>${date(i.created_at,1)}</time><div class="t">${locked(i)?`<div class="lk${lkc(i)}" data-lk="${i.id}"><div class="lkb">${ulf(i.id)}</div></div>`:`<div class="md">${mdn(i.body)}</div>`}${tags(i)||vb(i)?`<div class="tgs">${vb(i)}${tags(i)}</div>`:''}</div>${eb(i)}</div>`}).join('')}</div>`;
+ if(kind==='line')h=L.length?lineSheet(L):'';
  return L.length?h:''}
-function essayRows(L,cur){return L.length?L.map(it=>{const i=G(it);return`<a class="e5i${cur&&cur.id===i.id?' on':''}" href="#/log/${i.id}"><span class="d">${date(i.created_at)}<span class="tm"> ${date(i.created_at,1).slice(-5)}</span></span><span class="t">${vb(i)}${esc(i.title||'untitled')}</span></a>`}).join(''):'<p class="empty">no entries</p>'}
+/* txt: chess scoresheet (desktop: pages of 8 numbered moves side by side; phone: KAI left / RAY right) */
+function lineSheet(L){const P=lvData().players,sp=t=>{const k=String(t).replace(/^#/,'').toLowerCase();return lvKeys('w').includes(k)||lvKeys('b').includes(k)};
+ const E=[];L.slice().reverse().forEach(it=>{const i=G(it),s0=lvSideOfTag(i);if(locked(i)){E.push({s:s0||'',i,lock:1,first:1});return}
+  String(i.body||'').split(/\n+/).map(x=>x.trim()).filter(Boolean).forEach((line,k)=>{const pf=lvSideOfPrefix(line);E.push({s:pf?pf[0]:(s0||''),t:pf?pf[1]:line,i,first:k===0})})});
+ const R=[];for(let k=0;k<E.length;k++){const x=E[k],y=E[k+1];if(x.s==='w'&&y&&y.s==='b'){R.push({k:x,r:y});k++}else if(x.s==='b')R.push({r:x});else R.push({k:x})}
+ R.forEach((r,k)=>r.n=k+1);R.reverse();
+ const cell=(x,c)=>x?`<div class="${c}">${x.lock?`<div class="lk${lkc(x.i)}" data-lk="${x.i.id}"><div class="lkb">${ulf(x.i.id)}</div></div>`:`<div class="md">${mdn(x.t)}</div>`}<span class="xm">${date(x.i.created_at,1)}${x.first?(x.i.tags||[]).filter(t=>!sp(t)).map(t=>` <span class="tg" data-tag="${esc(t)}">#${esc(t)}</span>`).join(''):''}${x.first?eb(x.i):''}</span></div>`:'<div></div>';
+ const pgnName=s=>{let t=String((cxSpec(lvData().pgn||LV_PGN).h||{})[s==='w'?'White':'Black']||'').trim();if(t){const m=/^([^,]+),\s*(.+)$/.exec(t);if(m)t=m[2].trim()[0]+'. '+m[1].trim();else{const w=t.split(/\s+/);if(w.length>1)t=w[0][0]+'. '+w.slice(1).join(' ')}return t.toUpperCase()}const p=P[s]||{};return String(p.en||p.name||(s==='w'?'WHITE':'BLACK')).toUpperCase()},hn=s=>`<svg class="xk ${s}" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnP"/></svg>${esc(pgnName(s))}`,pages=[];for(let k=0;k<R.length;k+=8)pages.push(R.slice(k,k+8));
+ return`<div class="xs">${pages.map(S=>`<div class="xsh"><div class="xh"><span>#</span><span>${hn('w')}</span><span>${hn('b')}</span></div>${S.map(r=>`<div class="xr"><span class="xn">${r.n}.</span>${cell(r.k,'k')}${cell(r.r,'o')}</div>`).join('')}</div>`).join('')}</div>`}
+const logOrd=()=>ITEMS.filter(x=>x.kind==='log').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+function essayRows(L,cur){const ord=logOrd();return L.length?L.map(it=>{const i=G(it),n=ord.findIndex(x=>x.id===i.id)+1;return`<a class="e5i${cur&&cur.id===i.id?' on':''}" href="#/log/${i.id}"><span class="e5n">${n}</span><span class="e5x2"><b>${vb(i)}${esc(i.title||'untitled')}</b><small>${date(i.created_at)}</small></span></a>`}).join(''):'<p class="empty">no entries</p>'}
 function essayBody(it){if(!it)return'';const i=G(it);if(locked(i))return`<div class="lkcen"><div class="lkin"><svg class="rkbig" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnR"/></svg><div class="lkpm">LOG · ${date(i.created_at)}</div><div class="lkh1">${esc(i.title||'untitled')}</div>${ulf(i.id)}</div></div>`;
- return`${eb(i)?`<div class="e5ed">${eb(i)}</div>`:''}<div class="e5m">${tags(i)}</div><h1 class="e5t">${esc(i.title||'untitled')}</h1>${i.meta?.sub?`<div class="e5s">${esc(i.meta.sub)}</div>`:''}<div class="md e5b">${mdr(i.body)}</div>`}
+ const ord=logOrd(),k=ord.findIndex(x=>x.id===i.id),n=k+1,pv=ord[k-1],nx=ord[k+1],g1=(i.tags||[])[0];
+ const nk=(x,lab,cls,num)=>x?`<a class="e5nk ${cls}" href="#/log/${x.id}"><span class="e5n">${num}</span><span class="t"><small>${lab}</small><b>${esc(G(x).title||'untitled')}</b></span></a>`:'<span></span>';
+ return`<div class="e5band"><span class="k">${n}</span><span class="m"><span>${date(i.created_at)}${g1?' · '+esc(g1).toUpperCase():''}</span><i></i></span></div><div class="e5box">${eb(i)?`<div class="e5ed">${eb(i)}</div>`:''}<div class="e5m">${tags(i)}</div><h1 class="e5t">${esc(i.title||'untitled')}</h1>${i.meta?.sub?`<div class="e5s">${esc(i.meta.sub)}</div>`:''}<div class="md e5b">${mdr(i.body)}</div></div><div class="e5pn">${nk(pv,'PREV','p',n-1)}${nk(nx,'NEXT','n',n+1)}</div>`}
 function essayView(){const all=ITEMS.filter(i=>i.kind==='log'),sel=location.hash.replace('#/','').split('/')[1],was=!!$('#e5r'),y=scrollY;
  const get=()=>all.filter(i=>(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let L=get(),cur=L.find(i=>String(i.id)===sel)||L[0];
- app.innerHTML=head('log')+`<input id="sq" placeholder="search" value="${esc(Q)}" autocomplete="off">`+chips(all)+`<div class="e5"><div class="e5l" id="e5l">${essayRows(L,cur)}</div><div class="e5r" id="e5r">${essayBody(cur)}</div></div>`;
+ app.innerHTML=head('log')+`<input id="sq" placeholder="search" value="${esc(Q)}" autocomplete="off">`+chips(all)+`<div class="e5"><button class="e5x" id="e5x" type="button"><span class="e5n">${cur?logOrd().findIndex(x=>x.id===cur.id)+1:''}</span><b>${esc(cur?(G(cur).title||'untitled'):'')}</b><em></em></button><div class="e5l" id="e5l">${essayRows(L,cur)}</div><div class="e5r" id="e5r">${essayBody(cur)}</div></div>`;
+ $('#e5x').onclick=()=>$('.e5').classList.toggle('open');
  cxHydrate($('#e5r'));$('#sq').oninput=e=>{Q=e.target.value;L=get();$('#e5l').innerHTML=essayRows(L,cur)};
  if(was){scrollTo(0,y);}}
 function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind);if(kind==='log')return essayView();
