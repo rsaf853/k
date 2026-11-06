@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ko">
 <head>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -747,6 +748,25 @@ p.tsub{font-size:.8em;line-height:1.45;color:var(--tmu,var(--mut));margin-top:.2
  .xr .md{font:400 13.5px/1.5 var(--sans)}
  .xm{font-size:9px;font-weight:400}
 }
+
+/* ---------- gallery: JS columns (aligned at the top; 2 columns on phones) ---------- */
+.mas.gm{column-count:auto;display:grid;grid-template-columns:repeat(var(--gc),minmax(0,1fr));gap:8px;align-items:start}
+.mas.gm .mc{display:flex;flex-direction:column;gap:8px;min-width:0}
+.mas.gm .gi{margin:0;break-inside:auto}
+
+/* ---------- loading ---------- */
+.sk{display:block;background:var(--soft);margin:0 0 10px;animation:skp 1.1s ease-in-out infinite alternate}
+@keyframes skp{from{opacity:.5}to{opacity:1}}
+.skw{padding-top:4px}.skh{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:22px;align-items:start}
+@media(max-width:1080px){.skh{grid-template-columns:1fr}}
+#app.fx{animation:fxin .24s ease both}
+@keyframes fxin{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.im .imi{opacity:0;transition:opacity .6s ease}.im .imi.ok{opacity:1}
+.gi img,.md img{opacity:0;transition:opacity .45s ease,filter .35s}
+.gi img.ld,.md img.ld{opacity:1}
+.gi img:not(.ld),.md img:not(.ld){animation:imgshow .01s 3s forwards}
+@keyframes imgshow{to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.sk{animation:none}#app.fx{animation:none}.im .imi,.gi img,.md img{transition:none}}
 </style>
 </head>
 <body>
@@ -820,10 +840,10 @@ const rid=f=>`${crypto.randomUUID()}.${(f.name.split('.').pop()||'jpg').toLowerC
 async function upload(f){const p=rid(f),u=await sb.storage.from('img').upload(p,f,{contentType:f.type});if(u.error)throw u.error;return sb.storage.from('img').getPublicUrl(p).data.publicUrl}
 /* settings (columns) */
 let CFG={g:3,m:4};try{Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')||'{}'))}catch(e){}CFG.m=4;
-const applyCols=()=>{const cap=innerWidth<720?2:4,r=document.documentElement.style;r.setProperty('--gc',innerWidth<720?1:Math.min(CFG.g,cap));r.setProperty('--mc',Math.min(CFG.m,cap))};
+const applyCols=()=>{const cap=innerWidth<720?2:4,r=document.documentElement.style;r.setProperty('--gc',innerWidth<720?2:Math.min(CFG.g,cap));r.setProperty('--mc',Math.min(CFG.m,cap))};
 const segCfg=(k,l)=>`<label>${l}</label><div class="sg2">${[2,3,4].map(n=>`<button class="btn${CFG[k]===n?' on':''}" data-cfg="${k}" data-v="${n}">${n}</button>`).join('')}</div>`;
 const settings=()=>openM(`<h3>SETTINGS</h3>${segCfg('g','IMG · columns (desktop)')}<div class="acts" style="margin-top:10px"><button class="btn" data-x>DONE</button></div>`);
-const memoRe=()=>{const m=document.querySelector('.mas.m');if(m&&$('#lst')&&m.children.length!==(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4))$('#lst').innerHTML=list('memo')};
+const memoRe=()=>{const m=document.querySelector('.mas.m');if(m&&$('#lst')&&m.children.length!==(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4))$('#lst').innerHTML=list('memo');const g=document.querySelector('.mas.gm');if(g&&$('#lst')&&g.children.length!==(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gc'))||3))$('#lst').innerHTML=list('gallery')};
 applyCols();addEventListener('resize',()=>{applyCols();memoRe()});
 /* theme */
 const BOARD='<span class="bd"><i></i><i></i></span>';
@@ -850,7 +870,7 @@ async function load(){const my=++loadSeq;
 const IMG_DEF={iw:310,ix:50,iy:50,iz:100};
 const applyIw=()=>{const r=document.documentElement.style,w=HOME.iw||310;if(innerWidth<=720){r.removeProperty('--iw');return}r.setProperty('--iw',(innerWidth<=1024?Math.round(w*.68):w)+'px')};
 const paintVars=()=>{const s=$('#im').style;s.setProperty('--himg',HOME.img?`url("${HOME.img}")`:'none');s.setProperty('--ix',(HOME.ix??50)+'%');s.setProperty('--iy',(HOME.iy??50)+'%');s.setProperty('--iz',(HOME.iz||100)/100);applyIw()};
-const paintImg=()=>{paintVars();$('#im').innerHTML='<div class="imi"></div>'+(em()?'<div class="imb"><button class="bt" data-himg>IMAGE</button><button class="bt" data-iadj>ADJUST</button></div>':'')};
+const paintImg=()=>{paintVars();$('#im').innerHTML='<div class="imi"></div>'+(em()?'<div class="imb"><button class="bt" data-himg>IMAGE</button><button class="bt" data-iadj>ADJUST</button></div>':'');const imi=$('#im .imi'),u=HOME.img;if(!u)imi.classList.add('ok');else{const t=new Image();t.onload=t.onerror=()=>imi.classList.add('ok');t.src=u}};
 addEventListener('resize',applyIw);
 const IU={iw:'px',ix:'%',iy:'%',iz:'%'};
 function imgAdjust(){ADJ={iw:HOME.iw||310,ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100};
@@ -1438,7 +1458,7 @@ function chips(list){const all=[...new Set(list.flatMap(i=>i.tags||[]))].sort();
 const match=i=>!Q||[i.title,i.body,(i.tags||[]).join(' ')].join(' ').toLowerCase().includes(Q.toLowerCase());
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
  if(kind==='post'){const G2=[];L.forEach(i=>{const x=new Date(i.created_at),k=x.getFullYear()+'-'+x.getMonth(),g=G2[G2.length-1];if(g&&g.k===k)g.a.push(i);else G2.push({k,l:MONS[x.getMonth()]+' '+x.getFullYear(),a:[i]})});h=`<div class="arx mon">${G2.map(g=>`<div class="ag"><div class="agh"><b>${g.l}</b><i></i><span>${g.a.length}</span></div>${g.a.map(i=>{const inn=`<span class="dn">${p2(new Date(i.created_at).getDate())}</span><b>${vb(i)}${esc(i.title||'untitled')}</b>${i.meta?.sub?`<span class="as">${esc(i.meta.sub)}</span>`:''}${(i.tags||[]).length?`<span class="at">${tags(i)}</span>`:''}`;return`<a class="ai" href="#/post/${i.id}" data-tip="${i.id}">${inn}</a>`}).join('')}</div>`).join('')}</div>`}
- if(kind==='gallery')h=`<div class="mas g">${L.map(it=>{const i=G(it);return`<div class="gi${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-gi="${i.id}"`}>${locked(i)?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`}).join('')}</div>`;
+ if(kind==='gallery'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gc'))||3),cs=L.map(it=>{const i=G(it);return`<div class="gi${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-gi="${i.id}"`}>${locked(i)?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`}),cols=Array.from({length:N},()=>[]);cs.forEach((c,i)=>cols[i%N].push(c));h=`<div class="mas gm">${cols.map(c=>`<div class="mc">${c.join('')}</div>`).join('')}</div>`}
  if(kind==='memo'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4),cs=L.map(it=>{const i=G(it);return`<div class="mm${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-mv="${i.id}"`}>${i.title?`<b>${esc(i.title)}</b>`:locked(i)?'<b style="color:var(--mut)">untitled</b>':''}${locked(i)?`<div class="lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${vb(i)}${tags(i)}</span>${eb(i)}</div>`:''}</div>`}),cols=Array.from({length:N},()=>[]);cs.forEach((c,i)=>cols[i%N].push(c));h=`<div class="mas m">${cols.map(c=>`<div class="mc">${c.join('')}</div>`).join('')}</div>`}
  if(kind==='line')h=L.length?lineSheet(L):'';
  return L.length?h:''}
@@ -1469,11 +1489,22 @@ function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind);if(kind==
  const q=$('#q');if(q){const di=q.elements.dt,db=$('#dtb'),dx=$('#dtx'),sh=()=>{db.textContent=di.value?date(new Date(di.value).toISOString(),1):'DATE';dx.hidden=!di.value;db.classList.toggle('pri',!!di.value)};db.onclick=()=>{try{di.showPicker()}catch(e){di.focus();di.click()}};di.onchange=sh;dx.onclick=()=>{di.value='';sh()};const ta=q.elements.t,grow=()=>{ta.style.height='auto';ta.style.height=ta.scrollHeight+2+'px'};
   ta.oninput=grow;ta.onkeydown=e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();q.requestSubmit()}};
   q.onsubmit=async e=>{e.preventDefault();const t=ta.value.trim();if(!t)return;await save({kind:'line',body:t,tags:hash(t),visibility:'public',...(q.elements.dt.value?{created_at:new Date(q.elements.dt.value).toISOString()}:{})})}}}
-function route(){const h=location.hash.replace('#/','')||'',[a0,b]=h.split('/'),a=a0==='e5'?'log':a0;document.body.classList.toggle('bnpg',a==='banners');document.body.classList.toggle('pzpg',a==='puzzle');$('#puzzleNav').classList.toggle('on',a==='puzzle');$('#mateNav').classList.toggle('on',a==='banners');{const H=$('.hr');H.dataset.cur=a==='banners'?'mate':a==='puzzle'?'puzzle':'';delete H.dataset.h}document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('on',x.dataset.n===(a==='post'?'posts':a)));
+function route0(){const h=location.hash.replace('#/','')||'',[a0,b]=h.split('/'),a=a0==='e5'?'log':a0;document.body.classList.toggle('bnpg',a==='banners');document.body.classList.toggle('pzpg',a==='puzzle');$('#puzzleNav').classList.toggle('on',a==='puzzle');$('#mateNav').classList.toggle('on',a==='banners');{const H=$('.hr');H.dataset.cur=a==='banners'?'mate':a==='puzzle'?'puzzle':'';delete H.dataset.h}document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('on',x.dataset.n===(a==='post'?'posts':a)));
  if(a==='post'){const it=ITEMS.find(i=>i.id==b);if(!it){closeReader();return view('posts')}
   if(locked(it)){closeReader();document.body.classList.remove('pgd');return lockPage(it)}
   if(FS){if(!$('#app').innerHTML)view('posts');return reader(it)}return article(it)}
  FS=false;closeReader();document.body.classList.remove('pgd');if(!a)return home();if(a==='banners')return bannerPage();if(a==='puzzle')return puzzlePage();view(KIND[a]?a:'posts')}
+
+/* ---------- loading: skeleton while data arrives, gentle fade-in, images fade in ---------- */
+const skel=()=>{const h=location.hash.replace('#/','').split('/')[0],b=(w,hh,m)=>`<i class="sk" style="width:${w};height:${hh}px${m?';margin:'+m:''}"></i>`;
+ if(!h)return`<div class="skw skh"><div>${b('96px',20)}${b('64%',38,'12px 0 8px')}${b('38%',14,'0 0 18px')}${b('100%',34)}${b('100%',34)}${b('100%',34)}${b('100%',34)}${b('100%',34)}</div><div><i class="sk" style="width:100%;height:auto;aspect-ratio:1"></i></div></div>`;
+ if(['post','banners','puzzle'].includes(h))return`<div class="skw">${b('46%',34,'6px 0 16px')}${b('100%',13)}${b('96%',13)}${b('92%',13)}${b('100%',13)}${b('64%',13)}</div>`;
+ return`<div class="skw">${b('84px',12,'0 0 10px')}${b('100%',36,'0 0 12px')}${b('150px',22,'0 0 14px')}${[1,2,3,4,5,6].map(()=>b('100%',44)).join('')}</div>`};
+const sweepImgs=()=>{if(typeof app!=='undefined')app.querySelectorAll('img').forEach(i=>{if(i.complete)i.classList.add('ld')})};
+const fade=()=>{app.classList.remove('fx');void app.offsetWidth;app.classList.add('fx');sweepImgs()};
+let LASTP=null;
+function route(){const pg=location.hash.replace('#/','').split('/')[0],first=LASTP===null||LASTP!==pg;LASTP=pg;const r=route0();if(first)fade();else sweepImgs();return r}
+['load','error'].forEach(t=>document.addEventListener(t,e=>{if(e.target&&e.target.tagName==='IMG')e.target.classList.add('ld')},true));
 
 /* Lichess puzzle page */
 const PUZ={data:null,board:null,start:null,hist:[],hist0:0,solN:0,side:'w',cursor:0,selected:-1,legal:[],hint:0,hintSq:[],bad:-1,chk:-1,flip:false,local:false,li:-1,loading:false,solved:false,busy:false,daily:true,feedback:'',last:[]};
@@ -1635,7 +1666,7 @@ $('#adm').onclick=async()=>{if(admin){await sb.auth.signOut();return}
 sb.auth.onAuthStateChange((ev,s)=>{const was=admin;admin=!!s;if(!admin){EDITM=false;EM=false}sync();
  if(ev==='INITIAL_SESSION'||was===admin)return;
  setTimeout(async()=>{UNL={};if(await load())route()},0)});
-(async()=>{try{const{data}=await sb.auth.getSession();admin=!!data.session;sync();if(await load())route()}catch(x){app.innerHTML='<p class="empty">Load failed: '+esc(x.message||x)+'</p>'}})();
+(async()=>{try{app.innerHTML=skel();const{data}=await sb.auth.getSession();admin=!!data.session;sync();if(await load())route()}catch(x){app.innerHTML='<p class="empty">Load failed: '+esc(x.message||x)+'</p>'}})();
 </script>
 </body>
 </html>
