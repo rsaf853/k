@@ -235,7 +235,7 @@ input,select,textarea{padding:6px 9px}
 .add{align-items:center}.add input{height:28px}.add .ic{width:28px;height:28px;padding:0;display:grid;place-items:center;flex:none;border:1px solid var(--line);color:var(--mut)}.add .ic:hover{color:var(--fg);border-color:var(--fg)}.add .ic.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}.add .ic svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:square;stroke-linejoin:miter}
 /* responsive */
 @media(max-width:1024px){:root{--iw:170px}.shell{gap:0 22px;padding:0 16px}}
-@media(max-width:720px){:root{--iw:0px}.shell{display:block;padding:0 16px}.side{position:static;height:128px;padding:10px 0 0}.col{min-height:0}header{position:sticky}.blocks{grid-template-columns:1fr}.ln{grid-template-columns:minmax(0,1fr) auto}.ln time{grid-column:1/-1}.row{grid-template-columns:64px 1fr}.row>span{grid-column:2}.tb .md{margin-left:0}main{padding-top:16px}.mas{column-gap:8px}.mm,.gi{margin-bottom:8px}}
+@media(max-width:720px){:root{--iw:0px}.shell{display:block;padding:0 16px}.side{position:static;height:var(--mh,128px);padding:10px 0 0}.col{min-height:0}header{position:sticky}.blocks{grid-template-columns:1fr}.ln{grid-template-columns:minmax(0,1fr) auto}.ln time{grid-column:1/-1}.row{grid-template-columns:64px 1fr}.row>span{grid-column:2}.tb .md{margin-left:0}main{padding-top:16px}.mas{column-gap:8px}.mm,.gi{margin-bottom:8px}}
 @media(max-width:720px){.blocks .bl:first-child{border-top:0;padding-top:0}.blocks{height:auto!important}}
 .arc .gh{font:500 11px var(--sans);letter-spacing:.04em;color:var(--mut);padding:16px 0 6px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}.arc .gh:first-child{padding-top:4px}
 .arc .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;border-top:1px solid var(--line);padding:9px 0}.arc .gh+.row{border-top:0}.arc .row b{min-width:0;overflow-wrap:anywhere}.arc .row i{margin-left:0;min-width:0;overflow-wrap:anywhere}.arc .row>span{margin-left:auto}.arc .row>span:empty{display:none}
@@ -931,6 +931,8 @@ body.fp .lvchip::before{animation:none}
 /* while the ADJUST window is open the header shows the tab you are editing, whatever theme the page is in */
 #im#im[data-ep="light"]{--hi:var(--himgL,none);--ix:var(--ixL,50%);--iy:var(--iyL,50%);--iz:var(--izL,1)}
 #im#im[data-ep="dark"]{--hi:var(--himgD,var(--himgL,none));--ix:var(--ixD,var(--ixL,50%));--iy:var(--iyD,var(--iyL,50%));--iz:var(--izD,var(--izL,1))}
+/* ADJUST window: phone-header preview */
+.mpv{position:relative;overflow:hidden;background:var(--soft);border:1px solid var(--line);margin:0 0 4px}.mpv .imi{position:absolute;inset:0;background-size:cover;background-repeat:no-repeat}
 
 /* ---------- memo board: every memo is a square of a chessboard ---------- */
 .mbd{display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));border:2px solid var(--fg);margin-top:6px;width:100%;overflow:hidden}
@@ -1063,16 +1065,26 @@ async function load(){const my=++loadSeq;
   return true
  }catch(x){app.innerHTML='<p class="empty">Load failed: '+esc(x.message||x)+'</p>';return false}}
 const IMG_DEF={iw:310,ix:50,iy:50,iz:100};
-const applyIw=()=>{const r=document.documentElement.style,w=HOME.iw||310;if(innerWidth<=720){r.removeProperty('--iw');return}r.setProperty('--iw',(innerWidth<=1024?Math.round(w*.68):w)+'px')};
-const paintVars=()=>{const s=$('#im').style;s.setProperty('--himgL',HOME.img?`url("${HOME.img}")`:'none');if(HOME.imgD)s.setProperty('--himgD',`url("${HOME.imgD}")`);else s.removeProperty('--himgD');s.setProperty('--ixL',(HOME.ix??50)+'%');s.setProperty('--iyL',(HOME.iy??50)+'%');s.setProperty('--izL',(HOME.iz||100)/100);if(HOME.ixD!==undefined){s.setProperty('--ixD',HOME.ixD+'%');s.setProperty('--iyD',(HOME.iyD??50)+'%');s.setProperty('--izD',(HOME.izD||100)/100)}else{['--ixD','--iyD','--izD'].forEach(k=>s.removeProperty(k))}applyIw()};
+const applyIw=()=>{const r=document.documentElement.style,w=HOME.iw||310;r.setProperty('--mh',Math.max(60,Math.min(320,HOME.mh||128))+'px');if(innerWidth<=720){r.removeProperty('--iw');return}r.setProperty('--iw',(innerWidth<=1024?Math.round(w*.68):w)+'px')};
+/* header image settings: [x,y,zoom] per device (pc / m = phone) and theme (L / D). A missing group falls back: m+D -> m+L -> pc+D -> pc+L */
+const GK={pcL:['ix','iy','iz'],pcD:['ixD','iyD','izD'],mL:['mx','my','mz'],mD:['mxD','myD','mzD']},GCH={pcL:['pcL'],pcD:['pcD','pcL'],mL:['mL','pcL'],mD:['mD','mL','pcD','pcL']},GDEF=[50,50,100];
+const eff=(dev,t,a)=>{for(const g of GCH[dev+t]){const v=HOME[GK[g][a]];if(v!==undefined&&v!==null)return v}return GDEF[a]};
+const paintVars=()=>{const s=$('#im').style,dev=innerWidth<=720?'m':'pc';s.setProperty('--himgL',HOME.img?`url("${HOME.img}")`:'none');if(HOME.imgD)s.setProperty('--himgD',`url("${HOME.imgD}")`);else s.removeProperty('--himgD');['L','D'].forEach(t=>{s.setProperty('--ix'+t,eff(dev,t,0)+'%');s.setProperty('--iy'+t,eff(dev,t,1)+'%');s.setProperty('--iz'+t,eff(dev,t,2)/100)});applyIw()};
 const paintImg=()=>{paintVars();$('#im').innerHTML='<div class="imi"></div>'+(em()?'<div class="imb"><button class="bt" data-himg>IMAGE</button><button class="bt" data-himgd>DARK</button><button class="bt" data-iadj>ADJUST</button></div>':'');const imi=$('#im .imi'),u=HOME.img;if(!u)imi.classList.add('ok');else{const t=new Image();t.onload=t.onerror=()=>imi.classList.add('ok');t.src=u}};
-addEventListener('resize',applyIw);
-const IU={iw:'px',ix:'%',iy:'%',iz:'%',ixD:'%',iyD:'%',izD:'%'};let ADJT='light';
-function imgAdjust(tab,keep){tab=tab||'light';ADJT=tab;if(!keep)ADJ={iw:HOME.iw||310,ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100,ixD:HOME.ixD,iyD:HOME.iyD,izD:HOME.izD};
- const D=tab==='dark',kx=D?'ixD':'ix',ky=D?'iyD':'iy',kz=D?'izD':'iz',L={ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100},val=k=>k==='iw'?(HOME.iw||310):D&&HOME[k]===undefined?L[k.slice(0,2)]:(k==='iz'||k==='izD')?(HOME[k]||100):(HOME[k]??50);
+let LM=innerWidth<=720;addEventListener('resize',()=>{applyIw();const m=innerWidth<=720;if(m!==LM){LM=m;paintVars()}});
+const IU={iw:'px',mh:'px'};Object.values(GK).forEach(g=>g.forEach((k,a)=>IU[k]=a<2?'%':'%'));let ADJT='light',ADJV='pc';
+const KM={};Object.entries(GK).forEach(([g,ks])=>ks.forEach((k,a)=>KM[k]={dev:g.startsWith('pc')?'pc':'m',t:g.endsWith('D')?'D':'L',a}));
+function imgAdjust(tab,keep,dev){tab=tab||'light';ADJT=tab;if(dev)ADJV=dev;else if(!keep)ADJV=innerWidth<=720?'mobile':'pc';
+ if(!keep){ADJ={iw:HOME.iw||310};['mh',...Object.values(GK).flat()].forEach(k=>ADJ[k]=HOME[k])}
+ const D=tab==='dark',M=ADJV==='mobile',ks=M?(D?GK.mD:GK.mL):(D?GK.pcD:GK.pcL),val=k=>k==='iw'?(HOME.iw||310):k==='mh'?(HOME.mh||128):eff(KM[k].dev,KM[k].t,KM[k].a);
  const row=(k,l,min,max)=>`<label>${l} <span id="v_${k}">${val(k)}${IU[k]}</span></label><input type="range" data-ia="${k}" min="${min}" max="${max}" value="${val(k)}">`;
  const im=$('#im');if(im)im.dataset.ep=tab;
- openM(`<h3>IMAGE ADJUST</h3><div class="sg2" style="margin:2px 0 8px"><button type="button" class="btn${D?'':' on'}" data-itab="light">LIGHT</button><button type="button" class="btn${D?' on':''}" data-itab="dark">DARK</button></div>${row('iw','Width (both)',120,420)}${row(kx,'Position X',0,100)}${row(ky,'Position Y',0,100)}${row(kz,'Zoom',100,300)}<p class="st">${D?(HOME.imgD?'Position and zoom for the DARK image.':'No dark image yet: dark mode shows the light image with these settings.'):'Position and zoom for the LIGHT image.'}</p><div class="acts">${HOME.imgD?'<button type="button" class="btn" data-idrm>REMOVE DARK IMAGE</button>':''}<button type="button" class="btn" data-ireset>RESET</button><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" data-isave>SAVE</button></div>`)}
+ const tabs=`<div class="sg2" style="margin:2px 0 6px"><button type="button" class="btn${D?'':' on'}" data-itab="light">LIGHT</button><button type="button" class="btn${D?' on':''}" data-itab="dark">DARK</button></div><div class="sg2" style="margin:0 0 8px"><button type="button" class="btn${M?'':' on'}" data-idev="pc">PC</button><button type="button" class="btn${M?' on':''}" data-idev="mobile">MOBILE</button></div>`;
+ const rows=(M?row('mh','Height (both themes)',60,320):row('iw','Width (both)',120,420))+row(ks[0],'Position X',0,100)+row(ks[1],'Position Y',0,100)+row(ks[2],'Zoom',100,300);
+ const note=(D?(HOME.imgD?'Position and zoom for the DARK image.':'No dark image yet: dark mode shows the light image with these settings.'):'Position and zoom for the LIGHT image.')+(M?' Phone header (720px and narrower); untouched values follow the PC settings.':'');
+ openM(`<h3>IMAGE ADJUST</h3>${tabs}${M?'<div class="mpv" id="mpv"><div class="imi"></div></div>':''}${rows}<p class="st">${note}</p><div class="acts">${HOME.imgD?'<button type="button" class="btn" data-idrm>REMOVE DARK IMAGE</button>':''}<button type="button" class="btn" data-ireset>RESET</button><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" data-isave>SAVE</button></div>`);updPv()}
+/* phone-header preview inside the ADJUST window (same aspect as a 360px-wide phone) */
+const updPv=()=>{const p=$('#mpv');if(!p)return;const t=ADJT==='dark'?'D':'L',u=(t==='D'&&HOME.imgD)||HOME.img,x=eff('m',t,0),y=eff('m',t,1),z=eff('m',t,2)/100;p.style.aspectRatio='328/'+Math.max(20,(HOME.mh||128)-10);p.firstChild.style.cssText=`background-image:${u?`url("${u}")`:'none'};background-position:${x}% ${y}%;transform:scale(${z});transform-origin:${x}% ${y}%`};
 const saveHome=async()=>{const r=await sb.from('settings').upsert({key:'home',value:HOME});if(r.error)msg('Save failed: '+r.error.message)};
 /* locked items: the title stays visible and the password field opens in place (no popup) */
 function unlock(id){const it=ITEMS.find(x=>x.id==id);if(!it)return;const k=it.kind,to=(h,fn)=>{OPENLK=id;if(location.hash!==h)location.hash=h;else fn()};
@@ -1885,17 +1897,18 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(x=c('[data-gi]')){const i=G(ITEMS.find(i=>i.id==x.dataset.gi));if(locked(i))return unlock(i.id);$('#lb').innerHTML=`<figure><img src="${esc(i.meta.src)}" alt="">${i.body?`<figcaption>${esc(i.body)}</figcaption>`:''}</figure>`;$('#lb').hidden=false;return}
  if(c('[data-himg]')){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;try{HOME.img=await upload(f.files[0]);await saveHome();paintImg()}catch(x){alert('Upload failed: '+x.message)}};f.click();return}
  if(c('[data-himgd]')){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;try{HOME.imgD=await upload(f.files[0]);await saveHome();paintImg()}catch(x){alert('Upload failed: '+x.message)}};f.click();return}
- if(c('[data-idrm]')){delete HOME.imgD;delete HOME.ixD;delete HOME.iyD;delete HOME.izD;ADJ=null;saveHome();paintImg();closeM();return}
+ if(c('[data-idrm]')){delete HOME.imgD;delete HOME.ixD;delete HOME.iyD;delete HOME.izD;delete HOME.mxD;delete HOME.myD;delete HOME.mzD;ADJ=null;saveHome();paintImg();closeM();return}
  if(x=c('[data-itab]'))return imgAdjust(x.dataset.itab,true);
+ if(x=c('[data-idev]'))return imgAdjust(ADJT,true,x.dataset.idev);
  if(c('[data-iadj]'))return imgAdjust();
- if(c('[data-ireset]')){if(ADJT==='dark'){delete HOME.ixD;delete HOME.iyD;delete HOME.izD}else Object.assign(HOME,IMG_DEF);paintVars();imgAdjust(ADJT,true);return}
+ if(c('[data-ireset]')){if(ADJV==='mobile'){(ADJT==='dark'?GK.mD:GK.mL).forEach(k=>delete HOME[k]);if(ADJT!=='dark')delete HOME.mh}else if(ADJT==='dark'){delete HOME.ixD;delete HOME.iyD;delete HOME.izD}else Object.assign(HOME,IMG_DEF);paintVars();imgAdjust(ADJT,true);return}
  if(c('[data-isave]')){ADJ=null;saveHome();closeM();return}});
 {let t=0;addEventListener('scroll',()=>{const h=document.documentElement.classList;h.add('sb');clearTimeout(t);t=setTimeout(()=>h.remove('sb'),900)},{capture:true,passive:true})} /* show scrollbars only while scrolling */
 {const tb=$('#top'),ta=$('#tpa'),tc=$('#tpb'),up=()=>{const mx=document.documentElement.scrollHeight-innerHeight,p=mx>0?Math.min(1,Math.max(0,scrollY/mx)):0,v=Math.round(p*100)+'%';tb.classList.toggle('on',scrollY>400);tb.style.setProperty('--p',v);ta.textContent=v;tc.textContent=v};
  addEventListener('scroll',up,{passive:true});addEventListener('resize',up);if(window.ResizeObserver)new ResizeObserver(up).observe(app);
  tb.onclick=()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});up()}
 addEventListener('hashchange',()=>{TAG=PEND;PEND='';Q='';FS=false;if(!(/^#\/(log|e5)\b/.test(location.hash)&&$('#e5r')))scrollTo(0,0);route()});
-document.addEventListener('input',e=>{const t=e.target,k=t.dataset&&t.dataset.ia;if(!k)return;if(/D$/.test(k)&&HOME.ixD===undefined){HOME.ixD=HOME.ix??50;HOME.iyD=HOME.iy??50;HOME.izD=HOME.iz||100}HOME[k]=+t.value;$('#v_'+k).textContent=t.value+IU[k];paintVars()});
+document.addEventListener('input',e=>{const t=e.target,k=t.dataset&&t.dataset.ia;if(!k)return;const m=KM[k];if(m){const g=GK[m.dev+m.t];if(HOME[g[0]]===undefined){const v=[0,1,2].map(a=>eff(m.dev,m.t,a));g.forEach((kk,a)=>HOME[kk]=v[a])}}HOME[k]=+t.value;$('#v_'+k).textContent=t.value+IU[k];paintVars();updPv()});
 /* auth */
 const sync=()=>{$('#adm').classList.toggle('on',admin);const m=$('#mode');m.textContent=EM?'stalemate':'checkmate';m.classList.toggle('ok',admin);m.classList.toggle('on',admin&&EM)};
 $('#mode').onclick=()=>{if(!admin)return;EM=!EM;if(!EM)EDITM=false;sync();paintImg();route()};
