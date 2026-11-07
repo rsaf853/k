@@ -923,6 +923,11 @@ body.fp .lvchip::before{animation:none}
 #rd .br{display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
 #rd .br #pi{grid-column:2;text-align:center}
 #rd .br #aab{grid-column:3;justify-self:end}
+
+/* header image: light picture by default, a separate dark picture when one is set */
+#im{--hi:var(--himgL,none)}
+:root[data-theme="dark"] #im{--hi:var(--himgD,var(--himgL,none))}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) #im{--hi:var(--himgD,var(--himgL,none))}}
 </style>
 </head>
 <body>
