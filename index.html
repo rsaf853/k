@@ -883,6 +883,25 @@ body[data-pg=""] #top,body[data-pg="gallery"] #top,body[data-pg="puzzle"] #top,b
 /* banner board */
 .bnlm.f{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--fg) 38%,transparent) 0 1.5px,transparent 1.5px 6px)}
 .bnlm.t{box-shadow:inset 0 0 0 2px var(--fg)}
+
+/* banner page, phones only: "my banner" at the very bottom as an open / close block (peek strip). Desktop is unchanged. */
+.bnmb{display:none}
+@media(max-width:720px){
+ .bnmb{display:block;margin-top:28px}
+ .bnmb .bmp{position:relative;max-height:30px;overflow:hidden;transition:max-height .34s cubic-bezier(.3,.8,.2,1);border:1px solid var(--fg);border-bottom:0}
+ .bnmb .bmp img{display:block;width:100%;height:auto;-webkit-user-drag:none}
+ .bnmb .bmp::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 20%,var(--bg))}
+ .bnmb .bmx.on .bmp{max-height:0;border:0}
+ .bnmb .bmh{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:32px;border:1px solid var(--fg);padding:0 12px;font:700 10px var(--sans);letter-spacing:.12em;background:none;color:var(--fg);cursor:pointer;text-align:left}
+ .bnmb .bmc{width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translate(-1px,-1px);transition:transform .3s;flex:none}
+ .bnmb .bmx.on .bmc{transform:rotate(-135deg) translate(-1px,-1px)}
+ .bnmb .bmd{display:grid;grid-template-rows:0fr;transition:grid-template-rows .34s cubic-bezier(.3,.8,.2,1)}
+ .bnmb .bmx.on .bmd{grid-template-rows:1fr}
+ .bnmb .bmd>.bmi{overflow:hidden;min-height:0}
+ .bnmb .bmb{padding:12px 0 0}
+ .bnmb .bmb img{display:block;width:100%;height:auto;border:1px solid var(--fg);margin-bottom:8px}
+}
+@media(prefers-reduced-motion:reduce){.bnmb .bmp,.bnmb .bmd,.bnmb .bmc{transition:none}}
 </style>
 </head>
 <body>
@@ -1087,6 +1106,7 @@ function bannerPage(){FS=false;closeReader();document.body.classList.remove('pgd
  const D=banData(),S=D.slots,ed=admin&&EM,m=banMine(),fl=BNB.filter(p=>S[p.sq]&&S[p.sq].src),touch=matchMedia('(hover:none)').matches;
  const cell=p=>{const kg=isK(p.sq),s=kg?null:S[p.sq],f=s&&s.src;return`<button type="button" class="bnp ${p.c===p.c.toUpperCase()?'w':'k'}${p.y===7?' rb':''}${kg?' kg':''}${kg&&kingHas(p.sq)?' kp':''}${f?' f':''}${ed&&BSEL===p.sq?' a':''}" style="grid-area:${p.y+1}/${p.x+1}" data-sq="${p.sq}" aria-label="${p.sq}${f?' · '+esc(banName(s)):''}">${'<svg class="bnpc" viewBox="0 0 40 40" aria-hidden="true"><use href="#bn'+p.c.toUpperCase()+'"/></svg>'}</button>`};
  const cp=(k,v)=>`<button type="button" class="bncp" data-cp="${esc(v)}"><span>${k}</span><span>${esc(v)||'—'}</span><span>COPY</span></button>`;
+ const mineM=`<div class="bnmb"><div class="bmx" id="bnmb">${m.src?`<div class="bmp"><img src="${esc(m.src)}" alt=""></div>`:''}<button type="button" class="bmh" aria-expanded="false"><span>MY BANNER</span><i class="bmc"></i></button><div class="bmd"><div class="bmi"><div class="bmb">${m.src?`<img src="${esc(m.src)}" alt="${esc(m.title)}">`:'<div class="ph" style="margin-bottom:8px">NO BANNER</div>'}${cp('TITLE',m.title)}${cp('IMAGE',m.src)}${cp('LINK',m.url)}</div></div></div></div></div>`;
  const mine=`<div class="bnmy">${ed?'<div class="bnk" style="justify-content:flex-end"><button type="button" class="btn" id="bme">EDIT</button></div>':''}${m.src?`<img src="${esc(m.src)}" alt="${esc(m.title)}">`:'<div class="ph" style="margin-bottom:8px">NO BANNER</div>'}${cp('TITLE',m.title)}${cp('IMAGE',m.src)}${cp('LINK',m.url)}</div>`;
  let rest='';
  if(!ed)rest=`<div class="bnl">${banSorted(fl).map((p,i)=>{const s=S[p.sq],h=s.href||'';return`<div class="bnr ${p.c===p.c.toUpperCase()?'w':'k'}" data-sq="${p.sq}"><i>${p.sq}</i><span><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${p.c.toUpperCase()}"/></svg></span><a href="${/^(https?:|#)/.test(h)?esc(h):'#'}" target="_blank" rel="noopener"><b>${esc(banName(s)||'—')}</b></a></div>`}).join('')}</div>`;
@@ -1095,7 +1115,7 @@ function bannerPage(){FS=false;closeReader();document.body.classList.remove('pgd
  else rest='<div class="bnl"><p class="st">Select a piece to place a banner.</p></div>';
  const ic=p=>`<svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${p.c.toUpperCase()}"/></svg>`;
  const ord=ed&&fl.length?`<div class="bno"><div class="bnk" style="min-height:0;padding-bottom:8px"><span>ORDER · ⠿ DRAG OR ↑ ↓</span></div>${banSorted(fl).map((p,i)=>`<div class="bnr ed bno-r ${p.c===p.c.toUpperCase()?'w':'k'}" data-sq="${p.sq}"><button type="button" class="bngp" data-bgrip aria-label="Drag">⠿</button><i>${p.sq}</i><span>${ic(p)}</span><b>${esc(banName(S[p.sq])||'—')}</b><button type="button" class="btn bnud" data-bmv="-1">↑</button><button type="button" class="btn bnud" data-bmv="1">↓</button></div>`).join('')}</div>`:'';
- app.innerHTML=`${ed?`<div class="bneb"><span>EDIT MODE · ${fl.length} OF ${BNB.length} PIECES HAVE A BANNER · KINGS = PROFILE</span><button type="button" class="btn" id="bdone">DONE</button></div>`:''}<div class="bnh"><div><h1>King’s Gambit Accepted</h1></div><div class="bnmt">Spencer — Anderson<br>Eton College · 2008 · 29.Rd1 1–0</div></div><div class="bng"><div class="bnbx"><div class="bnbw">${evBar(fl,ed?null:bnPlies().length)}<div class="bnbd${ed?' ed':''}">${BNP.map(cell).join('')}${[0,1,2,3,4,5,6,7].map(y=>`<i class="co cr" style="grid-area:${y+1}/1" aria-hidden="true">${8-y}</i>`).join('')}${[...'abcdefgh'].map((f,x)=>`<i class="co cf" style="grid-area:8/${x+1}" aria-hidden="true">${f}</i>`).join('')}<div class="bnpop" hidden></div></div>${ed?'':BNRP}</div></div><aside class="bna">${mine}${rest}${ord}</aside></div>`;
+ app.innerHTML=`${ed?`<div class="bneb"><span>EDIT MODE · ${fl.length} OF ${BNB.length} PIECES HAVE A BANNER · KINGS = PROFILE</span><button type="button" class="btn" id="bdone">DONE</button></div>`:''}<div class="bnh"><div><h1>King’s Gambit Accepted</h1></div><div class="bnmt">Spencer — Anderson<br>Eton College · 2008 · 29.Rd1 1–0</div></div><div class="bng"><div class="bnbx"><div class="bnbw">${evBar(fl,ed?null:bnPlies().length)}<div class="bnbd${ed?' ed':''}">${BNP.map(cell).join('')}${[0,1,2,3,4,5,6,7].map(y=>`<i class="co cr" style="grid-area:${y+1}/1" aria-hidden="true">${8-y}</i>`).join('')}${[...'abcdefgh'].map((f,x)=>`<i class="co cf" style="grid-area:8/${x+1}" aria-hidden="true">${f}</i>`).join('')}<div class="bnpop" hidden></div></div>${ed?'':BNRP}</div></div><aside class="bna">${mine}${rest}${ord}</aside></div>${ed?'':mineM}`;
  const O=$('.bno');if(O){
   O.addEventListener('click',e=>{const b=e.target.closest('[data-bmv]');if(!b)return;const sq=b.closest('.bno-r').dataset.sq,o=banSorted(fl).map(p=>p.sq),i=o.indexOf(sq),j=i+ +b.dataset.bmv;if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];banData().order=o;saveHome();bannerPage()});
   O.addEventListener('pointerdown',e=>{const g=e.target.closest('[data-bgrip]');if(!g)return;e.preventDefault();const row=g.closest('.bno-r');row.classList.add('mv');try{g.setPointerCapture(e.pointerId)}catch(_){}
@@ -1121,6 +1141,7 @@ function bannerPage(){FS=false;closeReader();document.body.classList.remove('pgd
    if(!q){if(BPT!=='touch')hide();return}q.classList.add('hv');
    if(BPT!=='touch'&&innerWidth>820&&BTIP!==r.dataset.sq)show(q)}); /* hovering a link also pops its banner under the piece on the board */
   L.addEventListener('mouseleave',()=>{off();if(BPT!=='touch')hide()})}
+ {const mbE=$('#bnmb');if(mbE){const h=mbE.querySelector('.bmh');h.onclick=()=>{const on=mbE.classList.toggle('on');h.setAttribute('aria-expanded',on?'true':'false');if(on)setTimeout(()=>mbE.scrollIntoView({behavior:'smooth',block:'end'}),360)}}}
  app.querySelectorAll('[data-cp]').forEach(b=>b.onclick=async()=>{const v=b.dataset.cp;if(!v)return;try{await navigator.clipboard.writeText(v)}catch(x){const t=document.createElement('textarea');t.value=v;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}const l=b.lastElementChild,o=l.textContent;b.classList.add('ok');l.textContent='COPIED ✓';setTimeout(()=>{b.classList.remove('ok');l.textContent=o},1400)});
   /* game replay: opens on the final position; wheel / arrow keys / buttons step through the game */
  if(!ed&&$('#bnrp')){const PL=bnPlies(),T=PL.length;BNPLY=T;
