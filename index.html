@@ -925,9 +925,34 @@ body.fp .lvchip::before{animation:none}
 #rd .br #aab{grid-column:3;justify-self:end}
 
 /* header image: light picture by default, a separate dark picture when one is set */
-#im{--hi:var(--himgL,none)}
-:root[data-theme="dark"] #im{--hi:var(--himgD,var(--himgL,none))}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) #im{--hi:var(--himgD,var(--himgL,none))}}
+#im{--hi:var(--himgL,none);--ix:var(--ixL,50%);--iy:var(--iyL,50%);--iz:var(--izL,1)}
+:root[data-theme="dark"] #im{--hi:var(--himgD,var(--himgL,none));--ix:var(--ixD,var(--ixL,50%));--iy:var(--iyD,var(--iyL,50%));--iz:var(--izD,var(--izL,1))}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) #im{--hi:var(--himgD,var(--himgL,none));--ix:var(--ixD,var(--ixL,50%));--iy:var(--iyD,var(--iyL,50%));--iz:var(--izD,var(--izL,1))}}
+/* while the ADJUST window is open the header shows the tab you are editing, whatever theme the page is in */
+#im#im[data-ep="light"]{--hi:var(--himgL,none);--ix:var(--ixL,50%);--iy:var(--iyL,50%);--iz:var(--izL,1)}
+#im#im[data-ep="dark"]{--hi:var(--himgD,var(--himgL,none));--ix:var(--ixD,var(--ixL,50%));--iy:var(--iyD,var(--iyL,50%));--iz:var(--izD,var(--izL,1))}
+
+/* ---------- memo board: every memo is a square of a chessboard ---------- */
+.mbd{display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));border:2px solid var(--fg);margin-top:6px;width:100%;overflow:hidden}
+.mq{aspect-ratio:1/1;position:relative;min-width:0;min-height:0;background:var(--bg);color:var(--mut);cursor:pointer;transition:background .15s,color .15s}
+.mq.d{background:var(--hl,rgba(0,0,0,.055))}
+.mq.e{cursor:default;pointer-events:none}
+.mq:not(.e):hover{background:var(--fg);color:var(--bg)}
+.mqi{position:absolute;inset:0;padding:24px 11px 9px;display:flex;flex-direction:column;overflow:hidden}
+.mqc{position:absolute;left:9px;top:7px;font:700 9px var(--sans);letter-spacing:.1em;color:var(--mut);white-space:nowrap}
+.mq:hover .mqc,.mq:hover .tg,.mq:hover .mqt,.mq:hover .mqf{color:inherit}
+.mqt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;font-weight:700;font-size:13.5px;line-height:1.3;color:var(--fg);margin-bottom:4px;flex:none;word-break:break-word}
+.mqb{flex:1 1 0;min-height:0;overflow:hidden;font-size:12.5px;line-height:1.55;color:inherit;word-break:break-word}
+.mqx{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:6;line-clamp:6;overflow:hidden}
+.mqf{flex:none;margin-top:6px;max-height:2.9em;overflow:hidden;display:flex;gap:2px 8px;flex-wrap:wrap;align-items:center;font:500 10.5px/1.35 var(--sans);color:var(--mut)}
+.mq .mql{flex:1 1 0;min-height:0;overflow:auto;display:block}
+.mq.lk .lkb{display:block}
+.mq .btn{position:absolute;right:6px;top:5px;padding:0 6px;font-size:9px;line-height:16px;z-index:2}
+@media(max-width:720px){.mqi{padding:22px 9px 8px}.mqt{font-size:12.5px}.mqb{font-size:12px}}
+
+/* theme wipe: the browser's own cross-fade is switched off, the new picture is revealed by the clip-path animation in JS */
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}::view-transition-new(root){z-index:2}
 </style>
 </head>
 <body>
@@ -996,7 +1021,7 @@ const RKI='<svg class="rki" viewBox="0 0 40 40" aria-hidden="true"><use href="#b
 const ulf=id=>`<div class="rkw"><span class="rkt">${RKI}<b>LOCKED</b></span><form class="uf" data-uf="${id}" autocomplete="off"><input type="password" name="pw" placeholder="password" aria-label="password"><button aria-label="Unlock">→</button></form><p class="uer"></p></div>`;
 function lockPage(it){const lg=it.kind==='log';app.innerHTML=`<div class="lkpg"><svg class="rkbig" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnR"/></svg><div class="lkpm">${lg?'LOG':'ARCHIVE'} · ${date(it.created_at)}</div><h1 class="lkh1">${esc(it.title||'untitled')}</h1>${ulf(it.id)}<a class="lkbk" href="#/${lg?'log':'posts'}">← ${lg?'log':'archive'}</a></div>`;setTimeout(()=>{const o=app.querySelector('.uf input');if(o)o.focus()},60)}
 const hash=t=>[...t.matchAll(/(?:^|\s)#([^\s#]+)/g)].map(m=>m[1]);
-const openM=h=>{$('#mb').innerHTML=h;$('#md').hidden=false},closeM=()=>{$('#md').hidden=true;if(ADJ){Object.assign(HOME,ADJ);ADJ=null;paintVars()}};
+const openM=h=>{$('#mb').innerHTML=h;$('#md').hidden=false},closeM=()=>{$('#md').hidden=true;if(ADJ){Object.assign(HOME,ADJ);ADJ=null;paintVars()}{const im=$('#im');if(im)delete im.dataset.ep}};
 $('#md').onclick=e=>{if(e.target.id==='md')closeM()};$('#lb').onclick=()=>$('#lb').hidden=true;
 const msg=t=>{const e=$('#st');if(e)e.textContent=t;else alert(t)};
 const rid=f=>`${crypto.randomUUID()}.${(f.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg'}`;
@@ -1006,13 +1031,20 @@ let CFG={g:3,m:4};try{Object.assign(CFG,JSON.parse(localStorage.getItem('cfg')||
 const applyCols=()=>{const cap=innerWidth<720?2:4,r=document.documentElement.style;r.setProperty('--gc',innerWidth<720?2:Math.min(CFG.g,cap));r.setProperty('--mc',Math.min(CFG.m,cap))};
 const segCfg=(k,l)=>`<label>${l}</label><div class="sg2">${[2,3,4].map(n=>`<button class="btn${CFG[k]===n?' on':''}" data-cfg="${k}" data-v="${n}">${n}</button>`).join('')}</div>`;
 const settings=()=>openM(`<h3>SETTINGS</h3>${segCfg('g','IMG · columns (desktop)')}<div class="acts" style="margin-top:10px"><button class="btn" data-x>DONE</button></div>`);
-const memoRe=()=>{const m=document.querySelector('.mas.m');if(m&&$('#lst')&&m.children.length!==(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4))$('#lst').innerHTML=list('memo');const g=document.querySelector('.mas.gm');if(g&&$('#lst')&&g.children.length!==(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gc'))||3))$('#lst').innerHTML=list('gallery')};
-applyCols();addEventListener('resize',()=>{applyCols();memoRe()});
+const memoRe=()=>{const m=document.querySelector('.mbd');if(m&&$('#lst')&&+m.dataset.n!==(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4))$('#lst').innerHTML=list('memo');mqFit();const g=document.querySelector('.mas.gm');if(g&&$('#lst')&&g.children.length!==(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gc'))||3))$('#lst').innerHTML=list('gallery')};
+applyCols();addEventListener('resize',()=>{applyCols();memoRe();mqFit()});
 /* theme */
 const BOARD='<span class="bd"><i></i><i></i></span>';
 const isDark=()=>{const r=document.documentElement;return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches};
 const paintTheme=()=>{const d=isDark(),b=$('#theme');if(!b.firstChild)b.innerHTML=BOARD;b.dataset.s=d?'dark':'light';b.title=d?'Light mode':'Dark mode';{const m=document.querySelector('meta[name=theme-color]');if(m)m.content=d?'#0d0d0d':'#ffffff'}applyRS()};
-$('#theme').onclick=()=>{const r=document.documentElement;r.dataset.theme=isDark()?'light':'dark';try{localStorage.setItem('theme',r.dataset.theme)}catch(e){}paintTheme()};
+/* theme switch: a wipe. Going to dark the new theme falls from the top; going back to light it rises from the bottom. Instant when the browser cannot do it or "reduce motion" is on. */
+let THT=false;
+const setTheme=t=>{const r=document.documentElement;r.dataset.theme=t;try{localStorage.setItem('theme',t)}catch(e){}paintTheme()};
+$('#theme').onclick=()=>{if(THT)return;const to=isDark()?'light':'dark';
+ if(!document.startViewTransition||matchMedia('(prefers-reduced-motion:reduce)').matches)return setTheme(to);
+ THT=true;const vt=document.startViewTransition(()=>setTheme(to));
+ vt.ready.then(()=>{document.documentElement.animate({clipPath:to==='dark'?['inset(0 0 100% 0)','inset(0 0 0 0)']:['inset(100% 0 0 0)','inset(0 0 0 0)']},{duration:700,easing:'cubic-bezier(.5,0,.2,1)',pseudoElement:'::view-transition-new(root)'})}).catch(()=>{});
+ vt.finished.finally(()=>{THT=false})};
 $('#puzzleNav').onclick=()=>{location.hash='#/puzzle'};$('#mateNav').onclick=()=>{location.hash='#/banners'};(function(){const h=document.querySelector('.hr');if(!h)return;const on=e=>{const b=e.target.closest&&e.target.closest('.hp');if(b)h.dataset.h=b.dataset.k},off=e=>{const b=e.target.closest&&e.target.closest('.hp');if(b&&!b.contains(e.relatedTarget))delete h.dataset.h};h.addEventListener('pointerover',on);h.addEventListener('pointerout',off);h.addEventListener('focusin',on);h.addEventListener('focusout',off)})();
 matchMedia('(prefers-color-scheme:dark)').addEventListener('change',paintTheme);
 /* data */
@@ -1032,13 +1064,15 @@ async function load(){const my=++loadSeq;
  }catch(x){app.innerHTML='<p class="empty">Load failed: '+esc(x.message||x)+'</p>';return false}}
 const IMG_DEF={iw:310,ix:50,iy:50,iz:100};
 const applyIw=()=>{const r=document.documentElement.style,w=HOME.iw||310;if(innerWidth<=720){r.removeProperty('--iw');return}r.setProperty('--iw',(innerWidth<=1024?Math.round(w*.68):w)+'px')};
-const paintVars=()=>{const s=$('#im').style;s.setProperty('--himgL',HOME.img?`url("${HOME.img}")`:'none');if(HOME.imgD)s.setProperty('--himgD',`url("${HOME.imgD}")`);else s.removeProperty('--himgD');s.setProperty('--ix',(HOME.ix??50)+'%');s.setProperty('--iy',(HOME.iy??50)+'%');s.setProperty('--iz',(HOME.iz||100)/100);applyIw()};
+const paintVars=()=>{const s=$('#im').style;s.setProperty('--himgL',HOME.img?`url("${HOME.img}")`:'none');if(HOME.imgD)s.setProperty('--himgD',`url("${HOME.imgD}")`);else s.removeProperty('--himgD');s.setProperty('--ixL',(HOME.ix??50)+'%');s.setProperty('--iyL',(HOME.iy??50)+'%');s.setProperty('--izL',(HOME.iz||100)/100);if(HOME.ixD!==undefined){s.setProperty('--ixD',HOME.ixD+'%');s.setProperty('--iyD',(HOME.iyD??50)+'%');s.setProperty('--izD',(HOME.izD||100)/100)}else{['--ixD','--iyD','--izD'].forEach(k=>s.removeProperty(k))}applyIw()};
 const paintImg=()=>{paintVars();$('#im').innerHTML='<div class="imi"></div>'+(em()?'<div class="imb"><button class="bt" data-himg>IMAGE</button><button class="bt" data-himgd>DARK</button><button class="bt" data-iadj>ADJUST</button></div>':'');const imi=$('#im .imi'),u=HOME.img;if(!u)imi.classList.add('ok');else{const t=new Image();t.onload=t.onerror=()=>imi.classList.add('ok');t.src=u}};
 addEventListener('resize',applyIw);
-const IU={iw:'px',ix:'%',iy:'%',iz:'%'};
-function imgAdjust(){ADJ={iw:HOME.iw||310,ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100};
- const row=(k,l,min,max)=>`<label>${l} <span id="v_${k}">${ADJ[k]}${IU[k]}</span></label><input type="range" data-ia="${k}" min="${min}" max="${max}" value="${ADJ[k]}">`;
- openM(`<h3>IMAGE ADJUST</h3>${row('iw','Width',120,420)}${row('ix','Position X',0,100)}${row('iy','Position Y',0,100)}${row('iz','Zoom',100,300)}<div class="acts">${HOME.imgD?'<button type="button" class="btn" data-idrm>REMOVE DARK IMAGE</button>':''}<button type="button" class="btn" data-ireset>RESET</button><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" data-isave>SAVE</button></div>`)}
+const IU={iw:'px',ix:'%',iy:'%',iz:'%',ixD:'%',iyD:'%',izD:'%'};let ADJT='light';
+function imgAdjust(tab,keep){tab=tab||'light';ADJT=tab;if(!keep)ADJ={iw:HOME.iw||310,ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100,ixD:HOME.ixD,iyD:HOME.iyD,izD:HOME.izD};
+ const D=tab==='dark',kx=D?'ixD':'ix',ky=D?'iyD':'iy',kz=D?'izD':'iz',L={ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100},val=k=>k==='iw'?(HOME.iw||310):D&&HOME[k]===undefined?L[k.slice(0,2)]:(k==='iz'||k==='izD')?(HOME[k]||100):(HOME[k]??50);
+ const row=(k,l,min,max)=>`<label>${l} <span id="v_${k}">${val(k)}${IU[k]}</span></label><input type="range" data-ia="${k}" min="${min}" max="${max}" value="${val(k)}">`;
+ const im=$('#im');if(im)im.dataset.ep=tab;
+ openM(`<h3>IMAGE ADJUST</h3><div class="sg2" style="margin:2px 0 8px"><button type="button" class="btn${D?'':' on'}" data-itab="light">LIGHT</button><button type="button" class="btn${D?' on':''}" data-itab="dark">DARK</button></div>${row('iw','Width (both)',120,420)}${row(kx,'Position X',0,100)}${row(ky,'Position Y',0,100)}${row(kz,'Zoom',100,300)}<p class="st">${D?(HOME.imgD?'Position and zoom for the DARK image.':'No dark image yet: dark mode shows the light image with these settings.'):'Position and zoom for the LIGHT image.'}</p><div class="acts">${HOME.imgD?'<button type="button" class="btn" data-idrm>REMOVE DARK IMAGE</button>':''}<button type="button" class="btn" data-ireset>RESET</button><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" data-isave>SAVE</button></div>`)}
 const saveHome=async()=>{const r=await sb.from('settings').upsert({key:'home',value:HOME});if(r.error)msg('Save failed: '+r.error.message)};
 /* locked items: the title stays visible and the password field opens in place (no popup) */
 function unlock(id){const it=ITEMS.find(x=>x.id==id);if(!it)return;const k=it.kind,to=(h,fn)=>{OPENLK=id;if(location.hash!==h)location.hash=h;else fn()};
@@ -1411,6 +1445,7 @@ const LV_PGN=`[Event "Eton College Chess Club Autumn Fixture"]
 1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be3 e5 7. Nb3 Be6 8. f3 h5 9. Qd2 Nbd7 10. O-O-O Rc8 11. Kb1 Be7 12. Nd5 Nxd5 13. exd5 Bf5 14. Bd3 Bxd3 15. Qxd3 Bg5 16. Bf2 O-O 17. h4 Bh6 18. g4 hxg4 19. fxg4 e4 20. Qxe4 Re8 21. Qg2 Re2 22. Nd4 Rd2 23. Rxd2 Bxd2 24. g5 Ne5 25. Rd1 Ba5 26. Nf5 Qc7 27. Bd4 Nc4 28. b3 Na3+ 29. Kb2 Nb5 30. Bxg7 Bc3+ 31. Kb1 Bxg7 32. Rd3 Nc3+ 33. Kc1 Nxa2+ 34. Kd1 Nb4 35. Rd2 Bc3 36. Re2 Nxd5 37. Qf3 Qc5 38. Nh6+ Kh8 39. Nxf7+ Kg7 40. Rf2 Ne3+ 41. Kc1 Qa3+ 42. Kb1 Qa1# 0-1`;
 const LVK={post:'ARCHIVE',log:'LOG',memo:'MEMO',line:'TXT',gallery:'IMG'};
 const LVS={cur:0,sel:0,tm:null};let LVZ=null;let LV_INTRO=true; /* first arrival on the home page replays the game once */
+const LVI={total:11000,min:260,max:900}; /* intro speed: aim for ~11 s overall, one move takes between 0.26 s and 0.9 s */
 const lvDay=t=>{const d=new Date(t);return d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate()};
 function lvData(){if(!HOME.live)HOME.live={};const L=HOME.live,K=(banData().kings)||{};
  if(!L.players)L.players={w:{name:K.w?.name||'Kai',en:'KAI',title:K.w?.title||'',elo:K.w?.elo||'',src:K.w?.src||'',tags:'K, Kai'},b:{name:K.k?.name||'Ray',en:'RAY',title:K.k?.title||'',elo:K.k?.elo||'',src:K.k?.src||'',tags:'R, Ray'}};
@@ -1474,7 +1509,7 @@ function lvHome(){lvStop();lvData();LVZ=lvGame();const intro=LV_INTRO&&LVZ.seq.l
  <div class="lvrgt"><div class="lvtabs">${TB('moves','P','Moves',1)}${TB('chat','N','Chat')}${TB('notes','R','Notes')}${TB('photos','B','Photos')}</div>
  <div class="lvpn on" data-lp="moves"><div class="lvmv" id="lvmv"></div><div class="lvpv" id="lvpv"></div></div><div class="lvpn" data-lp="chat"><div class="lvch" id="lvch"></div></div><div class="lvpn" data-lp="notes"><div class="lvnt" id="lvnt"></div></div><div class="lvpn" data-lp="photos"><div class="lvph" id="lvph"></div></div></div></div></section>`;
  lvPaint();lvChat();lvNotes();lvPhotos();if(intro)lvIntro()}
-function lvIntro(){const n=LVZ.seq.length,dt=Math.max(140,Math.min(700,Math.round(6500/n))),b=$('#lvplay');if(b){b.innerHTML=IC.pa;b.classList.add('on')}
+function lvIntro(){const n=LVZ.seq.length,dt=Math.max(LVI.min,Math.min(LVI.max,Math.round(LVI.total/n))),b=$('#lvplay');if(b){b.innerHTML=IC.pa;b.classList.add('on')}
  LVS.tm=setInterval(()=>{if(!$('.lv')||LVS.cur>=n)return lvStop();lvGo(LVS.cur+1)},dt)}
 document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('.lv'))return;const t=e.target;let x;
  if(x=t.closest('#lvfp')){if(!admin)return;FP=!FP;try{localStorage.setItem('e4fp',FP?'1':'0')}catch(z){}applyFP();x.setAttribute('aria-pressed',FP);setTimeout(()=>dispatchEvent(new Event('resize')),540);return}
@@ -1639,10 +1674,14 @@ function sqUpdate(kind){const w=$('#sbx');if(!w)return;const tot=ITEMS.filter(i=
 function head(k,t){const n=ITEMS.filter(i=>i.kind===KIND[k]).length,nosq=KIND[k]==='gallery';return nosq||admin?`<div class="top"${nosq?'':' style="justify-content:flex-end"'}>${nosq?`<span class="sub" style="margin:0">${n} ITEMS</span>`:''}${admin?`<button class="btn" data-new="${KIND[k]}">+ NEW</button>`:''}</div>`:''}
 function chips(list){const all=[...new Set(list.flatMap(i=>i.tags||[]))].sort();return all.length?`<div class="bar tgbar"><button class="chip${TAG?'':' on'}" data-tag="" title="All" aria-label="All">${list.length}</button>${all.map(t=>`<button class="chip${TAG===t?' on':''}" data-tag="${esc(t)}">#${esc(t)}</button>`).join('')}</div>`:''}
 const match=i=>!Q||[i.title,i.body,(i.tags||[]).join(' ')].join(' ').toLowerCase().includes(Q.toLowerCase());
+function mqFit(){document.querySelectorAll('.mq .mqb').forEach(b=>{const x=b.firstElementChild;if(!x)return;x.style.webkitLineClamp='';x.style.lineClamp='';const lh=parseFloat(getComputedStyle(b).lineHeight)||18,n=Math.max(1,Math.floor(b.clientHeight/lh));x.style.webkitLineClamp=n;x.style.lineClamp=n})}
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
  if(kind==='post'){const G2=[];L.forEach(i=>{const x=new Date(i.created_at),k=x.getFullYear()+'-'+x.getMonth(),g=G2[G2.length-1];if(g&&g.k===k)g.a.push(i);else G2.push({k,l:MONS[x.getMonth()]+' '+x.getFullYear(),a:[i]})});h=`<div class="arx mon">${G2.map(g=>`<div class="ag"><div class="agh"><b>${g.l}</b><i></i><span>${g.a.length}</span></div>${g.a.map(i=>{const inn=`<span class="dn">${p2(new Date(i.created_at).getDate())}</span><b>${vb(i)}${esc(i.title||'untitled')}</b>${i.meta?.sub?`<span class="as">${esc(i.meta.sub)}</span>`:''}${(i.tags||[]).length?`<span class="at">${tags(i)}</span>`:''}`;return`<a class="ai" href="#/post/${i.id}" data-tip="${i.id}">${inn}</a>`}).join('')}</div>`).join('')}</div>`}
  if(kind==='gallery'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gc'))||3),cs=L.map(it=>{const i=G(it);return`<div class="gi${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-gi="${i.id}"`}>${locked(i)?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`}),cols=Array.from({length:N},()=>[]);cs.forEach((c,i)=>cols[i%N].push(c));h=`<div class="mas gm">${cols.map(c=>`<div class="mc">${c.join('')}</div>`).join('')}</div>`}
- if(kind==='memo'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4),cs=L.map(it=>{const i=G(it);return`<div class="mm${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-mv="${i.id}"`}>${i.title?`<b>${esc(i.title)}</b>`:locked(i)?'<b style="color:var(--mut)">untitled</b>':''}${locked(i)?`<div class="lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)||eb(i)?`<div class="ft"><span>${vb(i)}${tags(i)}</span>${eb(i)}</div>`:''}</div>`}),cols=Array.from({length:N},()=>[]);cs.forEach((c,i)=>cols[i%N].push(c));h=`<div class="mas m">${cols.map(c=>`<div class="mc">${c.join('')}</div>`).join('')}</div>`}
+ if(kind==='memo'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mc'))||4),NUM=new Map(ITEMS.filter(i=>i.kind==='memo').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).map((x,j)=>[x.id,j+1])),
+  cs=L.map((it,j)=>{const i=G(it),lk=locked(i),r=Math.floor(j/N),c=j%N;return`<div class="mq${(r+c)%2?' d':''}${lk?' lk'+lkc(i):''}" ${lk?`data-lk="${i.id}"`:`data-mv="${i.id}"`}><div class="mqi"><span class="mqc">${'abcdefgh'[c%8]}${8-(r%8)} · ${NUM.get(i.id)||''}</span>${eb(i)}${i.title?`<b class="mqt">${esc(i.title)}</b>`:lk?'<b class="mqt" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mqb"><span class="mqx">${esc(plain(i.body||''))}</span></div>`}${tags(i)||vb(i)?`<div class="mqf">${vb(i)}${tags(i)}</div>`:''}</div></div>`});
+  const pad=(N-cs.length%N)%N;for(let j=0;j<pad;j++){const k=cs.length+j,r=Math.floor(k/N),c=k%N;cs.push(`<div class="mq e${(r+c)%2?' d':''}" aria-hidden="true"></div>`)}
+  h=`<div class="mbd" data-n="${N}" style="--n:${N}">${cs.join('')}</div>`;requestAnimationFrame(mqFit)}
  if(kind==='line')h=L.length?lineSheet(L):'';
  return L.length?h:''}
 
@@ -1846,16 +1885,17 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(x=c('[data-gi]')){const i=G(ITEMS.find(i=>i.id==x.dataset.gi));if(locked(i))return unlock(i.id);$('#lb').innerHTML=`<figure><img src="${esc(i.meta.src)}" alt="">${i.body?`<figcaption>${esc(i.body)}</figcaption>`:''}</figure>`;$('#lb').hidden=false;return}
  if(c('[data-himg]')){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;try{HOME.img=await upload(f.files[0]);await saveHome();paintImg()}catch(x){alert('Upload failed: '+x.message)}};f.click();return}
  if(c('[data-himgd]')){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;try{HOME.imgD=await upload(f.files[0]);await saveHome();paintImg()}catch(x){alert('Upload failed: '+x.message)}};f.click();return}
- if(c('[data-idrm]')){delete HOME.imgD;saveHome();paintImg();closeM();return}
+ if(c('[data-idrm]')){delete HOME.imgD;delete HOME.ixD;delete HOME.iyD;delete HOME.izD;ADJ=null;saveHome();paintImg();closeM();return}
+ if(x=c('[data-itab]'))return imgAdjust(x.dataset.itab,true);
  if(c('[data-iadj]'))return imgAdjust();
- if(c('[data-ireset]')){Object.assign(HOME,IMG_DEF);paintVars();document.querySelectorAll('[data-ia]').forEach(s=>{s.value=HOME[s.dataset.ia];$('#v_'+s.dataset.ia).textContent=s.value+IU[s.dataset.ia]});return}
+ if(c('[data-ireset]')){if(ADJT==='dark'){delete HOME.ixD;delete HOME.iyD;delete HOME.izD}else Object.assign(HOME,IMG_DEF);paintVars();imgAdjust(ADJT,true);return}
  if(c('[data-isave]')){ADJ=null;saveHome();closeM();return}});
 {let t=0;addEventListener('scroll',()=>{const h=document.documentElement.classList;h.add('sb');clearTimeout(t);t=setTimeout(()=>h.remove('sb'),900)},{capture:true,passive:true})} /* show scrollbars only while scrolling */
 {const tb=$('#top'),ta=$('#tpa'),tc=$('#tpb'),up=()=>{const mx=document.documentElement.scrollHeight-innerHeight,p=mx>0?Math.min(1,Math.max(0,scrollY/mx)):0,v=Math.round(p*100)+'%';tb.classList.toggle('on',scrollY>400);tb.style.setProperty('--p',v);ta.textContent=v;tc.textContent=v};
  addEventListener('scroll',up,{passive:true});addEventListener('resize',up);if(window.ResizeObserver)new ResizeObserver(up).observe(app);
  tb.onclick=()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});up()}
 addEventListener('hashchange',()=>{TAG=PEND;PEND='';Q='';FS=false;if(!(/^#\/(log|e5)\b/.test(location.hash)&&$('#e5r')))scrollTo(0,0);route()});
-document.addEventListener('input',e=>{const t=e.target,k=t.dataset&&t.dataset.ia;if(!k)return;HOME[k]=+t.value;$('#v_'+k).textContent=t.value+IU[k];paintVars()});
+document.addEventListener('input',e=>{const t=e.target,k=t.dataset&&t.dataset.ia;if(!k)return;if(/D$/.test(k)&&HOME.ixD===undefined){HOME.ixD=HOME.ix??50;HOME.iyD=HOME.iy??50;HOME.izD=HOME.iz||100}HOME[k]=+t.value;$('#v_'+k).textContent=t.value+IU[k];paintVars()});
 /* auth */
 const sync=()=>{$('#adm').classList.toggle('on',admin);const m=$('#mode');m.textContent=EM?'stalemate':'checkmate';m.classList.toggle('ok',admin);m.classList.toggle('on',admin&&EM)};
 $('#mode').onclick=()=>{if(!admin)return;EM=!EM;if(!EM)EDITM=false;sync();paintImg();route()};
