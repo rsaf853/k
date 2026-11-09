@@ -1138,6 +1138,11 @@ html.mlock,html.mlock body{overflow:hidden}
 .msh.cut .msm{display:block}
 .msh.inv .msm{color:color-mix(in srgb,var(--bg) 62%,transparent)}
 .msh.cut .mt::after{content:none}
+/* home chat: owner edit buttons on bubbles + write form */
+.lvbb .lvcx{display:none;margin-left:6px;padding:0 3px;font:700 11px/1 var(--sans);opacity:.6;cursor:pointer}
+.lvbb:hover .lvcx,.lvbb:focus-within .lvcx{display:inline}.lvbb .lvcx:hover{opacity:1}
+@media(hover:none){.lvbb .lvcx{display:inline}}
+#lvcf .lq{margin:10px 0 0}
 </style>
 </head>
 <body>
@@ -1676,10 +1681,14 @@ function lvPaint(){const Z=LVZ;$('#lvbd').innerHTML=`<div class="cx lvbx">${cxBo
  $('#lvpr i').style.width=(Z.seq.length?LVS.cur/Z.seq.length*100:0)+'%';$('#lvpg').textContent=`${LVS.cur} / ${Z.seq.length}`;lvMoves();lvPv();lvClock()}
 function lvGo(n){LVS.cur=Math.max(0,Math.min(LVZ.seq.length,n));LVS.sel=Math.max(1,LVS.cur);lvPaint()}
 function lvStop(){clearInterval(LVS.tm);LVS.tm=null;const b=$('#lvplay');if(b){b.innerHTML=IC.p;b.classList.remove('on')}}
-function lvChat(){const L=ITEMS.filter(i=>i.kind==='line'&&!locked(G(i))).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).slice(-60),M=[];let alt=0;
- L.forEach(i=>{const ts=lvSideOfTag(i);String(G(i).body||'').split(/\n+/).map(x=>x.trim()).filter(Boolean).forEach(line=>{const pf=lvSideOfPrefix(line);let s,t;if(pf){s=pf[0];t=pf[1]}else{s=ts||(alt++%2?'b':'w');t=line}M.push({s,t:plain(t),at:i.created_at})})});
- const P=lvData().players,gr=[];M.forEach(m=>{const l=gr[gr.length-1];if(l&&l.s===m.s&&lvDay(l.at)===lvDay(m.at)){l.a.push(m);l.at=m.at}else gr.push({s:m.s,at:m.at,a:[m]})});
- $('#lvch').innerHTML=gr.length?gr.map(g=>{const p=P[g.s]||{};return`<div class="lvgr${g.s==='b'?' r':''}"><i class="lvav"${p.src?` style="background-image:url('${esc(p.src)}')"`:''} title="${esc(p.name||'')}"></i><div class="lvls">${g.a.map(m=>`<span class="lvbb">${esc(m.t)}</span>`).join('')}<span class="lvtm">${date(g.at,1)}</span></div></div>`}).join(''):'<p class="empty">No messages yet.</p>'}
+/* HOME chat: written by hand here (HOME.live.chat), not linked to the txt page. One line = one bubble. */
+function lvChat(){const L=lvData(),C=L.chat||(L.chat=[]),P=L.players,ed=em(),gr=[];
+ C.forEach((m,k)=>{const x={s:m.s,t:m.t,at:m.at,k},l=gr[gr.length-1];if(l&&l.s===x.s&&lvDay(l.at)===lvDay(x.at)){l.a.push(x);l.at=x.at}else gr.push({s:x.s,at:x.at,a:[x]})});
+ $('#lvch').innerHTML=gr.length?gr.map(g=>{const p=P[g.s]||{};return`<div class="lvgr${g.s==='b'?' r':''}"><i class="lvav"${p.src?` style="background-image:url('${esc(p.src)}')"`:''} title="${esc(p.name||'')}"></i><div class="lvls">${g.a.map(m=>`<span class="lvbb">${esc(m.t)}${ed?`<button type="button" class="lvcx" data-lvcedit="${m.k}" title="Edit" aria-label="Edit">✎</button><button type="button" class="lvcx" data-lvcdel="${m.k}" title="Delete" aria-label="Delete">×</button>`:''}</span>`).join('')}</div></div>`}).join(''):'<p class="empty">No messages yet.</p>'}
+function lvCForm(){const f=$('#lvcf');if(!f)return;if(!em()){f.innerHTML='';return}const P=lvData().players,nm=s=>esc(String((P[s]||{}).en||(P[s]||{}).name||(s==='w'?'WHITE':'BLACK')).toUpperCase());
+ f.innerHTML=`<form class="lq" id="lvcform"><textarea name="t" rows="2" aria-label="chat" placeholder="대사를 적어요 · 줄마다 말풍선 하나 (Ctrl/⌘+Enter 전송)"></textarea><div class="lqr"><span class="lqs"><b>WHO</b><button type="button" class="sp on" data-csp="w"><svg class="xk w" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnP"/></svg>${nm('w')}</button><button type="button" class="sp" data-csp="b"><svg class="xk b" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnP"/></svg>${nm('b')}</button></span><span class="lqa"><button class="btn pri">SEND</button></span></div></form>`;
+ const ta=f.querySelector('textarea');ta.onkeydown=e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();ta.form.requestSubmit()}}}
+document.addEventListener('submit',async e=>{const f=e.target.closest&&e.target.closest('#lvcform');if(!f)return;e.preventDefault();const ta=f.elements.t,lines=ta.value.split(/\n+/).map(x=>x.trim()).filter(Boolean);if(!lines.length)return;const on=f.querySelector('.sp.on'),s=on?on.dataset.csp:'w',L=lvData(),at=new Date().toISOString();L.chat=L.chat||[];lines.forEach(t=>L.chat.push({s,t,at}));ta.value='';lvChat();const c=$('#lvch');c.scrollTop=c.scrollHeight;await saveHome()});
 function lvNotes(){const L=ITEMS.filter(i=>i.kind==='memo').slice(0,20);$('#lvnt').innerHTML=L.length?L.map(i=>{const g=G(i),lk=locked(g);return`<a class="lvno" href="javascript:void 0" data-mv="${i.id}"><b>${vb(i)}${esc(g.title||'')}</b><p>${lk?'LOCKED':esc(plain(g.body||'').slice(0,140))}</p></a>`}).join(''):'<p class="empty">No notes yet.</p>'}
 const lvPh=o=>typeof o==='string'?{u:o,x:50,y:50,z:100}:{u:o.u,x:o.x??50,y:o.y??50,z:o.z||100};
 const lvPiS=o=>`background:url('${esc(o.u)}') ${o.x}% ${o.y}%/cover no-repeat;transform:scale(${(o.z||100)/100});transform-origin:${o.x}% ${o.y}%`;
@@ -1703,8 +1712,8 @@ function lvHome(){lvStop();lvData();LVZ=lvGame();const intro=LV_INTRO&&LVZ.seq.l
  app.innerHTML=`<section class="lv"><div class="lvg"><div class="lvt"><div class="lvt1"><button type="button" class="lvchip" id="lvfp" title="${FP?'Back to normal':'Full page'}" aria-pressed="${FP}">${FP?'PAUSED':'LIVE'} · GAME ${LVZ.game}</button><span class="lvcn">${done?esc(o.h.Result||o.result||'')+' · FINISHED':LVZ.seq.length+' / '+LVZ.n+' MOVES'}</span>${em()?'<button class="btn" id="lvedit">EDIT</button>':''}</div><h3>${esc(tt)}</h3>${ts?`<p>${esc(ts)}</p>`:''}</div>
  <div class="lvlft"><div class="lvbar lvbk" id="lvpb"></div><div id="lvbd"></div><div class="lvbar lvwh" id="lvpw"></div><div class="lvctr"><button class="bt" data-lv="s" aria-label="start">${IC.s}</button><button class="bt" data-lv="-" aria-label="back">${IC.b}</button><button class="bt" data-lv="p" id="lvplay" aria-label="play">${IC.p}</button><button class="bt" data-lv="+" aria-label="next">${IC.n}</button><div class="lvpr" id="lvpr"><s><i></i></s></div><span class="lvpg" id="lvpg"></span></div></div>
  <div class="lvrgt"><div class="lvtabs">${TB('moves','P','Moves',1)}${TB('chat','N','Chat')}${TB('notes','R','Notes')}${TB('photos','B','Photos')}</div>
- <div class="lvpn on" data-lp="moves"><div class="lvmv" id="lvmv"></div><div class="lvpv" id="lvpv"></div></div><div class="lvpn" data-lp="chat"><div class="lvch" id="lvch"></div></div><div class="lvpn" data-lp="notes"><div class="lvnt" id="lvnt"></div></div><div class="lvpn" data-lp="photos"><div class="lvph" id="lvph"></div></div></div></div></section>`;
- lvPaint();lvChat();lvNotes();lvPhotos();if(intro)lvIntro()}
+ <div class="lvpn on" data-lp="moves"><div class="lvmv" id="lvmv"></div><div class="lvpv" id="lvpv"></div></div><div class="lvpn" data-lp="chat"><div class="lvch" id="lvch"></div><div id="lvcf"></div></div><div class="lvpn" data-lp="notes"><div class="lvnt" id="lvnt"></div></div><div class="lvpn" data-lp="photos"><div class="lvph" id="lvph"></div></div></div></div></section>`;
+ lvPaint();lvChat();lvCForm();lvNotes();lvPhotos();if(intro)lvIntro()}
 function lvIntro(){const n=LVZ.seq.length,dt=Math.max(LVI.min,Math.min(LVI.max,Math.round(LVI.total/n))),b=$('#lvplay');if(b){b.innerHTML=IC.pa;b.classList.add('on')}
  LVS.tm=setInterval(()=>{if(!$('.lv')||LVS.cur>=n)return lvStop();lvGo(LVS.cur+1)},dt)}
 document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('.lv'))return;const t=e.target;let x;
@@ -1713,6 +1722,8 @@ document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('.
  if(x=t.closest('.lvpr')){lvStop();const r=x.getBoundingClientRect();return lvGo(Math.round((e.clientX-r.left)/r.width*LVZ.seq.length))}
  if(x=t.closest('.lvm[data-j]')){lvStop();lvGo(+x.dataset.j);return}
  if(x=t.closest('[data-lt]')){document.querySelectorAll('.lvtabs button').forEach(b=>b.classList.toggle('on',b===x));document.querySelectorAll('.lvpn').forEach(p=>p.classList.toggle('on',p.dataset.lp===x.dataset.lt));if(x.dataset.lt==='chat'){const c=$('#lvch');c.scrollTop=c.scrollHeight}return}
+ if(x=t.closest('[data-lvcdel]')){const L=lvData();(L.chat||[]).splice(+x.dataset.lvcdel,1);saveHome();lvChat();return}
+ if(x=t.closest('[data-lvcedit]')){const L=lvData(),m=(L.chat||[])[+x.dataset.lvcedit];if(!m)return;const v=prompt('Edit',m.t);if(v===null)return;if(v.trim())m.t=v.trim();else L.chat.splice(+x.dataset.lvcedit,1);saveHome();lvChat();return}
  if(t.closest('#lvedit'))return lvEdit();
  if(x=t.closest('[data-lvfocus]')){e.stopPropagation();return lvFocus(+x.dataset.lvfocus)}
  if(x=t.closest('[data-lvdel]')){e.stopPropagation();const L=lvData();L.photos.splice(+x.dataset.lvdel,1);saveHome();return lvPhotos()}
