@@ -1134,7 +1134,7 @@ html.mlock,html.mlock body{overflow:hidden}
 .ipv{position:relative;overflow:hidden;width:100%;max-width:520px;margin:0 auto 6px;border:1px solid var(--fg);background:var(--soft)}
 
 /* memo sheets: cut on a whole line, with a separate "…" row (never a half line) */
-.msm{display:none;flex:none;margin-top:3px;text-align:right;margin-right:-.14em;font:700 13px/1 var(--sans);letter-spacing:.14em;color:var(--mut)}
+.msm{display:none;flex:none;margin-top:-1px;text-align:right;font:500 13px/1.2 var(--sans);letter-spacing:0;color:var(--mut)}
 .msh.cut .msm{display:block}
 .msh.inv .msm{color:color-mix(in srgb,var(--bg) 62%,transparent)}
 .msh.cut .mt::after{content:none}
@@ -1909,7 +1909,7 @@ function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.t
   cs=sortG(L).map(it=>{const i=G(it),lk=locked(i);return`<div class="gi${lk?' lk'+lkc(i):''}" ${lk?`data-lk="${i.id}"`:`data-gi="${i.id}"`} style="${lk?'':gs(i)}">${lk?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${(i.body||i.tags?.length)&&!lk?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`});
   h=`<div class="ggr gm${admin?' gsort':''}">${cs.join('')}</div>`}
  if(kind==='memo'){const NUM=new Map(ITEMS.filter(i=>i.kind==='memo').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).map((x,j)=>[x.id,j+1])),
-  cs=L.map(it=>{const i=G(it),lk=locked(i);return`<div class="msh${i.id%2===0?' inv':''}${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">NO. ${NUM.get(i.id)||''} · ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div><span class="msm" aria-hidden="true">…</span>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`});
+  cs=L.map(it=>{const i=G(it),lk=locked(i);return`<div class="msh${i.id%2===0?' inv':''}${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">NO. ${NUM.get(i.id)||''} · ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`});
   h=L.length?`<div class="mdk" id="mdk">${cs.join('')}</div>`:'<p class="empty">no entries</p>';requestAnimationFrame(deskInit);document.fonts&&document.fonts.ready.then(()=>deskInit())}
  if(kind==='line')h=L.length?lineSheet(L):'';
  return L.length?h:''}
@@ -2123,9 +2123,19 @@ function deskCut(m){const top=m.getBoundingClientRect().top,lim=m.clientHeight;l
  while(w.nextNode()){const n=w.currentNode;if(!n.nodeValue.trim())continue;r.selectNodeContents(n);for(const q of r.getClientRects()){if(!q.height)continue;const b=q.bottom-top;if(b<=lim+.5&&b>best)best=b}}
  m.querySelectorAll('img,svg:not(.gp)').forEach(x=>{const b=x.getBoundingClientRect().bottom-top;if(b<=lim+.5&&b>best)best=b});
  return best?Math.ceil(best)+1:lim}
-function deskFit(d){d.querySelectorAll('.msh:not(.big)').forEach(s=>{const m=s.querySelector('.mt');if(!m)return;m.style.height='';m.style.flex='';s.classList.remove('cut');if(m.scrollHeight<=m.clientHeight+1)return;s.classList.add('cut');
+/* end the text with "..." right after the last visible word of the last whole line (the rest is removed; the original is kept in m._o and restored on every re-fit) */
+function deskTrim(m,h){const top=m.getBoundingClientRect().top,r=document.createRange(),w=document.createTreeWalker(m,NodeFilter.SHOW_TEXT);let n=null;
+ while(w.nextNode()){const t=w.currentNode;if(!t.nodeValue.trim())continue;r.selectNodeContents(t);const q=r.getClientRects();if(q.length&&q[0].bottom-top<=h+.5)n=t}
+ if(!n)return;
+ const bot=k=>{r.setStart(n,0);r.setEnd(n,k);let b=0;for(const q of r.getClientRects())if(q.height)b=Math.max(b,q.bottom-top);return b};
+ let lo=1,hi=n.nodeValue.length;while(lo<hi){const mid=(lo+hi+1)>>1;if(bot(mid)<=h+.5)lo=mid;else hi=mid-1}
+ let base=n.nodeValue.slice(0,lo).replace(/\s+$/,'');
+ for(let c=n;c&&c!==m;c=c.parentNode)while(c.nextSibling)c.parentNode.removeChild(c.nextSibling);
+ n.nodeValue=base+'...';
+ for(let i=0;i<80&&base&&bot(n.nodeValue.length)>h+.5;i++){base=base.replace(/\s*\S+$/,'').replace(/\s+$/,'');n.nodeValue=base+'...'}}
+function deskFit(d){d.querySelectorAll('.msh:not(.big)').forEach(s=>{const m=s.querySelector('.mt');if(!m)return;if(m._o!=null)m.innerHTML=m._o;else m._o=m.innerHTML;m.style.height='';m.style.flex='';s.classList.remove('cut');if(m.scrollHeight<=m.clientHeight+1)return;s.classList.add('cut');
  /* sheets are tilted: measure them flat (rotated boxes skew the line positions), then put the tilt back without animating */
- s.style.transition='none';s.style.transform='none';const h=deskCut(m);s.style.transform='';void s.offsetHeight;s.style.transition='';
+ s.style.transition='none';s.style.transform='none';const h=deskCut(m);deskTrim(m,h);s.style.transform='';void s.offsetHeight;s.style.transition='';
  m.style.flex='none';m.style.height=h+'px'})}
 function deskInit(){const d=$('#mdk');if(!d)return;const W=d.clientWidth;if(!W)return;const mob=W<560,cols=mob?2:W<900?3:4,gap=mob?8:14,sw=Math.floor((W-12-(cols-1)*gap)/cols),sh=mob?240:290;d.style.setProperty('--sw',sw+'px');d.style.setProperty('--sh',sh+'px');deskFit(d);
  const sheets=[...d.querySelectorAll('.msh')].filter(s=>!s.classList.contains('big')),colH=Array(cols).fill(16);let bottom=0;
