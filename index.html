@@ -1121,6 +1121,23 @@ body.fp .lvchip::before{animation:none}
 .mcls:hover,.mcls:focus-visible{opacity:1;outline:0;transform:scale(1.12)}
 html.mlock,html.mlock body{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.mov,.mwr{animation:none}}
+
+/* header image: separate PHONE crop (position / zoom / height), light + dark */
+#im{--mx:var(--ixML,var(--ix));--my:var(--iyML,var(--iy));--mz:var(--izML,var(--iz))}
+:root[data-theme="dark"] #im{--mx:var(--ixMD,var(--ixML,var(--ix)));--my:var(--iyMD,var(--iyML,var(--iy)));--mz:var(--izMD,var(--izML,var(--iz)))}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) #im{--mx:var(--ixMD,var(--ixML,var(--ix)));--my:var(--iyMD,var(--iyML,var(--iy)));--mz:var(--izMD,var(--izML,var(--iz)))}}
+#im#im[data-ep="light"]{--mx:var(--ixML,var(--ix));--my:var(--iyML,var(--iy));--mz:var(--izML,var(--iz))}
+#im#im[data-ep="dark"]{--mx:var(--ixMD,var(--ixML,var(--ix)));--my:var(--iyMD,var(--iyML,var(--iy)));--mz:var(--izMD,var(--izML,var(--iz)))}
+@media(max-width:720px){.side{height:var(--ih,128px)}.im .imi{background-position:var(--mx,50%) var(--my,50%);transform:scale(var(--mz,1));transform-origin:var(--mx,50%) var(--my,50%)}}
+.ipa{position:relative;width:fit-content;max-width:100%;margin:0 auto 4px;cursor:crosshair;touch-action:none;user-select:none;-webkit-user-select:none;border:1px solid var(--fg)}
+.ipa img{display:block;max-width:100%;max-height:42vh;width:auto;height:auto;pointer-events:none;-webkit-user-drag:none}
+.ipv{position:relative;overflow:hidden;width:100%;max-width:520px;margin:0 auto 6px;border:1px solid var(--fg);background:var(--soft)}
+
+/* memo sheets: cut on a whole line, with a separate "…" row (never a half line) */
+.msm{display:none;flex:none;margin-top:3px;font:700 13px/1 var(--sans);letter-spacing:.14em;color:var(--mut)}
+.msh.cut .msm{display:block}
+.msh.inv .msm{color:color-mix(in srgb,var(--bg) 62%,transparent)}
+.msh.cut .mt::after{content:none}
 </style>
 </head>
 <body>
@@ -1231,16 +1248,27 @@ async function load(){const my=++loadSeq;
   return true
  }catch(x){app.innerHTML='<p class="empty">Load failed: '+esc(x.message||x)+'</p>';return false}}
 const IMG_DEF={iw:310,ix:50,iy:50,iz:100};
-const applyIw=()=>{const r=document.documentElement.style,w=HOME.iw||310;if(innerWidth<=720){r.removeProperty('--iw');return}r.setProperty('--iw',(innerWidth<=1024?Math.round(w*.68):w)+'px')};
-const paintVars=()=>{const s=$('#im').style;s.setProperty('--himgL',HOME.img?`url("${HOME.img}")`:'none');if(HOME.imgD)s.setProperty('--himgD',`url("${HOME.imgD}")`);else s.removeProperty('--himgD');s.setProperty('--ixL',(HOME.ix??50)+'%');s.setProperty('--iyL',(HOME.iy??50)+'%');s.setProperty('--izL',(HOME.iz||100)/100);if(HOME.ixD!==undefined){s.setProperty('--ixD',HOME.ixD+'%');s.setProperty('--iyD',(HOME.iyD??50)+'%');s.setProperty('--izD',(HOME.izD||100)/100)}else{['--ixD','--iyD','--izD'].forEach(k=>s.removeProperty(k))}applyIw()};
+const applyIw=()=>{const r=document.documentElement.style,w=HOME.iw||310;if(HOME.ihM)r.setProperty('--ih',HOME.ihM+'px');else r.removeProperty('--ih');if(innerWidth<=720){r.removeProperty('--iw');return}r.setProperty('--iw',(innerWidth<=1024?Math.round(w*.68):w)+'px')};
+const paintVars=()=>{const s=$('#im').style;s.setProperty('--himgL',HOME.img?`url("${HOME.img}")`:'none');if(HOME.imgD)s.setProperty('--himgD',`url("${HOME.imgD}")`);else s.removeProperty('--himgD');s.setProperty('--ixL',(HOME.ix??50)+'%');s.setProperty('--iyL',(HOME.iy??50)+'%');s.setProperty('--izL',(HOME.iz||100)/100);if(HOME.ixD!==undefined){s.setProperty('--ixD',HOME.ixD+'%');s.setProperty('--iyD',(HOME.iyD??50)+'%');s.setProperty('--izD',(HOME.izD||100)/100)}else{['--ixD','--iyD','--izD'].forEach(k=>s.removeProperty(k))}[['ixML',v=>v+'%'],['iyML',v=>v+'%'],['izML',v=>v/100],['ixMD',v=>v+'%'],['iyMD',v=>v+'%'],['izMD',v=>v/100]].forEach(([k,f])=>{if(HOME[k]!=null)s.setProperty('--'+k,f(HOME[k]));else s.removeProperty('--'+k)});applyIw()};
 const paintImg=()=>{paintVars();$('#im').innerHTML='<div class="imi"></div>'+(em()?'<div class="imb"><button class="bt" data-himg>IMAGE</button><button class="bt" data-himgd>DARK</button><button class="bt" data-iadj>ADJUST</button></div>':'');const imi=$('#im .imi'),u=HOME.img;if(!u)imi.classList.add('ok');else{const t=new Image();t.onload=t.onerror=()=>imi.classList.add('ok');t.src=u}};
 addEventListener('resize',applyIw);
-const IU={iw:'px',ix:'%',iy:'%',iz:'%',ixD:'%',iyD:'%',izD:'%'};let ADJT='light';
-function imgAdjust(tab,keep){tab=tab||'light';ADJT=tab;if(!keep)ADJ={iw:HOME.iw||310,ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100,ixD:HOME.ixD,iyD:HOME.iyD,izD:HOME.izD};
+const IU={iw:'px',ix:'%',iy:'%',iz:'%',ixD:'%',iyD:'%',izD:'%'};let ADJT='light',ADJTM='light';
+function imgAdjust(tab,keep){tab=tab||'light';ADJT=tab;if(!keep)ADJ={iw:HOME.iw||310,ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100,ixD:HOME.ixD,iyD:HOME.iyD,izD:HOME.izD,ixML:HOME.ixML,iyML:HOME.iyML,izML:HOME.izML,ixMD:HOME.ixMD,iyMD:HOME.iyMD,izMD:HOME.izMD,ihM:HOME.ihM};if(tab==='phone')return imgAdjustPhone();
  const D=tab==='dark',kx=D?'ixD':'ix',ky=D?'iyD':'iy',kz=D?'izD':'iz',L={ix:HOME.ix??50,iy:HOME.iy??50,iz:HOME.iz||100},val=k=>k==='iw'?(HOME.iw||310):D&&HOME[k]===undefined?L[k.slice(0,2)]:(k==='iz'||k==='izD')?(HOME[k]||100):(HOME[k]??50);
  const row=(k,l,min,max)=>`<label>${l} <span id="v_${k}">${val(k)}${IU[k]}</span></label><input type="range" data-ia="${k}" min="${min}" max="${max}" value="${val(k)}">`;
  const im=$('#im');if(im)im.dataset.ep=tab;
- openM(`<h3>IMAGE ADJUST</h3><div class="sg2" style="margin:2px 0 8px"><button type="button" class="btn${D?'':' on'}" data-itab="light">LIGHT</button><button type="button" class="btn${D?' on':''}" data-itab="dark">DARK</button></div>${row('iw','Width (both)',120,420)}${row(kx,'Position X',0,100)}${row(ky,'Position Y',0,100)}${row(kz,'Zoom',100,300)}<p class="st">${D?(HOME.imgD?'Position and zoom for the DARK image.':'No dark image yet: dark mode shows the light image with these settings.'):'Position and zoom for the LIGHT image.'}</p><div class="acts">${HOME.imgD?'<button type="button" class="btn" data-idrm>REMOVE DARK IMAGE</button>':''}<button type="button" class="btn" data-ireset>RESET</button><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" data-isave>SAVE</button></div>`)}
+ openM(`<h3>IMAGE ADJUST</h3><div class="sg2" style="margin:2px 0 8px"><button type="button" class="btn${D?'':' on'}" data-itab="light">LIGHT</button><button type="button" class="btn${D?' on':''}" data-itab="dark">DARK</button><button type="button" class="btn" data-itab="phone">PHONE</button></div>${row('iw','Width (both)',120,420)}${row(kx,'Position X',0,100)}${row(ky,'Position Y',0,100)}${row(kz,'Zoom',100,300)}<p class="st">${D?(HOME.imgD?'Position and zoom for the DARK image.':'No dark image yet: dark mode shows the light image with these settings.'):'Position and zoom for the LIGHT image.'}</p><div class="acts">${HOME.imgD?'<button type="button" class="btn" data-idrm>REMOVE DARK IMAGE</button>':''}<button type="button" class="btn" data-ireset>RESET</button><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" data-isave>SAVE</button></div>`)}
+/* PHONE tab: pick the crop of the header image on phones (tap/drag the picture), zoom, height; light + dark images separately */
+function imgAdjustPhone(){const dk=ADJTM==='dark'&&!!HOME.imgD,T=dk?'D':'L',url=(dk?HOME.imgD:HOME.img)||'',KX='ixM'+T,KY='iyM'+T,KZ='izM'+T;
+ const o={x:HOME[KX]??(dk?(HOME.ixML??HOME.ixD??HOME.ix??50):(HOME.ix??50)),y:HOME[KY]??(dk?(HOME.iyML??HOME.iyD??HOME.iy??50):(HOME.iy??50)),z:HOME[KZ]??(dk?(HOME.izML??HOME.izD??HOME.iz??100):(HOME.iz||100))};let h=HOME.ihM||128;
+ const W=innerWidth<=720?innerWidth-32:358,im=$('#im');if(im)im.dataset.ep=dk?'dark':'light';
+ const tabs='<div class="sg2" style="margin:2px 0 8px"><button type="button" class="btn" data-itab="light">LIGHT</button><button type="button" class="btn" data-itab="dark">DARK</button><button type="button" class="btn on" data-itab="phone">PHONE</button></div>';
+ if(!url)return openM(`<h3>IMAGE ADJUST</h3>${tabs}<p class="st">Upload a header image first (IMAGE button).</p><div class="acts"><button type="button" class="btn" data-x>CLOSE</button></div>`);
+ openM(`<h3>IMAGE ADJUST · PHONE</h3>${tabs}${HOME.imgD?`<div class="sg2" style="margin:0 0 8px"><button type="button" class="btn${dk?'':' on'}" data-iptm="light">LIGHT IMAGE</button><button type="button" class="btn${dk?' on':''}" data-iptm="dark">DARK IMAGE</button></div>`:''}<label>Tap or drag the picture: the phone header is centred on that spot</label><div class="ipa" id="ipa"><img src="${esc(url)}" alt="" draggable="false"><i class="lvfx" id="ipx"></i></div><label>Phone preview</label><div class="ipv" id="ipv"><span class="ipi" id="ipi"></span></div><label>Zoom <span id="ipzv"></span></label><input type="range" id="ipz" min="100" max="300"><label>Height <span id="iphv"></span></label><input type="range" id="iph" min="80" max="320"><p class="st">Only phones are affected. Light and dark images can each have their own crop.</p><div class="acts"><button type="button" class="btn" data-ireset>RESET</button><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" data-isave>SAVE</button></div>`);
+ const a=$('#ipa'),pv=$('#ipv'),pi=$('#ipi'),paint=wr=>{$('#ipx').style.left=o.x+'%';$('#ipx').style.top=o.y+'%';pi.style.cssText=`position:absolute;inset:0;background:url("${url}") ${o.x}% ${o.y}%/cover no-repeat;transform:scale(${o.z/100});transform-origin:${o.x}% ${o.y}%`;pv.style.aspectRatio=W+'/'+(h-10);$('#ipz').value=o.z;$('#ipzv').textContent=o.z+'%';$('#iph').value=h;$('#iphv').textContent=h+'px';if(wr){HOME[KX]=o.x;HOME[KY]=o.y;HOME[KZ]=o.z;HOME.ihM=h;paintVars()}};
+ const mv=e=>{const r=a.getBoundingClientRect();o.x=Math.round(Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100)));o.y=Math.round(Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100)));paint(true)};
+ a.onpointerdown=e=>{e.preventDefault();a.setPointerCapture(e.pointerId);mv(e);a.onpointermove=mv};a.onpointerup=()=>{a.onpointermove=null};
+ $('#ipz').oninput=e=>{o.z=+e.target.value;paint(true)};$('#iph').oninput=e=>{h=+e.target.value;paint(true)};paint(false)}
 const saveHome=async()=>{const r=await sb.from('settings').upsert({key:'home',value:HOME});if(r.error)msg('Save failed: '+r.error.message)};
 /* locked items: the title stays visible and the password field opens in place (no popup) */
 function unlock(id){const it=ITEMS.find(x=>x.id==id);if(!it)return;const k=it.kind,to=(h,fn)=>{OPENLK=id;if(location.hash!==h)location.hash=h;else fn()};
@@ -1870,7 +1898,7 @@ function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.t
   cs=sortG(L).map(it=>{const i=G(it),lk=locked(i);return`<div class="gi${lk?' lk'+lkc(i):''}" ${lk?`data-lk="${i.id}"`:`data-gi="${i.id}"`} style="${lk?'':gs(i)}">${lk?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${(i.body||i.tags?.length)&&!lk?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`});
   h=`<div class="ggr gm${admin?' gsort':''}">${cs.join('')}</div>`}
  if(kind==='memo'){const NUM=new Map(ITEMS.filter(i=>i.kind==='memo').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).map((x,j)=>[x.id,j+1])),
-  cs=L.map(it=>{const i=G(it),lk=locked(i);return`<div class="msh${i.id%2===0?' inv':''}${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">NO. ${NUM.get(i.id)||''} · ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`});
+  cs=L.map(it=>{const i=G(it),lk=locked(i);return`<div class="msh${i.id%2===0?' inv':''}${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">NO. ${NUM.get(i.id)||''} · ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div><span class="msm" aria-hidden="true">…</span>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`});
   h=L.length?`<div class="mdk" id="mdk">${cs.join('')}</div>`:'<p class="empty">no entries</p>';requestAnimationFrame(deskInit);document.fonts&&document.fonts.ready.then(()=>deskInit())}
  if(kind==='line')h=L.length?lineSheet(L):'';
  return L.length?h:''}
@@ -2079,8 +2107,13 @@ function cropInit(i){const m=i.meta||{},CR={d:{x:m.fx??50,y:m.fy??50,h:m.hs||1},
 /* ---- memo desk: loose sheets, drag them around, click one to read it ---- */
 let MSV=null,MD=null,MDSUP=false,Z_=60;
 /* a sheet whose text is longer than the sheet shows whole lines only and ends with an ellipsis */
-function deskFit(d){d.querySelectorAll('.msh:not(.big)').forEach(s=>{const m=s.querySelector('.mt');if(!m)return;m.style.height='';m.style.flex='';s.classList.remove('cut');if(m.scrollHeight>m.clientHeight+1){const lh=parseFloat(getComputedStyle(m).lineHeight)||20,n=Math.max(1,Math.floor(m.clientHeight/lh));m.style.flex='none';m.style.height=n*lh+'px';s.classList.add('cut')}})}
-function deskInit(){const d=$('#mdk');if(!d)return;const W=d.clientWidth;if(!W)return;const mob=W<560,cols=mob?2:W<900?3:4,gap=mob?14:20,sw=Math.floor((W-24-(cols-1)*gap)/cols),sh=mob?240:290;d.style.setProperty('--sw',sw+'px');d.style.setProperty('--sh',sh+'px');deskFit(d);
+/* bottom edge of the last text line / image that fully fits inside the visible height (paragraph gaps make "n x line-height" wrong) */
+function deskCut(m){const top=m.getBoundingClientRect().top,lim=m.clientHeight;let best=0;const r=document.createRange(),w=document.createTreeWalker(m,NodeFilter.SHOW_TEXT);
+ while(w.nextNode()){const n=w.currentNode;if(!n.nodeValue.trim())continue;r.selectNodeContents(n);for(const q of r.getClientRects()){if(!q.height)continue;const b=q.bottom-top;if(b<=lim+.5&&b>best)best=b}}
+ m.querySelectorAll('img,svg:not(.gp)').forEach(x=>{const b=x.getBoundingClientRect().bottom-top;if(b<=lim+.5&&b>best)best=b});
+ return best?Math.ceil(best)+1:lim}
+function deskFit(d){d.querySelectorAll('.msh:not(.big)').forEach(s=>{const m=s.querySelector('.mt');if(!m)return;m.style.height='';m.style.flex='';s.classList.remove('cut');if(m.scrollHeight<=m.clientHeight+1)return;s.classList.add('cut');const h=deskCut(m);m.style.flex='none';m.style.height=h+'px'})}
+function deskInit(){const d=$('#mdk');if(!d)return;const W=d.clientWidth;if(!W)return;const mob=W<560,cols=mob?2:W<900?3:4,gap=mob?14:20,sw=Math.floor((W-24-(cols-1)*gap)/cols),sh=mob?300:340;d.style.setProperty('--sw',sw+'px');d.style.setProperty('--sh',sh+'px');deskFit(d);
  const sheets=[...d.querySelectorAll('.msh')].filter(s=>!s.classList.contains('big')),colH=Array(cols).fill(16);let bottom=0;
  sheets.forEach(s=>{const id=+s.dataset.ms,pos=(HOME.mpos||{})[id],h=s.offsetHeight;let x,y;
   if(pos){x=pos[0]/100*W;y=pos[1]}else{let c=0;colH.forEach((v,k)=>{if(v<colH[c]-1)c=k});x=12+c*(sw+gap)+((id*37)%14)-6;y=colH[c]+((id*23)%12)-4;colH[c]+=h+30}
@@ -2152,10 +2185,11 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(x=c('[data-gi]'))return openLb(x.dataset.gi);
  if(c('[data-himg]')){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;try{HOME.img=await upload(f.files[0]);await saveHome();paintImg()}catch(x){alert('Upload failed: '+x.message)}};f.click();return}
  if(c('[data-himgd]')){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;try{HOME.imgD=await upload(f.files[0]);await saveHome();paintImg()}catch(x){alert('Upload failed: '+x.message)}};f.click();return}
- if(c('[data-idrm]')){delete HOME.imgD;delete HOME.ixD;delete HOME.iyD;delete HOME.izD;ADJ=null;saveHome();paintImg();closeM();return}
+ if(c('[data-idrm]')){delete HOME.imgD;delete HOME.ixD;delete HOME.iyD;delete HOME.izD;delete HOME.ixMD;delete HOME.iyMD;delete HOME.izMD;ADJ=null;saveHome();paintImg();closeM();return}
+ if(x=c('[data-iptm]')){ADJTM=x.dataset.iptm;const im=$('#im');if(im)im.dataset.ep=ADJTM;return imgAdjustPhone()}
  if(x=c('[data-itab]'))return imgAdjust(x.dataset.itab,true);
  if(c('[data-iadj]'))return imgAdjust();
- if(c('[data-ireset]')){if(ADJT==='dark'){delete HOME.ixD;delete HOME.iyD;delete HOME.izD}else Object.assign(HOME,IMG_DEF);paintVars();imgAdjust(ADJT,true);return}
+ if(c('[data-ireset]')){if(ADJT==='phone'){['ixML','iyML','izML','ixMD','iyMD','izMD','ihM'].forEach(k=>delete HOME[k]);paintVars();imgAdjustPhone();return}if(ADJT==='dark'){delete HOME.ixD;delete HOME.iyD;delete HOME.izD}else Object.assign(HOME,IMG_DEF);paintVars();imgAdjust(ADJT,true);return}
  if(c('[data-isave]')){ADJ=null;saveHome();closeM();return}});
 {let t=0;addEventListener('scroll',()=>{const h=document.documentElement.classList;h.add('sb');clearTimeout(t);t=setTimeout(()=>h.remove('sb'),900)},{capture:true,passive:true})} /* show scrollbars only while scrolling */
 {const tb=$('#top'),ta=$('#tpa'),tc=$('#tpb'),up=()=>{const mx=document.documentElement.scrollHeight-innerHeight,p=mx>0?Math.min(1,Math.max(0,scrollY/mx)):0,v=Math.round(p*100)+'%';tb.classList.toggle('on',scrollY>400);tb.style.setProperty('--p',v);ta.textContent=v;tc.textContent=v};
