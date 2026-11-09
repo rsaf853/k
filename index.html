@@ -985,7 +985,7 @@ body.fp .lvchip::before{animation:none}
 .rpr button:hover{background:var(--fg);color:var(--bg)}.rpr button:hover small{color:inherit;opacity:.7}
 
 /* ---------- LOG accordion ---------- */
-.lga{display:flex;height:clamp(480px,calc(100vh - 210px),780px);height:clamp(480px,calc(100svh - 210px),780px);margin-top:14px;border:2px solid var(--fg);overflow-x:auto;overflow-y:hidden;--sp:56px}
+.lga{display:flex;height:clamp(560px,calc(100vh - 150px),960px);height:clamp(560px,calc(100svh - 150px),960px);margin-top:14px;border:2px solid var(--fg);overflow-x:auto;overflow-y:hidden;--sp:56px}
 .lgp{flex:0 0 var(--sp);display:flex;border-right:1px solid var(--fg);overflow:hidden;position:relative;transition:flex .5s cubic-bezier(.3,.8,.2,1)}
 .lgp:last-child{border-right:0}
 .lgs{flex:0 0 var(--sp);width:var(--sp);writing-mode:vertical-rl;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0;cursor:pointer;color:var(--fg);background:var(--bg);text-align:left;transition:background .15s,color .15s}
@@ -1013,7 +1013,7 @@ body.fp .lvchip::before{animation:none}
 
 /* ---------- MEMO desk ---------- */
 .mdk{position:relative;margin-top:6px;overflow:visible;min-height:560px}
-.msh{position:absolute;width:var(--sw,240px);height:auto;min-height:84px;max-height:var(--sh,320px);display:flex;flex-direction:column;background:var(--bg);border:2px solid var(--fg);box-shadow:5px 5px 0 var(--fg);transform:rotate(var(--r,0deg));cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:box-shadow .15s,transform .15s}
+.msh{position:absolute;width:var(--sw,240px);height:auto;min-height:84px;max-height:var(--sh,290px);display:flex;flex-direction:column;background:var(--bg);border:2px solid var(--fg);box-shadow:5px 5px 0 var(--fg);transform:rotate(var(--r,0deg));cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:box-shadow .15s,transform .15s}
 .msh:hover{box-shadow:7px 7px 0 var(--fg)}
 .msh.dragging{cursor:grabbing;box-shadow:10px 10px 0 var(--fg);transform:rotate(0);transition:none;touch-action:none}
 .mshi{position:relative;padding:12px 14px;overflow:hidden;display:flex;flex-direction:column;min-height:0;flex:0 1 auto}
@@ -1068,16 +1068,16 @@ body.fp .lvchip::before{animation:none}
 .cw{display:flex;gap:14px;align-items:flex-start}
 .cfull{position:relative;flex:1 1 auto;min-width:0;max-width:300px;cursor:crosshair;touch-action:none;user-select:none;border:1px solid var(--fg)}
 .cfull img{display:block;width:100%;height:auto;pointer-events:none}
-.cx{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border:2px solid #fff;box-shadow:0 0 0 1.5px #000;pointer-events:none}
+.cfull .cx{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border:2px solid #fff;box-shadow:0 0 0 1.5px #000;pointer-events:none}
 .cpv{flex:none}.cbox{overflow:hidden;border:1px solid var(--fg);background:var(--soft)}.cbox img{display:block;width:100%;height:100%;object-fit:cover}.cpv small{display:block;margin-top:3px;color:var(--mut);font:600 9px var(--sans);letter-spacing:.12em;text-transform:uppercase}
 
 /* log panel: margin notes (number, date, tags, reading time in a narrow left column) */
 .lgb .e3{display:grid;grid-template-columns:96px minmax(0,1fr);gap:0 22px}
-.lgb .e3m{border-top:2px solid var(--fg);padding-top:8px;font:700 9.5px/1.8 var(--sans);letter-spacing:.08em;color:var(--mut);text-transform:uppercase;min-width:0}
+.lgb .e3m{border-top:0;padding-top:8px;font:700 9.5px/1.8 var(--sans);letter-spacing:.08em;color:var(--mut);text-transform:uppercase;min-width:0}
 .lgb .e3m b{display:block;color:var(--fg);font:900 30px/1 var(--sans);letter-spacing:-.06em;margin-bottom:6px}
 .lgb .e3m span{display:block}.lgb .e3g .tg{display:block;cursor:pointer;color:var(--mut)}.lgb .e3g .tg:hover{color:var(--fg)}
 .lgb .e3ed{margin-top:10px}.lgb .e3ed .btn{font-size:9px}
-.lgb .e3x{border-top:2px solid var(--fg);padding-top:10px;min-width:0}
+.lgb .e3x{border-top:0;padding-top:10px;min-width:0}
 .lgb .e3x .e5t{margin-top:0}
 @media(max-width:720px){
  .lgb .e3{grid-template-columns:1fr}
@@ -2080,7 +2080,7 @@ function cropInit(i){const m=i.meta||{},CR={d:{x:m.fx??50,y:m.fy??50,h:m.hs||1},
 let MSV=null,MD=null,MDSUP=false,Z_=60;
 /* a sheet whose text is longer than the sheet shows whole lines only and ends with an ellipsis */
 function deskFit(d){d.querySelectorAll('.msh:not(.big)').forEach(s=>{const m=s.querySelector('.mt');if(!m)return;m.style.height='';m.style.flex='';s.classList.remove('cut');if(m.scrollHeight>m.clientHeight+1){const lh=parseFloat(getComputedStyle(m).lineHeight)||20,n=Math.max(1,Math.floor(m.clientHeight/lh));m.style.flex='none';m.style.height=n*lh+'px';s.classList.add('cut')}})}
-function deskInit(){const d=$('#mdk');if(!d)return;const W=d.clientWidth;if(!W)return;const mob=W<560,cols=mob?2:W<900?3:4,gap=mob?14:20,sw=Math.floor((W-24-(cols-1)*gap)/cols),sh=mob?260:320;d.style.setProperty('--sw',sw+'px');d.style.setProperty('--sh',sh+'px');deskFit(d);
+function deskInit(){const d=$('#mdk');if(!d)return;const W=d.clientWidth;if(!W)return;const mob=W<560,cols=mob?2:W<900?3:4,gap=mob?14:20,sw=Math.floor((W-24-(cols-1)*gap)/cols),sh=mob?240:290;d.style.setProperty('--sw',sw+'px');d.style.setProperty('--sh',sh+'px');deskFit(d);
  const sheets=[...d.querySelectorAll('.msh')].filter(s=>!s.classList.contains('big')),colH=Array(cols).fill(16);let bottom=0;
  sheets.forEach(s=>{const id=+s.dataset.ms,pos=(HOME.mpos||{})[id],h=s.offsetHeight;let x,y;
   if(pos){x=pos[0]/100*W;y=pos[1]}else{let c=0;colH.forEach((v,k)=>{if(v<colH[c]-1)c=k});x=12+c*(sw+gap)+((id*37)%14)-6;y=colH[c]+((id*23)%12)-4;colH[c]+=h+30}
