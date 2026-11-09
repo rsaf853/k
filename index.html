@@ -2112,11 +2112,14 @@ function deskCut(m){const top=m.getBoundingClientRect().top,lim=m.clientHeight;l
  while(w.nextNode()){const n=w.currentNode;if(!n.nodeValue.trim())continue;r.selectNodeContents(n);for(const q of r.getClientRects()){if(!q.height)continue;const b=q.bottom-top;if(b<=lim+.5&&b>best)best=b}}
  m.querySelectorAll('img,svg:not(.gp)').forEach(x=>{const b=x.getBoundingClientRect().bottom-top;if(b<=lim+.5&&b>best)best=b});
  return best?Math.ceil(best)+1:lim}
-function deskFit(d){d.querySelectorAll('.msh:not(.big)').forEach(s=>{const m=s.querySelector('.mt');if(!m)return;m.style.height='';m.style.flex='';s.classList.remove('cut');if(m.scrollHeight<=m.clientHeight+1)return;s.classList.add('cut');const h=deskCut(m);m.style.flex='none';m.style.height=h+'px'})}
-function deskInit(){const d=$('#mdk');if(!d)return;const W=d.clientWidth;if(!W)return;const mob=W<560,cols=mob?2:W<900?3:4,gap=mob?14:20,sw=Math.floor((W-24-(cols-1)*gap)/cols),sh=mob?300:340;d.style.setProperty('--sw',sw+'px');d.style.setProperty('--sh',sh+'px');deskFit(d);
+function deskFit(d){d.querySelectorAll('.msh:not(.big)').forEach(s=>{const m=s.querySelector('.mt');if(!m)return;m.style.height='';m.style.flex='';s.classList.remove('cut');if(m.scrollHeight<=m.clientHeight+1)return;s.classList.add('cut');
+ /* sheets are tilted: measure them flat (rotated boxes skew the line positions), then put the tilt back without animating */
+ s.style.transition='none';s.style.transform='none';const h=deskCut(m);s.style.transform='';void s.offsetHeight;s.style.transition='';
+ m.style.flex='none';m.style.height=h+'px'})}
+function deskInit(){const d=$('#mdk');if(!d)return;const W=d.clientWidth;if(!W)return;const mob=W<560,cols=mob?2:W<900?3:4,gap=mob?8:14,sw=Math.floor((W-12-(cols-1)*gap)/cols),sh=mob?240:290;d.style.setProperty('--sw',sw+'px');d.style.setProperty('--sh',sh+'px');deskFit(d);
  const sheets=[...d.querySelectorAll('.msh')].filter(s=>!s.classList.contains('big')),colH=Array(cols).fill(16);let bottom=0;
  sheets.forEach(s=>{const id=+s.dataset.ms,pos=(HOME.mpos||{})[id],h=s.offsetHeight;let x,y;
-  if(pos){x=pos[0]/100*W;y=pos[1]}else{let c=0;colH.forEach((v,k)=>{if(v<colH[c]-1)c=k});x=12+c*(sw+gap)+((id*37)%14)-6;y=colH[c]+((id*23)%12)-4;colH[c]+=h+30}
+  if(pos){x=pos[0]/100*W;y=pos[1]}else{let c=0;colH.forEach((v,k)=>{if(v<colH[c]-1)c=k});x=6+c*(sw+gap)+((id*37)%14)-6;y=colH[c]+((id*23)%12)-4;colH[c]+=h+30}
   s.style.left=Math.max(0,Math.min(W-sw,x))+'px';s.style.top=Math.max(0,y)+'px';bottom=Math.max(bottom,Math.max(0,y)+h)});
  d.style.minHeight=Math.max(bottom+36,mob?300:360)+'px'}
 function deskOpen(s){const id=+s.dataset.ms,it=ITEMS.find(i=>i.id===id);if(!it)return;const i=G(it),inv=s.classList.contains('inv');deskClose();
