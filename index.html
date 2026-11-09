@@ -452,7 +452,6 @@ html{scrollbar-gutter:stable}
 /* log list: time only on desktop; empty meta row hidden */
 .e5i .d .tm{display:none}@media(min-width:721px){.e5i .d .tm{display:inline}}.e5m:empty{display:none}
 .e5r{position:relative}.e5ed{position:absolute;top:26px;right:40px;z-index:2}.e5ed~.e5t{padding-right:72px}.e5m:empty{display:none}
-@media(max-width:720px){.e5ed{top:18px;right:0}}
 /* pieces: same SVG set + colors as mate / puzzle */
 .bnpc.w{--pf:var(--cw);--ps:var(--cwl);--pe:#111}.bnpc.k{--pf:var(--ck);--ps:var(--ckl);--pe:var(--cw)}
 .bnpc.ic{width:15px;height:15px;vertical-align:-3px;margin-right:5px;stroke-width:1.6}
@@ -705,12 +704,12 @@ p.tsub{font-size:.8em;line-height:1.45;color:var(--tmu,var(--mut));margin-top:.2
 .e5x2 b{font:800 14px/1.1 var(--sans);letter-spacing:-.045em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.e5i.on .e5x2 b{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
 .e5x2 small{display:block;font:500 10.5px/1.1 var(--sans);color:var(--mut)}
 .e5r{padding:0;border:0;margin:0;min-height:0;position:static}
-.e5band{display:grid;grid-template-columns:44px minmax(0,1fr)}
-.e5band .k{background:var(--fg);color:var(--bg);display:grid;place-items:center;padding:6px 0;font:800 12.5px var(--sans);font-variant-numeric:tabular-nums}
-.e5band .m{border:1px solid var(--fg);border-left:0;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;font:700 9.5px var(--sans);letter-spacing:.08em;text-transform:uppercase}
+.e5band{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;border-bottom:1px solid var(--fg);margin:0 0 20px}
+.e5band .k{background:var(--fg);color:var(--bg);display:grid;place-items:center;padding:3px 9px;font:800 11.5px var(--sans);font-variant-numeric:tabular-nums}
+.e5band .m{border:0;padding:0 0 0 12px;color:var(--mut);display:flex;justify-content:space-between;align-items:center;font:700 9.5px var(--sans);letter-spacing:.08em;text-transform:uppercase}
 .e5band .m i{width:10px;height:10px;border:1px solid var(--fg);background:conic-gradient(var(--fg) 25%,transparent 0 50%,var(--fg) 0 75%,transparent 0)}
-.e5box{position:relative;border:1px solid var(--fg);border-top:0;padding:16px 18px 18px}
-.e5ed{position:absolute;top:12px;right:14px;z-index:2}.e5ed~.e5t{padding-right:0}
+.e5box{position:relative;border:0;padding:0}
+.e5ed{position:absolute;top:0;right:0;z-index:2}.e5ed~.e5t{padding-right:0}
 .e5t{font:900 25px/1.2 var(--sans);letter-spacing:-.065em;margin:0 0 4px}
 .e5s{font:400 14px var(--sans);color:var(--mut);margin:0 0 16px}
 .e5b{padding-top:0;font:400 15px/1.9 var(--sans)}.e5b p{margin:0 0 .85em}
@@ -726,7 +725,7 @@ p.tsub{font-size:.8em;line-height:1.45;color:var(--tmu,var(--mut));margin-top:.2
  .e5x em{font:800 9px var(--sans);letter-spacing:.14em;font-style:normal}.e5x em::after{content:"INDEX ▾"}.e5.open .e5x em::after{content:"INDEX ▴"}
  .e5l{display:none;border:1px solid var(--fg);border-top:0;padding:0 12px}.e5.open .e5l{display:block}
  .e5i:last-child{border-bottom:0}
- .e5r{margin-top:12px}.e5box{padding:14px}.e5t{font-size:22px}.e5b{font-size:15.5px}
+ .e5r{margin-top:12px}.e5t{font-size:22px}.e5b{font-size:15.5px}
 }
 /* ---------- TXT: scoresheet ---------- */
 .xs{display:grid;grid-template-columns:1fr 1fr;gap:18px 22px;margin-top:6px}
@@ -868,8 +867,6 @@ body[data-pg=""] #top,body[data-pg="gallery"] #top,body[data-pg="puzzle"] #top,b
 .hp svg.bolt,.hp.on svg.bolt,.hp:hover svg.bolt{width:18px;height:18px;fill:currentColor;stroke:none;--pe:currentColor;display:block;transition:none}
 
 /* ---------- batch 3 ---------- */
-.e5box{padding:20px 22px 22px}
-@media(max-width:720px){.e5box{padding:14px}}
 .bt svg.ic{width:13px;height:13px;fill:currentColor;display:block;margin:0 auto;pointer-events:none}
 .cx .bt,.cxpop .bt,.lvctr .bt{display:inline-flex;align-items:center;justify-content:center}
 
@@ -989,7 +986,7 @@ body.fp .lvchip::before{animation:none}
 .lgp{flex:0 0 var(--sp);display:flex;border-right:1px solid var(--fg);overflow:hidden;position:relative;transition:flex .5s cubic-bezier(.3,.8,.2,1)}
 .lgp:last-child{border-right:0}
 .lgs{flex:0 0 var(--sp);width:var(--sp);writing-mode:vertical-rl;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0;cursor:pointer;color:var(--fg);background:var(--bg);text-align:left;transition:background .15s,color .15s}
-.lgt{font:800 14px/1 var(--sans);letter-spacing:-.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:calc(100% - 40px)}
+.lgt{font:800 14px/1.1 var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:calc(100% - 40px)}
 .lgn{font:800 10.5px var(--sans);letter-spacing:.06em;color:var(--mut);font-variant-numeric:tabular-nums;writing-mode:horizontal-tb;order:2}
 .lgd{display:none}
 .lgp:not(.on) .lgs:hover{background:var(--soft)}
@@ -998,7 +995,6 @@ body.fp .lvchip::before{animation:none}
 .lgb{flex:1;min-width:480px;overflow:auto;padding:16px 20px 28px;opacity:0;visibility:hidden}
 .lgp.on .lgb{opacity:1;visibility:visible;animation:lgIn .4s .18s both}
 @keyframes lgIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
-.lgb .e5band{margin-top:0}
 @media(prefers-reduced-motion:reduce){.lgp{transition:none}.lgp.on .lgb{animation:none}}
 @media(max-width:720px){
  .lga{display:block;height:auto;overflow:visible;border:0;border-top:2px solid var(--fg)}
@@ -1033,6 +1029,30 @@ body.fp .lvchip::before{animation:none}
 .mcl{position:sticky;float:right;top:0;display:inline-block;width:auto;margin:0 0 6px 8px;background:var(--fg);color:var(--bg);font:800 10px var(--sans);letter-spacing:.1em;padding:1px 9px;z-index:4}
 .msh.big .btn,.msh.big .eb{position:sticky;float:right;right:auto;left:auto;top:0;margin:0 0 6px 6px;z-index:4;line-height:16px}
 @media(max-width:720px){.msh .mt{font-size:12.5px}.mshi{padding:10px 11px}.mst{font-size:14.5px}.msh.big{width:calc(100% - 16px);left:8px!important;top:8px!important}.mdk{min-height:440px}}
+/* ---------- LOG: vertical Korean titles / clean LOCKED ---------- */
+.lgb .e5t{margin:0 0 6px}.lgb .e5t:has(+.e5b){margin-bottom:22px}
+/* 2) vertical titles: Hangul stands upright with a full 1em advance, so tighten it. tune --vls if needed (0 = default, negative = tighter) */
+.lgs{--vls:-.04em}
+.lgt{letter-spacing:var(--vls);word-spacing:-.15em;text-orientation:mixed;font-kerning:none;text-spacing-trim:space-all}
+/* lock marker inside a vertical title: the old margin-right pushed it sideways and broke the line */
+.lgt .vb{display:inline-block;width:8px;height:8px;margin:0 0 7px;vertical-align:middle;position:relative;left:0}
+.lgt .vb.vl,.lgt .vb.vp{background:currentColor}
+.lgt .vb.vp{background:none}
+/* 3) LOCKED page: centered, no frame, input row sized properly */
+.lgb:has(.lkcen){display:flex;flex-direction:column;padding:0}
+.lgb .lkcen{flex:1;min-height:0;padding:24px 20px}
+.lkcen .lkin{width:100%;max-width:300px;gap:0}
+.lkcen .rkbig{width:40px;height:40px;margin-bottom:18px}
+.lkcen .lkpm{display:flex;align-items:center;gap:8px;margin-bottom:10px;font:800 9.5px var(--sans);letter-spacing:.16em;color:var(--mut)}
+.lkcen .lkpm::before{content:"LOCKED";color:var(--bg);background:var(--fg);padding:3px 6px 2px;letter-spacing:.14em}
+.lkcen .lkh1{margin:0 0 20px;font-size:22px;line-height:1.3;overflow-wrap:anywhere;text-wrap:balance}
+.lkcen .rkw{width:100%;align-items:stretch}
+.lkcen .uf{width:100%;margin:0;border:1px solid var(--fg)}
+.lkcen .uf input{padding:9px 11px}
+.lkcen .uf button{padding:0 14px}
+.lkcen .uer{min-height:1.4em;margin-top:8px;text-align:left}
+@media(max-width:720px){.e5band{margin-bottom:16px}.lgb .lkcen{min-height:260px}}
+@media(max-width:720px){.lgt{letter-spacing:-.04em;word-spacing:0;line-height:1.3;text-spacing-trim:normal}.lgt .vb{margin:0 6px 0 0;vertical-align:1px}}
 </style>
 </head>
 <body>
