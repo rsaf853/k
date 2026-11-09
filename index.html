@@ -1013,19 +1013,20 @@ body.fp .lvchip::before{animation:none}
 
 /* ---------- MEMO desk ---------- */
 .mdk{position:relative;margin-top:6px;overflow:visible;min-height:560px}
-.mhint{position:absolute;left:12px;bottom:8px;font:700 9px var(--sans);letter-spacing:.14em;color:var(--mut);pointer-events:none}
-.msh{position:absolute;width:var(--sw,240px);height:var(--sh,300px);background:var(--bg);border:2px solid var(--fg);box-shadow:5px 5px 0 var(--fg);transform:rotate(var(--r,0deg));cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:box-shadow .15s,transform .15s}
+.msh{position:absolute;width:var(--sw,240px);height:auto;min-height:84px;max-height:var(--sh,320px);display:flex;flex-direction:column;background:var(--bg);border:2px solid var(--fg);box-shadow:5px 5px 0 var(--fg);transform:rotate(var(--r,0deg));cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:box-shadow .15s,transform .15s}
 .msh:hover{box-shadow:7px 7px 0 var(--fg)}
 .msh.dragging{cursor:grabbing;box-shadow:10px 10px 0 var(--fg);transform:rotate(0);transition:none;touch-action:none}
-.mshi{position:absolute;inset:0;padding:12px 14px;overflow:hidden;display:flex;flex-direction:column}
+.mshi{position:relative;padding:12px 14px;overflow:hidden;display:flex;flex-direction:column;min-height:0;flex:0 1 auto}
 .mno{display:block;font:700 9px var(--sans);letter-spacing:.12em;color:var(--mut);margin-bottom:4px;flex:none}
 .mst{display:block;font:800 16px/1.2 var(--sans);letter-spacing:-.045em;margin-bottom:5px;flex:none;word-break:break-word}
-.msh .mt{font-size:13px;line-height:1.55;flex:1 1 0;min-height:0;overflow:hidden;color:var(--fg);word-break:break-word;display:block;-webkit-line-clamp:unset}
+.msh .mt{font-size:13px;line-height:1.55;flex:0 1 auto;min-height:0;overflow:hidden;color:var(--fg);word-break:break-word;display:block;-webkit-line-clamp:unset}
+.msh .mt{position:relative}
+.msh.cut .mt::after{content:"…";position:absolute;right:0;bottom:0;padding-left:10px;background:var(--bg);color:var(--mut);line-height:inherit}
 .msh .mt.md p{margin:0 0 10px}.msh .mt.md p:last-child{margin-bottom:0}
 .msf{flex:none;margin-top:6px;padding-top:5px;border-top:1px solid var(--line);font:500 10.5px/1.35 var(--sans);color:var(--mut);max-height:2.9em;overflow:hidden}
 .msh .btn,.msh .eb{position:absolute;right:8px;top:7px;z-index:3;padding:0 6px;font-size:9px;line-height:16px}
-.msh.lk .mql{flex:1 1 0;min-height:0;overflow:auto;display:block}
-.msh.big{width:min(640px,calc(100% - 24px));height:auto;max-height:calc(100% - 24px);left:12px!important;top:12px!important;transform:none;cursor:default;user-select:text;-webkit-user-select:text;box-shadow:9px 9px 0 var(--fg);overflow:auto}
+.msh.lk .mql{flex:0 1 auto;min-height:0;overflow:auto;display:block;margin-top:4px}
+.msh.big{width:min(640px,calc(100% - 24px));height:auto;min-height:0;max-height:calc(100% - 24px);display:block;left:12px!important;top:12px!important;transform:none;cursor:default;user-select:text;-webkit-user-select:text;box-shadow:9px 9px 0 var(--fg);overflow:auto}
 .msh.big .mshi{position:static;display:block;overflow:visible;padding:16px 20px 22px}
 .msh.big .mst{font-size:24px;margin-bottom:8px}
 .msh.big .mfull{max-height:none;overflow:visible}
@@ -1780,7 +1781,7 @@ function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.t
  if(kind==='gallery'){const N=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gc'))||3),cs=sortG(L).map(it=>{const i=G(it);return`<div class="gi${locked(i)?' lk'+lkc(i):''}" ${locked(i)?`data-lk="${i.id}"`:`data-gi="${i.id}"`}>${locked(i)?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${i.body||i.tags?.length?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`}),cols=Array.from({length:N},()=>[]);cs.forEach((c,i)=>cols[i%N].push(c));h=`${admin?'<div class="ghint">DRAG A PICTURE TO REORDER</div>':''}<div class="mas gm${admin?' gsort':''}">${cols.map(c=>`<div class="mc">${c.join('')}</div>`).join('')}</div>`}
  if(kind==='memo'){const NUM=new Map(ITEMS.filter(i=>i.kind==='memo').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).map((x,j)=>[x.id,j+1])),
   cs=L.map(it=>{const i=G(it),lk=locked(i);return`<div class="msh${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">NO. ${NUM.get(i.id)||''} · ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`});
-  h=L.length?`<div class="mdk" id="mdk"><span class="mhint">DRAG THE SHEETS · CLICK ONE TO READ IT</span>${cs.join('')}</div>`:'<p class="empty">no entries</p>';requestAnimationFrame(deskInit)}
+  h=L.length?`<div class="mdk" id="mdk">${cs.join('')}</div>`:'<p class="empty">no entries</p>';requestAnimationFrame(deskInit);document.fonts&&document.fonts.ready.then(()=>deskInit())}
  if(kind==='line')h=L.length?lineSheet(L):'';
  return L.length?h:''}
 
@@ -1975,12 +1976,14 @@ async function done(){closeM();await load();route()}
 /* events */
 /* ---- memo desk: loose sheets, drag them around, click one to read it ---- */
 let MSV=null,MD=null,MDSUP=false,Z_=60;
-function deskInit(){const d=$('#mdk');if(!d)return;const W=d.clientWidth;if(!W)return;const mob=W<560,cols=mob?2:W<900?3:4,gap=mob?14:20,sw=Math.floor((W-24-(cols-1)*gap)/cols),sh=mob?240:300;d.style.setProperty('--sw',sw+'px');d.style.setProperty('--sh',sh+'px');
- const sheets=[...d.querySelectorAll('.msh')];let bottom=0;
- sheets.forEach((s,j)=>{if(s.classList.contains('big'))return;const id=+s.dataset.ms,pos=(HOME.mpos||{})[id];let x,y;
-  if(pos){x=pos[0]/100*W;y=pos[1]}else{const c=j%cols,r=Math.floor(j/cols);x=12+c*(sw+gap)+((id*37)%14)-6;y=16+r*(sh+30)+((id*23)%14)-6}
-  s.style.left=Math.max(0,Math.min(W-sw,x))+'px';s.style.top=Math.max(0,y)+'px';bottom=Math.max(bottom,Math.max(0,y)+sh)});
- d.style.minHeight=Math.max(bottom+36,mob?440:560)+'px'}
+/* a sheet whose text is longer than the sheet shows whole lines only and ends with an ellipsis */
+function deskFit(d){d.querySelectorAll('.msh:not(.big)').forEach(s=>{const m=s.querySelector('.mt');if(!m)return;m.style.height='';m.style.flex='';s.classList.remove('cut');if(m.scrollHeight>m.clientHeight+1){const lh=parseFloat(getComputedStyle(m).lineHeight)||20,n=Math.max(1,Math.floor(m.clientHeight/lh));m.style.flex='none';m.style.height=n*lh+'px';s.classList.add('cut')}})}
+function deskInit(){const d=$('#mdk');if(!d)return;const W=d.clientWidth;if(!W)return;const mob=W<560,cols=mob?2:W<900?3:4,gap=mob?14:20,sw=Math.floor((W-24-(cols-1)*gap)/cols),sh=mob?260:320;d.style.setProperty('--sw',sw+'px');d.style.setProperty('--sh',sh+'px');deskFit(d);
+ const sheets=[...d.querySelectorAll('.msh')].filter(s=>!s.classList.contains('big')),colH=Array(cols).fill(16);let bottom=0;
+ sheets.forEach(s=>{const id=+s.dataset.ms,pos=(HOME.mpos||{})[id],h=s.offsetHeight;let x,y;
+  if(pos){x=pos[0]/100*W;y=pos[1]}else{let c=0;colH.forEach((v,k)=>{if(v<colH[c]-1)c=k});x=12+c*(sw+gap)+((id*37)%14)-6;y=colH[c]+((id*23)%12)-4;colH[c]+=h+30}
+  s.style.left=Math.max(0,Math.min(W-sw,x))+'px';s.style.top=Math.max(0,y)+'px';bottom=Math.max(bottom,Math.max(0,y)+h)});
+ d.style.minHeight=Math.max(bottom+36,mob?300:360)+'px'}
 function deskOpen(s){const d=s.closest('#mdk');s._pos=[s.style.left,s.style.top];const id=+s.dataset.ms,it=ITEMS.find(i=>i.id===id);if(!it)return;const i=G(it);
  s.classList.add('big');s.style.zIndex=999;s.innerHTML=`<div class="mshi"><button class="mcl" data-mclose type="button">CLOSE ✕</button>${eb(i)}<span class="mno">${s.dataset.no||''}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:''}<div class="mfull md">${mdm(i.body)}</div><p class="st" style="margin-top:12px">${vb(i)}${tags(i)} ${date(i.created_at,1)}</p>${relBlock(it)}</div>`;
  d.style.minHeight=Math.max(parseInt(d.style.minHeight)||0,Math.min(innerHeight*.92,760))+'px';cxHydrate(s);s.scrollIntoView({block:'nearest',behavior:'smooth'})}
