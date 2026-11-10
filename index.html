@@ -1164,6 +1164,15 @@ html.mlock,html.mlock body{overflow:hidden}
 .lvbb:hover .lvcx,.lvbb:focus-within .lvcx{display:inline}.lvbb .lvcx:hover{opacity:1}
 @media(hover:none){.lvbb .lvcx{display:inline}}
 #lvcf .lq{margin:10px 0 0}
+/* log list: number box + title + date; year on the spine in the same style as the month */
+.lgl button{grid-template-columns:30px minmax(0,1fr);gap:10px;padding:9px 0;align-items:center}
+.lgl .nb{width:30px;height:30px;font-size:12px}
+.lgl .tt{display:flex;flex-direction:column;align-items:stretch;gap:2px;min-width:0}
+.lgl .tt .lt{display:flex;align-items:center;gap:6px;min-width:0;font:800 14px/1.25 var(--sans);letter-spacing:-.045em;color:var(--fg)}
+.lgl .tt .ltx{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lgl .tt small{font:500 10.5px/1.2 var(--sans);color:var(--mut);letter-spacing:-.02em}
+.lgl button:hover .ltx,.lgl button.on .ltx{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+@media(min-width:721px){.lgb{grid-template-columns:240px minmax(0,1fr)}}
 </style>
 </head>
 <body>
@@ -1174,18 +1183,18 @@ try{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
  if(sessionStorage.getItem('e4intro'))return;sessionStorage.setItem('e4intro','1')}catch(e){}
 var css='#intro{position:fixed;inset:0;z-index:99999;background:var(--bg);color:var(--fg);display:flex;align-items:center;justify-content:center;cursor:pointer}'
 +'#intro .rw{display:flex;align-items:center;gap:clamp(16px,4vw,28px)}'
-+'#intro .bd{position:relative;flex:none;width:clamp(132px,40vw,220px);aspect-ratio:1;border:1px solid var(--fg);display:grid;grid-template-columns:repeat(8,1fr);opacity:0;animation:inF .5s ease forwards}'
-+'#intro .bd i,#intro .cl i{display:block}#intro .bd i.k{background:color-mix(in srgb,var(--fg) 7%,var(--bg))}'
++'#intro .ibd{position:relative;flex:none;width:clamp(132px,40vw,220px);aspect-ratio:1;border:1px solid var(--fg);display:grid;grid-template-columns:repeat(8,1fr);opacity:0;animation:inF .5s ease forwards}'
++'#intro .ibd i,#intro .cl i{display:block;position:static;width:auto;height:auto;background:none}#intro .ibd i.k{background:color-mix(in srgb,var(--fg) 7%,var(--bg))}'
 +'#intro .pc{position:absolute;left:0;top:0;width:12.5%;height:12.5%;display:grid;place-items:center;will-change:transform;transition:transform .6s cubic-bezier(.3,.8,.2,1),opacity .3s}'
 +'#intro .pc::before{content:"";width:46%;height:46%;border:2px solid var(--fg);background:var(--bg)}#intro .pc.b::before{background:var(--fg)}#intro .pc.g{opacity:0}'
 +'#intro .nt{font:500 17px/1.9 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums;min-width:7.4em}#intro .nt div{white-space:nowrap;min-height:1.9em}'
 +'#intro .nt .c::after{content:"";display:inline-block;width:2px;height:1em;background:var(--fg);margin-left:2px;vertical-align:-.12em;animation:inBl .7s steps(1) infinite}'
 +'#intro .hf{position:absolute;left:0;right:0;height:50%;overflow:hidden;background:var(--bg);will-change:transform;transition:transform .85s cubic-bezier(.76,0,.24,1)}#intro .hf.t{top:0}#intro .hf.b{bottom:0}'
-+'#intro .hf>div{position:absolute;left:0;right:0;height:200%;display:flex;align-items:center;justify-content:center}#intro .hf.t>div{top:0}#intro .hf.b>div{bottom:0}#intro .hf .bd{animation:none;opacity:1}'
++'#intro .hf>div{position:absolute;left:0;right:0;height:200%;display:flex;align-items:center;justify-content:center}#intro .hf.t>div{top:0}#intro .hf.b>div{bottom:0}#intro .hf .ibd{animation:none;opacity:1}'
 +'#intro.go .hf.t{transform:translate3d(0,-101%,0)}#intro.go .hf.b{transform:translate3d(0,101%,0)}'
 +'@keyframes inF{to{opacity:1}}@keyframes inBl{50%{opacity:0}}';
 var sq='',x,y;for(y=0;y<8;y++)for(x=0;x<8;x++)sq+='<i'+((x+y)%2?' class="k"':'')+'></i>';
-document.body.insertAdjacentHTML('afterbegin','<style>'+css+'</style><div id="intro" aria-hidden="true"><div class="rw"><div class="bd">'+sq
+document.body.insertAdjacentHTML('afterbegin','<style>'+css+'</style><div id="intro" aria-hidden="true"><div class="rw"><div class="ibd">'+sq
  +'<span class="pc w" id="iwE" style="transform:translate3d(400%,600%,0)"></span><span class="pc b" id="ibE" style="transform:translate3d(400%,100%,0)"></span><span class="pc w" id="iwF" style="transform:translate3d(500%,600%,0)"></span></div>'
  +'<div class="nt"><div></div><div></div><div></div></div></div></div>');
 var el=document.getElementById('intro'),done=false,R=el.querySelectorAll('.nt div');
@@ -1985,9 +1994,9 @@ const LG_MN=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','
 const lgMk=i=>{const x=new Date(i.created_at);return x.getFullYear()*12+x.getMonth()};
 const lgMl=k=>LG_MN[k%12];
 function lgGroups(L){const m=new Map();L.forEach(it=>{const k=lgMk(it);if(!m.has(k))m.set(k,[]);m.get(k).push(it)});return[...m]}
-function lgList(arr,cur){const ord=logOrd();return arr.map(it=>{const i=G(it),n=ord.findIndex(x=>x.id===i.id)+1;return`<button type="button" class="${i.id===cur?'on':''}" data-le="${i.id}"><span class="nb">${n}</span><span class="tt">${vb(i)}<span class="x">${esc(i.title||'untitled')}</span></span></button>`}).join('')}
+function lgList(arr,cur){const ord=logOrd();return arr.map(it=>{const i=G(it),n=ord.findIndex(x=>x.id===i.id)+1;return`<button type="button" class="${i.id===cur?'on':''}" data-le="${i.id}"><span class="nb">${n}</span><span class="tt"><b class="lt">${vb(i)}<span class="ltx">${esc(i.title||'untitled')}</span></b><small>${date(i.created_at)}</small></span></button>`}).join('')}
 /* LOG: accordion by month. Spines are months; the open month shows its entries on the left and the reading page on the right (phones: vertical accordion of months). */
-function lgaHtml(L,cur){return L.length?lgGroups(L).map(([k,arr])=>{const on=arr.some(it=>it.id===cur),it0=arr.find(it=>it.id===cur);return`<section class="lgp${on?' on':''}" data-lg="${k}" data-first="${arr[0].id}"><button class="lgs" type="button" aria-expanded="${on}"><span class="lgg"><b class="lgt">${lgMl(k)}</b></span><span class="lgn">${arr.length}</span><small class="lgd">${arr.length} ${arr.length===1?'entry':'entries'}</small></button><div class="lgb"><div class="lgl">${lgList(arr,cur)}</div><div class="lgr">${on?essayBody(it0,true):''}</div></div></section>`}).join(''):'<p class="empty">no entries</p>'}
+function lgaHtml(L,cur){return L.length?lgGroups(L).map(([k,arr])=>{const on=arr.some(it=>it.id===cur),it0=arr.find(it=>it.id===cur);return`<section class="lgp${on?' on':''}" data-lg="${k}" data-first="${arr[0].id}"><button class="lgs" type="button" aria-expanded="${on}"><span class="lgg"><b class="lgt">${lgMl(k)} ${Math.floor(k/12)}</b></span><span class="lgn">${arr.length}</span><small class="lgd">${arr.length} ${arr.length===1?'entry':'entries'}</small></button><div class="lgb"><div class="lgl">${lgList(arr,cur)}</div><div class="lgr">${on?essayBody(it0,true):''}</div></div></section>`}).join(''):'<p class="empty">no entries</p>'}
 function lgSize(){const w=$('#lga');if(!w)return;const n=w.children.length||1,W=w.clientWidth;w.style.setProperty('--sp',Math.max(34,Math.min(50,(W-560)/n))+'px')}
 function lgReveal(p){const w=$('#lga');if(!w||!p)return;const wr=w.getBoundingClientRect(),pr=p.getBoundingClientRect(),l=pr.left-wr.left+w.scrollLeft,r=l+pr.width;
  if(l<w.scrollLeft)w.scrollTo({left:l,behavior:'smooth'});else if(r>w.scrollLeft+w.clientWidth)w.scrollTo({left:r-w.clientWidth,behavior:'smooth'})}
