@@ -1172,28 +1172,40 @@ html.mlock,html.mlock body{overflow:hidden}
 try{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
  var h=location.hash;if(h&&h!=='#'&&h!=='#/')return;
  if(sessionStorage.getItem('e4intro'))return;sessionStorage.setItem('e4intro','1')}catch(e){}
-var L=['1. e4 e5','2. f4 exf4','3. ??'];
-var css='#intro{position:fixed;inset:0;z-index:99999;background:var(--bg);color:var(--fg);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity .55s ease}'
-+'#intro.o{opacity:0}'
-+'#intro .nt{font:500 17px/1.9 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}'
-+'#intro .nt div{white-space:nowrap}'
-+'#intro .a{position:relative}#intro .b{visibility:hidden}'
-+'#intro .a.c::after{content:"";position:absolute;right:-3px;top:.28em;bottom:.28em;width:2px;background:var(--fg);animation:inBl .7s steps(1) infinite}'
-+'@keyframes inBl{50%{opacity:0}}';
-var rows=L.map(function(t){return '<div><span class="a"></span><span class="b">'+t+'</span></div>'}).join('');
-document.body.insertAdjacentHTML('afterbegin','<style>'+css+'</style><div id="intro" aria-hidden="true"><div class="nt">'+rows+'</div></div>');
-var el=document.getElementById('intro'),done=false;
-var gone=function(){if(done)return;done=true;el.classList.add('o');setTimeout(function(){el.parentNode&&el.parentNode.removeChild(el)},600)};
+var css='#intro{position:fixed;inset:0;z-index:99999;background:var(--bg);color:var(--fg);display:flex;align-items:center;justify-content:center;cursor:pointer}'
++'#intro .rw{display:flex;align-items:center;gap:clamp(16px,4vw,28px)}'
++'#intro .bd{position:relative;flex:none;width:clamp(132px,40vw,220px);aspect-ratio:1;border:1px solid var(--fg);display:grid;grid-template-columns:repeat(8,1fr);opacity:0;animation:inF .5s ease forwards}'
++'#intro .bd i,#intro .cl i{display:block}#intro .bd i.k{background:color-mix(in srgb,var(--fg) 7%,var(--bg))}'
++'#intro .pc{position:absolute;left:0;top:0;width:12.5%;height:12.5%;display:grid;place-items:center;will-change:transform;transition:transform .6s cubic-bezier(.3,.8,.2,1),opacity .3s}'
++'#intro .pc::before{content:"";width:46%;height:46%;border:2px solid var(--fg);background:var(--bg)}#intro .pc.b::before{background:var(--fg)}#intro .pc.g{opacity:0}'
++'#intro .nt{font:500 17px/1.9 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums;min-width:7.4em}#intro .nt div{white-space:nowrap;min-height:1.9em}'
++'#intro .nt .c::after{content:"";display:inline-block;width:2px;height:1em;background:var(--fg);margin-left:2px;vertical-align:-.12em;animation:inBl .7s steps(1) infinite}'
++'#intro .hf{position:absolute;left:0;right:0;height:50%;overflow:hidden;background:var(--bg);will-change:transform;transition:transform .85s cubic-bezier(.76,0,.24,1)}#intro .hf.t{top:0}#intro .hf.b{bottom:0}'
++'#intro .hf>div{position:absolute;left:0;right:0;height:200%;display:flex;align-items:center;justify-content:center}#intro .hf.t>div{top:0}#intro .hf.b>div{bottom:0}#intro .hf .bd{animation:none;opacity:1}'
++'#intro.go .hf.t{transform:translate3d(0,-101%,0)}#intro.go .hf.b{transform:translate3d(0,101%,0)}'
++'@keyframes inF{to{opacity:1}}@keyframes inBl{50%{opacity:0}}';
+var sq='',x,y;for(y=0;y<8;y++)for(x=0;x<8;x++)sq+='<i'+((x+y)%2?' class="k"':'')+'></i>';
+document.body.insertAdjacentHTML('afterbegin','<style>'+css+'</style><div id="intro" aria-hidden="true"><div class="rw"><div class="bd">'+sq
+ +'<span class="pc w" id="iwE" style="transform:translate3d(400%,600%,0)"></span><span class="pc b" id="ibE" style="transform:translate3d(400%,100%,0)"></span><span class="pc w" id="iwF" style="transform:translate3d(500%,600%,0)"></span></div>'
+ +'<div class="nt"><div></div><div></div><div></div></div></div></div>');
+var el=document.getElementById('intro'),done=false,R=el.querySelectorAll('.nt div');
+var later=function(fn,ms){setTimeout(function(){if(!done)fn()},ms)};
+var mv=function(id,x,y){document.getElementById(id).style.transform='translate3d('+x*100+'%,'+y*100+'%,0)'};
+var type=function(r,str){var i=0;R.forEach(function(d){d.classList.remove('c')});R[r].classList.add('c');
+ (function n(){if(done)return;if(i<str.length){R[r].textContent+=str.charAt(i++);setTimeout(n,70)}})()};
+/* leave: the screen splits in two (with the board and the notation on it) and the halves slide apart; transform only, so it stays smooth */
+var gone=function(){if(done)return;done=true;
+ var rw=el.querySelector('.rw'),mk=function(c){var h=document.createElement('div');h.className='hf '+c;var i=document.createElement('div');i.appendChild(rw.cloneNode(true));h.appendChild(i);return h};
+ el.appendChild(mk('t'));el.appendChild(mk('b'));rw.style.visibility='hidden';el.style.background='transparent';el.style.cursor='default';
+ requestAnimationFrame(function(){requestAnimationFrame(function(){el.classList.add('go')})});
+ setTimeout(function(){el.parentNode&&el.parentNode.removeChild(el)},850+150)};
 el.addEventListener('click',gone);
-var A=el.querySelectorAll('.a'),B=el.querySelectorAll('.b'),li=0,ci=0;
-function step(){
- if(done)return;
- if(li>=L.length){A[L.length-1].classList.add('c');return setTimeout(gone,1300)}
- var t=L[li];A.forEach(function(x){x.classList.remove('c')});A[li].classList.add('c');
- if(ci<t.length){ci++;A[li].textContent=t.slice(0,ci);B[li].textContent=t.slice(ci);return setTimeout(step,t.charAt(ci-1)==='?'?170:85)}
- li++;ci=0;setTimeout(step,li===2?800:450);
-}
-setTimeout(step,500);
+later(function(){mv('iwE',4,4);type(0,'1. e4')},900);
+later(function(){mv('ibE',4,3);type(0,' e5')},1700);
+later(function(){mv('iwF',5,4);type(1,'2. f4')},2600);
+later(function(){mv('ibE',5,4);document.getElementById('iwF').classList.add('g');type(1,' exf4')},3500);
+later(function(){type(2,'3. ??')},4500);
+later(gone,5900);
 })();
 </script>
 <div class="shell">
@@ -1667,7 +1679,7 @@ const LV_PGN=`[Event "Eton College Chess Club Autumn Fixture"]
 1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be3 e5 7. Nb3 Be6 8. f3 h5 9. Qd2 Nbd7 10. O-O-O Rc8 11. Kb1 Be7 12. Nd5 Nxd5 13. exd5 Bf5 14. Bd3 Bxd3 15. Qxd3 Bg5 16. Bf2 O-O 17. h4 Bh6 18. g4 hxg4 19. fxg4 e4 20. Qxe4 Re8 21. Qg2 Re2 22. Nd4 Rd2 23. Rxd2 Bxd2 24. g5 Ne5 25. Rd1 Ba5 26. Nf5 Qc7 27. Bd4 Nc4 28. b3 Na3+ 29. Kb2 Nb5 30. Bxg7 Bc3+ 31. Kb1 Bxg7 32. Rd3 Nc3+ 33. Kc1 Nxa2+ 34. Kd1 Nb4 35. Rd2 Bc3 36. Re2 Nxd5 37. Qf3 Qc5 38. Nh6+ Kh8 39. Nxf7+ Kg7 40. Rf2 Ne3+ 41. Kc1 Qa3+ 42. Kb1 Qa1# 0-1`;
 const LVK={post:'ARCHIVE',log:'LOG',memo:'MEMO',line:'TXT',gallery:'IMG'};
 const LVS={cur:0,sel:0,tm:null};let LVZ=null;let LV_INTRO=true; /* first arrival on the home page replays the game once */
-const LVI={total:11000,min:260,max:900}; /* intro speed: aim for ~11 s overall, one move takes between 0.26 s and 0.9 s */
+const LVI={total:17000,min:450,max:1400,wait:600}; /* intro speed: aim for ~17 s overall, one move takes between 0.45 s and 1.4 s; starts `wait` ms after the entrance screen is gone */
 const lvDay=t=>{const d=new Date(t);return d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate()};
 function lvData(){if(!HOME.live)HOME.live={};const L=HOME.live,K=(banData().kings)||{};
  if(!L.players)L.players={w:{name:K.w?.name||'Kai',en:'KAI',title:K.w?.title||'',elo:K.w?.elo||'',src:K.w?.src||'',tags:'K, Kai'},b:{name:K.k?.name||'Ray',en:'RAY',title:K.k?.title||'',elo:K.k?.elo||'',src:K.k?.src||'',tags:'R, Ray'}};
@@ -1701,7 +1713,7 @@ function lvPaint(){const Z=LVZ;$('#lvbd').innerHTML=`<div class="cx lvbx">${cxBo
  $('#lvpb').innerHTML=lvBar('b');$('#lvpw').innerHTML=lvBar('w');{const lit=LVS.cur>0?(LVS.cur%2?'w':'b'):'';$('#lvpb').classList.toggle('turn',lit==='b');$('#lvpw').classList.toggle('turn',lit==='w')}
  $('#lvpr i').style.width=(Z.seq.length?LVS.cur/Z.seq.length*100:0)+'%';$('#lvpg').textContent=`${LVS.cur} / ${Z.seq.length}`;lvMoves();lvPv();lvClock()}
 function lvGo(n){LVS.cur=Math.max(0,Math.min(LVZ.seq.length,n));LVS.sel=Math.max(1,LVS.cur);lvPaint()}
-function lvStop(){clearInterval(LVS.tm);LVS.tm=null;const b=$('#lvplay');if(b){b.innerHTML=IC.p;b.classList.remove('on')}}
+function lvStop(){clearInterval(LVS.tm);LVS.tm=null;LVS.tok=(LVS.tok||0)+1;const b=$('#lvplay');if(b){b.innerHTML=IC.p;b.classList.remove('on')}}
 /* HOME chat: written by hand here (HOME.live.chat), not linked to the txt page. One line = one bubble. */
 function lvChat(){const L=lvData(),C=L.chat||(L.chat=[]),P=L.players,ed=em(),gr=[];
  C.forEach((m,k)=>{const x={s:m.s,t:m.t,at:m.at,k},l=gr[gr.length-1];if(l&&l.s===x.s&&lvDay(l.at)===lvDay(x.at)){l.a.push(x);l.at=x.at}else gr.push({s:x.s,at:x.at,a:[x]})});
@@ -1735,8 +1747,12 @@ function lvHome(){lvStop();lvData();LVZ=lvGame();const intro=LV_INTRO&&LVZ.seq.l
  <div class="lvrgt"><div class="lvtabs">${TB('moves','P','Moves',1)}${TB('chat','N','Chat')}${TB('notes','R','Notes')}${TB('photos','B','Photos')}</div>
  <div class="lvpn on" data-lp="moves"><div class="lvmv" id="lvmv"></div><div class="lvpv" id="lvpv"></div></div><div class="lvpn" data-lp="chat"><div class="lvch" id="lvch"></div><div id="lvcf"></div></div><div class="lvpn" data-lp="notes"><div class="lvnt" id="lvnt"></div></div><div class="lvpn" data-lp="photos"><div class="lvph" id="lvph"></div></div></div></div></section>`;
  lvPaint();lvChat();lvCForm();lvNotes();lvPhotos();if(intro)lvIntro()}
-function lvIntro(){const n=LVZ.seq.length,dt=Math.max(LVI.min,Math.min(LVI.max,Math.round(LVI.total/n))),b=$('#lvplay');if(b){b.innerHTML=IC.pa;b.classList.add('on')}
- LVS.tm=setInterval(()=>{if(!$('.lv')||LVS.cur>=n)return lvStop();lvGo(LVS.cur+1)},dt)}
+function lvIntro(){const n=LVZ.seq.length,dt=Math.max(LVI.min,Math.min(LVI.max,Math.round(LVI.total/n))),tok=LVS.tok;
+ const start=()=>{if(tok!==LVS.tok||LVS.tm||!$('.lv'))return;const b=$('#lvplay');if(b){b.innerHTML=IC.pa;b.classList.add('on')}
+  LVS.tm=setInterval(()=>{if(!$('.lv')||LVS.cur>=n)return lvStop();lvGo(LVS.cur+1)},dt)};
+ /* wait for the entrance screen (#intro) to finish and leave, then give the start position a moment before the first move */
+ const wait=()=>{if(tok!==LVS.tok||!$('.lv'))return;if(document.getElementById('intro'))return setTimeout(wait,120);setTimeout(start,LVI.wait)};
+ wait()}
 document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('.lv'))return;const t=e.target;let x;
  if(x=t.closest('#lvfp')){FP=!FP;try{localStorage.setItem('e4fp',FP?'1':'0')}catch(z){}applyFP();x.setAttribute('aria-pressed',FP);x.title=FP?'Back to normal':'Full page';x.textContent=(FP?'PAUSED':'LIVE')+' · GAME '+LVZ.game;setTimeout(()=>dispatchEvent(new Event('resize')),540);return}
  if(x=t.closest('[data-lv]')){const a=x.dataset.lv;if(a==='s'){lvStop();lvGo(0)}if(a==='-'){lvStop();lvGo(LVS.cur-1)}if(a==='+'){lvStop();lvGo(LVS.cur+1)}if(a==='p'){if(LVS.tm)return lvStop();if(LVS.cur>=LVZ.seq.length)lvGo(0);x.innerHTML=IC.pa;x.classList.add('on');LVS.tm=setInterval(()=>{if(!$('.lv')||LVS.cur>=LVZ.seq.length)return lvStop();lvGo(LVS.cur+1)},1100)}return}
