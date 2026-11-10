@@ -1173,6 +1173,43 @@ html.mlock,html.mlock body{overflow:hidden}
 .lgl .tt small{font:500 10.5px/1.2 var(--sans);color:var(--mut);letter-spacing:-.02em}
 .lgl button:hover .ltx,.lgl button.on .ltx{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
 @media(min-width:721px){.lgb{grid-template-columns:240px minmax(0,1fr)}}
+
+/* ---------- MEMO desk: pure #fff / #000 + INDEX CARD (A) ---------- */
+.mdk,#mov{--bg:#fff;--fg:#000;--mut:#000;--line:#000;--soft:#fff;--hl:transparent;--hl2:transparent}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .mdk,:root:not([data-theme="light"]) #mov{--bg:#0d0d0d;--fg:#fff;--mut:#fff;--line:#fff;--soft:#0d0d0d}}
+:root[data-theme="dark"] .mdk,:root[data-theme="dark"] #mov{--bg:#0d0d0d;--fg:#fff;--mut:#fff;--line:#fff;--soft:#0d0d0d}
+.mdk .msh{background:var(--bg);color:var(--fg);border:1px solid var(--fg);box-shadow:none;transform:rotate(calc(var(--r,0deg)*.6))}
+.mdk .msh.dragging{transform:rotate(0)}
+.mdk .msh:not(.dragging):hover{transform:rotate(0);box-shadow:4px 4px 0 var(--fg)}
+.mdk .msh.inv{background:var(--fg);color:var(--bg);box-shadow:none}
+.mdk .msh.inv:not(.dragging):hover{box-shadow:3px 3px 0 var(--bg),4px 4px 0 var(--fg)}
+.mdk .mshi{padding:0}
+.mdk .mno{display:flex;justify-content:space-between;align-items:center;margin:0;padding:5px 12px;border-bottom:1px solid currentColor;color:inherit}
+.mdk .mno::after{content:"";width:8px;height:8px;background:currentColor;flex:none}
+.mdk .mst{margin:0;padding:9px 12px 8px;border-bottom:2px solid currentColor;font-size:15px;color:inherit}
+.mdk .msh .mt{padding:0 12px;line-height:22px;color:inherit}
+.mdk .msh .mt::before{content:"";position:absolute;inset:0 12px;z-index:-1;pointer-events:none;background:linear-gradient(transparent 21px,currentColor 21px) 0 0/100% 22px;-webkit-mask:linear-gradient(90deg,#000 1px,transparent 1px) 0 0/4px 100%;mask:linear-gradient(90deg,#000 1px,transparent 1px) 0 0/4px 100%}
+.mdk .msh .mt.md p{margin:0 0 22px}
+.mdk .msh .mt.md p:last-child{margin-bottom:0}
+.mdk .msh .msf{margin:0;padding:6px 12px;border-top:1px solid currentColor;color:inherit}
+.mdk .msf .tg{color:inherit}
+.mdk .msh.inv .mno,.mdk .msh.inv .msf,.mdk .msh.inv .msf .tg{color:var(--bg)}
+.mdk .msh.inv .msf{border-top-color:var(--bg)}
+.mdk .msh .btn,.mdk .msh .eb{right:26px;top:4px}
+.mdk .msh .mql{padding:6px 12px}
+.mdk mark,#mov mark{background:var(--fg);color:var(--bg);border-bottom:0}
+.mdk .msh.inv mark,#mov.inv mark{background:var(--bg);color:var(--fg)}
+.mdk .md code,.mdk .md pre,#mov .md code,#mov .md pre{background:transparent;border:1px solid currentColor}
+/* reading sheet */
+#mov .msheet{background:var(--bg);color:var(--fg);border:2px solid var(--fg);box-shadow:9px 9px 0 var(--fg)}
+#mov.inv .msheet{background:var(--fg);color:var(--bg);box-shadow:7px 7px 0 var(--bg),9px 9px 0 var(--fg)}
+#mov .mno,#mov .mfoot .st,#mov .mfoot .tg{color:inherit}
+#mov .mfoot{border-top-color:currentColor}
+#mov.inv .md a,#mov.inv .md blockquote{color:var(--bg)}
+#mov.inv .md code,#mov.inv .md pre{background:transparent;color:var(--bg);border-color:var(--bg)}
+#mov.inv .rl{border-bottom-color:var(--bg);color:var(--bg)}
+#mov.inv .rit,#mov.inv .rit.var,#mov.inv .rit .mn,#mov.inv .rit .rsrc{color:var(--bg)}
+#mov.inv .rit:hover{background:var(--bg);color:var(--fg)}
 </style>
 </head>
 <body>
@@ -2203,11 +2240,11 @@ function deskFit(d){d.querySelectorAll('.msh:not(.big)').forEach(s=>{const m=s.q
  /* sheets are tilted: measure them flat (rotated boxes skew the line positions), then put the tilt back without animating */
  s.style.transition='none';s.style.transform='none';const h=deskCut(m);deskTrim(m,h);s.style.transform='';void s.offsetHeight;s.style.transition='';
  m.style.flex='none';m.style.height=h+'px'})}
-function deskInit(){const d=$('#mdk');if(!d)return;const W=d.clientWidth;if(!W)return;const mob=W<560,cols=mob?2:W<900?3:4,gap=mob?8:14,sw=Math.floor((W-12-(cols-1)*gap)/cols),sh=mob?240:290;d.style.setProperty('--sw',sw+'px');d.style.setProperty('--sh',sh+'px');deskFit(d);
+function deskInit(){const d=$('#mdk');if(!d)return;const W=d.clientWidth;if(!W)return;const mob=W<560,cols=mob?2:W<900?3:4,gap=mob?4:6,sw=Math.floor((W-12-(cols-1)*gap)/cols),sh=mob?240:290;d.style.setProperty('--sw',sw+'px');d.style.setProperty('--sh',sh+'px');deskFit(d);
  const sheets=[...d.querySelectorAll('.msh')].filter(s=>!s.classList.contains('big')),colH=Array(cols).fill(16);let bottom=0;
- sheets.forEach(s=>{const id=+s.dataset.ms,pos=(HOME.mpos||{})[id],h=s.offsetHeight;let x,y;
-  if(pos){x=pos[0]/100*W;y=pos[1]}else{let c=0;colH.forEach((v,k)=>{if(v<colH[c]-1)c=k});x=6+c*(sw+gap)+((id*37)%14)-6;y=colH[c]+((id*23)%12)-4;colH[c]+=h+30}
-  s.style.left=Math.max(0,Math.min(W-sw,x))+'px';s.style.top=Math.max(0,y)+'px';bottom=Math.max(bottom,Math.max(0,y)+h)});
+ sheets.forEach((s,k)=>{const id=+s.dataset.ms,pos=(HOME.mpos||{})[id],h=s.offsetHeight;let x,y;
+  if(pos){x=pos[0]/100*W;y=pos[1]}else{let c=0;colH.forEach((v,k)=>{if(v<colH[c]-1)c=k});x=6+c*(sw+gap)+((id*37)%26)-13;y=colH[c]+((id*23)%14)-7;colH[c]+=h-26+((id*11)%12)}
+  if(!s.style.zIndex)s.style.zIndex=k+1;s.style.left=Math.max(0,Math.min(W-sw,x))+'px';s.style.top=Math.max(0,y)+'px';bottom=Math.max(bottom,Math.max(0,y)+h)});
  d.style.minHeight=Math.max(bottom+36,mob?300:360)+'px'}
 function deskOpen(s){const id=+s.dataset.ms,it=ITEMS.find(i=>i.id===id);if(!it)return;const i=G(it),inv=s.classList.contains('inv');deskClose();
  const ov=document.createElement('div');ov.id='mov';ov.className='mov'+(inv?' inv':'');
