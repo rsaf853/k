@@ -1077,14 +1077,16 @@ body.fp .lvchip::before{animation:none}
 .lgy button small{font:700 9px var(--sans);opacity:.6;margin-left:6px}
 .lgy button:hover{background:var(--soft)}.lgy button.on{background:var(--fg);color:var(--bg)}
 /* ---------- gallery: tidy grid with per-device crop ---------- */
-.ggr{display:grid;grid-template-columns:repeat(var(--gc,3),minmax(0,1fr));grid-auto-rows:240px;gap:8px;margin-top:6px}
-.ggr .gi{margin:0;grid-row:span var(--rs,1);overflow:hidden;min-height:0;aspect-ratio:auto;break-inside:auto}
-.ggr .gi img{width:100%;height:100%;object-fit:cover;object-position:var(--fx,50%) var(--fy,50%);border:0}
+.ggr{position:relative;display:block;margin-top:6px;min-height:40px}
+/* pinterest-style: every image keeps its own ratio; JS (gLay) drops each one into the shortest column */
+.ggr .gi{position:absolute;top:0;left:0;width:var(--gw,33%);margin:0;overflow:hidden;break-inside:auto;transition:transform .3s ease}
+.ggr:not(.gon) .gi{visibility:hidden}
+.ggr .gi img{display:block;width:100%;height:auto;aspect-ratio:var(--ar,3/4);object-fit:cover;border:0}
 .ggr .gi .cp{position:absolute;left:0;right:0;bottom:0;padding:5px 9px;background:var(--bg);color:var(--fg);font-size:11.5px;opacity:0;transition:opacity .2s}
 .ggr .gi:hover .cp{opacity:1}
 @media(hover:none){.ggr .gi .cp{opacity:1}}
-.ggr .gi.lk{aspect-ratio:auto;display:grid;place-items:center}.ggr .gi.lk .lkb{width:min(260px,88%)}.ggr .gi.lk .rkw{align-items:center}
-@media(max-width:720px){.ggr{grid-auto-rows:170px}.ggr .gi{grid-row:span var(--mrs,var(--rs,1))}.ggr .gi img{object-position:var(--mfx,var(--fx,50%)) var(--mfy,var(--fy,50%))}}
+.ggr .gi.lk{aspect-ratio:3/4;display:grid;place-items:center}.ggr .gi.lk .lkb{width:min(260px,88%)}.ggr .gi.lk .rkw{align-items:center}
+@media(prefers-reduced-motion:reduce){.ggr .gi{transition:none}}
 .crop{margin-top:8px}.ctabs{display:flex;gap:6px;margin-bottom:8px}.ctabs .btn.on{background:var(--fg);color:var(--bg)}
 .cw{display:flex;gap:14px;align-items:flex-start}
 .cfull{position:relative;flex:1 1 auto;min-width:0;max-width:300px;cursor:crosshair;touch-action:none;user-select:none;border:1px solid var(--fg)}
@@ -1976,8 +1978,8 @@ const match=i=>!Q||[i.title,i.body,(i.tags||[]).join(' ')].join(' ').toLowerCase
 function mqFit(){document.querySelectorAll('.mq .mqb').forEach(b=>{const x=b.firstElementChild;if(!x)return;x.style.webkitLineClamp='';x.style.lineClamp='';const lh=parseFloat(getComputedStyle(b).lineHeight)||18,n=Math.max(1,Math.floor(b.clientHeight/lh));x.style.webkitLineClamp=n;x.style.lineClamp=n})}
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
  if(kind==='post'){const G2=[];L.forEach(i=>{const x=new Date(i.created_at),k=x.getFullYear()+'-'+x.getMonth(),g=G2[G2.length-1];if(g&&g.k===k)g.a.push(i);else G2.push({k,l:MONS[x.getMonth()]+' '+x.getFullYear(),a:[i]})});h=`<div class="arx mon">${G2.map(g=>`<div class="ag"><div class="agh"><b>${g.l}</b><i></i><span>${g.a.length}</span></div>${g.a.map(i=>{const inn=`<span class="dn">${p2(new Date(i.created_at).getDate())}</span><b>${vb(i)}${esc(i.title||'untitled')}</b>${i.meta?.sub?`<span class="as">${esc(i.meta.sub)}</span>`:''}${(i.tags||[]).length?`<span class="at">${tags(i)}</span>`:''}`;return`<a class="ai" href="#/post/${i.id}" data-tip="${i.id}">${inn}</a>`}).join('')}</div>`).join('')}</div>`}
- if(kind==='gallery'){const gs=i=>{const m=i.meta||{};return`--fx:${m.fx??50}%;--fy:${m.fy??50}%;--rs:${m.hs||1};--mfx:${m.mfx??m.fx??50}%;--mfy:${m.mfy??m.fy??50}%;--mrs:${m.mhs||m.hs||1}`},
-  cs=sortG(L).map(it=>{const i=G(it),lk=locked(i);return`<div class="gi${lk?' lk'+lkc(i):''}" ${lk?`data-lk="${i.id}"`:`data-gi="${i.id}"`} style="${lk?'':gs(i)}">${lk?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt="">`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${(i.body||i.tags?.length)&&!lk?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`});
+ if(kind==='gallery'){const gs=()=>'',
+  cs=sortG(L).map(it=>{const i=G(it),lk=locked(i);return`<div class="gi${lk?' lk'+lkc(i):''}" ${lk?`data-lk="${i.id}"`:`data-gi="${i.id}"`} style="${lk?'':gs(i)}">${lk?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt=""${GAR.has(i.meta?.src)?` style="--ar:${GAR.get(i.meta?.src)}"`:''}>`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${(i.body||i.tags?.length)&&!lk?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`});
   h=`<div class="ggr gm${admin?' gsort':''}">${cs.join('')}</div>`}
  if(kind==='memo'){const NUM=new Map(ITEMS.filter(i=>i.kind==='memo').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).map((x,j)=>[x.id,j+1])),
   cs=L.map(it=>{const i=G(it),lk=locked(i);return`<div class="msh${i.id%2===0?' inv':''}${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">NO. ${NUM.get(i.id)||''} · ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`});
@@ -2263,6 +2265,17 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')deskClose()});
 
 /* ---- gallery: drag to reorder (owner) ---- */
 const sortG=arr=>{const ix=new Map((HOME.gord||[]).map((id,i)=>[id,i]));return[...arr].sort((a,b)=>{const ia=ix.has(a.id)?ix.get(a.id):-1,ib=ix.has(b.id)?ix.get(b.id):-1;if(ia<0&&ib<0)return 0;if(ia<0)return-1;if(ib<0)return 1;return ia-ib})};
+/* IMG masonry: shortest-column placement, image ratios cached by src so re-renders don't jump */
+const GAR=new Map();
+function gLay(){document.querySelectorAll('.ggr').forEach(g=>{const W=g.clientWidth;if(!W)return;const mob=innerWidth<720,n=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gc'))||3),gap=mob?6:10,cw=(W-gap*(n-1))/n,H=Array(n).fill(0),it=[...g.children].filter(e=>e.classList.contains('gi'));
+ g.style.setProperty('--gw',cw+'px');const hs=it.map(e=>e.offsetHeight);
+ it.forEach((e,k)=>{let c=0;for(let q=1;q<n;q++)if(H[q]<H[c]-1)c=q;e.style.transform=`translate(${c*(cw+gap)}px,${H[c]}px)`;H[c]+=hs[k]+gap});
+ g.style.height=Math.max(0,Math.max(...H)-gap)+'px';g.classList.add('gon')})}
+let GLT=0;const gLaySoon=()=>{cancelAnimationFrame(GLT);GLT=requestAnimationFrame(gLay)};
+document.addEventListener('load',e=>{const im=e.target;if(im.tagName!=='IMG'||!im.closest||!im.closest('.ggr'))return;if(im.naturalWidth&&im.naturalHeight){const r=im.naturalWidth+'/'+im.naturalHeight;GAR.set(im.getAttribute('src'),r);im.style.setProperty('--ar',r)}gLaySoon()},true);
+document.addEventListener('error',e=>{if(e.target.tagName==='IMG'&&e.target.closest&&e.target.closest('.ggr'))gLaySoon()},true);
+addEventListener('resize',gLaySoon);
+new MutationObserver(()=>{if(document.querySelector('.ggr:not(.gon)'))gLaySoon()}).observe(document.body,{childList:true,subtree:true});
 let GD=null,GDSUP=false;
 const gClear=()=>document.querySelectorAll('.gi.gb,.gi.ga').forEach(e=>e.classList.remove('gb','ga'));
 function gStart(e){if(!GD||GD.active)return;const t=GD.el,r=t.getBoundingClientRect(),g=t.cloneNode(true);g.className='gi gghost';g.style.cssText=`position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;margin:0;opacity:.85;pointer-events:none;z-index:400;box-shadow:0 6px 24px rgba(0,0,0,.3)`;g.querySelectorAll('button').forEach(b=>b.remove());document.body.appendChild(g);GD.ghost=g;GD.dx=e.clientX-r.left;GD.dy=e.clientY-r.top;GD.active=true;t.classList.add('gdrag');document.body.style.userSelect='none'}
