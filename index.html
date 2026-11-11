@@ -1204,7 +1204,7 @@ html.mlock,html.mlock body{overflow:hidden}
 .mdk .msh{--tr:transparent;background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-filter:blur(1.5px) grayscale(1);backdrop-filter:blur(1.5px) grayscale(1);border:1px solid color-mix(in srgb,var(--fg) 28%,transparent);box-shadow:0 1px 3px rgba(0,0,0,.05);color:var(--fg)}
 .mdk .msh:hover{box-shadow:0 1px 2px rgba(0,0,0,.08),0 10px 22px rgba(0,0,0,.10)}
 .mdk .msh.dragging{background:color-mix(in srgb,var(--bg) 82%,transparent);box-shadow:0 2px 4px rgba(0,0,0,.10),0 16px 34px rgba(0,0,0,.14)}
-.mdk .msh .mno{color:var(--fg)}
+.mdk .msh .mno{color:color-mix(in srgb,var(--fg) 45%,transparent)}
 .mdk .msh .msf{border-top:1px solid color-mix(in srgb,var(--fg) 25%,transparent)}
 #mov .msheet{background:color-mix(in srgb,var(--bg) 96%,transparent);-webkit-backdrop-filter:blur(6px) grayscale(1);backdrop-filter:blur(6px) grayscale(1);color:var(--fg);border:1px solid color-mix(in srgb,var(--fg) 28%,transparent);box-shadow:0 2px 6px rgba(0,0,0,.08),0 24px 60px rgba(0,0,0,.16)}
 #mov .mwr{color:var(--fg)}
@@ -1991,7 +1991,7 @@ function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.t
   cs=sortG(L).map(it=>{const i=G(it),lk=locked(i);return`<div class="gi${lk?' lk'+lkc(i):''}" ${lk?`data-lk="${i.id}"`:`data-gi="${i.id}"`} style="${lk?'':gs(i)}">${lk?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt=""${GAR.has(i.meta?.src)?` style="--ar:${GAR.get(i.meta?.src)}"`:''}>`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${(i.body||i.tags?.length)&&!lk?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`});
   h=`<div class="ggr gm${admin?' gsort':''}">${cs.join('')}</div>`}
  if(kind==='memo'){const NUM=new Map(ITEMS.filter(i=>i.kind==='memo').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).map((x,j)=>[x.id,j+1])),
-  cs=L.map(it=>{const i=G(it),lk=locked(i);return`<div class="msh${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">NO. ${NUM.get(i.id)||''} · ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`});
+  cs=L.map(it=>{const i=G(it),lk=locked(i);return`<div class="msh${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">#${NUM.get(i.id)||''} ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`});
   h=L.length?`<div class="mdk" id="mdk">${cs.join('')}</div>`:'<p class="empty">no entries</p>';requestAnimationFrame(deskInit);document.fonts&&document.fonts.ready.then(()=>deskInit())}
  if(kind==='line')h=L.length?lineSheet(L):'';
  return L.length?h:''}
