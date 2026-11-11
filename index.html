@@ -1209,6 +1209,23 @@ html.mlock,html.mlock body{overflow:hidden}
 #mov .msheet{background:color-mix(in srgb,var(--bg) 96%,transparent);-webkit-backdrop-filter:blur(6px) grayscale(1);backdrop-filter:blur(6px) grayscale(1);color:var(--fg);border:1px solid color-mix(in srgb,var(--fg) 28%,transparent);box-shadow:0 2px 6px rgba(0,0,0,.08),0 24px 60px rgba(0,0,0,.16)}
 #mov .mwr{color:var(--fg)}
 @media(max-width:720px){.mdk .msh{-webkit-backdrop-filter:blur(1px) grayscale(1);backdrop-filter:blur(1px) grayscale(1)}}
+/* ---------- MEMO: recent desk + month piles (hidden until the button is pressed) ---------- */
+.mpw{margin:28px 0 8px;scroll-margin-top:70px}
+.mptg{display:flex;align-items:center;gap:8px;width:100%;padding:12px 0;border:0;border-top:1px solid var(--line);background:none;color:var(--fg);font:700 11px var(--sans);letter-spacing:.12em;cursor:pointer;text-align:left}
+.mptg b{font-weight:800}.mptg i{font-style:normal;margin-left:auto}
+.mptg:hover b{text-decoration:underline;text-underline-offset:3px}
+.mpg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:34px 22px;padding:18px 6px 20px}
+.mpl{position:relative;display:block;height:150px;padding:0;border:0;background:none;cursor:pointer;color:var(--fg);text-align:left;font:inherit}
+.mpb,.mpt{position:absolute;inset:8px 10px 10px 6px;border:1px solid color-mix(in srgb,var(--fg) 28%,transparent);background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-filter:blur(1.5px) grayscale(1);backdrop-filter:blur(1.5px) grayscale(1)}
+.mpb.b1{transform:translate(5px,4px) rotate(3deg)}.mpb.b2{transform:translate(-4px,7px) rotate(-4deg)}.mpb.b3{transform:translate(8px,10px) rotate(6deg)}
+.mpt{display:flex;flex-direction:column;gap:2px;padding:10px 12px;transform:rotate(-1deg);transition:transform .18s}
+.mpl:hover .mpt{transform:rotate(0) translateY(-3px)}
+.mpt small{font:700 9px var(--sans);letter-spacing:.12em;color:color-mix(in srgb,var(--fg) 45%,transparent)}
+.mpt b{font:800 28px/1 var(--sans);letter-spacing:-.05em}
+.mpt em{font-style:normal;font-size:11.5px;line-height:1.4;margin-top:6px;color:color-mix(in srgb,var(--fg) 70%,transparent);overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.mpn{margin-top:auto;font:700 9.5px var(--sans);letter-spacing:.1em}
+.mpbar{display:flex;align-items:center;gap:12px;margin:6px 0 10px}.mpbar b{font:800 13px var(--sans);letter-spacing:.1em}.mpbar span{font:600 11px var(--sans);color:var(--mut)}
+@media(max-width:720px){.mpg{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 14px}.mpl{height:136px}.mpb,.mpt{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--bg)}}
 </style>
 </head>
 <body>
@@ -1991,8 +2008,14 @@ function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.t
   cs=sortG(L).map(it=>{const i=G(it),lk=locked(i);return`<div class="gi${lk?' lk'+lkc(i):''}" ${lk?`data-lk="${i.id}"`:`data-gi="${i.id}"`} style="${lk?'':gs(i)}">${lk?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt=""${GAR.has(i.meta?.src)?` style="--ar:${GAR.get(i.meta?.src)}"`:''}>`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${(i.body||i.tags?.length)&&!lk?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`});
   h=`<div class="ggr gm${admin?' gsort':''}">${cs.join('')}</div>`}
  if(kind==='memo'){const NUM=new Map(ITEMS.filter(i=>i.kind==='memo').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).map((x,j)=>[x.id,j+1])),
-  cs=L.map(it=>{const i=G(it),lk=locked(i);return`<div class="msh${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">#${NUM.get(i.id)||''} ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`});
-  h=L.length?`<div class="mdk" id="mdk">${cs.join('')}</div>`:'<p class="empty">no entries</p>';requestAnimationFrame(deskInit);document.fonts&&document.fonts.ready.then(()=>deskInit())}
+  mk=it=>{const i=G(it),lk=locked(i);return`<div class="msh${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">#${NUM.get(i.id)||''} ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`},mon=i=>{const x=new Date(i.created_at);return x.getFullYear()+'-'+x.getMonth()},filt=!!(Q||TAG),N=innerWidth<720?8:12;
+  let show=L,rest=[],bar='';
+  if(!filt&&MMON){show=L.filter(i=>mon(i)===MMON);const[y,m]=MMON.split('-');bar=`<div class="mpbar"><button type="button" class="btn" data-mback>← RECENT</button><b>${MONS[+m]} ${y}</b><span>${show.length}</span></div>`}
+  else if(!filt){show=L.slice(0,N);rest=L.slice(N)}
+  const cs=show.map(mk);
+  let piles='';if(rest.length){const G3=[];rest.forEach(i=>{const k=mon(i),g=G3[G3.length-1];if(g&&g.k===k)g.a.push(i);else G3.push({k,a:[i]})});
+   piles=`<div class="mpw"><button type="button" class="mptg${MPILES?' on':''}" data-mpiles aria-expanded="${MPILES}">지난 메모 <b>${rest.length}</b> <i>${MPILES?'▴':'▾'}</i></button>${MPILES?`<div class="mpg">${G3.map(g=>{const[y,m]=g.k.split('-'),t=g.a.find(i=>!locked(G(i))&&(G(i).title||G(i).body)),tt=t?esc((G(t).title||plain(G(t).body||'')).slice(0,28)):'',dp=Math.min(3,Math.ceil(g.a.length/4));return`<button type="button" class="mpl" data-mmon="${g.k}" style="--d:${dp}">${dp>2?'<span class="mpb b3"></span>':''}${dp>1?'<span class="mpb b2"></span>':''}<span class="mpb b1"></span><span class="mpt"><small>${y}</small><b>${MONS[+m]}</b>${tt?`<em>${tt}</em>`:''}<span class="mpn">${g.a.length} MEMOS</span></span></button>`}).join('')}</div>`:''}</div>`}
+  h=show.length?bar+`<div class="mdk" id="mdk">${cs.join('')}</div>`+piles:'<p class="empty">no entries</p>';requestAnimationFrame(deskInit);document.fonts&&document.fonts.ready.then(()=>deskInit())}
  if(kind==='line')h=L.length?lineSheet(L):'';
  return L.length?h:''}
 
@@ -2218,7 +2241,7 @@ function cropInit(i){const m=i.meta||{},CR={d:{x:m.fx??50,y:m.fy??50,h:m.hs||1},
  draw();return{get:()=>({fx:CR.d.x,fy:CR.d.y,hs:CR.d.h,mfx:CR.m.x,mfy:CR.m.y,mhs:CR.m.h})}}
 
 /* ---- memo desk: loose sheets, drag them around, click one to read it ---- */
-let MSV=null,MD=null,MDSUP=false,Z_=60;
+let MSV=null,MD=null,MDSUP=false,Z_=60;let MMON=null,MPILES=false;
 /* a sheet whose text is longer than the sheet shows whole lines only and ends with an ellipsis */
 /* bottom edge of the last text line / image that fully fits inside the visible height (paragraph gaps make "n x line-height" wrong) */
 function deskCut(m){const top=m.getBoundingClientRect().top,lim=m.clientHeight;let best=0;const r=document.createRange(),w=document.createTreeWalker(m,NodeFilter.SHOW_TEXT);
@@ -2241,7 +2264,7 @@ function deskFit(d){d.querySelectorAll('.msh:not(.big)').forEach(s=>{const m=s.q
  m.style.flex='none';m.style.height=h+'px'})}
 function deskInit(){const d=$('#mdk');if(!d)return;const W=d.clientWidth;if(!W)return;const mob=W<560,cols=mob?2:W<900?3:4,gap=mob?4:6,sw=Math.floor((W-12-(cols-1)*gap)/cols),sh=mob?240:290;d.style.setProperty('--sw',sw+'px');d.style.setProperty('--sh',sh+'px');deskFit(d);
  const sheets=[...d.querySelectorAll('.msh')].filter(s=>!s.classList.contains('big')),colH=Array(cols).fill(16);let bottom=0;
- sheets.forEach((s,k)=>{const id=+s.dataset.ms,pos=(HOME.mpos||{})[id],h=s.offsetHeight;let x,y;
+ sheets.forEach((s,k)=>{const id=+s.dataset.ms,pos=MMON?null:(HOME.mpos||{})[id],h=s.offsetHeight;let x,y;
   if(pos){x=pos[0]/100*W;y=pos[1]}else{let c=0;colH.forEach((v,k)=>{if(v<colH[c]-1)c=k});x=6+c*(sw+gap)+((id*37)%26)-13;y=colH[c]+((id*23)%14)-7;colH[c]+=h-26+((id*11)%12)}
   if(!s.style.zIndex)s.style.zIndex=k+1;s.style.left=Math.max(0,Math.min(W-sw,x))+'px';s.style.top=Math.max(0,y)+'px';bottom=Math.max(bottom,Math.max(0,y)+h)});
  d.style.minHeight=Math.max(bottom+36,mob?300:360)+'px'}
@@ -2261,7 +2284,7 @@ document.addEventListener('pointermove',e=>{if(!MD)return;const m=Math.hypot(e.c
  if(e.clientY<70)scrollBy(0,-14);else if(e.clientY>innerHeight-70)scrollBy(0,14)});
 document.addEventListener('touchmove',e=>{if(MD&&MD.active)e.preventDefault()},{passive:false});
 function deskEnd(){const g=MD;MD=null;if(!g)return;clearTimeout(g.timer);const s=g.s;s.classList.remove('dragging');
- if(g.active){MDSUP=true;setTimeout(()=>MDSUP=false,60);const W=g.d.clientWidth,id=+s.dataset.ms;HOME.mpos=HOME.mpos||{};HOME.mpos[id]=[+(parseFloat(s.style.left)/W*100).toFixed(2),Math.round(parseFloat(s.style.top))];
+ if(g.active&&MMON){MDSUP=true;setTimeout(()=>MDSUP=false,60)}else if(g.active){MDSUP=true;setTimeout(()=>MDSUP=false,60);const W=g.d.clientWidth,id=+s.dataset.ms;HOME.mpos=HOME.mpos||{};HOME.mpos[id]=[+(parseFloat(s.style.left)/W*100).toFixed(2),Math.round(parseFloat(s.style.top))];
   if(admin){clearTimeout(MSV);MSV=setTimeout(()=>{try{saveHome()}catch(x){}},700)}}}
 document.addEventListener('pointerup',deskEnd);document.addEventListener('pointercancel',deskEnd);
 document.addEventListener('click',e=>{if(MDSUP){e.stopPropagation();e.preventDefault();MDSUP=false;return}
@@ -2291,6 +2314,10 @@ document.addEventListener('load',e=>{const im=e.target;if(im.tagName!=='IMG'||!i
 document.addEventListener('error',e=>{if(e.target.tagName==='IMG'&&e.target.closest&&e.target.closest('.ggr'))gLaySoon()},true);
 addEventListener('resize',gLaySoon);
 new MutationObserver(()=>{if(document.querySelector('.ggr:not(.gon)'))gLaySoon()}).observe(document.body,{childList:true,subtree:true});
+document.addEventListener('click',e=>{const t=e.target;if(!t.closest)return;let x;
+ if(x=t.closest('[data-mpiles]')){MPILES=!MPILES;const l=$('#lst');if(l){l.innerHTML=list('memo');if(MPILES){const w=$('.mpw');w&&w.scrollIntoView({behavior:'smooth',block:'start'})}}return}
+ if(x=t.closest('[data-mmon]')){MMON=x.dataset.mmon;const l=$('#lst');if(l){l.innerHTML=list('memo');l.scrollIntoView({behavior:'smooth',block:'start'})}return}
+ if(t.closest('[data-mback]')){MMON=null;const l=$('#lst');if(l){l.innerHTML=list('memo');scrollTo({top:0,behavior:'smooth'})}}});
 let GD=null,GDSUP=false;
 const gClear=()=>document.querySelectorAll('.gi.gb,.gi.ga').forEach(e=>e.classList.remove('gb','ga'));
 function gStart(e){if(!GD||GD.active)return;const t=GD.el,r=t.getBoundingClientRect(),g=t.cloneNode(true);g.className='gi gghost';g.style.cssText=`position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;margin:0;opacity:.85;pointer-events:none;z-index:400;box-shadow:0 6px 24px rgba(0,0,0,.3)`;g.querySelectorAll('button').forEach(b=>b.remove());document.body.appendChild(g);GD.ghost=g;GD.dx=e.clientX-r.left;GD.dy=e.clientY-r.top;GD.active=true;t.classList.add('gdrag');document.body.style.userSelect='none'}
