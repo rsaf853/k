@@ -1201,16 +1201,14 @@ html.mlock,html.mlock body{overflow:hidden}
 #mov.inv .rit,#mov.inv .rit.var,#mov.inv .rit .mn,#mov.inv .rit .rsrc{color:var(--bg)}
 #mov.inv .rit:hover{background:var(--bg);color:var(--fg)}
 /* ---------- MEMO: tracing paper (translucent sheets; overlaps darken, the top sheet blurs what is under it) ---------- */
-.mdk .msh{--tr:color-mix(in srgb,var(--fg) 1.8%,transparent);background:linear-gradient(var(--tr),var(--tr)),color-mix(in srgb,var(--bg) 70%,transparent);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);border:1px solid var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.05);color:var(--fg)}
+.mdk .msh{--tr:color-mix(in srgb,var(--fg) 4%,transparent);background:linear-gradient(var(--tr),var(--tr)),color-mix(in srgb,var(--bg) 70%,transparent);-webkit-backdrop-filter:blur(3px) grayscale(1);backdrop-filter:blur(3px) grayscale(1);border:1px solid color-mix(in srgb,var(--fg) 28%,transparent);box-shadow:0 1px 3px rgba(0,0,0,.05);color:var(--fg)}
 .mdk .msh:hover{box-shadow:0 1px 2px rgba(0,0,0,.08),0 10px 22px rgba(0,0,0,.10)}
 .mdk .msh.dragging{background:linear-gradient(var(--tr),var(--tr)),color-mix(in srgb,var(--bg) 80%,transparent);box-shadow:0 2px 4px rgba(0,0,0,.10),0 16px 34px rgba(0,0,0,.14)}
 .mdk .msh .mno{color:color-mix(in srgb,var(--fg) 60%,transparent)}
 .mdk .msh .msf{border-top:1px solid color-mix(in srgb,var(--fg) 25%,transparent)}
-.mdk .msh.cut .mt{-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent);mask-image:linear-gradient(180deg,#000 70%,transparent)}
-.mdk .msh.cut .mt::after{display:none}
-#mov .msheet{background:color-mix(in srgb,var(--bg) 84%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:var(--fg);border:1px solid var(--fg);box-shadow:0 2px 6px rgba(0,0,0,.08),0 24px 60px rgba(0,0,0,.16)}
+#mov .msheet{background:color-mix(in srgb,var(--bg) 84%,transparent);-webkit-backdrop-filter:blur(6px) grayscale(1);backdrop-filter:blur(6px) grayscale(1);color:var(--fg);border:1px solid color-mix(in srgb,var(--fg) 28%,transparent);box-shadow:0 2px 6px rgba(0,0,0,.08),0 24px 60px rgba(0,0,0,.16)}
 #mov .mwr{color:var(--fg)}
-@media(max-width:720px){.mdk .msh{-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}}
+@media(max-width:720px){.mdk .msh{-webkit-backdrop-filter:blur(2px) grayscale(1);backdrop-filter:blur(2px) grayscale(1)}}
 </style>
 </head>
 <body>
