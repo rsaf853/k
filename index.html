@@ -2269,7 +2269,13 @@ const sortG=arr=>{const ix=new Map((HOME.gord||[]).map((id,i)=>[id,i]));return[.
 const GAR=new Map();
 function gLay(){document.querySelectorAll('.ggr').forEach(g=>{const W=g.clientWidth;if(!W)return;const mob=innerWidth<720,n=Math.max(1,parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gc'))||3),gap=mob?6:10,cw=(W-gap*(n-1))/n,H=Array(n).fill(0),it=[...g.children].filter(e=>e.classList.contains('gi'));
  g.style.setProperty('--gw',cw+'px');const hs=it.map(e=>e.offsetHeight);
- it.forEach((e,k)=>{let c=0;for(let q=1;q<n;q++)if(H[q]<H[c]-1)c=q;e.style.transform=`translate(${c*(cw+gap)}px,${H[c]}px)`;H[c]+=hs[k]+gap});
+ /* greedy (shortest column) for most images; the last few are tried in every column combination so the bottoms end as even as possible */
+ const N=it.length,K=n>1?Math.min(N,Math.max(0,Math.floor(Math.log(20000)/Math.log(n))),8):0,cols=Array(N).fill(0);
+ for(let k=0;k<N-K;k++){let c=0;for(let q=1;q<n;q++)if(H[q]<H[c]-1)c=q;cols[k]=c;H[c]+=hs[k]+gap}
+ if(K){let best=Infinity,bc=null;const cur=Array(K),T=H.slice();
+  const dfs=d=>{if(d===K){const sp=Math.max(...T)-Math.min(...T);if(sp<best-.5){best=sp;bc=cur.slice()}return}const h=hs[N-K+d]+gap;for(let q=0;q<n;q++){cur[d]=q;T[q]+=h;dfs(d+1);T[q]-=h}};
+  dfs(0);bc.forEach((c,d)=>{cols[N-K+d]=c;H[c]+=hs[N-K+d]+gap})}
+ const Y=Array(n).fill(0);it.forEach((e,k)=>{const c=cols[k];e.style.transform=`translate(${c*(cw+gap)}px,${Y[c]}px)`;Y[c]+=hs[k]+gap});
  g.style.height=Math.max(0,Math.max(...H)-gap)+'px';g.classList.add('gon')})}
 let GLT=0;const gLaySoon=()=>{cancelAnimationFrame(GLT);GLT=requestAnimationFrame(gLay)};
 document.addEventListener('load',e=>{const im=e.target;if(im.tagName!=='IMG'||!im.closest||!im.closest('.ggr'))return;if(im.naturalWidth&&im.naturalHeight){const r=im.naturalWidth+'/'+im.naturalHeight;GAR.set(im.getAttribute('src'),r);im.style.setProperty('--ar',r)}gLaySoon()},true);
