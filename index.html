@@ -1201,12 +1201,12 @@ html.mlock,html.mlock body{overflow:hidden}
 #mov.inv .rit,#mov.inv .rit.var,#mov.inv .rit .mn,#mov.inv .rit .rsrc{color:var(--bg)}
 #mov.inv .rit:hover{background:var(--bg);color:var(--fg)}
 /* ---------- MEMO: tracing paper (translucent sheets; overlaps darken, the top sheet blurs what is under it) ---------- */
-.mdk .msh{--tr:transparent;background:color-mix(in srgb,var(--bg) 94%,transparent);-webkit-backdrop-filter:blur(3px) grayscale(1);backdrop-filter:blur(3px) grayscale(1);border:1px solid var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.05);color:var(--fg)}
+.mdk .msh{--tr:transparent;background:color-mix(in srgb,var(--bg) 94%,transparent);-webkit-backdrop-filter:blur(3px) grayscale(1);backdrop-filter:blur(3px) grayscale(1);border:1px solid color-mix(in srgb,var(--fg) 28%,transparent);box-shadow:0 1px 3px rgba(0,0,0,.05);color:var(--fg)}
 .mdk .msh:hover{box-shadow:0 1px 2px rgba(0,0,0,.08),0 10px 22px rgba(0,0,0,.10)}
 .mdk .msh.dragging{background:var(--bg);box-shadow:0 2px 4px rgba(0,0,0,.10),0 16px 34px rgba(0,0,0,.14)}
 .mdk .msh .mno{color:var(--fg)}
 .mdk .msh .msf{border-top:1px solid color-mix(in srgb,var(--fg) 25%,transparent)}
-#mov .msheet{background:color-mix(in srgb,var(--bg) 96%,transparent);-webkit-backdrop-filter:blur(6px) grayscale(1);backdrop-filter:blur(6px) grayscale(1);color:var(--fg);border:1px solid var(--fg);box-shadow:0 2px 6px rgba(0,0,0,.08),0 24px 60px rgba(0,0,0,.16)}
+#mov .msheet{background:color-mix(in srgb,var(--bg) 96%,transparent);-webkit-backdrop-filter:blur(6px) grayscale(1);backdrop-filter:blur(6px) grayscale(1);color:var(--fg);border:1px solid color-mix(in srgb,var(--fg) 28%,transparent);box-shadow:0 2px 6px rgba(0,0,0,.08),0 24px 60px rgba(0,0,0,.16)}
 #mov .mwr{color:var(--fg)}
 @media(max-width:720px){.mdk .msh{-webkit-backdrop-filter:blur(2px) grayscale(1);backdrop-filter:blur(2px) grayscale(1)}}
 </style>
