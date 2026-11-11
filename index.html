@@ -2011,7 +2011,7 @@ function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.t
  if(kind==='memo'){const NUM=new Map(ITEMS.filter(i=>i.kind==='memo').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).map((x,j)=>[x.id,j+1])),
   mk=it=>{const i=G(it),lk=locked(i);return`<div class="msh${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">#${NUM.get(i.id)||''} ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`},mon=i=>{const x=new Date(i.created_at);return x.getFullYear()+'-'+x.getMonth()},filt=!!(Q||TAG),N=innerWidth<720?8:12;
   let show=L,rest=[],bar='';
-  if(!filt&&MMON){show=L.filter(i=>mon(i)===MMON);const[y,m]=MMON.split('-');bar=`<div class="mpbar"><b>${MONS[+m]}</b><small>${y}</small><span>${show.length}</span><button type="button" class="mpbk" data-mback>최근 메모로</button></div>`}
+  if(!filt&&MMON){show=L.filter(i=>mon(i)===MMON);const[y,m]=MMON.split('-');bar=`<div class="mpbar"><b>${MONS[+m]}</b><small>${y}</small><span>${show.length}</span><button type="button" class="mpbk" data-mback>Back to recent</button></div>`}
   else if(!filt){show=L.slice(0,N);rest=L.slice(N)}
   const cs=show.map(mk);
   let piles='';if(rest.length){const G3=[];rest.forEach(i=>{const k=mon(i),g=G3[G3.length-1];if(g&&g.k===k)g.a.push(i);else G3.push({k,a:[i]})});
