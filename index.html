@@ -1212,7 +1212,7 @@ html.mlock,html.mlock body{overflow:hidden}
 /* ---------- MEMO: recent desk + month piles (hidden until the button is pressed) ---------- */
 .mpw{margin:28px 0 8px;scroll-margin-top:70px}
 .mptg{display:flex;align-items:center;gap:8px;width:100%;padding:12px 0;border:0;border-top:1px solid var(--line);background:none;color:var(--fg);font:700 11px var(--sans);letter-spacing:.12em;cursor:pointer;text-align:left}
-.mptg b{font-weight:800}.mptg i{font-style:normal;margin-left:auto}
+.mptg b{font-weight:800}.mptg i{display:grid;margin-left:auto}.mptg svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.3;transition:transform .2s}.mptg.on svg{transform:rotate(180deg)}
 .mptg:hover b{text-decoration:underline;text-underline-offset:3px}
 .mpg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:34px 22px;padding:18px 6px 20px}
 .mpl{position:relative;display:block;height:150px;padding:0;border:0;background:none;cursor:pointer;color:var(--fg);text-align:left;font:inherit}
@@ -2015,7 +2015,7 @@ function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.t
   else if(!filt){show=L.slice(0,N);rest=L.slice(N)}
   const cs=show.map(mk);
   let piles='';if(rest.length){const G3=[];rest.forEach(i=>{const k=mon(i),g=G3[G3.length-1];if(g&&g.k===k)g.a.push(i);else G3.push({k,a:[i]})});
-   piles=`<div class="mpw"><button type="button" class="mptg${MPILES?' on':''}" data-mpiles aria-expanded="${MPILES}">EARLIER <b>${rest.length}</b> <i>${MPILES?'▴':'▾'}</i></button>${MPILES?`<div class="mpg">${G3.map(g=>{const[y,m]=g.k.split('-'),t=g.a.find(i=>!locked(G(i))&&(G(i).title||G(i).body)),tt=t?esc((G(t).title||plain(G(t).body||'')).slice(0,28)):'',dp=Math.min(3,Math.ceil(g.a.length/4));return`<button type="button" class="mpl" data-mmon="${g.k}" style="--d:${dp}">${dp>2?'<span class="mpb b3"></span>':''}${dp>1?'<span class="mpb b2"></span>':''}<span class="mpb b1"></span><span class="mpt"><small>${y}</small><b>${MONS[+m]}</b>${tt?`<em>${tt}</em>`:''}<span class="mpn">${g.a.length} MEMOS</span></span></button>`}).join('')}</div>`:''}</div>`}
+   piles=`<div class="mpw"><button type="button" class="mptg${MPILES?' on':''}" data-mpiles aria-expanded="${MPILES}">EARLIER <b>${rest.length}</b> <i><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5l4 4 4-4"/></svg></i></button>${MPILES?`<div class="mpg">${G3.map(g=>{const[y,m]=g.k.split('-'),t=g.a.find(i=>!locked(G(i))&&(G(i).title||G(i).body)),tt=t?esc((G(t).title||plain(G(t).body||'')).slice(0,28)):'',dp=Math.min(3,Math.ceil(g.a.length/4));return`<button type="button" class="mpl" data-mmon="${g.k}" style="--d:${dp}">${dp>2?'<span class="mpb b3"></span>':''}${dp>1?'<span class="mpb b2"></span>':''}<span class="mpb b1"></span><span class="mpt"><small>${y}</small><b>${MONS[+m]}</b>${tt?`<em>${tt}</em>`:''}<span class="mpn">${g.a.length} MEMOS</span></span></button>`}).join('')}</div>`:''}</div>`}
   h=show.length?bar+`<div class="mdk" id="mdk">${cs.join('')}</div>`+piles:'<p class="empty">no entries</p>';requestAnimationFrame(deskInit);document.fonts&&document.fonts.ready.then(()=>deskInit())}
  if(kind==='line')h=L.length?lineSheet(L):'';
  return L.length?h:''}
