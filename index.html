@@ -1251,6 +1251,29 @@ html.mlock,html.mlock body{overflow:hidden}
 .epff button{padding:3px 8px;border:1px solid var(--line);background:var(--bg);color:var(--mut);font-size:11px;letter-spacing:0;cursor:pointer}
 .epff button.on{border-color:var(--fg);color:var(--fg)}
 .epff button:hover{color:var(--fg)}
+/* ---------- photo albums ---------- */
+.gi.alb img.as{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.asg{position:absolute;left:6px;right:6px;bottom:6px;z-index:2;display:flex;gap:3px;opacity:0;transition:opacity .2s;pointer-events:none}
+.asg i{flex:1;height:2px;background:rgba(255,255,255,.45)}.asg i.on{background:#fff}
+.gi.alb:hover .asg,.gi.alb.scr .asg{opacity:1}
+.gi.alb .cp{z-index:3}
+#lb:has(.alb-v){flex-direction:column;gap:10px;cursor:zoom-out}
+.alb-v{position:relative;width:min(94vw,820px);height:min(82vh,640px);height:min(82dvh,640px);outline:none;cursor:default;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.alb-c{margin:0;max-width:min(94vw,820px);color:#fff;font-size:12.5px;text-align:center}
+.ask{position:absolute;left:50%;top:50%;max-width:86%;max-height:88%;object-fit:contain;transition:transform .5s cubic-bezier(.3,.8,.2,1),opacity .4s;cursor:pointer}
+.apr{position:absolute;padding:6px 6px 18px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.3);cursor:grab;transition:transform .4s cubic-bezier(.3,.8,.2,1),left .4s,top .4s,width .4s;touch-action:none}
+.apr.drg{transition:none;cursor:grabbing}
+.apr img{display:block;width:100%;pointer-events:none}
+.abk{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;aspect-ratio:2/1.35;max-height:100%;display:grid;grid-template-columns:1fr 1fr;perspective:1600px;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.abk.one{width:min(100%,460px);aspect-ratio:1/1.3;grid-template-columns:1fr}.abk.one .l{display:none}
+.apg{position:relative;background:#fbfbf8;display:grid;place-items:center;padding:7%;overflow:hidden;cursor:pointer}
+.apg img{max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.abk .l{border-right:1px solid #ddd}
+.alf{position:absolute;left:50%;top:0;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.45,.05,.25,1)}
+.abk.one .alf{left:0;width:100%}
+.alf .apg{position:absolute;inset:0;backface-visibility:hidden}.alf .bk2{transform:rotateY(180deg)}
+.alf.go{transform:rotateY(-180deg)}
+@media(prefers-reduced-motion:reduce){.ask,.apr,.alf{transition:none}}
 </style>
 </head>
 <body>
@@ -1326,7 +1349,7 @@ const ulf=id=>`<div class="rkw"><span class="rkt">${RKI}<b>LOCKED</b></span><for
 function lockPage(it){const lg=it.kind==='log';app.innerHTML=`<div class="lkpg"><svg class="rkbig" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnR"/></svg><div class="lkpm">${lg?'LOG':'ARCHIVE'} · ${date(it.created_at)}</div><h1 class="lkh1">${esc(it.title||'untitled')}</h1>${ulf(it.id)}<a class="lkbk" href="#/${lg?'log':'posts'}">← ${lg?'log':'archive'}</a></div>`;setTimeout(()=>{const o=app.querySelector('.uf input');if(o)o.focus()},60)}
 const hash=t=>[...t.matchAll(/(?:^|\s)#([^\s#]+)/g)].map(m=>m[1]);
 const openM=h=>{$('#mb').innerHTML=h;$('#md').hidden=false},closeM=()=>{$('#md').hidden=true;if(ADJ){Object.assign(HOME,ADJ);ADJ=null;paintVars()}{const im=$('#im');if(im)delete im.dataset.ep}};
-$('#md').onclick=e=>{if(e.target.id==='md')closeM()};$('#lb').onclick=()=>$('#lb').hidden=true;
+$('#md').onclick=e=>{if(e.target.id==='md')closeM()};$('#lb').onclick=e=>{if(!e.target.isConnected||(e.target.closest&&e.target.closest('.alb-v')))return;$('#lb').hidden=true};
 const msg=t=>{const e=$('#st');if(e)e.textContent=t;else alert(t)};
 const rid=f=>`${crypto.randomUUID()}.${(f.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg'}`;
 async function upload(f){const p=rid(f),u=await sb.storage.from('img').upload(p,f,{contentType:f.type});if(u.error)throw u.error;return sb.storage.from('img').getPublicUrl(p).data.publicUrl}
@@ -1886,7 +1909,7 @@ const KCODE={post:'E4',log:'E5',memo:'F4',line:'EXF4',gallery:'?!'},KNAME={post:
 const relName=r=>{const g=G(r);return g.title||(g.kind==='gallery'?(g.body||'Image'):plain(g.body||'').slice(0,34))||('#'+g.id)};
 const relOf=it=>{const own=Array.isArray(it.meta&&it.meta.rel)?it.meta.rel:[],back=ITEMS.filter(x=>x.id!==it.id&&Array.isArray(x.meta&&x.meta.rel)&&x.meta.rel.includes(it.id)).map(x=>x.id);return[...new Set([...own,...back])].map(id=>ITEMS.find(x=>x.id===id)).filter(Boolean)};
 const relBlock=it=>{const L=relOf(it);if(!L.length)return'';return`<div class="rel"><div class="rl"><span>Variations</span><span>${L.length}</span></div><div class="rpg">${L.map((r,j)=>`<a class="rit ${j?'var':'main'}" data-rel="${r.id}" href="${r.kind==='post'?'#/post/'+r.id:r.kind==='log'?'#/log/'+r.id:'#/'}"><span class="mn">${j?'(1…'+j:'1.'}</span>${esc(relName(r))}<span class="rsrc">${KNAME[r.kind]}${j?')':''}</span></a>`).join('')}</div></div>`};
-function openLb(id){const i=G(ITEMS.find(i=>i.id==id));if(!i)return;if(locked(i))return unlock(i.id);$('#lb').innerHTML=`<figure><img src="${esc(i.meta.src)}" alt="">${i.body?`<figcaption>${esc(i.body)}</figcaption>`:''}${relBlock(i)}</figure>`;$('#lb').hidden=false}
+function openLb(id){const i=G(ITEMS.find(i=>i.id==id));if(!i)return;if(locked(i))return unlock(i.id);if(Array.isArray(i.meta?.srcs)&&i.meta.srcs.length>1)return albOpen(i);$('#lb').innerHTML=`<figure><img src="${esc(i.meta.src)}" alt="">${i.body?`<figcaption>${esc(i.body)}</figcaption>`:''}${relBlock(i)}</figure>`;$('#lb').hidden=false}
 function relGo(id){const r=ITEMS.find(i=>i.id==id);if(!r)return;deskClose();closeM();$('#lb').hidden=true;
  if(r.kind==='post')location.hash='#/post/'+id;else if(r.kind==='log')location.hash='#/log/'+id;
  else if(r.kind==='memo'){if(location.hash!=='#/memo')location.hash='#/memo';setTimeout(()=>memoView(id),80)}
@@ -2037,7 +2060,7 @@ function mqFit(){document.querySelectorAll('.mq .mqb').forEach(b=>{const x=b.fir
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
  if(kind==='post'){const G2=[];L.forEach(i=>{const x=new Date(i.created_at),k=x.getFullYear()+'-'+x.getMonth(),g=G2[G2.length-1];if(g&&g.k===k)g.a.push(i);else G2.push({k,l:MONS[x.getMonth()]+' '+x.getFullYear(),a:[i]})});h=`<div class="arx mon">${G2.map(g=>`<div class="ag"><div class="agh"><b>${g.l}</b><i></i><span>${g.a.length}</span></div>${g.a.map(i=>{const inn=`<span class="dn">${p2(new Date(i.created_at).getDate())}</span><b>${vb(i)}${esc(i.title||'untitled')}</b>${i.meta?.sub?`<span class="as">${esc(i.meta.sub)}</span>`:''}${(i.tags||[]).length?`<span class="at">${tags(i)}</span>`:''}`;return`<a class="ai" href="#/post/${i.id}" data-tip="${i.id}">${inn}</a>`}).join('')}</div>`).join('')}</div>`}
  if(kind==='gallery'){const gs=()=>'',
-  cs=sortG(L).map(it=>{const i=G(it),lk=locked(i);return`<div class="gi${lk?' lk'+lkc(i):''}" ${lk?`data-lk="${i.id}"`:`data-gi="${i.id}"`} style="${lk?'':gs(i)}">${lk?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt=""${GAR.has(i.meta?.src)?` style="--ar:${GAR.get(i.meta?.src)}"`:''}>`}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${(i.body||i.tags?.length)&&!lk?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`});
+  cs=sortG(L).map(it=>{const i=G(it),lk=locked(i),al=!lk&&Array.isArray(i.meta?.srcs)&&i.meta.srcs.length>1;return`<div class="gi${lk?' lk'+lkc(i):''}${al?' alb':''}" ${lk?`data-lk="${i.id}"`:`data-gi="${i.id}"`} style="${lk?'':gs(i)}">${lk?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt=""${GAR.has(i.meta?.src)?` style="--ar:${GAR.get(i.meta?.src)}"`:''}>`}${al?`<img class="as" alt="" hidden><span class="asg">${i.meta.srcs.map((x,j)=>`<i${j?'':' class="on"'}></i>`).join('')}</span>`:''}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${(i.body||i.tags?.length)&&!lk?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`});
   h=`<div class="ggr gm${admin?' gsort':''}">${cs.join('')}</div>`}
  if(kind==='memo'){const NUM=new Map(ITEMS.filter(i=>i.kind==='memo').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).map((x,j)=>[x.id,j+1])),
   mk=it=>{const i=G(it),lk=locked(i);return`<div class="msh${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">#${NUM.get(i.id)||''} ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`},mon=i=>{const x=new Date(i.created_at);return x.getFullYear()+'-'+x.getMonth()},filt=!!(Q||TAG),N=innerWidth<720?8:12;
@@ -2257,7 +2280,7 @@ function memoView(id){const it=ITEMS.find(i=>i.id==id);if(!it)return;const i=G(i
 function form(kind,it){if(kind==='post'||kind==='log'){closeM();return editor(it,kind)}const i=it||{visibility:'public',tags:[],meta:{}},nw=!it;
  openM(`<h3>${LBL[kind].toUpperCase()} ${nw?'NEW':'EDIT'}</h3><form id="f">
  ${kind==='memo'||kind==='log'?`<label>Title</label><input name="title" value="${esc(i.title)}">`:''}
- ${kind==='gallery'?`<label>Image URL (one per line)</label><textarea name="urls">${esc(i.meta?.src||'')}</textarea>${nw?'<label>or upload files</label><input type="file" name="files" accept="image/*" multiple>':''}<label>Caption</label><input name="body" value="${esc(i.body)}">${nw?'':cropUI(i)}`:`<label>Content${kind==='line'||kind==='memo'||kind==='log'?' (markdown)':''}</label><textarea name="body" style="min-height:${kind==='line'?110:kind==='log'?280:140}px">${esc(i.body)}</textarea>`}
+ ${kind==='gallery'?`<label>Image URL (one per line${nw?'':'; the first one is the cover'})</label><textarea name="urls">${esc((i.meta?.srcs&&i.meta.srcs.length>1?i.meta.srcs:[i.meta?.src||'']).join('\n'))}</textarea>${nw?'<label>or upload files</label><input type="file" name="files" accept="image/*" multiple><label>Several pictures</label><select name="grp"><option value="each">One post per picture</option><option value="album">One album (first picture is the cover)</option></select>':''}<label>Album view</label><select name="av">${[['stack','Stack'],['desk','Scatter on a desk'],['book','Photo book']].map(([k,t])=>`<option value="${k}"${(i.meta?.av||'stack')===k?' selected':''}>${t}</option>`).join('')}</select><label>Caption</label><input name="body" value="${esc(i.body)}">${nw?'':cropUI(i)}`:`<label>Content${kind==='line'||kind==='memo'||kind==='log'?' (markdown)':''}</label><textarea name="body" style="min-height:${kind==='line'?110:kind==='log'?280:140}px">${esc(i.body)}</textarea>`}
  ${kind==='line'||kind==='log'?`<label>Date</label><input type="datetime-local" name="dt" value="${nw?'':loc(i.created_at)}">`:''}
   <label>Tags (space separated)</label><input name="tags" value="${esc((i.tags||[]).join(' '))}"><div class="tpk" id="ftpk"></div>
  <label>Related (also shown on the other entry)</label><div class="relw" id="frel"></div>
@@ -2273,7 +2296,9 @@ function form(kind,it){if(kind==='post'||kind==='log'){closeM();return editor(it
   if(kind==='gallery'){const srcs=(fd.get('urls')||'').split('\n').map(s=>s.trim()).filter(Boolean);
    try{for(const f of fd.getAll('files')){if(f.size)srcs.push(await upload(f))}}catch(x){return msg('Upload failed: '+x.message)}
    if(!srcs.length)return msg('Add an image');
-   if(!nw)return save({...base,body:fd.get('body'),meta:{...(i.meta||{}),src:srcs[0],rel:REL.get(),...(CROP?CROP.get():{})}},i.id,pw);
+   const av=fd.get('av')||'stack';
+   if(!nw){const m={...(i.meta||{}),src:srcs[0],av,rel:REL.get(),...(CROP?CROP.get():{})};if(srcs.length>1)m.srcs=srcs;else delete m.srcs;return save({...base,body:fd.get('body'),meta:m},i.id,pw)}
+   if(fd.get('grp')==='album'&&srcs.length>1)return save({...base,body:fd.get('body'),meta:{src:srcs[0],srcs,av,rel:REL.get()}},null,pw);
    for(const s of srcs)await save({...base,body:fd.get('body'),meta:{src:s,rel:REL.get()}},null,pw,1);return done()}
   save({...base,body:fd.get('body'),meta:{...(i.meta||{}),rel:REL.get()}},i.id,pw)}}
 async function save(row,id,pw,quiet){try{const r=id?await sb.from('items').update(row).eq('id',id).select('id').single():await sb.from('items').insert(row).select('id').single();
@@ -2361,7 +2386,7 @@ function gLay(){document.querySelectorAll('.ggr').forEach(g=>{const W=g.clientWi
  const Y=Array(n).fill(0);it.forEach((e,k)=>{const c=cols[k];e.style.transform=`translate(${c*(cw+gap)}px,${Y[c]}px)`;Y[c]+=hs[k]+gap});
  g.style.height=Math.max(0,Math.max(...H)-gap)+'px';g.classList.add('gon')})}
 let GLT=0;const gLaySoon=()=>{cancelAnimationFrame(GLT);GLT=requestAnimationFrame(gLay)};
-document.addEventListener('load',e=>{const im=e.target;if(im.tagName!=='IMG'||!im.closest||!im.closest('.ggr'))return;if(im.naturalWidth&&im.naturalHeight){const r=im.naturalWidth+'/'+im.naturalHeight;GAR.set(im.getAttribute('src'),r);im.style.setProperty('--ar',r)}gLaySoon()},true);
+document.addEventListener('load',e=>{const im=e.target;if(im.tagName!=='IMG'||!im.closest||!im.closest('.ggr')||im.classList.contains('as'))return;if(im.naturalWidth&&im.naturalHeight){const r=im.naturalWidth+'/'+im.naturalHeight;GAR.set(im.getAttribute('src'),r);im.style.setProperty('--ar',r)}gLaySoon()},true);
 document.addEventListener('error',e=>{if(e.target.tagName==='IMG'&&e.target.closest&&e.target.closest('.ggr'))gLaySoon()},true);
 addEventListener('resize',gLaySoon);
 new MutationObserver(()=>{if(document.querySelector('.ggr:not(.gon)'))gLaySoon()}).observe(document.body,{childList:true,subtree:true});
@@ -2370,6 +2395,43 @@ document.addEventListener('click',e=>{const t=e.target;if(!t.closest)return;let 
  if(x=t.closest('[data-mmon]')){MMON=x.dataset.mmon;const l=$('#lst');if(l){l.innerHTML=list('memo');l.scrollIntoView({behavior:'smooth',block:'start'})}return}
  if(t.closest('[data-mback]')){MMON=null;const l=$('#lst');if(l){l.innerHTML=list('memo');scrollTo({top:0,behavior:'smooth'})}}});
 let GD=null,GDSUP=false;
+
+/* ---------- photo albums (gallery item with meta.srcs): scrub on the tile, open as stack / desk / book ---------- */
+function albScrub(t,x){const it=G(ITEMS.find(i=>i.id==t.dataset.gi));const S=it?.meta?.srcs;if(!S)return;const r=t.getBoundingClientRect(),k=Math.max(0,Math.min(S.length-1,Math.floor((x-r.left)/r.width*S.length))),o=t.querySelector('img.as');
+ if(o){if(k){if(o.dataset.k!=k){o.src=S[k];o.dataset.k=k}o.hidden=false}else o.hidden=true}t.querySelectorAll('.asg i').forEach((s,j)=>s.classList.toggle('on',j===k))}
+document.addEventListener('mousemove',e=>{const t=e.target.closest&&e.target.closest('.gi.alb');if(t)albScrub(t,e.clientX)});
+document.addEventListener('mouseout',e=>{const t=e.target.closest&&e.target.closest('.gi.alb');if(t&&!t.contains(e.relatedTarget))albScrub(t,-1e6)});
+let ATS=null;document.addEventListener('touchstart',e=>{const t=e.target.closest&&e.target.closest('.gi.alb');ATS=t?{t,x:e.touches[0].clientX,y:e.touches[0].clientY,h:false}:null},{passive:true});
+document.addEventListener('touchmove',e=>{if(!ATS)return;const dx=e.touches[0].clientX-ATS.x,dy=e.touches[0].clientY-ATS.y;if(!ATS.h&&Math.abs(dx)>12&&Math.abs(dx)>Math.abs(dy))ATS.h=true;if(ATS.h){ATS.t.classList.add('scr');albScrub(ATS.t,e.touches[0].clientX)}},{passive:true});
+document.addEventListener('touchend',()=>{if(ATS&&ATS.h){const t=ATS.t;GDSUP=true;setTimeout(()=>{GDSUP=false;t.classList.remove('scr');albScrub(t,-1e6)},900)}ATS=null},{passive:true});
+function albOpen(i){const S=i.meta.srcs,av=i.meta.av||'stack',lb=$('#lb'),rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ lb.innerHTML=`<div class="alb-v av-${av}" tabindex="-1"></div>${i.body?`<p class="alb-c">${esc(i.body)}</p>`:''}`;lb.hidden=false;const v=lb.querySelector('.alb-v');v.focus({preventScroll:true});
+ const key=f=>v.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();f(1)}if(e.key==='ArrowLeft'){e.preventDefault();f(-1)}});
+ if(av==='desk'){let z=10;const ps=S.map(u=>{const p=document.createElement('div');p.className='apr';p.innerHTML=`<img src="${esc(u)}" alt="" draggable="false">`;v.appendChild(p);return p});
+  const W=v.clientWidth,H=v.clientHeight,pw=Math.min(W*.36,240);ps.forEach((p,k)=>{p.style.width=pw+'px';const x=Math.random()*(W-pw),y=Math.random()*(H-pw*1.1),r=(Math.random()-.5)*28;p.dataset.r=r;p.dataset.x=x;p.dataset.y=y;
+   if(!rm){p.style.transition='none';p.style.left=(W-pw)/2+'px';p.style.top=-pw*1.6+'px';p.style.transform=`rotate(${r*3}deg)`;p.offsetWidth;p.style.transition=''}
+   setTimeout(()=>{p.style.left=x+'px';p.style.top=y+'px';p.style.transform=`rotate(${r}deg)`},rm?0:k*80)});
+  let D=null;const bigOff=()=>ps.forEach(q=>{if(q.classList.contains('big')){q.classList.remove('big');q.style.width=pw+'px';q.style.left=q.dataset.x+'px';q.style.top=q.dataset.y+'px';q.style.transform=`rotate(${q.dataset.r}deg)`}});
+  v.addEventListener('pointerdown',e=>{const p=e.target.closest('.apr');if(!p)return;e.preventDefault();p.style.zIndex=++z;const r=p.getBoundingClientRect();D={p,ox:e.clientX-r.left,oy:e.clientY-r.top,x0:e.clientX,y0:e.clientY,m:false};p.setPointerCapture(e.pointerId)});
+  v.addEventListener('pointermove',e=>{if(!D)return;if(!D.m&&Math.hypot(e.clientX-D.x0,e.clientY-D.y0)>5){D.m=true;if(D.p.classList.contains('big'))bigOff();D.p.classList.add('drg')}if(!D.m)return;const b=v.getBoundingClientRect(),x=e.clientX-b.left-D.ox,y=e.clientY-b.top-D.oy;D.p.style.left=x+'px';D.p.style.top=y+'px';D.p.dataset.x=x;D.p.dataset.y=y});
+  v.addEventListener('pointerup',()=>{if(!D)return;const p=D.p;p.classList.remove('drg');if(!D.m){const on=!p.classList.contains('big');bigOff();if(on){const bw=Math.min(W*.72,520);p.classList.add('big');p.style.width=bw+'px';p.style.left=(W-bw)/2+'px';p.style.top=Math.max(0,(H-bw*1.05)/2)+'px';p.style.transform='rotate(0deg)'}}D=null});
+  return}
+ if(av==='book'){const one=v.clientWidth<560;let k=0,busy=false;v.innerHTML=`<div class="abk${one?' one':''}"><div class="apg l"></div><div class="apg r"></div></div>`;const bk=v.firstChild,L=bk.querySelector('.l'),R=bk.querySelector('.r'),st=one?1:2;
+  const pg=j=>j>=0&&j<S.length?`<img src="${esc(S[j])}" alt="" draggable="false">`:'';
+  const draw=()=>{if(one)R.innerHTML=pg(k);else{L.innerHTML=pg(k-1);R.innerHTML=pg(k)}};
+  const flip=d=>{if(busy)return;const nk=k+d*st;if(one?(nk<0||nk>=S.length):(nk<1||nk>S.length))return;busy=true;const lf=document.createElement('div');lf.className='alf'+(d<0?' go':'');
+   if(one){lf.innerHTML=`<div class="apg r">${pg(d>0?k:nk)}</div><div class="apg bk2"></div>`;if(d>0)R.innerHTML=pg(nk)}
+   else if(d>0){lf.innerHTML=`<div class="apg r">${pg(k)}</div><div class="apg l bk2">${pg(k+1)}</div>`;R.innerHTML=pg(k+2)}else{lf.innerHTML=`<div class="apg r">${pg(k-2)}</div><div class="apg l bk2">${pg(k-1)}</div>`;L.innerHTML=pg(k-3)}
+   bk.appendChild(lf);lf.offsetWidth;lf.classList.toggle('go');setTimeout(()=>{k=nk;lf.remove();draw();busy=false},rm?0:820)};
+  if(!one)k=1;R.onclick=()=>flip(1);L.onclick=()=>flip(-1);if(one){let sx=null;bk.addEventListener('pointerdown',e=>sx=e.clientX);bk.addEventListener('pointerup',e=>{if(sx!=null&&Math.abs(e.clientX-sx)>30)flip(e.clientX<sx?1:-1);sx=null})}
+  key(flip);draw();return}
+ /* stack (default) */
+ let order=S.map((u,j)=>j);const cs=S.map(u=>{const c=document.createElement('img');c.className='ask';c.src=u;c.alt='';c.draggable=false;v.appendChild(c);return c});
+ const rot=j=>((j*41)%13)-6;
+ const lay=()=>order.forEach((j,z)=>{const c=cs[j];c.style.zIndex=S.length-z;c.style.opacity=z>3?0:1;c.style.transform=`translate(-50%,-50%) rotate(${z?rot(j):0}deg)`});
+ const next=d=>{if(d<0){order.unshift(order.pop());lay();return}const t=cs[order[0]];t.style.transform=`translate(${-50+d*130}%,-50%) rotate(${d*16}deg)`;t.style.opacity=0;setTimeout(()=>{order.push(order.shift());lay()},rm?0:240)};
+ let sx=null;v.addEventListener('pointerdown',e=>{sx=e.clientX});v.addEventListener('pointerup',e=>{if(sx==null)return;const d=e.clientX-sx;sx=null;if(Math.abs(d)>30)next(d<0?1:-1);else if(e.target===cs[order[0]])next(1)});key(next);lay()}
+
 const gClear=()=>document.querySelectorAll('.gi.gb,.gi.ga').forEach(e=>e.classList.remove('gb','ga'));
 function gStart(e){if(!GD||GD.active)return;const t=GD.el,r=t.getBoundingClientRect(),g=t.cloneNode(true);g.className='gi gghost';g.style.cssText=`position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;margin:0;opacity:.85;pointer-events:none;z-index:400;box-shadow:0 6px 24px rgba(0,0,0,.3)`;g.querySelectorAll('button').forEach(b=>b.remove());document.body.appendChild(g);GD.ghost=g;GD.dx=e.clientX-r.left;GD.dy=e.clientY-r.top;GD.active=true;t.classList.add('gdrag');document.body.style.userSelect='none'}
 function gMove(e){if(!GD)return;if(!GD.active){const m=Math.hypot(e.clientX-GD.x0,e.clientY-GD.y0);if(GD.touch){if(m>8){clearTimeout(GD.timer);GD=null}return}if(m>6)gStart(e);else return}
