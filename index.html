@@ -1928,6 +1928,18 @@ function editor(it,kind){kind=(it&&it.kind)||kind||'post';const i=it||{visibilit
  em.addEventListener('input',mdFit);addEventListener('resize',mdFit);if(window.ResizeObserver)new ResizeObserver(()=>{if($('#srcw').style.display==='block')mdFit()}).observe($('#srcw'));if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{if($('#srcw').style.display==='block')mdFit()});
  $('#emd').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.m)};show(mode);
  $('#tbb').onmousedown=e=>{if(e.target.closest('button'))e.preventDefault()};
+ /* paste a Lichess game link -> the game's PGN becomes a chess block (Chess.com has no public PGN-by-link) */
+ const LIRE=/^https?:\/\/(?:www\.)?lichess\.org\/([A-Za-z0-9]{8})(?:[A-Za-z0-9]{4})?(?:\/(white|black))?\/?(?:#(\d+))?$/;
+ const liSpec=async(m)=>{const r=await fetch('https://lichess.org/game/export/'+m[1]+'?clocks=false&evals=false&literate=false',{headers:{Accept:'application/x-chess-pgn'}});if(!r.ok)throw new Error(r.status===404?'game not found':'Lichess '+r.status);
+  const pgn=(await r.text()).trim();return['style: strip',m[2]==='black'?'view: black':'',m[3]?'start: '+m[3]:'',pgn].filter(Boolean).join('\n')};
+ const liPaste=(e,md)=>{const t=((e.clipboardData||window.clipboardData).getData('text/plain')||'').trim();if(/chess\.com\/(?:game|analysis|live)/.test(t)&&!LIRE.test(t)){$('#sv').textContent='Chess.com links can’t be imported yet; pasted as a link';return}
+  const m=LIRE.exec(t);if(!m)return;e.preventDefault();e.stopImmediatePropagation();const tk='li'+Date.now();$('#sv').textContent='loading Lichess game…';
+  if(md){const ph='```chess\n(loading '+tk+')\n```\n';em.setRangeText(ph,em.selectionStart,em.selectionEnd,'end');em.dispatchEvent(new Event('input',{bubbles:true}));
+   liSpec(m).then(sp=>{em.value=em.value.replace('(loading '+tk+')',sp);$('#sv').textContent='Lichess game added'}).catch(x=>{em.value=em.value.replace('```chess\n(loading '+tk+')\n```\n',t);$('#sv').textContent='Could not load the game: '+x.message}).finally(()=>em.dispatchEvent(new Event('input',{bubbles:true})))}
+  else{document.execCommand('insertHTML',false,'<pre class="hbx" data-chess data-lt="'+tk+'">loading Lichess game…</pre><p><br></p>');
+   const pre=()=>eb.querySelector('pre[data-lt="'+tk+'"]');
+   liSpec(m).then(sp=>{const p=pre();if(p){p.textContent=sp;p.removeAttribute('data-lt')}$('#sv').textContent='Lichess game added'}).catch(x=>{const p=pre();if(p){const a=document.createElement('a');a.href=t;a.textContent=t;p.replaceWith(a)}$('#sv').textContent='Could not load the game: '+x.message}).finally(()=>eb.dispatchEvent(new Event('input',{bubbles:true})))}};
+ eb.addEventListener('paste',e=>liPaste(e,false),true);em.addEventListener('paste',e=>liPaste(e,true),true);
  eb.addEventListener('paste',e=>{if(e.target.closest&&e.target.closest('pre[data-html]')){e.preventDefault();document.execCommand('insertText',false,(e.clipboardData||window.clipboardData).getData('text/plain'))}});
  $('#tbb').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.menu)return menu(b);const c=b.dataset.c.split(':');eb.focus();
   if(c[0]==='pagebreak'){pageBreak(eb)}
