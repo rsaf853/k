@@ -1229,14 +1229,15 @@ html.mlock,html.mlock body{overflow:hidden}
 @media(max-width:720px){.mpg{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 14px}.mpl{height:136px}.mpb,.mpt{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--bg)}}
 @media(max-width:720px){.mdk .msh:not(.dragging){transform:rotate(calc(var(--r,0deg)*.6))}}
 /* ---------- daily puzzle log (owner only, under the title) ---------- */
-.pzlog{margin-top:14px}
+.pzlog{position:relative;margin-top:14px;width:max-content}
 .pzw{display:grid;grid-template-columns:repeat(7,28px);gap:6px;padding:0;border:0;background:none;cursor:pointer;width:max-content}
 .pzw:focus-visible{outline:1px solid var(--fg);outline-offset:4px}
 .pzw i{position:relative;display:block;width:28px;height:28px;border:1px solid color-mix(in srgb,var(--fg) 30%,transparent);font:700 8.5px/1 var(--sans);font-style:normal;color:var(--mut)}
 .pzw i::before{content:attr(data-l);position:absolute;left:3px;top:3px}
 .pzw i.y,.pzcg i.y{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 .pzw i.t,.pzcg i.t{outline:1px solid var(--fg);outline-offset:2px}
-.pzc{margin-top:14px;width:min(300px,100%)}
+.pzc{position:absolute;left:-2px;top:calc(100% + 10px);z-index:60;width:280px;max-width:calc(100vw - 32px);box-sizing:border-box;padding:12px 12px 14px;background:var(--bg);border:1px solid var(--fg);box-shadow:4px 4px 0 var(--fg)}
+.pzc::before{content:"";position:absolute;left:12px;top:-6px;width:10px;height:10px;background:var(--bg);border-left:1px solid var(--fg);border-top:1px solid var(--fg);transform:rotate(45deg)}
 .pzcn{display:flex;align-items:center;gap:6px;margin-bottom:8px}
 .pzcn b{font:800 13px var(--sans);letter-spacing:.06em;margin-left:4px}.pzcn span{margin-left:auto;font:600 11px var(--sans);color:var(--mut)}
 .pzcn button{width:26px;height:26px;border:1px solid var(--line);background:none;color:var(--fg);cursor:pointer;font:700 13px var(--sans)}
@@ -2225,9 +2226,11 @@ function pzLog(){const L=HOME.puz||{},td=pzDay(),w=[];
  for(let o=6;o>=0;o--){const k=pzDay(o),d=new Date(k+'T00:00'),x=L[k];w.push(`<i class="${x?'y':''}${k===td?' t':''}" data-l="${'SMTWTFS'[d.getDay()]}" title="${k}${x?' · solved'+(x.h?' (hint)':''):''}"></i>`)}
  return`<div class="pzlog" id="pzlog"><button type="button" class="pzw" data-pzw aria-expanded="${PZC.open}" aria-label="Puzzle log">${w.join('')}</button>${PZC.open?pzCal():''}</div>`}
 document.addEventListener('click',e=>{const t=e.target;if(!t.closest)return;let x;
+ if(PZC.open&&!t.closest('#pzlog')){PZC.open=false;const el=$('#pzlog');if(el)el.outerHTML=pzLog();return}
  if(x=t.closest('[data-pzw]')){PZC.open=!PZC.open;if(PZC.open){const d=new Date();PZC.y=d.getFullYear();PZC.m=d.getMonth()}}
  else if(x=t.closest('[data-pzm]')){PZC.m+=+x.dataset.pzm;if(PZC.m<0){PZC.m=11;PZC.y--}if(PZC.m>11){PZC.m=0;PZC.y++}}
  else return;const el=$('#pzlog');if(el)el.outerHTML=pzLog()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&PZC.open){PZC.open=false;const el=$('#pzlog');if(el)el.outerHTML=pzLog()}});
 const puzDayCheck=()=>{if(/^#\/puzzle/.test(location.hash)&&PUZ.daily&&!PUZ.loading&&!PUZ.busy&&PUZ.cursor===0&&PUZ.day&&PUZ.day!==new Date().toISOString().slice(0,10))puzLoad(true)};setInterval(puzDayCheck,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)puzDayCheck()});
 
 /* memo viewer */
