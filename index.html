@@ -1235,7 +1235,6 @@ html.mlock,html.mlock body{overflow:hidden}
 .pzlg i{display:block;width:10px;height:10px;border:1px solid color-mix(in srgb,var(--fg) 30%,transparent)}
 .pzlg i.y{background:var(--fg);border-color:var(--fg)}.pzlg i.t{outline:1px solid var(--fg);outline-offset:1px}
 @media(max-width:720px){.pzlg{grid-template-columns:repeat(14,10px)}}
-.hp.pzok::after{content:"";position:absolute;right:-1px;top:calc(50% - 9px);width:5px;height:5px;border-radius:50%;background:var(--fg)}
 </style>
 </head>
 <body>
@@ -2203,7 +2202,7 @@ async function puzLoad(daily){PUZ.loading=true;PUZ.local=false;PUZ.feedback='Loa
 function puzzlePage(){puzLoad(true)}
 /* daily puzzle log: when the owner (admin) solves today's Lichess puzzle it is written to HOME.puz[local date]; everyone sees the record */
 const pzDay=(o=0)=>{const d=new Date();d.setDate(d.getDate()-o);return ymd(d.getFullYear(),d.getMonth(),d.getDate())};
-function pzNav(){const b=$('#puzzleNav');if(b)b.classList.toggle('pzok',!!(HOME.puz||{})[pzDay()])}
+function pzNav(){}
 function puzMark(){if(!admin||!PUZ.daily||PUZ.local)return;HOME.puz=HOME.puz||{};const k=pzDay();if(HOME.puz[k])return;HOME.puz[k]={id:PUZ.data?.puzzle?.id||'',h:PUZ.hint?1:0};pzNav();saveHome()}
 function pzLog(){const L=HOME.puz||{},n=28,cells=[];let st=0,on=0;for(let o=L[pzDay()]?0:1;L[pzDay(o)];o++)st++;
  for(let o=n-1;o>=0;o--){const k=pzDay(o),x=L[k];if(x)on++;cells.push(`<i class="${x?'y':''}${o===0?' t':''}" title="${k}${x?' · solved'+(x.h?' (hint)':''):''}"></i>`)}
