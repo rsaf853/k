@@ -1228,13 +1228,24 @@ html.mlock,html.mlock body{overflow:hidden}
 .mpbk{margin-left:auto;padding:4px 0;border:0;background:none;color:var(--mut);font:600 11.5px var(--sans);cursor:pointer}.mpbk:hover{color:var(--fg);text-decoration:underline;text-underline-offset:3px}
 @media(max-width:720px){.mpg{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 14px}.mpl{height:136px}.mpb,.mpt{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--bg)}}
 @media(max-width:720px){.mdk .msh:not(.dragging){transform:rotate(calc(var(--r,0deg)*.6))}}
-/* ---------- daily puzzle log ---------- */
-.pzlog{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:-4px 0 22px}
-.pzlh{display:flex;gap:14px;align-items:baseline;font:700 10px var(--sans);letter-spacing:.12em;color:var(--mut)}.pzlh b{color:var(--fg);font-weight:800}
-.pzlg{display:grid;grid-template-columns:repeat(28,10px);gap:3px}
-.pzlg i{display:block;width:10px;height:10px;border:1px solid color-mix(in srgb,var(--fg) 30%,transparent)}
-.pzlg i.y{background:var(--fg);border-color:var(--fg)}.pzlg i.t{outline:1px solid var(--fg);outline-offset:1px}
-@media(max-width:720px){.pzlg{grid-template-columns:repeat(14,10px)}}
+/* ---------- daily puzzle log (owner only, under the title) ---------- */
+.pzlog{margin-top:14px}
+.pzw{display:grid;grid-template-columns:repeat(7,28px);gap:6px;padding:0;border:0;background:none;cursor:pointer;width:max-content}
+.pzw:focus-visible{outline:1px solid var(--fg);outline-offset:4px}
+.pzw i{position:relative;display:block;width:28px;height:28px;border:1px solid color-mix(in srgb,var(--fg) 30%,transparent);font:700 8.5px/1 var(--sans);font-style:normal;color:var(--mut)}
+.pzw i::before{content:attr(data-l);position:absolute;left:3px;top:3px}
+.pzw i.y,.pzcg i.y{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.pzw i.t,.pzcg i.t{outline:1px solid var(--fg);outline-offset:2px}
+.pzc{margin-top:14px;width:min(300px,100%)}
+.pzcn{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.pzcn b{font:800 13px var(--sans);letter-spacing:.06em;margin-left:4px}.pzcn span{margin-left:auto;font:600 11px var(--sans);color:var(--mut)}
+.pzcn button{width:26px;height:26px;border:1px solid var(--line);background:none;color:var(--fg);cursor:pointer;font:700 13px var(--sans)}
+.pzcn button:hover:not(:disabled){border-color:var(--fg)}.pzcn button:disabled{opacity:.3;cursor:default}
+.pzcd,.pzcg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.pzcd{margin-bottom:4px;font:700 9px var(--sans);letter-spacing:.1em;color:var(--mut);text-align:center}
+.pzcg i{position:relative;aspect-ratio:1;border:1px solid color-mix(in srgb,var(--fg) 22%,transparent);font:600 10px/1 var(--sans);font-style:normal;color:var(--mut)}
+.pzcg i span{position:absolute;left:4px;top:4px}
+.pzcg i.o{visibility:hidden}.pzcg i.f{opacity:.35}
 </style>
 </head>
 <body>
@@ -2178,7 +2189,7 @@ function puzRender(){const d=PUZ.data;if(!d)return;const p=d.puzzle,game=d.game|
  const bt=PUZ.board.turn,k=PUZ.board.sq.indexOf(bt==='w'?'K':'k');PUZ.chk=k>=0&&puzAtt(PUZ.board.sq,k,bt==='w'?'b':'w')?k:-1;
  const tags=(p.themes||[]).slice(0,5).map(t=>`<span class="puzzle-tag">${esc(t.replace(/-/g,' '))}</span>`).join(''),mine=PUZ.side==='w'?'White':'Black',total=Math.ceil(sol.length/2),step=Math.min(total,Math.floor(PUZ.cursor/2)+1);
  const ttl=PUZ.local?'Practice Puzzle':PUZ.daily?'Today’s Puzzle':'Next Puzzle',sub=PUZ.local?'OFFLINE':PUZ.daily?'DAILY':'TRAINING';
- app.innerHTML=`<section class="puzzle-page"><div class="puzzle-head"><div><h1>${ttl}</h1></div><div class="bnmt">${PUZ.daily&&!PUZ.local?(PUZ.day||new Date().toISOString().slice(0,10))+' UTC · <span style="text-transform:none">#'+esc(PUZ.data&&PUZ.data.puzzle?PUZ.data.puzzle.id:'')+'</span>':'LICHESS PUZZLE'}<br>${sub}</div></div>${PUZ.daily&&!PUZ.local?pzLog():''}<div class="puzzle-layout"><aside class="pz-l"><div class="puzzle-turn"><i class="${PUZ.side==='w'?'tw':'tb'}"></i><b>${mine} to move</b><span>${PUZ.solved?'SOLVED':`${step} / ${total}`}</span></div><div class="puzzle-meta">${tags}</div><p class="puzzle-instruction">${PUZ.solved?'Puzzle completed. Well played!':`Find the best move for ${mine}.`}</p><div class="puzzle-actions"><button class="btn pri" id="puzNext">${PUZ.solved?'NEXT PUZZLE':'SKIP'}</button><button class="btn" id="puzHint"${PUZ.solved?' disabled':''}>HINT</button><button class="btn" id="puzFlip">FLIP</button><button class="btn" id="puzReset">RESET</button>${PUZ.daily&&!PUZ.local?'':'<button class="btn" id="puzDaily">DAILY</button>'}</div><div class="puzzle-status${PUZ.solved?' good':''}${PUZ.feedback==='Not quite. Try again.'?' bad':''}" id="puzStatus">${esc(PUZ.feedback||'')}</div></aside><div class="puzzle-board-wrap"><div class="puzzle-board">${indices.map(i=>puzSquareHtml(i,view)).join('')}</div></div><aside class="pz-r"><div class="pz-h"><span>MOVES</span><span>${game.id?`GAME · ${esc(game.id)}`:'LICHESS'}</span></div><div class="pz-mv" id="pzMv">${puzMovesHtml()}</div>${p.id&&p.id!=='local'?`<a class="pz-a" href="https://lichess.org/training/${encodeURIComponent(p.id)}" target="_blank" rel="noopener">OPEN ON LICHESS ↗</a>`:''}</aside></div></section>`;
+ app.innerHTML=`<section class="puzzle-page"><div class="puzzle-head"><div><h1>${ttl}</h1>${admin?pzLog():''}</div><div class="bnmt">${PUZ.daily&&!PUZ.local?(PUZ.day||new Date().toISOString().slice(0,10))+' UTC · <span style="text-transform:none">#'+esc(PUZ.data&&PUZ.data.puzzle?PUZ.data.puzzle.id:'')+'</span>':'LICHESS PUZZLE'}<br>${sub}</div></div><div class="puzzle-layout"><aside class="pz-l"><div class="puzzle-turn"><i class="${PUZ.side==='w'?'tw':'tb'}"></i><b>${mine} to move</b><span>${PUZ.solved?'SOLVED':`${step} / ${total}`}</span></div><div class="puzzle-meta">${tags}</div><p class="puzzle-instruction">${PUZ.solved?'Puzzle completed. Well played!':`Find the best move for ${mine}.`}</p><div class="puzzle-actions"><button class="btn pri" id="puzNext">${PUZ.solved?'NEXT PUZZLE':'SKIP'}</button><button class="btn" id="puzHint"${PUZ.solved?' disabled':''}>HINT</button><button class="btn" id="puzFlip">FLIP</button><button class="btn" id="puzReset">RESET</button>${PUZ.daily&&!PUZ.local?'':'<button class="btn" id="puzDaily">DAILY</button>'}</div><div class="puzzle-status${PUZ.solved?' good':''}${PUZ.feedback==='Not quite. Try again.'?' bad':''}" id="puzStatus">${esc(PUZ.feedback||'')}</div></aside><div class="puzzle-board-wrap"><div class="puzzle-board">${indices.map(i=>puzSquareHtml(i,view)).join('')}</div></div><aside class="pz-r"><div class="pz-h"><span>MOVES</span><span>${game.id?`GAME · ${esc(game.id)}`:'LICHESS'}</span></div><div class="pz-mv" id="pzMv">${puzMovesHtml()}</div>${p.id&&p.id!=='local'?`<a class="pz-a" href="https://lichess.org/training/${encodeURIComponent(p.id)}" target="_blank" rel="noopener">OPEN ON LICHESS ↗</a>`:''}</aside></div></section>`;
  {const mv=$('#pzMv');if(mv)mv.scrollTop=mv.scrollHeight}
  app.querySelectorAll('[data-puz-square]').forEach(el=>el.addEventListener('click',()=>puzClick(+el.dataset.puzSquare)));
  $('#puzNext').onclick=()=>puzLoad(false);$('#puzReset').onclick=()=>puzReset();$('#puzFlip').onclick=()=>{PUZ.flip=!PUZ.flip;puzRender()};$('#puzHint').onclick=puzHint;if($('#puzDaily'))$('#puzDaily').onclick=()=>puzLoad(true)}
@@ -2204,9 +2215,19 @@ function puzzlePage(){puzLoad(true)}
 const pzDay=(o=0)=>{const d=new Date();d.setDate(d.getDate()-o);return ymd(d.getFullYear(),d.getMonth(),d.getDate())};
 function pzNav(){}
 function puzMark(){if(!admin||!PUZ.daily||PUZ.local)return;HOME.puz=HOME.puz||{};const k=pzDay();if(HOME.puz[k])return;HOME.puz[k]={id:PUZ.data?.puzzle?.id||'',h:PUZ.hint?1:0};pzNav();saveHome()}
-function pzLog(){const L=HOME.puz||{},n=28,cells=[];let st=0,on=0;for(let o=L[pzDay()]?0:1;L[pzDay(o)];o++)st++;
- for(let o=n-1;o>=0;o--){const k=pzDay(o),x=L[k];if(x)on++;cells.push(`<i class="${x?'y':''}${o===0?' t':''}" title="${k}${x?' · solved'+(x.h?' (hint)':''):''}"></i>`)}
- return`<div class="pzlog"><div class="pzlh"><b>${L[pzDay()]?'TODAY ✓':'TODAY —'}</b><span>STREAK ${st}</span><span>${on} / ${n}</span></div><div class="pzlg">${cells.join('')}</div></div>`}
+const PZC={open:false,y:0,m:0};
+function pzCal(){const L=HOME.puz||{},y=PZC.y,m=PZC.m,f=new Date(y,m,1),n=new Date(y,m+1,0).getDate(),off=(f.getDay()+6)%7,td=pzDay(),c=[];let sv=0;
+ for(let i=0;i<off;i++)c.push('<i class="o"></i>');
+ for(let d=1;d<=n;d++){const k=ymd(y,m,d),fut=k>td,x=L[k];if(x)sv++;c.push(`<i class="${x?'y':''}${k===td?' t':''}${fut?' f':''}" title="${k}${x?' · solved'+(x.h?' (hint)':''):''}"><span>${d}</span></i>`)}
+ const ks=Object.keys(L).sort(),f0=ks[0]?ks[0].slice(0,7):td.slice(0,7),cur=ymd(y,m,1).slice(0,7);
+ return`<div class="pzc"><div class="pzcn"><button type="button" data-pzm="-1" aria-label="Previous month"${cur<=f0?' disabled':''}>‹</button><button type="button" data-pzm="1" aria-label="Next month"${cur>=td.slice(0,7)?' disabled':''}>›</button><b>${MONS[m]} ${y}</b><span>${sv}</span></div><div class="pzcd">${['M','T','W','T','F','S','S'].map(x=>`<span>${x}</span>`).join('')}</div><div class="pzcg">${c.join('')}</div></div>`}
+function pzLog(){const L=HOME.puz||{},td=pzDay(),w=[];
+ for(let o=6;o>=0;o--){const k=pzDay(o),d=new Date(k+'T00:00'),x=L[k];w.push(`<i class="${x?'y':''}${k===td?' t':''}" data-l="${'SMTWTFS'[d.getDay()]}" title="${k}${x?' · solved'+(x.h?' (hint)':''):''}"></i>`)}
+ return`<div class="pzlog" id="pzlog"><button type="button" class="pzw" data-pzw aria-expanded="${PZC.open}" aria-label="Puzzle log">${w.join('')}</button>${PZC.open?pzCal():''}</div>`}
+document.addEventListener('click',e=>{const t=e.target;if(!t.closest)return;let x;
+ if(x=t.closest('[data-pzw]')){PZC.open=!PZC.open;if(PZC.open){const d=new Date();PZC.y=d.getFullYear();PZC.m=d.getMonth()}}
+ else if(x=t.closest('[data-pzm]')){PZC.m+=+x.dataset.pzm;if(PZC.m<0){PZC.m=11;PZC.y--}if(PZC.m>11){PZC.m=0;PZC.y++}}
+ else return;const el=$('#pzlog');if(el)el.outerHTML=pzLog()});
 const puzDayCheck=()=>{if(/^#\/puzzle/.test(location.hash)&&PUZ.daily&&!PUZ.loading&&!PUZ.busy&&PUZ.cursor===0&&PUZ.day&&PUZ.day!==new Date().toISOString().slice(0,10))puzLoad(true)};setInterval(puzDayCheck,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)puzDayCheck()});
 
 /* memo viewer */
