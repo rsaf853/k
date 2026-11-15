@@ -1236,40 +1236,33 @@ html.mlock,html.mlock body{overflow:hidden}
 try{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
  var h=location.hash;if(h&&h!=='#'&&h!=='#/')return;
  if(sessionStorage.getItem('e4intro'))return;sessionStorage.setItem('e4intro','1')}catch(e){}
-var css='#intro{position:fixed;inset:0;z-index:99999;background:var(--bg);color:var(--fg);display:flex;align-items:center;justify-content:center;cursor:pointer}'
-+'#intro .rw{display:flex;align-items:center;gap:clamp(16px,4vw,28px)}'
-+'#intro .ibd{position:relative;flex:none;width:clamp(132px,40vw,220px);aspect-ratio:1;border:1px solid var(--fg);display:grid;grid-template-columns:repeat(8,1fr);opacity:0;animation:inF .3s ease forwards}'
-+'#intro .ibd i,#intro .cl i{display:block;position:static;width:auto;height:auto;background:none}#intro .ibd i.k{background:color-mix(in srgb,var(--fg) 7%,var(--bg))}'
-+'#intro .pc{position:absolute;left:0;top:0;width:12.5%;height:12.5%;display:grid;place-items:center;will-change:transform;transition:transform .4s cubic-bezier(.3,.8,.2,1),opacity .2s}'
-+'#intro .pc::before{content:"";width:46%;height:46%;border:2px solid var(--fg);background:var(--bg)}#intro .pc.b::before{background:var(--fg)}#intro .pc.g{opacity:0}'
-+'#intro .nt{font:500 17px/1.9 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums;min-width:7.4em}#intro .nt div{white-space:nowrap;min-height:1.9em}'
-+'#intro .nt .c::after{content:"";display:inline-block;width:2px;height:1em;background:var(--fg);margin-left:2px;vertical-align:-.12em;animation:inBl .7s steps(1) infinite}'
-+'#intro .hf{position:absolute;left:0;right:0;height:50%;overflow:hidden;background:var(--bg);will-change:transform;transition:transform .6s cubic-bezier(.76,0,.24,1)}#intro .hf.t{top:0}#intro .hf.b{bottom:0}'
-+'#intro .hf>div{position:absolute;left:0;right:0;height:200%;display:flex;align-items:center;justify-content:center}#intro .hf.t>div{top:0}#intro .hf.b>div{bottom:0}#intro .hf .ibd{animation:none;opacity:1}'
-+'#intro.go .hf.t{transform:translate3d(0,-101%,0)}#intro.go .hf.b{transform:translate3d(0,101%,0)}'
-+'@keyframes inF{to{opacity:1}}@keyframes inBl{50%{opacity:0}}';
-var sq='',x,y;for(y=0;y<8;y++)for(x=0;x<8;x++)sq+='<i'+((x+y)%2?' class="k"':'')+'></i>';
-document.body.insertAdjacentHTML('afterbegin','<style>'+css+'</style><div id="intro" aria-hidden="true"><div class="rw"><div class="ibd">'+sq
- +'<span class="pc w" id="iwE" style="transform:translate3d(400%,600%,0)"></span><span class="pc b" id="ibE" style="transform:translate3d(400%,100%,0)"></span><span class="pc w" id="iwF" style="transform:translate3d(500%,600%,0)"></span></div>'
- +'<div class="nt"><div></div><div></div><div></div></div></div></div>');
-var el=document.getElementById('intro'),done=false,R=el.querySelectorAll('.nt div');
-var later=function(fn,ms){setTimeout(function(){if(!done)fn()},ms)};
-var mv=function(id,x,y){document.getElementById(id).style.transform='translate3d('+x*100+'%,'+y*100+'%,0)'};
-var type=function(r,str){var i=0;R.forEach(function(d){d.classList.remove('c')});R[r].classList.add('c');
- (function n(){if(done)return;if(i<str.length){R[r].textContent+=str.charAt(i++);setTimeout(n,45)}})()};
-/* leave: the screen splits in two (with the board and the notation on it) and the halves slide apart; transform only, so it stays smooth */
-var gone=function(){if(done)return;done=true;
- var rw=el.querySelector('.rw'),mk=function(c){var h=document.createElement('div');h.className='hf '+c;var i=document.createElement('div');i.appendChild(rw.cloneNode(true));h.appendChild(i);return h};
- el.appendChild(mk('t'));el.appendChild(mk('b'));rw.style.visibility='hidden';el.style.background='transparent';el.style.cursor='default';
- requestAnimationFrame(function(){requestAnimationFrame(function(){el.classList.add('go')})});
- setTimeout(function(){el.parentNode&&el.parentNode.removeChild(el)},600+150)};
+var NAV=['check','e4','e5','f4','exf4','?!'];
+var css='#intro{position:fixed;inset:0;z-index:99999;cursor:pointer;pointer-events:auto}'
++'#intro .ibg{position:absolute;inset:0;background:var(--bg)}'
++'#intro .iw{position:absolute;inset:0;display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:.42em;padding:0 16px;white-space:nowrap;font:800 clamp(22px,6.4vw,84px)/1.1 var(--sans);letter-spacing:-.045em;color:var(--fg)}'
++'#intro .iw span{display:inline-block;transform-origin:0 0;will-change:transform,opacity;opacity:0}';
+document.body.insertAdjacentHTML('afterbegin','<style>'+css+'</style><div id="intro" aria-hidden="true"><div class="ibg"></div><div class="iw">'+NAV.map(function(n){return '<span>'+n+'</span>'}).join('')+'</div></div>');
+var el=document.getElementById('intro'),bg=el.querySelector('.ibg'),W=[].slice.call(el.querySelectorAll('.iw span')),done=false,hid=[];
+var ease='cubic-bezier(.3,.8,.2,1)',flyE='cubic-bezier(.7,0,.2,1)';
+var A=function(e,k,o){o.fill='both';return e.animate(k,o)};
+var end=function(){if(!el.parentNode)return;hid.forEach(function(a){a.style.visibility=''});el.parentNode.removeChild(el)};
+/* skip: a click fades the whole thing out at once */
+var gone=function(){if(done)return;done=true;hid.forEach(function(a){a.style.visibility=''});A(el,[{opacity:1},{opacity:0}],{duration:220}).onfinish=end};
 el.addEventListener('click',gone);
-later(function(){mv('iwE',4,4);type(0,'1. e4')},500);
-later(function(){mv('ibE',4,3);type(0,' e5')},1250);
-later(function(){mv('iwF',5,4);type(1,'2. f4')},2000);
-later(function(){mv('ibE',5,4);document.getElementById('iwF').classList.add('g');type(1,' exf4')},2750);
-later(function(){type(2,'3. ??')},3500);
-later(gone,4400);
+W.forEach(function(w,i){A(w,[{opacity:0,transform:'translateY(40%)'},{opacity:1,transform:'none'}],{duration:300,delay:120+i*95,easing:ease})});
+/* each word flies to its own menu slot in the header and becomes the menu */
+setTimeout(function(){if(done)return;
+ var N=[].slice.call(document.querySelectorAll('header nav a'));
+ if(N.length!==W.length||!N[0].getBoundingClientRect().width)return gone();
+ done=true;el.style.pointerEvents='none';hid=N;
+ var last=null;
+ W.forEach(function(w,i){var a=w.getBoundingClientRect(),t=N[i],b=t.getBoundingClientRect(),cs=getComputedStyle(t),sc=parseFloat(cs.fontSize)/parseFloat(getComputedStyle(w).fontSize);
+  t.style.visibility='hidden';
+  last=A(w,[{transform:'none',color:getComputedStyle(w).color},{transform:'translate('+(b.left-a.left)+'px,'+(b.top-a.top+(b.height-a.height*sc)/2)+'px) scale('+sc+')',color:cs.color}],{duration:620,delay:i*35,easing:flyE})});
+ A(bg,[{opacity:1},{opacity:0}],{duration:460,delay:220,easing:'ease-out'});
+ last.onfinish=function(){N.forEach(function(a){a.style.visibility=''});A(el,[{opacity:1},{opacity:0}],{duration:140}).onfinish=end};
+},120+5*95+300+280);
+setTimeout(function(){if(el.parentNode&&!done)gone()},4000);
 })();
 </script>
 <div class="shell">
@@ -1743,7 +1736,7 @@ const LV_PGN=`[Event "Eton College Chess Club Autumn Fixture"]
 1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be3 e5 7. Nb3 Be6 8. f3 h5 9. Qd2 Nbd7 10. O-O-O Rc8 11. Kb1 Be7 12. Nd5 Nxd5 13. exd5 Bf5 14. Bd3 Bxd3 15. Qxd3 Bg5 16. Bf2 O-O 17. h4 Bh6 18. g4 hxg4 19. fxg4 e4 20. Qxe4 Re8 21. Qg2 Re2 22. Nd4 Rd2 23. Rxd2 Bxd2 24. g5 Ne5 25. Rd1 Ba5 26. Nf5 Qc7 27. Bd4 Nc4 28. b3 Na3+ 29. Kb2 Nb5 30. Bxg7 Bc3+ 31. Kb1 Bxg7 32. Rd3 Nc3+ 33. Kc1 Nxa2+ 34. Kd1 Nb4 35. Rd2 Bc3 36. Re2 Nxd5 37. Qf3 Qc5 38. Nh6+ Kh8 39. Nxf7+ Kg7 40. Rf2 Ne3+ 41. Kc1 Qa3+ 42. Kb1 Qa1# 0-1`;
 const LVK={post:'ARCHIVE',log:'LOG',memo:'MEMO',line:'TXT',gallery:'IMG'};
 const LVS={cur:0,sel:0,tm:null};let LVZ=null;let LV_INTRO=true; /* first arrival on the home page replays the game once */
-const LVI={total:17000,min:450,max:1400,wait:600}; /* intro speed: aim for ~17 s overall, one move takes between 0.45 s and 1.4 s; starts `wait` ms after the entrance screen is gone */
+const LVI={total:17000,min:450,max:1400,wait:150}; /* intro speed: aim for ~17 s overall, one move takes between 0.45 s and 1.4 s; starts `wait` ms after the entrance screen is gone */
 const lvDay=t=>{const d=new Date(t);return d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate()};
 function lvData(){if(!HOME.live)HOME.live={};const L=HOME.live,K=(banData().kings)||{};
  if(!L.players)L.players={w:{name:K.w?.name||'Kai',en:'KAI',title:K.w?.title||'',elo:K.w?.elo||'',src:K.w?.src||'',tags:'K, Kai'},b:{name:K.k?.name||'Ray',en:'RAY',title:K.k?.title||'',elo:K.k?.elo||'',src:K.k?.src||'',tags:'R, Ray'}};
