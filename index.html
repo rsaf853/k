@@ -1228,6 +1228,14 @@ html.mlock,html.mlock body{overflow:hidden}
 .mpbk{margin-left:auto;padding:4px 0;border:0;background:none;color:var(--mut);font:600 11.5px var(--sans);cursor:pointer}.mpbk:hover{color:var(--fg);text-decoration:underline;text-underline-offset:3px}
 @media(max-width:720px){.mpg{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 14px}.mpl{height:136px}.mpb,.mpt{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--bg)}}
 @media(max-width:720px){.mdk .msh:not(.dragging){transform:rotate(calc(var(--r,0deg)*.6))}}
+/* ---------- daily puzzle log ---------- */
+.pzlog{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:-4px 0 22px}
+.pzlh{display:flex;gap:14px;align-items:baseline;font:700 10px var(--sans);letter-spacing:.12em;color:var(--mut)}.pzlh b{color:var(--fg);font-weight:800}
+.pzlg{display:grid;grid-template-columns:repeat(28,10px);gap:3px}
+.pzlg i{display:block;width:10px;height:10px;border:1px solid color-mix(in srgb,var(--fg) 30%,transparent)}
+.pzlg i.y{background:var(--fg);border-color:var(--fg)}.pzlg i.t{outline:1px solid var(--fg);outline-offset:1px}
+@media(max-width:720px){.pzlg{grid-template-columns:repeat(14,10px)}}
+.hp.pzok::after{content:"";position:absolute;right:-1px;top:calc(50% - 9px);width:5px;height:5px;border-radius:50%;background:var(--fg)}
 </style>
 </head>
 <body>
@@ -1338,7 +1346,7 @@ async function load(){const my=++loadSeq;
    sb.from('settings').select('value').eq('key','home').maybeSingle(),
    admin?Promise.resolve({data:null}):sb.rpc('eval_counts')]);
   if(my!==loadSeq)return false; /* a newer load started; drop this stale result */
-  ITEMS=r.data||[];EVC=null;if(ec&&Array.isArray(ec.data)){EVC={pub:0,hid:0};ec.data.forEach(x=>{if(x.visibility==='public')EVC.pub+=+x.n;else EVC.hid+=+x.n})}HOME=h.data?.value?.blocks?h.data.value:DEF();
+  ITEMS=r.data||[];EVC=null;setTimeout(()=>pzNav&&pzNav(),0);if(ec&&Array.isArray(ec.data)){EVC={pub:0,hid:0};ec.data.forEach(x=>{if(x.visibility==='public')EVC.pub+=+x.n;else EVC.hid+=+x.n})}HOME=h.data?.value?.blocks?h.data.value:DEF();
   paintImg();
   if(r.error){app.innerHTML='<p class="empty">Load failed: '+esc(r.error.message)+'</p>';return false}
   return true
@@ -2171,7 +2179,7 @@ function puzRender(){const d=PUZ.data;if(!d)return;const p=d.puzzle,game=d.game|
  const bt=PUZ.board.turn,k=PUZ.board.sq.indexOf(bt==='w'?'K':'k');PUZ.chk=k>=0&&puzAtt(PUZ.board.sq,k,bt==='w'?'b':'w')?k:-1;
  const tags=(p.themes||[]).slice(0,5).map(t=>`<span class="puzzle-tag">${esc(t.replace(/-/g,' '))}</span>`).join(''),mine=PUZ.side==='w'?'White':'Black',total=Math.ceil(sol.length/2),step=Math.min(total,Math.floor(PUZ.cursor/2)+1);
  const ttl=PUZ.local?'Practice Puzzle':PUZ.daily?'Today’s Puzzle':'Next Puzzle',sub=PUZ.local?'OFFLINE':PUZ.daily?'DAILY':'TRAINING';
- app.innerHTML=`<section class="puzzle-page"><div class="puzzle-head"><div><h1>${ttl}</h1></div><div class="bnmt">${PUZ.daily&&!PUZ.local?(PUZ.day||new Date().toISOString().slice(0,10))+' UTC · <span style="text-transform:none">#'+esc(PUZ.data&&PUZ.data.puzzle?PUZ.data.puzzle.id:'')+'</span>':'LICHESS PUZZLE'}<br>${sub}</div></div><div class="puzzle-layout"><aside class="pz-l"><div class="puzzle-turn"><i class="${PUZ.side==='w'?'tw':'tb'}"></i><b>${mine} to move</b><span>${PUZ.solved?'SOLVED':`${step} / ${total}`}</span></div><div class="puzzle-meta">${tags}</div><p class="puzzle-instruction">${PUZ.solved?'Puzzle completed. Well played!':`Find the best move for ${mine}.`}</p><div class="puzzle-actions"><button class="btn pri" id="puzNext">${PUZ.solved?'NEXT PUZZLE':'SKIP'}</button><button class="btn" id="puzHint"${PUZ.solved?' disabled':''}>HINT</button><button class="btn" id="puzFlip">FLIP</button><button class="btn" id="puzReset">RESET</button>${PUZ.daily&&!PUZ.local?'':'<button class="btn" id="puzDaily">DAILY</button>'}</div><div class="puzzle-status${PUZ.solved?' good':''}${PUZ.feedback==='Not quite. Try again.'?' bad':''}" id="puzStatus">${esc(PUZ.feedback||'')}</div></aside><div class="puzzle-board-wrap"><div class="puzzle-board">${indices.map(i=>puzSquareHtml(i,view)).join('')}</div></div><aside class="pz-r"><div class="pz-h"><span>MOVES</span><span>${game.id?`GAME · ${esc(game.id)}`:'LICHESS'}</span></div><div class="pz-mv" id="pzMv">${puzMovesHtml()}</div>${p.id&&p.id!=='local'?`<a class="pz-a" href="https://lichess.org/training/${encodeURIComponent(p.id)}" target="_blank" rel="noopener">OPEN ON LICHESS ↗</a>`:''}</aside></div></section>`;
+ app.innerHTML=`<section class="puzzle-page"><div class="puzzle-head"><div><h1>${ttl}</h1></div><div class="bnmt">${PUZ.daily&&!PUZ.local?(PUZ.day||new Date().toISOString().slice(0,10))+' UTC · <span style="text-transform:none">#'+esc(PUZ.data&&PUZ.data.puzzle?PUZ.data.puzzle.id:'')+'</span>':'LICHESS PUZZLE'}<br>${sub}</div></div>${PUZ.daily&&!PUZ.local?pzLog():''}<div class="puzzle-layout"><aside class="pz-l"><div class="puzzle-turn"><i class="${PUZ.side==='w'?'tw':'tb'}"></i><b>${mine} to move</b><span>${PUZ.solved?'SOLVED':`${step} / ${total}`}</span></div><div class="puzzle-meta">${tags}</div><p class="puzzle-instruction">${PUZ.solved?'Puzzle completed. Well played!':`Find the best move for ${mine}.`}</p><div class="puzzle-actions"><button class="btn pri" id="puzNext">${PUZ.solved?'NEXT PUZZLE':'SKIP'}</button><button class="btn" id="puzHint"${PUZ.solved?' disabled':''}>HINT</button><button class="btn" id="puzFlip">FLIP</button><button class="btn" id="puzReset">RESET</button>${PUZ.daily&&!PUZ.local?'':'<button class="btn" id="puzDaily">DAILY</button>'}</div><div class="puzzle-status${PUZ.solved?' good':''}${PUZ.feedback==='Not quite. Try again.'?' bad':''}" id="puzStatus">${esc(PUZ.feedback||'')}</div></aside><div class="puzzle-board-wrap"><div class="puzzle-board">${indices.map(i=>puzSquareHtml(i,view)).join('')}</div></div><aside class="pz-r"><div class="pz-h"><span>MOVES</span><span>${game.id?`GAME · ${esc(game.id)}`:'LICHESS'}</span></div><div class="pz-mv" id="pzMv">${puzMovesHtml()}</div>${p.id&&p.id!=='local'?`<a class="pz-a" href="https://lichess.org/training/${encodeURIComponent(p.id)}" target="_blank" rel="noopener">OPEN ON LICHESS ↗</a>`:''}</aside></div></section>`;
  {const mv=$('#pzMv');if(mv)mv.scrollTop=mv.scrollHeight}
  app.querySelectorAll('[data-puz-square]').forEach(el=>el.addEventListener('click',()=>puzClick(+el.dataset.puzSquare)));
  $('#puzNext').onclick=()=>puzLoad(false);$('#puzReset').onclick=()=>puzReset();$('#puzFlip').onclick=()=>{PUZ.flip=!PUZ.flip;puzRender()};$('#puzHint').onclick=puzHint;if($('#puzDaily'))$('#puzDaily').onclick=()=>puzLoad(true)}
@@ -2183,9 +2191,9 @@ function puzClick(to){if(PUZ.loading||PUZ.busy||PUZ.solved)return;const piece=PU
  if(!PUZ.legal.includes(to)){PUZ.feedback='That move is not legal.';return puzSel(-1,true)}
  const from=PUZ.selected,uci=puzUci(from,to,''),sol=PUZ.data.puzzle.solution||[],want=sol[PUZ.cursor];
  if(want&&want.slice(0,4)===uci){PUZ.hist.push(puzSanOf(PUZ.board,want));PUZ.solN++;PUZ.board=puzApply(PUZ.board,want);PUZ.cursor++;PUZ.last=[from,to];PUZ.selected=-1;PUZ.legal=[];PUZ.hint=0;PUZ.hintSq=[];PUZ.bad=-1;PUZ.feedback='Correct!';
-  if(PUZ.cursor>=sol.length){PUZ.solved=true;return puzRender()}
+  if(PUZ.cursor>=sol.length){PUZ.solved=true;puzMark();return puzRender()}
   PUZ.busy=true;puzRender();
-  setTimeout(()=>{const reply=sol[PUZ.cursor];if(reply){PUZ.hist.push(puzSanOf(PUZ.board,reply));PUZ.solN++;PUZ.board=puzApply(PUZ.board,reply);PUZ.last=puzIdx(reply);PUZ.cursor++}PUZ.busy=false;PUZ.feedback='Your turn.';if(PUZ.cursor>=sol.length)PUZ.solved=true;puzRender()},520)}
+  setTimeout(()=>{const reply=sol[PUZ.cursor];if(reply){PUZ.hist.push(puzSanOf(PUZ.board,reply));PUZ.solN++;PUZ.board=puzApply(PUZ.board,reply);PUZ.last=puzIdx(reply);PUZ.cursor++}PUZ.busy=false;PUZ.feedback='Your turn.';if(PUZ.cursor>=sol.length){PUZ.solved=true;puzMark()}puzRender()},520)}
  else{PUZ.selected=-1;PUZ.legal=[];PUZ.bad=to;PUZ.feedback='Not quite. Try again.';puzRender();setTimeout(()=>{if(PUZ.bad===to){PUZ.bad=-1;puzRender()}},700)}}
 async function puzLoad(daily){PUZ.loading=true;PUZ.local=false;PUZ.feedback='Loading puzzle…';app.innerHTML=`<section class="puzzle-page"><div class="puzzle-head"><h1>${daily?'Today’s Puzzle':'Next Puzzle'}</h1></div><p class="puzzle-loading">Loading from Lichess…</p></section>`;
  let data=null,note='';
@@ -2193,6 +2201,13 @@ async function puzLoad(daily){PUZ.loading=true;PUZ.local=false;PUZ.feedback='Loa
  catch(err){data=puzLocal(daily);PUZ.start=puzStart(data);PUZ.local=true;note=`${err.message||'Could not reach Lichess.'} Showing a saved puzzle.`}
  PUZ.data=data;PUZ.board=PUZ.start.board;PUZ.last=PUZ.start.last;PUZ.hist=PUZ.start.hist.slice();PUZ.hist0=PUZ.start.hist0;PUZ.solN=0;PUZ.side=PUZ.board.turn;PUZ.cursor=0;PUZ.selected=-1;PUZ.legal=[];PUZ.hint=0;PUZ.hintSq=[];PUZ.bad=-1;PUZ.solved=false;PUZ.busy=false;PUZ.daily=daily;PUZ.day=new Date().toISOString().slice(0,10);PUZ.loading=false;PUZ.flip=false;PUZ.feedback=note||'';puzRender()}
 function puzzlePage(){puzLoad(true)}
+/* daily puzzle log: when the owner (admin) solves today's Lichess puzzle it is written to HOME.puz[local date]; everyone sees the record */
+const pzDay=(o=0)=>{const d=new Date();d.setDate(d.getDate()-o);return ymd(d.getFullYear(),d.getMonth(),d.getDate())};
+function pzNav(){const b=$('#puzzleNav');if(b)b.classList.toggle('pzok',!!(HOME.puz||{})[pzDay()])}
+function puzMark(){if(!admin||!PUZ.daily||PUZ.local)return;HOME.puz=HOME.puz||{};const k=pzDay();if(HOME.puz[k])return;HOME.puz[k]={id:PUZ.data?.puzzle?.id||'',h:PUZ.hint?1:0};pzNav();saveHome()}
+function pzLog(){const L=HOME.puz||{},n=28,cells=[];let st=0,on=0;for(let o=L[pzDay()]?0:1;L[pzDay(o)];o++)st++;
+ for(let o=n-1;o>=0;o--){const k=pzDay(o),x=L[k];if(x)on++;cells.push(`<i class="${x?'y':''}${o===0?' t':''}" title="${k}${x?' · solved'+(x.h?' (hint)':''):''}"></i>`)}
+ return`<div class="pzlog"><div class="pzlh"><b>${L[pzDay()]?'TODAY ✓':'TODAY —'}</b><span>STREAK ${st}</span><span>${on} / ${n}</span></div><div class="pzlg">${cells.join('')}</div></div>`}
 const puzDayCheck=()=>{if(/^#\/puzzle/.test(location.hash)&&PUZ.daily&&!PUZ.loading&&!PUZ.busy&&PUZ.cursor===0&&PUZ.day&&PUZ.day!==new Date().toISOString().slice(0,10))puzLoad(true)};setInterval(puzDayCheck,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)puzDayCheck()});
 
 /* memo viewer */
