@@ -1250,7 +1250,7 @@ var end=function(){if(!el.parentNode)return;hid.forEach(function(a){a.style.visi
 /* skip: a click fades the whole thing out at once */
 var gone=function(){if(done)return;done=true;hid.forEach(function(a){a.style.visibility=''});A(el,[{opacity:1},{opacity:0}],{duration:220}).onfinish=end};
 el.addEventListener('click',gone);
-W.forEach(function(w,i){A(w,[{opacity:0,transform:'translateY(40%)'},{opacity:1,transform:'none'}],{duration:450,delay:150+i*170,easing:ease})});
+W.forEach(function(w,i){A(w,[{opacity:0,transform:'translateY(40%)'},{opacity:1,transform:'none'}],{duration:600,delay:200+i*225,easing:ease})});
 /* each word flies to its own menu slot in the header and becomes the menu */
 setTimeout(function(){if(done)return;
  var N=[].slice.call(document.querySelectorAll('header nav a'));
@@ -1259,11 +1259,11 @@ setTimeout(function(){if(done)return;
  var last=null;
  W.forEach(function(w,i){var a=w.getBoundingClientRect(),t=N[i],b=t.getBoundingClientRect(),cs=getComputedStyle(t),sc=parseFloat(cs.fontSize)/parseFloat(getComputedStyle(w).fontSize);
   t.style.visibility='hidden';
-  last=A(w,[{transform:'none',color:getComputedStyle(w).color},{transform:'translate('+(b.left-a.left)+'px,'+(b.top-a.top+(b.height-a.height*sc)/2)+'px) scale('+sc+')',color:cs.color}],{duration:950,delay:i*55,easing:flyE})});
- A(bg,[{opacity:1},{opacity:0}],{duration:700,delay:350,easing:'ease-out'});
- last.onfinish=function(){N.forEach(function(a){a.style.visibility=''});A(el,[{opacity:1},{opacity:0}],{duration:180}).onfinish=end};
-},150+5*170+450+450);
-setTimeout(function(){if(el.parentNode&&!done)gone()},6000);
+  last=A(w,[{transform:'none',color:getComputedStyle(w).color},{transform:'translate('+(b.left-a.left)+'px,'+(b.top-a.top+(b.height-a.height*sc)/2)+'px) scale('+sc+')',color:cs.color}],{duration:1250,delay:i*70,easing:flyE})});
+ A(bg,[{opacity:1},{opacity:0}],{duration:900,delay:450,easing:'ease-out'});
+ last.onfinish=function(){N.forEach(function(a){a.style.visibility=''});A(el,[{opacity:1},{opacity:0}],{duration:250}).onfinish=end};
+},200+5*225+600+600);
+setTimeout(function(){if(el.parentNode&&!done)gone()},8000);
 })();
 </script>
 <div class="shell">
