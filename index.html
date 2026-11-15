@@ -356,7 +356,7 @@ html.sb ::-webkit-scrollbar-thumb{background:var(--fg)} /* html.sb = scrolled wi
 .puzzle-square.sel{box-shadow:inset 0 0 0 3px var(--fg)}.puzzle-square.chk{box-shadow:inset 0 0 0 4px var(--fg);background:color-mix(in srgb,var(--fg) 20%,transparent)}
 .puzzle-square.hint{box-shadow:inset 0 0 0 3px var(--fg);animation:puzpulse .9s ease-in-out infinite alternate}.puzzle-square.bad{animation:puzshake .35s;background:color-mix(in srgb,var(--fg) 32%,transparent)}
 @keyframes puzpulse{from{background:transparent}to{background:color-mix(in srgb,var(--fg) 22%,transparent)}}@keyframes puzshake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
-.puzzle-turn{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--fg);margin-bottom:10px;font:600 12px var(--sans)}.puzzle-turn i{width:11px;height:11px;border:1px solid var(--fg);flex:none}.puzzle-turn i.tb{background:var(--fg)}.puzzle-turn span{margin-left:auto;color:var(--mut);font:600 10px var(--sans);letter-spacing:.05em}
+.puzzle-turn{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--fg);margin-bottom:10px;font:600 12px var(--sans)}.puzzle-turn i{width:11px;height:11px;border:1px solid var(--fg);flex:none}.puzzle-turn i{background:var(--cw)}.puzzle-turn i.tb{background:var(--ck)}.puzzle-turn span{margin-left:auto;color:var(--mut);font:600 10px var(--sans);letter-spacing:.05em}
 .puzzle-actions .btn:disabled{opacity:.35;cursor:default}
 .puzzle-page{max-width:none;margin:0}
 .puzzle-layout{display:grid;grid-template-columns:minmax(200px,1fr) minmax(0,min(78vh,740px)) minmax(200px,1fr);grid-template-areas:"l b r";gap:28px;align-items:start}
