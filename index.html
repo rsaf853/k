@@ -1299,10 +1299,10 @@ html.mlock,html.mlock body{overflow:hidden}
 .sblf .sbpg{position:absolute;inset:0;backface-visibility:hidden}.sblf .bk2{transform:rotateY(180deg)}.sblf.go{transform:rotateY(-180deg)}
 #lb .sbedb{position:fixed;right:max(16px,env(safe-area-inset-right,0px));top:calc(16px + env(safe-area-inset-top,0px));z-index:5;background:var(--bg);color:var(--fg)}
 #sbed{position:fixed;inset:0;z-index:2100;background:var(--bg);color:var(--fg);display:flex;flex-direction:column;outline:none}
-.sbtop{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--line)}.sbtop b{font:800 12px var(--sans);letter-spacing:.14em}.sbsp{flex:1}
-.sbstage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:12px 16px;background:var(--soft)}
+.sbtop{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;padding:8px 16px;border-bottom:1px solid var(--line)}.sbtop b{font:800 12px var(--sans);letter-spacing:.14em}.sbsp{flex:1}
+.sbstage{flex:1;min-height:0;display:grid;place-items:center;padding:12px;background:var(--soft);overflow:hidden}
 .sbtb,.sbnav{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}.sbpn{font:600 11px var(--sans);color:var(--mut);min-width:70px;text-align:center}
-.sbbk.ed{position:relative;left:auto;top:auto;transform:none;width:min(100%,calc((100dvh - 330px) * 2 / 1.32),900px);flex:none}
+.sbbk.ed{position:relative;left:auto;top:auto;transform:none;max-height:none}
 .sbpg.tgt{outline:2px dashed var(--fg);outline-offset:-6px}
 .sbbk.ed .sbpg{cursor:default;touch-action:none}.sbbk.ed .sbi{cursor:move}
 .sbsel{position:absolute;inset:-3px;border:1px solid #111;pointer-events:none}
@@ -1310,13 +1310,13 @@ html.mlock,html.mlock body{overflow:hidden}
 .sbh.rs{right:-9px;bottom:-9px;cursor:nwse-resize}.sbh.ro{left:50%;top:-30px;margin-left:-8px;border-radius:50%;cursor:grab}.sbh.ro::after{content:"";position:absolute;left:50%;top:14px;width:1px;height:14px;background:#111}
 .sbh.dl{left:-9px;top:-9px;display:grid;place-items:center;font:700 11px/1 var(--sans);color:#111;cursor:pointer}
 .sbtray{border-top:1px solid var(--fg)}
-.sbtabs{display:flex;border-bottom:1px solid var(--line)}.sbtabs button{font:700 11px var(--sans);letter-spacing:.1em;padding:0 16px;height:38px;border:0;border-right:1px solid var(--line);background:none;color:var(--mut);cursor:pointer}.sbtabs button.on{color:var(--fg);box-shadow:inset 0 -2px 0 var(--fg)}
-.sbtbody{display:flex;gap:10px;align-items:center;padding:12px 16px;overflow-x:auto;min-height:110px}
+.sbtabs{display:flex;border-bottom:1px solid var(--line)}.sbtabs button{font:700 11px var(--sans);letter-spacing:.1em;padding:0 16px;height:32px;border:0;border-right:1px solid var(--line);background:none;color:var(--mut);cursor:pointer}.sbtabs button.on{color:var(--fg);box-shadow:inset 0 -2px 0 var(--fg)}
+.sbtbody{display:flex;gap:8px;align-items:center;padding:8px 16px;overflow-x:auto;min-height:84px}
 .sbti{flex:none;padding:0;border:1px solid var(--line);background:var(--bg);cursor:pointer;display:grid;place-items:center}.sbti:hover{border-color:var(--fg)}
-.sbti.ph{width:70px;height:86px}.sbti.ph img{max-width:62px;max-height:78px}.sbti.ph.used{opacity:.35}
+.sbti.ph{width:60px;height:68px}.sbti.ph img{max-width:54px;max-height:62px}.sbti.ph.used{opacity:.35}
 .sbti.ta{width:104px;height:40px;padding:9px 6px}.sbti.ta .wt{height:20px}
-.sbti.st{width:80px;height:80px;background:var(--soft)}.sbti.st span{display:block;width:64px}.sbti.st canvas{display:block;width:100%;height:auto}
-.sbti.up{width:80px;height:80px;border-style:dashed;font:700 10px var(--sans);letter-spacing:.1em;color:var(--mut)}
+.sbti.st{width:68px;height:68px;background:var(--soft)}.sbti.st span{display:block;width:54px}.sbti.st canvas{display:block;width:100%;height:auto}
+.sbti.up{width:68px;height:68px;border-style:dashed;font:700 10px var(--sans);letter-spacing:.1em;color:var(--mut)}
 .sbsty{display:flex;flex-direction:column;gap:4px;flex:none;padding-right:10px;border-right:1px solid var(--line)}.sbsty button{font:700 10px var(--sans);letter-spacing:.08em;height:24px;padding:0 10px;border:1px solid var(--line);background:var(--bg);color:var(--mut);cursor:pointer}.sbsty button.on{border-color:var(--fg);color:var(--fg)}
 @media(prefers-reduced-motion:reduce){.sblf,.gi.sbk>img:first-of-type{transition:none}}
 </style>
@@ -2493,12 +2493,10 @@ function sbView(i,v){const P=sbPagesOf(i),one=v.clientWidth<560,rm=matchMedia('(
 /* editor (owner only) */
 function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.meta.srcs.slice();if(pages.length%2)pages.push([]);let sp=0,sel=null,TAB='photo',STY='sticker',TGT=1,D=null;
  const UPS=[...new Set(pages.flat().filter(x=>x.t==='sticker'&&x.u).map(x=>x.u))];
- $('#lb').hidden=true;const ov=document.createElement('div');ov.id='sbed';ov.innerHTML=`<div class="sbtop"><b>SCRAPBOOK</b><span class="sbsp"></span><button type="button" class="btn" data-sb="cancel">CANCEL</button><button type="button" class="btn pri" data-sb="save">SAVE</button></div>
- <div class="sbstage"><div class="sbtb"><button class="btn" type="button" data-a="front">FRONT</button><button class="btn" type="button" data-a="back">BACK</button><button class="btn" type="button" data-a="frame">FRAME</button><button class="btn" type="button" data-a="del">DELETE</button></div>
- <div class="sbbk ed"><div class="sbpg l" data-side="0"></div><div class="sbpg r" data-side="1"></div></div>
- <div class="sbnav"><button class="btn" type="button" data-n="-1" aria-label="Previous pages">‹</button><span class="sbpn"></span><button class="btn" type="button" data-n="1" aria-label="Next pages">›</button><button class="btn" type="button" data-n="add">+ PAGES</button><button class="btn" type="button" data-n="rm">− PAGES</button></div></div>
+ $('#lb').hidden=true;const ov=document.createElement('div');ov.id='sbed';ov.innerHTML=`<div class="sbtop"><b>SCRAPBOOK</b><div class="sbnav"><button class="btn" type="button" data-n="-1" aria-label="Previous pages">‹</button><span class="sbpn"></span><button class="btn" type="button" data-n="1" aria-label="Next pages">›</button><button class="btn" type="button" data-n="add">+ PAGES</button><button class="btn" type="button" data-n="rm">− PAGES</button></div><div class="sbtb"><button class="btn" type="button" data-a="front">FRONT</button><button class="btn" type="button" data-a="back">BACK</button><button class="btn" type="button" data-a="frame">FRAME</button><button class="btn" type="button" data-a="del">DELETE</button></div><span class="sbsp"></span><button type="button" class="btn" data-sb="cancel">CANCEL</button><button type="button" class="btn pri" data-sb="save">SAVE</button></div>
+ <div class="sbstage"><div class="sbbk ed"><div class="sbpg l" data-side="0"></div><div class="sbpg r" data-side="1"></div></div></div>
  <div class="sbtray"><div class="sbtabs"><button type="button" class="on" data-tab="photo">PHOTOS</button><button type="button" data-tab="tape">TAPE</button><button type="button" data-tab="sticker">STICKERS</button></div><div class="sbtbody"></div></div>`;
- document.body.appendChild(ov);document.documentElement.classList.add('mlock');
+ document.body.appendChild(ov);document.documentElement.classList.add('mlock');const fit=()=>{const st=ov.querySelector('.sbstage'),b=ov.querySelector('.sbbk'),W=st.clientWidth-24,H=st.clientHeight-24;b.style.width=Math.max(200,Math.min(W,H*2/1.32))+'px'};addEventListener('resize',fit);requestAnimationFrame(fit);
  const bk=ov.querySelector('.sbbk'),PG=[...bk.querySelectorAll('.sbpg')],find=id=>{const[a,b]=String(id).split(':');return pages[+a]&&pages[+a][+b]};
  const draw=()=>{PG.forEach((pg,side)=>{const pi=sp+side,P=pages[pi];pg.dataset.pi=pi;pg.classList.toggle('tgt',side===TGT);pg.innerHTML=P?P.map((it,j)=>sbItem(it,pi+':'+j,sel===pi+':'+j)).join(''):''});sbHydrate(bk);
   ov.querySelector('.sbpn').textContent=`${sp+1}–${sp+2} / ${pages.length}`;ov.querySelector('[data-n="-1"]').disabled=sp<=0;ov.querySelector('[data-n="1"]').disabled=sp+2>=pages.length;ov.querySelector('[data-n="rm"]').disabled=pages.length<=2;
@@ -2528,7 +2526,7 @@ function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.me
   if(b.dataset.a==='front'){P.splice(j,1);P.push(it);sel=pi+':'+(P.length-1)}if(b.dataset.a==='back'){P.splice(j,1);P.unshift(it);sel=pi+':0'}if(b.dataset.a==='frame')it.fr=it.fr?0:1;if(b.dataset.a==='del'){P.splice(j,1);sel=null}draw()};
  ov.querySelector('.sbnav').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;const n=b.dataset.n;sel=null;
   if(n==='add'){pages.push([],[]);sp=pages.length-2}else if(n==='rm'){if(pages.length>2&&(pages[sp].length+pages[sp+1].length===0||confirm('Delete these two pages?'))){pages.splice(sp,2);sp=Math.max(0,Math.min(sp,pages.length-2))}}else{sp=Math.max(0,Math.min(pages.length-2,sp+(+n)*2))}draw()};
- const close=()=>{ov.remove();document.documentElement.classList.remove('mlock')};
+ const close=()=>{removeEventListener('resize',fit);ov.remove();document.documentElement.classList.remove('mlock')};
  ov.querySelector('[data-sb="cancel"]').onclick=close;
  ov.querySelector('[data-sb="save"]').onclick=async()=>{const p=pages.slice();while(p.length>2&&!p[p.length-1].length&&!p[p.length-2].length)p.splice(-2,2);
   const r=await sb.from('items').update({meta:{...(i.meta||{}),src:SRC[0],srcs:SRC,av:'book',sb:{p}}}).eq('id',i.id);if(r.error)return msg('Save failed: '+r.error.message);close();await load();route();setTimeout(()=>openLb(i.id),50)};
