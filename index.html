@@ -1275,13 +1275,11 @@ html.mlock,html.mlock body{overflow:hidden}
 .alf.go{transform:rotateY(-180deg)}
 @media(prefers-reduced-motion:reduce){.ask,.apr,.alf{transition:none}}
 /* ---------- scrapbook ---------- */
-.gi.sbk{perspective:900px}
-.gi.sbk>img:first-of-type{position:relative;z-index:1;transform-origin:left center;transition:transform .5s cubic-bezier(.3,.8,.2,1),filter .35s;backface-visibility:hidden}
-.gi.sbk:hover>img:first-of-type{transform:rotateY(-58deg)}
-.gi.sbk::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--fg);z-index:2}
-.sbp{position:absolute;inset:0;background:#fbfbf8;overflow:hidden;z-index:0}
-.ggr .gi .sbp img{position:absolute;left:18%;top:16%;width:62%;height:auto;aspect-ratio:auto;filter:none;transform:rotate(-5deg);box-shadow:0 1px 3px rgba(0,0,0,.3);opacity:1}
-.sbp .wt{position:absolute;width:34%;height:9%;left:32%;top:12%;transform:rotate(-8deg)}
+.gi.sbk>img:first-of-type{position:relative;z-index:1;transition:opacity .3s ease,filter .35s}
+.gi.sbk:hover>img:first-of-type{opacity:0}
+.sbp{position:absolute;inset:0;background:var(--soft);overflow:hidden;z-index:0}
+.sbp .sbbk{width:94%;max-height:94%;box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:zoom-in}
+.ggr .gi .sbp img{width:100%;height:auto;aspect-ratio:auto;border:0;filter:none;opacity:1}
 .wt{display:block;width:100%;height:100%;clip-path:polygon(0 0,3% 12%,0 25%,3% 38%,0 50%,3% 62%,0 75%,3% 88%,0 100%,100% 100%,97% 88%,100% 75%,97% 62%,100% 50%,97% 38%,100% 25%,97% 12%,100% 0)}
 .wt.grey{background:rgba(150,150,150,.55)}.wt.white{background:repeating-linear-gradient(90deg,rgba(255,255,255,.85) 0 8px,rgba(225,225,225,.85) 8px 16px)}.wt.black{background:rgba(17,17,17,.82)}.wt.kraft{background:rgba(196,160,112,.82)}
 .wt.dots{background:rgba(240,240,236,.85) radial-gradient(circle,#111 0 1.4px,transparent 1.8px) 0 0/9px 9px}.wt.check{background:repeating-conic-gradient(rgba(17,17,17,.8) 0 25%,rgba(255,255,255,.8) 0 50%) 0 0/12px 12px}.wt.stripe{background:repeating-linear-gradient(45deg,rgba(17,17,17,.75) 0 4px,rgba(255,255,255,.8) 4px 10px)}
@@ -2109,7 +2107,7 @@ function mqFit(){document.querySelectorAll('.mq .mqb').forEach(b=>{const x=b.fir
 function list(k){const kind=KIND[k],L=ITEMS.filter(i=>i.kind===kind&&(!TAG||(i.tags||[]).includes(TAG))&&match(G(i)));let h='';
  if(kind==='post'){const G2=[];L.forEach(i=>{const x=new Date(i.created_at),k=x.getFullYear()+'-'+x.getMonth(),g=G2[G2.length-1];if(g&&g.k===k)g.a.push(i);else G2.push({k,l:MONS[x.getMonth()]+' '+x.getFullYear(),a:[i]})});h=`<div class="arx mon">${G2.map(g=>`<div class="ag"><div class="agh"><b>${g.l}</b><i></i><span>${g.a.length}</span></div>${g.a.map(i=>{const inn=`<span class="dn">${p2(new Date(i.created_at).getDate())}</span><b>${vb(i)}${esc(i.title||'untitled')}</b>${i.meta?.sub?`<span class="as">${esc(i.meta.sub)}</span>`:''}${(i.tags||[]).length?`<span class="at">${tags(i)}</span>`:''}`;return`<a class="ai" href="#/post/${i.id}" data-tip="${i.id}">${inn}</a>`}).join('')}</div>`).join('')}</div>`}
  if(kind==='gallery'){const gs=()=>'',
-  cs=sortG(L).map(it=>{const i=G(it),lk=locked(i),al0=!lk&&Array.isArray(i.meta?.srcs)&&i.meta.srcs.length>1,bk=al0&&i.meta.av==='book',al=al0&&!bk;return`<div class="gi${lk?' lk'+lkc(i):''}${al?' alb':''}${bk?' sbk':''}" ${lk?`data-lk="${i.id}"`:`data-gi="${i.id}"`} style="${lk?'':gs(i)}">${lk?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt=""${GAR.has(i.meta?.src)?` style="--ar:${GAR.get(i.meta?.src)}"`:''}>`}${bk?`<span class="sbp"><img src="${esc(i.meta.srcs[1])}" alt="" loading="lazy"><i class="wt grey"></i></span>`:''}${al?`<img class="as" alt="" hidden><span class="asg">${i.meta.srcs.map((x,j)=>`<i${j?'':' class="on"'}></i>`).join('')}</span>`:''}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${(i.body||i.tags?.length)&&!lk?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`});
+  cs=sortG(L).map(it=>{const i=G(it),lk=locked(i),al0=!lk&&Array.isArray(i.meta?.srcs)&&i.meta.srcs.length>1,bk=al0&&i.meta.av==='book',al=al0&&!bk;return`<div class="gi${lk?' lk'+lkc(i):''}${al?' alb':''}${bk?' sbk':''}" ${lk?`data-lk="${i.id}"`:`data-gi="${i.id}"`} style="${lk?'':gs(i)}">${lk?`<div class="lkb">${ulf(i.id)}</div>`:`<img src="${esc(i.meta?.src)}" loading="lazy" alt=""${GAR.has(i.meta?.src)?` style="--ar:${GAR.get(i.meta?.src)}"`:''}>`}${bk?'<span class="sbp"></span>':''}${al?`<img class="as" alt="" hidden><span class="asg">${i.meta.srcs.map((x,j)=>`<i${j?'':' class="on"'}></i>`).join('')}</span>`:''}${admin?`<button class="eb" data-ed="${i.id}">EDIT</button>`:''}${(i.body||i.tags?.length)&&!lk?`<div class="cp">${esc(i.body||'')} ${vb(i)}${tags(i)}</div>`:''}</div>`});
   h=`<div class="ggr gm${admin?' gsort':''}">${cs.join('')}</div>`}
  if(kind==='memo'){const NUM=new Map(ITEMS.filter(i=>i.kind==='memo').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).map((x,j)=>[x.id,j+1])),
   mk=it=>{const i=G(it),lk=locked(i);return`<div class="msh${lk?' lk'+lkc(i):''}" data-ms="${i.id}" style="--r:${((((Math.sin(i.id*12.9898)*43758.5453)%1+1)%1)-.5)*14}deg"><div class="mshi">${eb(i)}<span class="mno">#${NUM.get(i.id)||''} ${date(i.created_at)}</span>${i.title?`<b class="mst">${esc(i.title)}</b>`:lk?'<b class="mst" style="color:var(--mut)">untitled</b>':''}${lk?`<div class="mql lkb">${ulf(i.id)}</div>`:`<div class="mt md">${mdm(i.body)}</div>`}${tags(i)||vb(i)?`<div class="msf">${vb(i)}${tags(i)}</div>`:''}</div></div>`},mon=i=>{const x=new Date(i.created_at);return x.getFullYear()+'-'+x.getMonth()},filt=!!(Q||TAG),N=innerWidth<720?8:12;
@@ -2535,6 +2533,10 @@ function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.me
   const r=await sb.from('items').update({meta:{...(i.meta||{}),src:SRC[0],srcs:SRC,av:'book',sb:{p}}}).eq('id',i.id);if(r.error)return msg('Save failed: '+r.error.message);close();await load();route();setTimeout(()=>openLb(i.id),50)};
  ov.addEventListener('keydown',e=>{if((e.key==='Delete'||e.key==='Backspace')&&sel&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){const[pi,j]=sel.split(':').map(Number);pages[pi].splice(j,1);sel=null;draw()}});ov.tabIndex=-1;ov.focus();
  tray();draw()}
+
+/* scrapbook tile: on hover the cover gives way to the real first spread, drawn the first time it is needed */
+document.addEventListener('mouseover',e=>{const t=e.target.closest&&e.target.closest('.gi.sbk');if(!t)return;const sp=t.querySelector('.sbp');if(!sp||sp.dataset.on)return;const it=G(ITEMS.find(x=>x.id==t.dataset.gi));if(!it)return;sp.dataset.on=1;
+ const P=sbPagesOf(it);sp.innerHTML=`<div class="sbbk"><div class="sbpg l">${sbPage(P[0])}</div><div class="sbpg r">${sbPage(P[1])}</div></div>`;sbHydrate(sp)});
 function albOpen(i){const S=i.meta.srcs,av=i.meta.av||'stack',lb=$('#lb'),rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
  lb.innerHTML=`<div class="alb-v av-${av}" tabindex="-1"></div>${i.body?`<p class="alb-c">${esc(i.body)}</p>`:''}`;lb.hidden=false;const v=lb.querySelector('.alb-v');v.focus({preventScroll:true});
  const key=f=>v.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();f(1)}if(e.key==='ArrowLeft'){e.preventDefault();f(-1)}});
