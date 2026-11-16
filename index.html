@@ -2485,6 +2485,7 @@ function sbShape(k){const c=document.createElement('canvas');c.width=c.height=24
  return c}
 /* sticker outline: ported from the coffee editor's bakeStickerCanvas */
 function sbBake(img,style){const w=img.naturalWidth||img.width,h=img.naturalHeight||img.height,thickness=Math.round(Math.max(w,h)*.05);
+ if(style==='none'){const o=document.createElement('canvas');o.width=w;o.height=h;o.getContext('2d').drawImage(img,0,0,w,h);return o}
  const sil=f=>{const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(img,0,0,w,h);x.globalCompositeOperation='source-in';x.fillStyle=f;x.fillRect(0,0,w,h);return c};
  if(style==='shadow'){const pad=Math.max(30,Math.round(Math.max(w,h)*.07)+20),o=document.createElement('canvas');o.width=w+pad*2;o.height=h+pad*2;const x=o.getContext('2d');if('filter' in x)x.filter='drop-shadow(0 0 3px rgba(120,120,120,.9)) drop-shadow(0 0 9px rgba(120,120,120,.6)) drop-shadow(0 0 17px rgba(120,120,120,.4))';x.drawImage(img,pad,pad,w,h);return o}
  const pad=thickness,sm=style==='sticker'?Math.max(8,Math.round(pad*.5)+6):0,off=sm+pad,o=document.createElement('canvas');o.width=w+pad*2+sm*2;o.height=h+pad*2+sm*2;const x=o.getContext('2d');
@@ -2535,7 +2536,7 @@ function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.me
   else if(it.t==='text')c.innerHTML=`<input type="text" data-c="tx" value="${esc(it.tx||'')}" aria-label="Text"><select data-c="f" aria-label="Font">${[['sans','Sans'],['serif','Serif'],['hand','Hand']].map(([k,t])=>`<option value="${k}"${(it.f||'sans')===k?' selected':''}>${t}</option>`).join('')}</select>${col(it.c||'#111111')}`;
   else if(it.t==='label')c.innerHTML=`<input type="text" data-c="tx" value="${esc(it.tx||'')}" aria-label="Label">`;
   else if(it.t==='stamp')c.innerHTML=`<input type="text" data-c="tx" value="${esc((it.tx||'').replace(/\n/g,' / '))}" aria-label="Stamp text (use / for a new line)">${col(it.c||'#b3261e')}`;
-  else if(it.t==='sticker')c.innerHTML=[['basic','PLAIN'],['sticker','STICKER'],['shadow','GLOW']].map(([k,t])=>`<button type="button" class="btn${(it.st||'sticker')===k?' pri':''}" data-c="st" data-v="${k}">${t}</button>`).join('');
+  else if(it.t==='sticker')c.innerHTML=[['none','NONE'],['basic','PLAIN'],['sticker','STICKER'],['shadow','GLOW']].map(([k,t])=>`<button type="button" class="btn${(it.st||'sticker')===k?' pri':''}" data-c="st" data-v="${k}">${t}</button>`).join('');
   else c.innerHTML=''};
  const draw=()=>{drawBook();drawCtx();ov.querySelector('.sbpn').textContent=`${sp+1}–${sp+2} / ${pages.length}`;ov.querySelector('[data-n="-1"]').disabled=sp<=0;ov.querySelector('[data-n="1"]').disabled=sp+2>=pages.length;ov.querySelector('[data-n="rm"]').disabled=pages.length<=2;if(TAB==='photo')tray()};
  let ctxSnap=false;const ctx=ov.querySelector('.sbctx');
