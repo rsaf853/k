@@ -1367,6 +1367,22 @@ html.mlock,html.mlock body{overflow:hidden}
 .sbfl .sbctx input[type=range]{width:84px}
 .sbfl .sbctx .btn{height:28px;padding:0 8px;font-size:10.5px}
 .sbfl .tg{height:28px;padding:0 8px;border:1px solid var(--line);background:none;color:var(--mut);font:700 10px var(--sans);letter-spacing:.06em;cursor:pointer}.sbfl .tg.on{border-color:var(--fg);color:var(--fg);background:var(--soft)}
+/* scrapbook viewer: spreads and the page turn */
+.sbbk.sbv{display:block;background:#fbfbf8}
+.sbspr{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;background:#fbfbf8 linear-gradient(90deg,transparent calc(50% - 16px),rgba(0,0,0,.07) calc(50% - 1px),#e2e2dc calc(50% - 1px) 50%,rgba(0,0,0,.07) 50%,transparent calc(50% + 16px))}
+.sbspr.one{grid-template-columns:1fr;background:#fbfbf8}
+.sbspr>.sbpg{background:transparent;overflow:visible;pointer-events:none;border:0;box-shadow:none}
+.sbspr .sbi{pointer-events:auto}
+.sbh2,.sbfc{position:absolute;top:0;bottom:0;width:50%;overflow:hidden}
+.sbh2.l{left:0}.sbh2.r{left:50%}
+.sbhin{position:absolute;top:0;bottom:0;width:200%}.sbhin.l{left:0}.sbhin.r{left:-100%}
+.sbleaf{position:absolute;top:0;bottom:0;left:50%;width:50%;transform-origin:left center;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.45,.05,.25,1);z-index:3}
+.sbleaf.go{transform:rotateY(-180deg)}
+.sbfc{left:0;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.sbfc.bk{transform:rotateY(180deg)}
+.sbfc::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.16),rgba(0,0,0,0) 35%);animation:sbshade .9s ease both}
+.sbfc.bk::after{background:linear-gradient(270deg,rgba(0,0,0,.16),rgba(0,0,0,0) 35%)}
+@keyframes sbshade{0%,100%{opacity:.3}50%{opacity:1}}
 </style>
 </head>
 <body>
@@ -1442,7 +1458,7 @@ const ulf=id=>`<div class="rkw"><span class="rkt">${RKI}<b>LOCKED</b></span><for
 function lockPage(it){const lg=it.kind==='log';app.innerHTML=`<div class="lkpg"><svg class="rkbig" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnR"/></svg><div class="lkpm">${lg?'LOG':'ARCHIVE'} · ${date(it.created_at)}</div><h1 class="lkh1">${esc(it.title||'untitled')}</h1>${ulf(it.id)}<a class="lkbk" href="#/${lg?'log':'posts'}">← ${lg?'log':'archive'}</a></div>`;setTimeout(()=>{const o=app.querySelector('.uf input');if(o)o.focus()},60)}
 const hash=t=>[...t.matchAll(/(?:^|\s)#([^\s#]+)/g)].map(m=>m[1]);
 const openM=h=>{$('#mb').innerHTML=h;$('#md').hidden=false},closeM=()=>{$('#md').hidden=true;if(ADJ){Object.assign(HOME,ADJ);ADJ=null;paintVars()}{const im=$('#im');if(im)delete im.dataset.ep}};
-$('#md').onclick=e=>{if(e.target.id==='md')closeM()};$('#lb').onclick=e=>{if(!e.target.isConnected||(e.target.closest&&e.target.closest('.alb-v')))return;$('#lb').hidden=true};
+$('#md').onclick=e=>{if(e.target.id==='md')closeM()};$('#lb').onclick=e=>{if(!e.target.isConnected||(e.target.closest&&e.target.closest('.ask,.apr,.sbbk,.sbedb')))return;$('#lb').hidden=true};
 const msg=t=>{const e=$('#st');if(e)e.textContent=t;else alert(t)};
 const rid=f=>`${crypto.randomUUID()}.${(f.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg'}`;
 async function upload(f){const p=rid(f),u=await sb.storage.from('img').upload(p,f,{contentType:f.type});if(u.error)throw u.error;return sb.storage.from('img').getPublicUrl(p).data.publicUrl}
@@ -2545,16 +2561,24 @@ function sbItem(it,id,selected){const tx=SBTXT.includes(it.t);if(tx&&it.t==='tex
 const sbPagesOf=i=>{const p=i.meta?.sb?.p;if(Array.isArray(p)&&p.length)return p;return i.meta.srcs.map(u=>[{t:'photo',s:u,x:50,y:48,w:74,r:0,fr:1}])};
 const sbPage=P=>P?P.map((it,j)=>sbItem(it,j,false)).join(''):'';
 function sbView(i,v){const P=sbPagesOf(i),one=v.clientWidth<560,rm=matchMedia('(prefers-reduced-motion: reduce)').matches,n=P.length;let s=0,busy=false;
- v.innerHTML=`<div class="sbbk${one?' one':''}"><div class="sbpg l"></div><div class="sbpg r"></div></div>${admin?'<button type="button" class="btn sbedb">EDIT</button>':''}`;
- const bk=v.firstChild,L=bk.querySelector('.l'),R=bk.querySelector('.r');
- const draw=()=>{if(one){R.innerHTML=sbPage(P[s])}else{L.innerHTML=sbPage(P[s]);R.innerHTML=sbPage(P[s+1])}sbHydrate(bk)};
- const st=one?1:2;
- const flip=d=>{if(busy)return;const ns=s+d*st;if(ns<0||ns>n-1)return;busy=true;const lf=document.createElement('div');lf.className='sblf'+(d<0?' go':'');
-  if(one){lf.innerHTML=`<div class="sbpg r">${sbPage(P[d>0?s:ns])}</div><div class="sbpg bk2"></div>`;if(d>0)R.innerHTML=sbPage(P[ns])}
-  else if(d>0){lf.innerHTML=`<div class="sbpg r">${sbPage(P[s+1])}</div><div class="sbpg l bk2">${sbPage(P[s+2])}</div>`;R.innerHTML=sbPage(P[s+3])}
-  else{lf.innerHTML=`<div class="sbpg r">${sbPage(P[s-1])}</div><div class="sbpg l bk2">${sbPage(P[s])}</div>`;L.innerHTML=sbPage(P[s-2])}
-  bk.appendChild(lf);sbHydrate(bk);lf.offsetWidth;lf.classList.toggle('go');setTimeout(()=>{s=ns;lf.remove();draw();busy=false},rm?0:820)};
- bk.addEventListener('click',e=>{const r=bk.getBoundingClientRect();flip(e.clientX>r.left+r.width/2?1:-1)});if(one){let sx=null;bk.addEventListener('pointerdown',e=>sx=e.clientX);bk.addEventListener('pointerup',e=>{if(sx!=null&&Math.abs(e.clientX-sx)>30)flip(e.clientX<sx?1:-1);sx=null})}
+ v.innerHTML=`<div class="sbbk sbv${one?' one':''}"></div>${admin?'<button type="button" class="btn sbedb">EDIT</button>':''}`;
+ const bk=v.firstChild,st=one?1:2;
+ /* a whole spread as one sheet, so things lying across the fold stay whole */
+ const spread=k=>one?`<div class="sbspr one"><div class="sbpg r">${sbPage(P[k])}</div></div>`:`<div class="sbspr"><div class="sbpg l">${sbPage(P[k])}</div><div class="sbpg r">${sbPage(P[k+1])}</div></div>`;
+ const half=(k,side,cls)=>`<div class="${cls} ${side}"><div class="sbhin ${side}">${spread(k)}</div></div>`;
+ const draw=()=>{bk.innerHTML=spread(s);sbHydrate(bk)};
+ const flip=d=>{if(busy)return;const ns=s+d*st;if(ns<0||ns>n-1)return;busy=true;
+  if(one||rm){if(rm){s=ns;draw();busy=false;return}
+   const o=bk.firstChild;bk.insertAdjacentHTML('beforeend',spread(ns));const nw=bk.lastChild;sbHydrate(nw);
+   o.animate([{transform:'none',opacity:1},{transform:`translateX(${-d*18}%) rotate(${-d*2}deg)`,opacity:0}],{duration:380,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
+   nw.animate([{transform:`translateX(${d*18}%)`,opacity:0},{transform:'none',opacity:1}],{duration:380,easing:'cubic-bezier(.4,0,.2,1)'}).onfinish=()=>{s=ns;draw();busy=false};return}
+  /* page turn: the leaf carries the old spread's right half on its front and the new spread's left half on its back */
+  const fw=d>0,a=fw?s:ns,b=fw?ns:s;
+  bk.innerHTML=half(fw?s:ns,'l','sbh2')+half(fw?ns:s,'r','sbh2')+`<div class="sbleaf${fw?'':' go'}"><div class="sbfc fr">${`<div class="sbhin r">${spread(fw?s:ns)}</div>`}</div><div class="sbfc bk">${`<div class="sbhin l">${spread(fw?ns:s)}</div>`}</div></div>`;
+  sbHydrate(bk);const lf=bk.querySelector('.sbleaf');lf.offsetWidth;lf.classList.toggle('go');
+  setTimeout(()=>{s=ns;draw();busy=false},900)};
+ bk.addEventListener('click',e=>{const r=bk.getBoundingClientRect();flip(e.clientX>r.left+r.width/2?1:-1)});
+ if(one){let sx=null;bk.addEventListener('pointerdown',e=>sx=e.clientX);bk.addEventListener('pointerup',e=>{if(sx!=null&&Math.abs(e.clientX-sx)>30)flip(e.clientX<sx?1:-1);sx=null})}
  v.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();flip(1)}if(e.key==='ArrowLeft'){e.preventDefault();flip(-1)}});
  const eb=v.querySelector('.sbedb');if(eb)eb.onclick=e=>{e.stopPropagation();sbEdit(i)};
  const fit=()=>{if(!bk.isConnected)return removeEventListener('resize',fit);const W=v.clientWidth,H=v.clientHeight,ar=one?1/1.32:2/1.32;const w=Math.min(W,H*ar);bk.style.width=w+'px';bk.style.height=w/ar+'px';bk.style.maxWidth='none'};addEventListener('resize',fit);fit();draw()}
