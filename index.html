@@ -1297,7 +1297,7 @@ html.mlock,html.mlock body{overflow:hidden}
 .sblf{position:absolute;left:50%;top:0;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.45,.05,.25,1)}
 .sbbk.one .sblf{left:0;width:100%}
 .sblf .sbpg{position:absolute;inset:0;backface-visibility:hidden}.sblf .bk2{transform:rotateY(180deg)}.sblf.go{transform:rotateY(-180deg)}
-.alb-v .sbedb{position:absolute;right:0;top:-44px;background:var(--bg)}
+#lb .sbedb{position:fixed;right:max(16px,env(safe-area-inset-right,0px));top:calc(16px + env(safe-area-inset-top,0px));z-index:5;background:var(--bg);color:var(--fg)}
 #sbed{position:fixed;inset:0;z-index:2100;background:var(--bg);color:var(--fg);display:flex;flex-direction:column;outline:none}
 .sbtop{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--line)}.sbtop b{font:800 12px var(--sans);letter-spacing:.14em}.sbsp{flex:1}
 .sbstage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:12px 16px;background:var(--soft)}
@@ -2325,14 +2325,14 @@ function memoView(id){const it=ITEMS.find(i=>i.id==id);if(!it)return;const i=G(i
 function form(kind,it){if(kind==='post'||kind==='log'){closeM();return editor(it,kind)}const i=it||{visibility:'public',tags:[],meta:{}},nw=!it;
  openM(`<h3>${LBL[kind].toUpperCase()} ${nw?'NEW':'EDIT'}</h3><form id="f">
  ${kind==='memo'||kind==='log'?`<label>Title</label><input name="title" value="${esc(i.title)}">`:''}
- ${kind==='gallery'?`<label>Image URL (one per line${nw?'':'; the first one is the cover'})</label><textarea name="urls">${esc((i.meta?.srcs&&i.meta.srcs.length>1?i.meta.srcs:[i.meta?.src||'']).join('\n'))}</textarea>${nw?'<label>or upload files</label><input type="file" name="files" accept="image/*" multiple><label>Several pictures</label><select name="grp"><option value="each">One post per picture</option><option value="album">One album (first picture is the cover)</option></select>':''}<label>Album view</label><select name="av">${[['stack','Stack'],['desk','Scatter on a desk'],['book','Scrapbook']].map(([k,t])=>`<option value="${k}"${(i.meta?.av||'stack')===k?' selected':''}>${t}</option>`).join('')}</select><label>Caption</label><input name="body" value="${esc(i.body)}">${nw?'':cropUI(i)}`:`<label>Content${kind==='line'||kind==='memo'||kind==='log'?' (markdown)':''}</label><textarea name="body" style="min-height:${kind==='line'?110:kind==='log'?280:140}px">${esc(i.body)}</textarea>`}
+ ${kind==='gallery'?`<label>Image URL (one per line${nw?'':'; the first one is the cover'})</label><textarea name="urls">${esc((i.meta?.srcs&&i.meta.srcs.length>1?i.meta.srcs:[i.meta?.src||'']).join('\n'))}</textarea><label>${nw?'or upload files':'add pictures (added after the ones above)'}</label><input type="file" name="files" accept="image/*" multiple>${nw?'<label>Several pictures</label><select name="grp"><option value="each">One post per picture</option><option value="album">One album (first picture is the cover)</option></select>':''}${!nw&&i.meta?.srcs&&i.meta.srcs.length>1?'<button type="button" class="btn" data-sbopen style="width:100%;margin:10px 0 2px">DECORATE SCRAPBOOK →</button>':''}<label>Album view</label><select name="av">${[['stack','Stack'],['desk','Scatter on a desk'],['book','Scrapbook']].map(([k,t])=>`<option value="${k}"${(i.meta?.av||'stack')===k?' selected':''}>${t}</option>`).join('')}</select><label>Caption</label><input name="body" value="${esc(i.body)}">${nw?'':cropUI(i)}`:`<label>Content${kind==='line'||kind==='memo'||kind==='log'?' (markdown)':''}</label><textarea name="body" style="min-height:${kind==='line'?110:kind==='log'?280:140}px">${esc(i.body)}</textarea>`}
  ${kind==='line'||kind==='log'?`<label>Date</label><input type="datetime-local" name="dt" value="${nw?'':loc(i.created_at)}">`:''}
   <label>Tags (space separated)</label><input name="tags" value="${esc((i.tags||[]).join(' '))}"><div class="tpk" id="ftpk"></div>
  <label>Related (also shown on the other entry)</label><div class="relw" id="frel"></div>
  <label>Visibility</label><select name="vis">${[['public','Public'],['private','Private'],['locked','Locked']].map(([k,t])=>`<option value="${k}"${i.visibility===k?' selected':''}>${t}</option>`).join('')}</select>
  <input type="password" name="pw" placeholder="password" autocomplete="new-password" style="margin-top:6px">
  <p id="st" class="st"></p><div class="acts">${nw?'':'<button type="button" class="btn" data-del>DELETE</button>'}<button type="button" class="btn" data-x>CANCEL</button><button class="btn">SAVE</button></div></form>`);
- tagPicker($('#ftpk'),$('#f [name=tags]'),tagPool(kind),false);const CROP=kind==='gallery'&&!nw?cropInit(i):null;const REL=relPicker($('#frel'),i.meta&&i.meta.rel,i.id);
+ tagPicker($('#ftpk'),$('#f [name=tags]'),tagPool(kind),false);if($('[data-sbopen]'))$('[data-sbopen]').onclick=()=>{closeM();sbEdit(G(it))};const CROP=kind==='gallery'&&!nw?cropInit(i):null;const REL=relPicker($('#frel'),i.meta&&i.meta.rel,i.id);
  if($('[data-del]'))$('[data-del]').onclick=async()=>{if(!confirm('Delete?'))return;const r=await sb.from('items').delete().eq('id',i.id);if(r.error)return msg(r.error.message);closeM();await load();route()};
  $('#f').onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target);msg('Saving…');
   const base={kind,title:fd.get('title')||null,tags:[...new Set([...(fd.get('tags')||'').split(/[,\s]+/).map(s=>s.replace(/^#/,'')).filter(Boolean),...(kind==='memo'||kind==='line'?hash(fd.get('body')||''):[])])],visibility:fd.get('vis')},pw=fd.get('pw');
@@ -2491,7 +2491,7 @@ function sbView(i,v){const P=sbPagesOf(i),one=v.clientWidth<560,rm=matchMedia('(
  v.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();flip(1)}if(e.key==='ArrowLeft'){e.preventDefault();flip(-1)}});
  const eb=v.querySelector('.sbedb');if(eb)eb.onclick=e=>{e.stopPropagation();sbEdit(i)};draw()}
 /* editor (owner only) */
-function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.meta.srcs;if(pages.length%2)pages.push([]);let sp=0,sel=null,TAB='photo',STY='sticker',TGT=1,D=null;
+function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.meta.srcs.slice();if(pages.length%2)pages.push([]);let sp=0,sel=null,TAB='photo',STY='sticker',TGT=1,D=null;
  const UPS=[...new Set(pages.flat().filter(x=>x.t==='sticker'&&x.u).map(x=>x.u))];
  $('#lb').hidden=true;const ov=document.createElement('div');ov.id='sbed';ov.innerHTML=`<div class="sbtop"><b>SCRAPBOOK</b><span class="sbsp"></span><button type="button" class="btn" data-sb="cancel">CANCEL</button><button type="button" class="btn pri" data-sb="save">SAVE</button></div>
  <div class="sbstage"><div class="sbtb"><button class="btn" type="button" data-a="front">FRONT</button><button class="btn" type="button" data-a="back">BACK</button><button class="btn" type="button" data-a="frame">FRAME</button><button class="btn" type="button" data-a="del">DELETE</button></div>
@@ -2504,7 +2504,7 @@ function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.me
   ov.querySelector('.sbpn').textContent=`${sp+1}–${sp+2} / ${pages.length}`;ov.querySelector('[data-n="-1"]').disabled=sp<=0;ov.querySelector('[data-n="1"]').disabled=sp+2>=pages.length;ov.querySelector('[data-n="rm"]').disabled=pages.length<=2;
   ov.querySelectorAll('.sbtb .btn').forEach(b=>b.disabled=!sel);const it=sel&&find(sel);ov.querySelector('[data-a="frame"]').hidden=!(it&&it.t==='photo');if(TAB==='photo')tray()};
  const tray=()=>{const b=ov.querySelector('.sbtbody'),used=new Set(pages.flat().filter(x=>x.t==='photo').map(x=>x.s));
-  if(TAB==='photo')b.innerHTML=SRC.map((u,k)=>`<button type="button" class="sbti ph${used.has(u)?' used':''}" data-add="photo" data-v="${k}"><img src="${esc(u)}" alt=""></button>`).join('');
+  if(TAB==='photo')b.innerHTML=SRC.map((u,k)=>`<button type="button" class="sbti ph${used.has(u)?' used':''}" data-add="photo" data-v="${k}"><img src="${esc(u)}" alt=""></button>`).join('')+`<label class="sbti up ph">+ PHOTO<input type="file" accept="image/*" multiple hidden data-ph></label>`;
   if(TAB==='tape')b.innerHTML=SBT.map(t=>`<button type="button" class="sbti ta" data-add="tape" data-v="${t}"><div class="wt ${t}"></div></button>`).join('');
   if(TAB==='sticker'){b.innerHTML=`<div class="sbsty">${[['basic','PLAIN'],['sticker','STICKER'],['shadow','GLOW']].map(([k,t])=>`<button type="button" data-sty="${k}" class="${STY===k?'on':''}">${t}</button>`).join('')}</div>`+SBK.map(k=>`<button type="button" class="sbti st" data-add="sticker" data-k="${k}"><span data-sk='${JSON.stringify({k,st:STY})}'></span></button>`).join('')+UPS.map(u=>`<button type="button" class="sbti st" data-add="sticker" data-u="${esc(u)}"><span data-sk='${esc(JSON.stringify({u,st:STY}))}'></span></button>`).join('')+`<label class="sbti up">PNG<input type="file" accept="image/png,image/webp" multiple hidden></label>`;sbHydrate(b)}};
  ov.querySelector('.sbtabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(!b)return;TAB=b.dataset.tab;ov.querySelectorAll('.sbtabs button').forEach(x=>x.classList.toggle('on',x===b));tray()};
@@ -2512,7 +2512,7 @@ function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.me
   const a=e.target.closest('[data-add]');if(!a)return;const pi=sp+TGT,P=pages[pi];if(!P)return;const k=a.dataset.add,it={t:k,x:Math.round(50+(Math.random()-.5)*16),y:Math.round(50+(Math.random()-.5)*16),r:Math.round((Math.random()-.5)*14)};
   if(k==='photo'){it.s=SRC[+a.dataset.v];it.w=56}if(k==='tape'){it.tp=a.dataset.v;it.w=30;it.r=Math.round((Math.random()-.5)*40)}if(k==='sticker'){if(a.dataset.k)it.k=a.dataset.k;else it.u=a.dataset.u;it.st=STY;it.w=22}
   P.push(it);sel=pi+':'+(P.length-1);draw()});
- ov.querySelector('.sbtbody').addEventListener('change',async e=>{if(e.target.type!=='file')return;for(const f of e.target.files){try{const u=await upload(f);UPS.push(u)}catch(x){msg('Upload failed: '+(x.message||x))}}tray()});
+ ov.querySelector('.sbtbody').addEventListener('change',async e=>{if(e.target.type!=='file')return;const ph=e.target.hasAttribute('data-ph');for(const f of e.target.files){try{const u=await upload(f);if(ph)SRC.push(u);else UPS.push(u)}catch(x){msg('Upload failed: '+(x.message||x))}}tray()});
  bk.addEventListener('pointerdown',e=>{const pg=e.target.closest('.sbpg');if(!pg)return;TGT=+pg.dataset.side;const el=e.target.closest('.sbi'),h=e.target.closest('[data-h]');
   if(!el){sel=null;draw();return}const id=el.dataset.id,[pi,j]=id.split(':').map(Number),it=pages[pi][j];
   if(h&&h.dataset.h==='dl'){pages[pi].splice(j,1);sel=null;draw();return}
@@ -2531,7 +2531,7 @@ function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.me
  const close=()=>{ov.remove();document.documentElement.classList.remove('mlock')};
  ov.querySelector('[data-sb="cancel"]').onclick=close;
  ov.querySelector('[data-sb="save"]').onclick=async()=>{const p=pages.slice();while(p.length>2&&!p[p.length-1].length&&!p[p.length-2].length)p.splice(-2,2);
-  const r=await sb.from('items').update({meta:{...(i.meta||{}),sb:{p}}}).eq('id',i.id);if(r.error)return msg('Save failed: '+r.error.message);close();await load();route();setTimeout(()=>openLb(i.id),50)};
+  const r=await sb.from('items').update({meta:{...(i.meta||{}),src:SRC[0],srcs:SRC,av:'book',sb:{p}}}).eq('id',i.id);if(r.error)return msg('Save failed: '+r.error.message);close();await load();route();setTimeout(()=>openLb(i.id),50)};
  ov.addEventListener('keydown',e=>{if((e.key==='Delete'||e.key==='Backspace')&&sel&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){const[pi,j]=sel.split(':').map(Number);pages[pi].splice(j,1);sel=null;draw()}});ov.tabIndex=-1;ov.focus();
  tray();draw()}
 function albOpen(i){const S=i.meta.srcs,av=i.meta.av||'stack',lb=$('#lb'),rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
