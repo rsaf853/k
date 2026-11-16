@@ -1383,6 +1383,20 @@ html.mlock,html.mlock body{overflow:hidden}
 .sbfc::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.16),rgba(0,0,0,0) 35%);animation:sbshade .9s ease both}
 .sbfc.bk::after{background:linear-gradient(270deg,rgba(0,0,0,.16),rgba(0,0,0,0) 35%)}
 @keyframes sbshade{0%,100%{opacity:.3}50%{opacity:1}}
+/* scrapbook paper (one per spread); the fold is drawn on top so it shades photos lying across it */
+.sbspr,.sbbk.ed{background-image:none}
+.pp-white{background-color:#fbfbf8!important}
+.pp-cream{background-color:#f3ecdc!important}
+.pp-kraft{background-color:#c6a477!important;background-image:radial-gradient(rgba(90,60,30,.12) .6px,transparent .9px)!important;background-size:5px 5px!important}
+.pp-grid{background-color:#fbfbf8!important;background-image:linear-gradient(rgba(60,90,140,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(60,90,140,.13) 1px,transparent 1px)!important;background-size:4% 6.06%!important}
+.pp-dot{background-color:#fbfbf8!important;background-image:radial-gradient(rgba(0,0,0,.22) 1px,transparent 1.4px)!important;background-size:4% 6.06%!important}
+.pp-lined{background-color:#fbfbf8!important;background-image:linear-gradient(transparent calc(100% - 1px),rgba(60,90,140,.18) calc(100% - 1px))!important;background-size:100% 5.3%!important}
+.pp-gray{background-color:#e6e6e2!important}
+.pp-black{background-color:#1c1c1c!important}
+.sbspr::after,.sbbk.ed::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,transparent calc(50% - 18px),rgba(0,0,0,.08) calc(50% - 1px),rgba(0,0,0,.18) calc(50% - 1px) 50%,rgba(0,0,0,.08) 50%,transparent calc(50% + 18px))}
+.sbspr.one::after{display:none}
+.sbbk.ed>.sbpg{position:relative;z-index:1}
+.sbtop .sbpp{height:30px;width:auto;margin:0;padding:0 6px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:600 11px var(--sans)}
 </style>
 </head>
 <body>
@@ -2546,6 +2560,7 @@ function sbCut(img){const W0=img.naturalWidth||img.width,H0=img.naturalHeight||i
  for(let i=0;i<N;i++)if(seen[i])a[i*4+3]=0;
  for(let i=0;i<N;i++){if(seen[i])continue;const px=i%w;if((px>0&&seen[i-1])||(px<w-1&&seen[i+1])||(i>=w&&seen[i-w])||(i<N-w&&seen[i+w]))a[i*4+3]=Math.round(a[i*4+3]*.55)}
  x.putImageData(d,0,0);return c}
+const SBPP=[['white','White'],['cream','Cream'],['kraft','Kraft'],['grid','Grid'],['dot','Dots'],['lined','Lined'],['gray','Gray'],['black','Black']];
 const SBC=new Map();
 function sbSticker(it,cb){const key=(it.k||it.u)+'|'+(it.st||'sticker')+'|'+(it.bg?1:0)+'|'+(it.oc||'')+'|'+(it.ot??'')+'|'+(it.gc||'');if(SBC.has(key))return cb(SBC.get(key));
  const fin=src=>{const c=sbBake(it.bg?sbCut(src):src,it.st||'sticker',it.oc,it.ot,it.gc);SBC.set(key,c);cb(c)};if(it.k)return fin(sbShape(it.k));const im=new Image();if(it.bg)im.crossOrigin='anonymous';im.onload=()=>fin(im);im.onerror=()=>{if(im.crossOrigin){const j=new Image();j.onload=()=>fin(j);j.src=it.u}};im.src=it.u}
@@ -2564,7 +2579,8 @@ function sbView(i,v){const P=sbPagesOf(i),one=v.clientWidth<560,rm=matchMedia('(
  v.innerHTML=`<div class="sbbk sbv${one?' one':''}"></div>${admin?'<button type="button" class="btn sbedb">EDIT</button>':''}`;
  const bk=v.firstChild,st=one?1:2;
  /* a whole spread as one sheet, so things lying across the fold stay whole */
- const spread=k=>one?`<div class="sbspr one"><div class="sbpg r">${sbPage(P[k])}</div></div>`:`<div class="sbspr"><div class="sbpg l">${sbPage(P[k])}</div><div class="sbpg r">${sbPage(P[k+1])}</div></div>`;
+ const PB=i.meta?.sb?.pb||[],pp=k=>' pp-'+(PB[Math.floor(k/2)]||'white');
+ const spread=k=>one?`<div class="sbspr one${pp(k)}"><div class="sbpg r">${sbPage(P[k])}</div></div>`:`<div class="sbspr${pp(k)}"><div class="sbpg l">${sbPage(P[k])}</div><div class="sbpg r">${sbPage(P[k+1])}</div></div>`;
  const half=(k,side,cls)=>`<div class="${cls} ${side}"><div class="sbhin ${side}">${spread(k)}</div></div>`;
  const draw=()=>{bk.innerHTML=spread(s);sbHydrate(bk)};
  const flip=d=>{if(busy)return;const ns=s+d*st;if(ns<0||ns>n-1)return;busy=true;
@@ -2583,10 +2599,10 @@ function sbView(i,v){const P=sbPagesOf(i),one=v.clientWidth<560,rm=matchMedia('(
  const eb=v.querySelector('.sbedb');if(eb)eb.onclick=e=>{e.stopPropagation();sbEdit(i)};
  const fit=()=>{if(!bk.isConnected)return removeEventListener('resize',fit);const W=v.clientWidth,H=v.clientHeight,ar=one?1/1.32:2/1.32;const w=Math.min(W,H*ar);bk.style.width=w+'px';bk.style.height=w/ar+'px';bk.style.maxWidth='none'};addEventListener('resize',fit);fit();draw()}
 /* editor (owner only) */
-function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.meta.srcs.slice();if(pages.length%2)pages.push([]);let sp=0,sel=null,TAB='photo',STY='sticker',TGT=1,D=null,TC='#9a9a9a',TO=.8,OC='#ffffff',OT=3,GC='#222222';const H=[];
- const snap=()=>{H.push(JSON.stringify(pages));if(H.length>80)H.shift()};
- const undo=()=>{if(!H.length)return;const p=JSON.parse(H.pop());pages.length=0;p.forEach(x=>pages.push(x));sel=null;if(sp>pages.length-2)sp=Math.max(0,pages.length-2);draw()};
- $('#lb').hidden=true;const ov=document.createElement('div');ov.id='sbed';ov.innerHTML=`<div class="sbtop"><b>SCRAPBOOK</b><div class="sbnav"><button class="btn" type="button" data-n="-1" aria-label="Previous pages">‹</button><span class="sbpn"></span><button class="btn" type="button" data-n="1" aria-label="Next pages">›</button><button class="btn" type="button" data-n="add">+ PAGES</button><button class="btn" type="button" data-n="rm">− PAGES</button><button class="btn" type="button" data-u title="Ctrl+Z">UNDO</button></div><span class="sbsp"></span><button type="button" class="btn" data-sb="cancel">CANCEL</button><button type="button" class="btn pri" data-sb="save">SAVE</button></div>
+function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.meta.srcs.slice(),PB=(i.meta?.sb?.pb||[]).slice();if(pages.length%2)pages.push([]);let sp=0,sel=null,TAB='photo',STY='sticker',TGT=1,D=null,TC='#9a9a9a',TO=.8,OC='#ffffff',OT=3,GC='#222222';const H=[];
+ const snap=()=>{H.push(JSON.stringify({pages,PB}));if(H.length>80)H.shift()};
+ const undo=()=>{if(!H.length)return;const o=JSON.parse(H.pop());pages.length=0;o.pages.forEach(x=>pages.push(x));PB.length=0;o.PB.forEach((x,k)=>PB[k]=x);sel=null;if(sp>pages.length-2)sp=Math.max(0,pages.length-2);draw()};
+ $('#lb').hidden=true;const ov=document.createElement('div');ov.id='sbed';ov.innerHTML=`<div class="sbtop"><b>SCRAPBOOK</b><div class="sbnav"><button class="btn" type="button" data-n="-1" aria-label="Previous pages">‹</button><span class="sbpn"></span><button class="btn" type="button" data-n="1" aria-label="Next pages">›</button><button class="btn" type="button" data-n="add">+ PAGES</button><button class="btn" type="button" data-n="rm">− PAGES</button><button class="btn" type="button" data-u title="Ctrl+Z">UNDO</button><select class="sbpp" aria-label="Paper">${SBPP.map(([k,t])=>`<option value="${k}">${t}</option>`).join('')}</select></div><span class="sbsp"></span><button type="button" class="btn" data-sb="cancel">CANCEL</button><button type="button" class="btn pri" data-sb="save">SAVE</button></div>
  <div class="sbstage"><div class="sbfl" hidden><div class="sbtb"><button type="button" data-a="front" title="Bring forward"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="2" width="9" height="9" class="f"/><rect x="2" y="5" width="9" height="9"/></svg></button><button type="button" data-a="back" title="Send back"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="5" width="9" height="9" class="f"/><rect x="5" y="2" width="9" height="9"/></svg></button><button type="button" data-a="frame" title="White frame"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="12" height="12"/><rect x="4.5" y="4.5" width="7" height="5.5" class="f"/></svg></button><button type="button" data-a="shadow" title="Shadow"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="10" height="10"/><path d="M14 5v9H5"/></svg></button><button type="button" data-a="fillp" title="Fill page"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="2" width="8" height="12"/><path d="M6 5h4M6 11h4"/></svg></button><button type="button" data-a="fills" title="Fill both pages"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="3" width="14" height="10"/><path d="M8 3v10"/></svg></button><button type="button" data-a="del" title="Delete"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4h10M6 4V2.5h4V4M4.5 4l.7 9.5h5.6l.7-9.5"/></svg></button></div><div class="sbctx"></div></div><div class="sbbk ed"><div class="sbpg l" data-side="0"></div><div class="sbpg r" data-side="1"></div></div></div>
  <div class="sbtray"><div class="sbtabs"><button type="button" class="on" data-tab="photo">PHOTOS</button><button type="button" data-tab="tape">TAPE</button><button type="button" data-tab="text">TEXT</button><button type="button" data-tab="sticker">STICKERS</button></div><div class="sbtbody"></div></div>`;
  document.body.appendChild(ov);document.documentElement.classList.add('mlock');const fit=()=>{const st=ov.querySelector('.sbstage'),b=ov.querySelector('.sbbk'),W=st.clientWidth-24,H2=st.clientHeight-24;b.style.width=Math.max(200,Math.min(W,H2*2/1.32))+'px'};addEventListener('resize',fit);requestAnimationFrame(fit);
@@ -2602,7 +2618,7 @@ function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.me
   else if(it.t==='stamp')c.innerHTML=`<input type="text" data-c="tx" value="${esc((it.tx||'').replace(/\n/g,' / '))}" aria-label="Stamp text (use / for a new line)">${col(it.c||'#b3261e')}`;
   else if(it.t==='sticker'){const sty=it.st||'sticker',ol=sty==='basic'||sty==='sticker'||sty==='double';c.innerHTML=`<select data-c="st" aria-label="Sticker style">${[['none','No outline'],['basic','Outline'],['sticker','Outline + shadow'],['double','Double line'],['shadow','Glow']].map(([k,t])=>`<option value="${k}"${sty===k?' selected':''}>${t}</option>`).join('')}</select>${ol?`<input type="color" data-c="oc" value="${esc(it.oc||'#ffffff')}" aria-label="Outline colour"><input type="range" data-c="ot" min="0.5" max="10" step="0.5" value="${it.ot??3}" aria-label="Outline width">${sty==='double'?`<input type="color" data-c="gc" value="${esc(it.gc||'#222222')}" aria-label="Outer line colour">`:''}`:''}<button type="button" class="tg${it.bg?' on':''}" data-c="bg">CUT BG</button>`}
   else c.innerHTML='';requestAnimationFrame(posFl)};
- const draw=()=>{drawBook();drawCtx();ov.querySelector('.sbpn').textContent=`${sp+1}–${sp+2} / ${pages.length}`;ov.querySelector('[data-n="-1"]').disabled=sp<=0;ov.querySelector('[data-n="1"]').disabled=sp+2>=pages.length;ov.querySelector('[data-n="rm"]').disabled=pages.length<=2;if(TAB==='photo')tray()};
+ const draw=()=>{const pk=PB[sp/2]||'white';bk.className='sbbk ed pp-'+pk;ov.querySelector('.sbpp').value=pk;drawBook();drawCtx();ov.querySelector('.sbpn').textContent=`${sp+1}–${sp+2} / ${pages.length}`;ov.querySelector('[data-n="-1"]').disabled=sp<=0;ov.querySelector('[data-n="1"]').disabled=sp+2>=pages.length;ov.querySelector('[data-n="rm"]').disabled=pages.length<=2;if(TAB==='photo')tray()};
  let ctxSnap=false;const ctx=ov.querySelector('.sbctx');
  ctx.addEventListener('focusin',()=>{ctxSnap=false});
  ctx.addEventListener('input',e=>{const it=cur(),k=e.target.dataset.c;if(!it||!k)return;if(!ctxSnap){snap();ctxSnap=true}
@@ -2644,13 +2660,13 @@ function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.me
  bk.addEventListener('pointerup',()=>{if(D)requestAnimationFrame(posFl);D=null});
  ov.querySelector('.sbtb').onclick=e=>{const b=e.target.closest('[data-a]');if(!b||!sel)return;const[pi,j]=sel.split(':').map(Number),P=pages[pi],it=P[j];snap();
   if(b.dataset.a==='front'){P.splice(j,1);P.push(it);sel=pi+':'+(P.length-1)}if(b.dataset.a==='back'){P.splice(j,1);P.unshift(it);sel=pi+':0'}if(b.dataset.a==='frame')it.fr=it.fr?0:1;if(b.dataset.a==='shadow')it.ns=it.ns?0:1;if(b.dataset.a==='fillp'){it.x=50;it.y=50;it.w=100;it.r=0;it.fr=0}if(b.dataset.a==='fills'){it.x=(pi-sp)===0?100:0;it.y=50;it.w=200;it.r=0;it.fr=0}if(b.dataset.a==='del'){P.splice(j,1);sel=null}draw()};
- ov.querySelector('[data-u]').onclick=undo;
+ ov.querySelector('[data-u]').onclick=undo;ov.querySelector('.sbpp').onchange=e=>{snap();PB[sp/2]=e.target.value;draw()};
  ov.querySelector('.sbnav').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;const n=b.dataset.n;sel=null;
-  if(n==='add'){snap();pages.push([],[]);sp=pages.length-2}else if(n==='rm'){if(pages.length>2&&(pages[sp].length+pages[sp+1].length===0||confirm('Delete these two pages?'))){snap();pages.splice(sp,2);sp=Math.max(0,Math.min(sp,pages.length-2))}}else{sp=Math.max(0,Math.min(pages.length-2,sp+(+n)*2))}draw()};
+  if(n==='add'){snap();pages.push([],[]);sp=pages.length-2}else if(n==='rm'){if(pages.length>2&&(pages[sp].length+pages[sp+1].length===0||confirm('Delete these two pages?'))){snap();pages.splice(sp,2);PB.splice(sp/2,1);sp=Math.max(0,Math.min(sp,pages.length-2))}}else{sp=Math.max(0,Math.min(pages.length-2,sp+(+n)*2))}draw()};
  const close=()=>{removeEventListener('resize',fit);document.removeEventListener('paste',onPaste);ov.remove();document.documentElement.classList.remove('mlock')};
  ov.querySelector('[data-sb="cancel"]').onclick=close;
  ov.querySelector('[data-sb="save"]').onclick=async()=>{const p=pages.slice();while(p.length>2&&!p[p.length-1].length&&!p[p.length-2].length)p.splice(-2,2);
-  const r=await sb.from('items').update({meta:{...(i.meta||{}),src:SRC[0],srcs:SRC,av:'book',sb:{p}}}).eq('id',i.id);if(r.error)return msg('Save failed: '+r.error.message);close();await load();route();setTimeout(()=>openLb(i.id),50)};
+  const r=await sb.from('items').update({meta:{...(i.meta||{}),src:SRC[0],srcs:SRC,av:'book',sb:{p,pb:PB.slice(0,p.length/2).map(x=>x||'white')}}}).eq('id',i.id);if(r.error)return msg('Save failed: '+r.error.message);close();await load();route();setTimeout(()=>openLb(i.id),50)};
  ov.addEventListener('keydown',e=>{const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!typing){e.preventDefault();undo();return}
   if((e.key==='Delete'||e.key==='Backspace')&&sel&&!typing){const[pi,j]=sel.split(':').map(Number);snap();pages[pi].splice(j,1);sel=null;draw()}});ov.tabIndex=-1;ov.focus();
@@ -2658,7 +2674,7 @@ function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.me
 
 /* scrapbook tile: on hover the cover gives way to the real first spread, drawn the first time it is needed */
 document.addEventListener('mouseover',e=>{const t=e.target.closest&&e.target.closest('.gi.sbk');if(!t)return;const sp=t.querySelector('.sbp');if(!sp||sp.dataset.on)return;const it=G(ITEMS.find(x=>x.id==t.dataset.gi));if(!it)return;sp.dataset.on=1;
- const P=sbPagesOf(it);sp.innerHTML=`<div class="sbbk"><div class="sbpg l">${sbPage(P[0])}</div><div class="sbpg r">${sbPage(P[1])}</div></div>`;sbHydrate(sp)});
+ const P=sbPagesOf(it);sp.innerHTML=`<div class="sbbk pp-${(it.meta?.sb?.pb||[])[0]||'white'}"><div class="sbpg l">${sbPage(P[0])}</div><div class="sbpg r">${sbPage(P[1])}</div></div>`;sbHydrate(sp)});
 function albOpen(i){const S=i.meta.srcs,av=i.meta.av||'stack',lb=$('#lb'),rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
  lb.innerHTML=`<div class="alb-v av-${av}" tabindex="-1"></div>${i.body?`<p class="alb-c">${esc(i.body)}</p>`:''}`;lb.hidden=false;const v=lb.querySelector('.alb-v');v.focus({preventScroll:true});
  const key=f=>v.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();f(1)}if(e.key==='ArrowLeft'){e.preventDefault();f(-1)}});
