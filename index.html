@@ -1397,22 +1397,22 @@ html.mlock,html.mlock body{overflow:hidden}
 .sbspr.one::after{display:none}
 .sbbk.ed>.sbpg{position:relative;z-index:1}
 .sbtop .sbpp{height:30px;width:auto;margin:0;padding:0 6px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:600 11px var(--sans)}
-/* memo: light border, hover-only offset shadow; popup cleanup */
+/* memo: light border, hover-only offset shadow; popup cleanup (selectors match the later .mdk / #mov rules) */
 :root{--mbd:color-mix(in srgb,var(--fg) 20%,var(--bg));--mbh:color-mix(in srgb,var(--fg) 45%,var(--bg));--msd:color-mix(in srgb,var(--fg) 22%,transparent)}
-.msh{border:1px solid var(--mbd);box-shadow:none;transition:box-shadow .15s,border-color .15s,transform .15s}
-.msh:hover{border-color:var(--mbh);box-shadow:6px 6px 0 var(--msd)}
-.msh.dragging{border-color:var(--mbh);box-shadow:8px 8px 0 var(--msd)}
-.msh.big,.msh.big:hover{box-shadow:6px 6px 0 var(--msd)}
-.msh.inv{border-color:var(--fg);box-shadow:none}.msh.inv:hover{box-shadow:6px 6px 0 var(--mut)}
+.mdk .msh{border:1px solid var(--mbd);box-shadow:none;transition:box-shadow .15s,border-color .15s,transform .15s}
+.mdk .msh:hover{border-color:var(--mbh);box-shadow:6px 6px 0 var(--msd)}
+.mdk .msh.dragging{border-color:var(--mbh);box-shadow:8px 8px 0 var(--msd)}
+.mdk .msh.big,.mdk .msh.big:hover{box-shadow:6px 6px 0 var(--msd)}
+.mdk .msh.inv{border-color:var(--fg);box-shadow:none}.mdk .msh.inv:hover{box-shadow:6px 6px 0 var(--mut)}.mdk .msh.inv.dragging{box-shadow:8px 8px 0 var(--mut)}
 .mm{border-color:var(--mbd);transition:border-color .15s,color .15s,box-shadow .15s}
 .mm:hover{border-color:var(--mbh);box-shadow:6px 6px 0 var(--msd)}
-.msheet{border:1px solid var(--mbd);box-shadow:6px 6px 0 var(--msd);padding:24px}
-.mov.inv .msheet{border-color:color-mix(in srgb,var(--bg) 25%,var(--fg));box-shadow:6px 6px 0 var(--mut)}
-.msheet .mno{display:none}
-.msheet .mst{padding-right:18px}
-.mfoot{border-top:0;padding-top:0}.mov.inv .mfoot{border-top:0}
-.mfoot .st{color:color-mix(in srgb,var(--fg) 30%,var(--bg))}
-.mcls{right:8px;top:8px;width:24px;height:24px;opacity:.4}.mcls svg{width:9px;height:9px}
+#mov .msheet{border:1px solid var(--mbd);box-shadow:6px 6px 0 var(--msd);padding:24px}
+#mov.inv .msheet{border-color:color-mix(in srgb,var(--bg) 25%,var(--fg));box-shadow:6px 6px 0 var(--mut)}
+#mov .msheet .mno{display:none}
+#mov .msheet .mst{padding-right:18px}
+#mov .mfoot,#mov.inv .mfoot{border-top:0;padding-top:0}
+#mov .mfoot .st{color:color-mix(in srgb,var(--fg) 30%,var(--bg))}#mov.inv .mfoot .st{color:color-mix(in srgb,var(--bg) 40%,var(--fg))}
+#mov .mcls{right:8px;top:8px;width:24px;height:24px;opacity:.4}#mov .mcls:hover{opacity:1}#mov .mcls svg{width:9px;height:9px}
 </style>
 </head>
 <body>
