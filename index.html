@@ -1397,6 +1397,29 @@ html.mlock,html.mlock body{overflow:hidden}
 .sbspr.one::after{display:none}
 .sbbk.ed>.sbpg{position:relative;z-index:1}
 .sbtop .sbpp{height:30px;width:auto;margin:0;padding:0 6px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:600 11px var(--sans)}
+/* scrapbook viewer, one page at a time: the whole spread is drawn and only the current half is shown, so things lying across the fold stay whole */
+.sbbk.one .sbspr.hh .sbpg.l{display:block}
+.sbspr.one{overflow:hidden}
+.sbspr.hh{inset:auto;top:0;bottom:0;left:0;width:200%;background:none!important;grid-template-columns:1fr 1fr}
+/* scrapbook editor: tidy two-row top bar, quieter tray and floating tools */
+#sbed .sbtop{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:max(10px,env(safe-area-inset-top,0px)) 12px 0;border-bottom:1px solid var(--line)}
+#sbed .sbtop b{font:700 11px var(--sans);letter-spacing:.16em;color:var(--mut)}
+#sbed .sbtop .btn{height:30px;padding:0 14px;font-size:11px;letter-spacing:.06em}
+#sbed .sbtop .btn.pri{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+#sbed .sbnav{order:5;flex:1 0 100%;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:6px;padding:8px 0 10px;border-top:1px solid var(--line)}
+#sbed .sbnav::-webkit-scrollbar{display:none}
+#sbed .sbnav>*{flex:none}
+#sbed .sbnav .btn{height:28px;padding:0 10px}
+#sbed .sbnav .btn[data-n="-1"],#sbed .sbnav .btn[data-n="1"]{padding:0 9px;font-size:14px}
+#sbed .sbnav .sbpn{min-width:64px}
+#sbed .sbnav .sbpp{height:28px;border-color:var(--line)}
+#sbed .sbnav .sbpw{width:110px;padding:0 8px}
+#sbed .sbtray{border-top:1px solid var(--line)}
+#sbed .sbtabs{padding:0 6px}
+#sbed .sbtabs button{height:36px;border-right:0}
+#sbed .sbfl{border:1px solid var(--mbd);box-shadow:0 6px 18px rgba(0,0,0,.12);border-radius:4px}
+#sbed .sbstage{padding:10px}
+@media(max-width:720px){#sbed .sbtop .btn{height:32px}#sbed .sbtbody{min-height:78px;padding:8px 12px}}
 /* memo: light border, hover-only offset shadow; popup cleanup (selectors match the later .mdk / #mov rules) */
 :root{--mbd:color-mix(in srgb,var(--fg) 20%,var(--bg));--mbh:color-mix(in srgb,var(--fg) 45%,var(--bg));--msd:color-mix(in srgb,var(--fg) 13%,transparent)}
 .mdk .msh{border:1px solid var(--mbd);box-shadow:none;transition:box-shadow .15s,border-color .15s,transform .15s}
@@ -2597,7 +2620,7 @@ function sbView(i,v){const P=sbPagesOf(i),one=v.clientWidth<560,rm=matchMedia('(
  const bk=v.firstChild,st=one?1:2;
  /* a whole spread as one sheet, so things lying across the fold stay whole */
  const PB=i.meta?.sb?.pb||[],pp=k=>' pp-'+(PB[Math.floor(k/2)]||'white');
- const spread=k=>one?`<div class="sbspr one${pp(k)}"><div class="sbpg r">${sbPage(P[k])}</div></div>`:`<div class="sbspr${pp(k)}"><div class="sbpg l">${sbPage(P[k])}</div><div class="sbpg r">${sbPage(P[k+1])}</div></div>`;
+ const spread=k=>one?`<div class="sbspr one${pp(k)}"><div class="sbspr hh" style="transform:translateX(${k%2?-50:0}%)"><div class="sbpg l">${sbPage(P[k-k%2])}</div><div class="sbpg r">${sbPage(P[k-k%2+1])}</div></div></div>`:`<div class="sbspr${pp(k)}"><div class="sbpg l">${sbPage(P[k])}</div><div class="sbpg r">${sbPage(P[k+1])}</div></div>`;
  const half=(k,side,cls)=>`<div class="${cls} ${side}"><div class="sbhin ${side}">${spread(k)}</div></div>`;
  const draw=()=>{bk.innerHTML=spread(s);sbHydrate(bk)};
  const flip=d=>{if(busy)return;const ns=s+d*st;if(ns<0||ns>n-1)return;busy=true;
@@ -2619,7 +2642,7 @@ function sbView(i,v){const P=sbPagesOf(i),one=v.clientWidth<560,rm=matchMedia('(
 function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.meta.srcs.slice(),PB=(i.meta?.sb?.pb||[]).slice();if(pages.length%2)pages.push([]);let sp=0,sel=null,TAB='photo',STY='sticker',TGT=1,D=null,TC='#9a9a9a',TO=.8,OC='#ffffff',OT=3,GC='#222222';const H=[];
  const snap=()=>{H.push(JSON.stringify({pages,PB}));if(H.length>80)H.shift()};
  const undo=()=>{if(!H.length)return;const o=JSON.parse(H.pop());pages.length=0;o.pages.forEach(x=>pages.push(x));PB.length=0;o.PB.forEach((x,k)=>PB[k]=x);sel=null;if(sp>pages.length-2)sp=Math.max(0,pages.length-2);draw()};
- $('#lb').hidden=true;const ov=document.createElement('div');ov.id='sbed';ov.innerHTML=`<div class="sbtop"><b>SCRAPBOOK</b><div class="sbnav"><button class="btn" type="button" data-n="-1" aria-label="Previous pages">‹</button><span class="sbpn"></span><button class="btn" type="button" data-n="1" aria-label="Next pages">›</button><button class="btn" type="button" data-n="add">+ PAGES</button><button class="btn" type="button" data-n="rm">− PAGES</button><button class="btn" type="button" data-u title="Ctrl+Z">UNDO</button><select class="sbpp" aria-label="Paper">${SBPP.map(([k,t])=>`<option value="${k}">${t}</option>`).join('')}</select><select class="sbpp sbvis" aria-label="Visibility">${[['public','PUBLIC'],['private','PRIVATE'],['locked','LOCKED']].map(([k,t])=>`<option value="${k}"${(i.visibility||'public')===k?' selected':''}>${t}</option>`).join('')}</select><input class="sbpp sbpw" type="password" placeholder="password" autocomplete="new-password" style="width:110px;display:none"></div><span class="sbsp"></span><button type="button" class="btn" data-sb="cancel">CANCEL</button><button type="button" class="btn pri" data-sb="save">SAVE</button></div>
+ $('#lb').hidden=true;const ov=document.createElement('div');ov.id='sbed';ov.innerHTML=`<div class="sbtop"><button type="button" class="btn" data-sb="cancel">CANCEL</button><b>SCRAPBOOK</b><span class="sbsp"></span><button type="button" class="btn pri" data-sb="save">SAVE</button><div class="sbnav"><button class="btn" type="button" data-n="-1" aria-label="Previous pages">‹</button><span class="sbpn"></span><button class="btn" type="button" data-n="1" aria-label="Next pages">›</button><button class="btn" type="button" data-n="add">+ PAGES</button><button class="btn" type="button" data-n="rm">− PAGES</button><button class="btn" type="button" data-u title="Ctrl+Z">UNDO</button><select class="sbpp" aria-label="Paper">${SBPP.map(([k,t])=>`<option value="${k}">${t}</option>`).join('')}</select><select class="sbpp sbvis" aria-label="Visibility">${[['public','PUBLIC'],['private','PRIVATE'],['locked','LOCKED']].map(([k,t])=>`<option value="${k}"${(i.visibility||'public')===k?' selected':''}>${t}</option>`).join('')}</select><input class="sbpp sbpw" type="password" placeholder="password" autocomplete="new-password" style="width:110px;display:none"></div></div>
  <div class="sbstage"><div class="sbfl" hidden><div class="sbtb"><button type="button" data-a="front" title="Bring forward"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="2" width="9" height="9" class="f"/><rect x="2" y="5" width="9" height="9"/></svg></button><button type="button" data-a="back" title="Send back"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="5" width="9" height="9" class="f"/><rect x="5" y="2" width="9" height="9"/></svg></button><button type="button" data-a="frame" title="White frame"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="12" height="12"/><rect x="4.5" y="4.5" width="7" height="5.5" class="f"/></svg></button><button type="button" data-a="shadow" title="Shadow"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="10" height="10"/><path d="M14 5v9H5"/></svg></button><button type="button" data-a="fillp" title="Fill page"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="2" width="8" height="12"/><path d="M6 5h4M6 11h4"/></svg></button><button type="button" data-a="fills" title="Fill both pages"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="3" width="14" height="10"/><path d="M8 3v10"/></svg></button><button type="button" data-a="del" title="Delete"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4h10M6 4V2.5h4V4M4.5 4l.7 9.5h5.6l.7-9.5"/></svg></button></div><div class="sbctx"></div></div><div class="sbbk ed"><div class="sbpg l" data-side="0"></div><div class="sbpg r" data-side="1"></div></div></div>
  <div class="sbtray"><div class="sbtabs"><button type="button" class="on" data-tab="photo">PHOTOS</button><button type="button" data-tab="tape">TAPE</button><button type="button" data-tab="text">TEXT</button><button type="button" data-tab="sticker">STICKERS</button></div><div class="sbtbody"></div></div>`;
  document.body.appendChild(ov);document.documentElement.classList.add('mlock');const fit=()=>{const st=ov.querySelector('.sbstage'),b=ov.querySelector('.sbbk'),W=st.clientWidth-24,H2=st.clientHeight-24;b.style.width=Math.max(200,Math.min(W,H2*2/1.32))+'px'};addEventListener('resize',fit);requestAnimationFrame(fit);
