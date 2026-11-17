@@ -1397,6 +1397,22 @@ html.mlock,html.mlock body{overflow:hidden}
 .sbspr.one::after{display:none}
 .sbbk.ed>.sbpg{position:relative;z-index:1}
 .sbtop .sbpp{height:30px;width:auto;margin:0;padding:0 6px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:600 11px var(--sans)}
+/* memo: light border, hover-only offset shadow; popup cleanup */
+:root{--mbd:color-mix(in srgb,var(--fg) 20%,var(--bg));--mbh:color-mix(in srgb,var(--fg) 45%,var(--bg));--msd:color-mix(in srgb,var(--fg) 22%,transparent)}
+.msh{border:1px solid var(--mbd);box-shadow:none;transition:box-shadow .15s,border-color .15s,transform .15s}
+.msh:hover{border-color:var(--mbh);box-shadow:6px 6px 0 var(--msd)}
+.msh.dragging{border-color:var(--mbh);box-shadow:8px 8px 0 var(--msd)}
+.msh.big,.msh.big:hover{box-shadow:6px 6px 0 var(--msd)}
+.msh.inv{border-color:var(--fg);box-shadow:none}.msh.inv:hover{box-shadow:6px 6px 0 var(--mut)}
+.mm{border-color:var(--mbd);transition:border-color .15s,color .15s,box-shadow .15s}
+.mm:hover{border-color:var(--mbh);box-shadow:6px 6px 0 var(--msd)}
+.msheet{border:1px solid var(--mbd);box-shadow:6px 6px 0 var(--msd);padding:24px}
+.mov.inv .msheet{border-color:color-mix(in srgb,var(--bg) 25%,var(--fg));box-shadow:6px 6px 0 var(--mut)}
+.msheet .mno{display:none}
+.msheet .mst{padding-right:18px}
+.mfoot{border-top:0;padding-top:0}.mov.inv .mfoot{border-top:0}
+.mfoot .st{color:color-mix(in srgb,var(--fg) 30%,var(--bg))}
+.mcls{right:8px;top:8px;width:24px;height:24px;opacity:.4}.mcls svg{width:9px;height:9px}
 </style>
 </head>
 <body>
@@ -1758,8 +1774,8 @@ function wrapKo(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEX
  L.forEach(n=>{const s=n.nodeValue,f=document.createDocumentFragment();let last=0,m;HANG.lastIndex=0;
   while(m=HANG.exec(s)){if(m.index>last)f.append(s.slice(last,m.index));const sp=document.createElement('span');sp.className='ko';sp.textContent=m[0];f.append(sp);last=m.index+m[0].length}
   if(last<s.length)f.append(s.slice(last));n.replaceWith(f)})}
-function layout(){const b=$('#bk'),p=$('#pg'),r=$('#rd');if(!b||r.hidden)return;const two=matchMedia('(min-width:900px) and (orientation:landscape)').matches;r.classList.toggle('two',two);p.style.columnCount=two?2:1;p.style.columnGap=GAP+'px';p.style.height=b.clientHeight+'px';pN=pgPages(b,p);go(pI)}
-function go(i){pI=Math.max(0,Math.min(pN-1,i));const p=$('#pg');if(!p)return;p.style.transform=`translateX(${-pI*($('#bk').clientWidth+GAP)}px)`;$('#pi').textContent=`${pI+1} / ${pN}`}
+function layout(){const b=$('#bk'),p=$('#pg'),r=$('#rd');if(!b||r.hidden)return;const two=matchMedia('(min-width:900px) and (orientation:landscape)').matches;r.classList.toggle('two',two);p.style.columnCount=two?2:1;p.style.columnGap=GAP+'px';p.style.width=pgW(b)+'px';p.style.height=b.clientHeight+'px';pN=pgPages(b,p);go(pI)}
+function go(i){pI=Math.max(0,Math.min(pN-1,i));const p=$('#pg');if(!p)return;p.style.transform=`translateX(${-pI*(pgW($('#bk'))+GAP)}px)`;$('#pi').textContent=`${pI+1} / ${pN}`}
 function reader(it){const i=G(it),r=$('#rd');pI=0;r.hidden=false;document.body.classList.add('ro');r.classList.add('ui');
  r.innerHTML=`<div class="tp"><button class="ib" data-xfs aria-label="Back">←</button><b>${esc(i.title||'')}</b><span style="min-width:28px;text-align:right">${admin?`<button class="bt" data-ed="${i.id}">EDIT</button>`:''}</span></div><div class="bk" id="bk"><div class="pg" id="pg"><h1${i.meta?.sub?' class="h1s"':''}>${esc(i.title||'')}</h1>${i.meta?.sub?`<p class="sb">${esc(i.meta.sub)}</p>`:''}${marked.parse(i.body||'')}</div></div><div class="bm"><div class="br"><span id="pi"></span><button class="ib" id="aab" aria-label="Typography">Aa</button></div></div><div class="sh" id="sh">${sheet(true)}</div>`;
  wrapKo($('#pg'));cxHydrate($('#pg'));applyRS();document.fonts.ready.then(layout);r.querySelectorAll('img').forEach(m=>m.onload=layout)}
@@ -1778,12 +1794,13 @@ function article(it){const i=G(it);closeReader();p2I=0;
 function layout2(){const a=$('#ar');if(!a){document.body.classList.remove('pgd');return}
  const b=$('#bk2'),p=$('#pg2'),two=matchMedia('(min-width:900px) and (orientation:landscape)').matches;
  a.classList.toggle('paged',two);document.body.classList.toggle('pgd',two);
- if(!two){p.style.height=p.style.columnCount=p.style.columnGap=p.style.transform=b.style.height='';return}
+ if(!two){p.style.width=p.style.height=p.style.columnCount=p.style.columnGap=p.style.transform=b.style.height='';return}
  const h=Math.max(240,innerHeight-(b.getBoundingClientRect().top+scrollY)-44-16-$('footer').offsetHeight);
- b.style.height=h+'px';p.style.columnCount=2;p.style.columnGap=GAP+'px';p.style.height=h+'px';
+ b.style.height=h+'px';p.style.columnCount=2;p.style.columnGap=GAP+'px';p.style.width=pgW(b)+'px';p.style.height=h+'px';
  p2N=pgPages(b,p);go2(p2I)}
-function pgPages(b,p){let r=p.scrollWidth;const o=p.getBoundingClientRect().left;[...p.children].slice(-8).forEach(c=>[...c.getClientRects()].forEach(q=>{if(q.width||q.height)r=Math.max(r,q.right-o)}));return Math.max(1,Math.ceil((r+GAP)/(b.clientWidth+GAP)-.02))}
-function go2(i){const b=$('#bk2'),p=$('#pg2');if(!p||!$('#ar.paged'))return;p2I=Math.max(0,Math.min(p2N-1,i));p.style.transform=`translateX(${-p2I*(b.clientWidth+GAP)}px)`;upd2()}
+function pgW(b){const w=Math.floor(b.getBoundingClientRect().width);return w-(w%2)}
+function pgPages(b,p){let r=p.scrollWidth;const o=p.getBoundingClientRect().left;[...p.children].slice(-8).forEach(c=>[...c.getClientRects()].forEach(q=>{if(q.width||q.height)r=Math.max(r,q.right-o)}));return Math.max(1,Math.ceil((r+GAP)/(pgW(b)+GAP)-.02))}
+function go2(i){const b=$('#bk2'),p=$('#pg2');if(!p||!$('#ar.paged'))return;p2I=Math.max(0,Math.min(p2N-1,i));p.style.transform=`translateX(${-p2I*(pgW(b)+GAP)}px)`;upd2()}
 function upd2(){const pi=$('#pi2');if(!pi||!$('#ar.paged'))return;pi.textContent=`${p2I+1} / ${p2N}`;const pv=$('[data-pp="-1"]'),nx=$('[data-pp="1"]');if(pv)pv.disabled=p2I===0;if(nx)nx.disabled=p2I===p2N-1;const l=$('#zl'),r=$('#zr');if(l)l.classList.toggle('off',p2I===0);if(r)r.classList.toggle('off',p2I===p2N-1)}
 function closeReader(){$('#rd').hidden=true;$('#rd').innerHTML='';document.body.classList.remove('ro')}
 $('#rd').addEventListener('click',e=>{const r=$('#rd'),sh=$('#sh');if(e.target.closest('.sh')){const b=e.target.closest('button');if(!b)return;rsClick(b);sh.innerHTML=sheet(true);applyRS();return}
@@ -2602,7 +2619,7 @@ function sbView(i,v){const P=sbPagesOf(i),one=v.clientWidth<560,rm=matchMedia('(
 function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.meta.srcs.slice(),PB=(i.meta?.sb?.pb||[]).slice();if(pages.length%2)pages.push([]);let sp=0,sel=null,TAB='photo',STY='sticker',TGT=1,D=null,TC='#9a9a9a',TO=.8,OC='#ffffff',OT=3,GC='#222222';const H=[];
  const snap=()=>{H.push(JSON.stringify({pages,PB}));if(H.length>80)H.shift()};
  const undo=()=>{if(!H.length)return;const o=JSON.parse(H.pop());pages.length=0;o.pages.forEach(x=>pages.push(x));PB.length=0;o.PB.forEach((x,k)=>PB[k]=x);sel=null;if(sp>pages.length-2)sp=Math.max(0,pages.length-2);draw()};
- $('#lb').hidden=true;const ov=document.createElement('div');ov.id='sbed';ov.innerHTML=`<div class="sbtop"><b>SCRAPBOOK</b><div class="sbnav"><button class="btn" type="button" data-n="-1" aria-label="Previous pages">‹</button><span class="sbpn"></span><button class="btn" type="button" data-n="1" aria-label="Next pages">›</button><button class="btn" type="button" data-n="add">+ PAGES</button><button class="btn" type="button" data-n="rm">− PAGES</button><button class="btn" type="button" data-u title="Ctrl+Z">UNDO</button><select class="sbpp" aria-label="Paper">${SBPP.map(([k,t])=>`<option value="${k}">${t}</option>`).join('')}</select></div><span class="sbsp"></span><button type="button" class="btn" data-sb="cancel">CANCEL</button><button type="button" class="btn pri" data-sb="save">SAVE</button></div>
+ $('#lb').hidden=true;const ov=document.createElement('div');ov.id='sbed';ov.innerHTML=`<div class="sbtop"><b>SCRAPBOOK</b><div class="sbnav"><button class="btn" type="button" data-n="-1" aria-label="Previous pages">‹</button><span class="sbpn"></span><button class="btn" type="button" data-n="1" aria-label="Next pages">›</button><button class="btn" type="button" data-n="add">+ PAGES</button><button class="btn" type="button" data-n="rm">− PAGES</button><button class="btn" type="button" data-u title="Ctrl+Z">UNDO</button><select class="sbpp" aria-label="Paper">${SBPP.map(([k,t])=>`<option value="${k}">${t}</option>`).join('')}</select><select class="sbpp sbvis" aria-label="Visibility">${[['public','PUBLIC'],['private','PRIVATE'],['locked','LOCKED']].map(([k,t])=>`<option value="${k}"${(i.visibility||'public')===k?' selected':''}>${t}</option>`).join('')}</select><input class="sbpp sbpw" type="password" placeholder="password" autocomplete="new-password" style="width:110px;display:none"></div><span class="sbsp"></span><button type="button" class="btn" data-sb="cancel">CANCEL</button><button type="button" class="btn pri" data-sb="save">SAVE</button></div>
  <div class="sbstage"><div class="sbfl" hidden><div class="sbtb"><button type="button" data-a="front" title="Bring forward"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="2" width="9" height="9" class="f"/><rect x="2" y="5" width="9" height="9"/></svg></button><button type="button" data-a="back" title="Send back"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="5" width="9" height="9" class="f"/><rect x="5" y="2" width="9" height="9"/></svg></button><button type="button" data-a="frame" title="White frame"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="12" height="12"/><rect x="4.5" y="4.5" width="7" height="5.5" class="f"/></svg></button><button type="button" data-a="shadow" title="Shadow"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="10" height="10"/><path d="M14 5v9H5"/></svg></button><button type="button" data-a="fillp" title="Fill page"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="2" width="8" height="12"/><path d="M6 5h4M6 11h4"/></svg></button><button type="button" data-a="fills" title="Fill both pages"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="3" width="14" height="10"/><path d="M8 3v10"/></svg></button><button type="button" data-a="del" title="Delete"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4h10M6 4V2.5h4V4M4.5 4l.7 9.5h5.6l.7-9.5"/></svg></button></div><div class="sbctx"></div></div><div class="sbbk ed"><div class="sbpg l" data-side="0"></div><div class="sbpg r" data-side="1"></div></div></div>
  <div class="sbtray"><div class="sbtabs"><button type="button" class="on" data-tab="photo">PHOTOS</button><button type="button" data-tab="tape">TAPE</button><button type="button" data-tab="text">TEXT</button><button type="button" data-tab="sticker">STICKERS</button></div><div class="sbtbody"></div></div>`;
  document.body.appendChild(ov);document.documentElement.classList.add('mlock');const fit=()=>{const st=ov.querySelector('.sbstage'),b=ov.querySelector('.sbbk'),W=st.clientWidth-24,H2=st.clientHeight-24;b.style.width=Math.max(200,Math.min(W,H2*2/1.32))+'px'};addEventListener('resize',fit);requestAnimationFrame(fit);
@@ -2665,8 +2682,10 @@ function sbEdit(i){const pages=JSON.parse(JSON.stringify(sbPagesOf(i))),SRC=i.me
   if(n==='add'){snap();pages.push([],[]);sp=pages.length-2}else if(n==='rm'){if(pages.length>2&&(pages[sp].length+pages[sp+1].length===0||confirm('Delete these two pages?'))){snap();pages.splice(sp,2);PB.splice(sp/2,1);sp=Math.max(0,Math.min(sp,pages.length-2))}}else{sp=Math.max(0,Math.min(pages.length-2,sp+(+n)*2))}draw()};
  const close=()=>{removeEventListener('resize',fit);document.removeEventListener('paste',onPaste);ov.remove();document.documentElement.classList.remove('mlock')};
  ov.querySelector('[data-sb="cancel"]').onclick=close;
+ const svis=ov.querySelector('.sbvis'),spw=ov.querySelector('.sbpw'),syncPw=()=>{spw.style.display=svis.value==='locked'?'':'none'};svis.onchange=syncPw;syncPw();
  ov.querySelector('[data-sb="save"]').onclick=async()=>{const p=pages.slice();while(p.length>2&&!p[p.length-1].length&&!p[p.length-2].length)p.splice(-2,2);
-  const r=await sb.from('items').update({meta:{...(i.meta||{}),src:SRC[0],srcs:SRC,av:'book',sb:{p,pb:PB.slice(0,p.length/2).map(x=>x||'white')}}}).eq('id',i.id);if(r.error)return msg('Save failed: '+r.error.message);close();await load();route();setTimeout(()=>openLb(i.id),50)};
+  const vv=svis.value,pw=spw.value;if(vv==='locked'&&i.visibility!=='locked'&&!pw)return msg('Locked items need a password');
+  const r=await sb.from('items').update({visibility:vv,meta:{...(i.meta||{}),src:SRC[0],srcs:SRC,av:'book',sb:{p,pb:PB.slice(0,p.length/2).map(x=>x||'white')}}}).eq('id',i.id);if(r.error)return msg('Save failed: '+r.error.message);if(vv==='locked'&&pw)await sb.rpc('set_pw',{p_id:i.id,p_pw:pw});close();await load();route();setTimeout(()=>openLb(i.id),50)};
  ov.addEventListener('keydown',e=>{const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!typing){e.preventDefault();undo();return}
   if((e.key==='Delete'||e.key==='Backspace')&&sel&&!typing){const[pi,j]=sel.split(':').map(Number);snap();pages[pi].splice(j,1);sel=null;draw()}});ov.tabIndex=-1;ov.focus();
