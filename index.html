@@ -1443,6 +1443,11 @@ html.mlock,html.mlock body{overflow:hidden}
 .pg p+p{text-indent:1.5em}
 .pg p+p:has(>img:only-child,>.cx:only-child,>a:only-child>img){text-indent:0}
 .pg p:has(+:not(p)){margin-bottom:.9em}
+/* one-page page turn (phones) */
+.sbleaf.one{left:0;width:100%}
+.sbleaf.one .sbfc{left:0;width:100%}
+.sbleaf.one.go{transform:rotateY(-160deg)}
+.sbleaf.one .sbfc::after{background:linear-gradient(90deg,rgba(0,0,0,.2),rgba(0,0,0,0) 45%)}
 </style>
 </head>
 <body>
@@ -2631,10 +2636,10 @@ function sbView(i,v){const P=sbPagesOf(i),one=v.clientWidth<560,rm=matchMedia('(
  const half=(k,side,cls)=>`<div class="${cls} ${side}"><div class="sbhin ${side}">${spread(k)}</div></div>`;
  const draw=()=>{bk.innerHTML=spread(s);sbHydrate(bk)};
  const flip=d=>{if(busy)return;const ns=s+d*st;if(ns<0||ns>n-1)return;busy=true;
-  if(one||rm){if(rm){s=ns;draw();busy=false;return}
-   const o=bk.firstChild;bk.insertAdjacentHTML('beforeend',spread(ns));const nw=bk.lastChild;sbHydrate(nw);
-   o.animate([{transform:'none',opacity:1},{transform:`translateX(${-d*18}%) rotate(${-d*2}deg)`,opacity:0}],{duration:380,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
-   nw.animate([{transform:`translateX(${d*18}%)`,opacity:0},{transform:'none',opacity:1}],{duration:380,easing:'cubic-bezier(.4,0,.2,1)'}).onfinish=()=>{s=ns;draw();busy=false};return}
+  if(rm){s=ns;draw();busy=false;return}
+  if(one){/* one page: the page itself turns on the spine at its left edge */
+   const fw=d>0;bk.innerHTML=spread(fw?ns:s)+`<div class="sbleaf one${fw?'':' go'}"><div class="sbfc fr">${spread(fw?s:ns)}</div></div>`;sbHydrate(bk);
+   const lf=bk.querySelector('.sbleaf');lf.offsetWidth;lf.classList.toggle('go');setTimeout(()=>{s=ns;draw();busy=false},900);return}
   /* page turn: the leaf carries the old spread's right half on its front and the new spread's left half on its back */
   const fw=d>0,a=fw?s:ns,b=fw?ns:s;
   bk.innerHTML=half(fw?s:ns,'l','sbh2')+half(fw?ns:s,'r','sbh2')+`<div class="sbleaf${fw?'':' go'}"><div class="sbfc fr">${`<div class="sbhin r">${spread(fw?s:ns)}</div>`}</div><div class="sbfc bk">${`<div class="sbhin l">${spread(fw?ns:s)}</div>`}</div></div>`;
