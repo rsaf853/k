@@ -2141,7 +2141,7 @@ function editor(it,kind){kind=(it&&it.kind)||kind||'post';const i=it||{visibilit
   if(/^(---|\*\*\*)$/.test(l))return`<span class="mk">${l}</span>`;
   l=l.replace(/^(\s*(?:[-*]|\d+\.) )(\{[bn]\d+r?\})?/,(a,x,y)=>`<span class="mk">${x}${y||''}</span>`);
   return l.replace(/(\*\*|==|~~|&lt;\/?u&gt;|\{h3\}|\{h13\})/g,'<span class="mk">$1</span>')}).join('\n')+'\n'};
- const mdFit=()=>{em.style.height='auto';const h=Math.max(em.scrollHeight,300);em.style.height=h+'px';$('#emh').innerHTML=mdHl(em.value)};
+ const mdFit=()=>{const sc=em.closest('.esl'),top=sc?sc.scrollTop:0,wt=scrollY;em.style.height='auto';const h=Math.max(em.scrollHeight,300);em.style.height=h+'px';if(sc&&sc.scrollTop!==top)sc.scrollTop=top;if(scrollY!==wt)scrollTo(0,wt);$('#emh').innerHTML=mdHl(em.value)};
  em.addEventListener('input',mdFit);addEventListener('resize',mdFit);if(window.ResizeObserver)new ResizeObserver(()=>{if($('#srcw').style.display==='block')mdFit()}).observe($('#srcw'));if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{if($('#srcw').style.display==='block')mdFit()});
  $('#emd').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.m)};show(mode);
  $('#tbb').onmousedown=e=>{if(e.target.closest('button'))e.preventDefault()};
@@ -2191,7 +2191,10 @@ function editor(it,kind){kind=(it&&it.kind)||kind||'post';const i=it||{visibilit
  if(matchMedia('(hover:hover)').matches){$('#etb').addEventListener('mouseover',e=>{const b=e.target.closest('[data-hm]');if(b)hmOpen(b);else if(e.target.closest('button'))hmClose()});$('#etb').addEventListener('mouseleave',hmClose);$('#epm').addEventListener('mouseenter',()=>clearTimeout(hmT));$('#epm').addEventListener('mouseleave',hmClose)}
  /* PREVIEW: slides in beside the editor, remembers on/off */
  let pvT=null;const pvVars=el=>{const o=ffo();el.style.setProperty('--tf',o.tf);el.style.setProperty('--tk',o.tk);el.style.setProperty('--ts',SZ[RS.sz]+'px');el.style.setProperty('--tlh',RS.l);el.style.setProperty('--tc',RS.c+'em')};
- const pvRender=()=>{const c=$('#epvc');if(!c)return;const t=$('#eti').value.trim(),su=$('#esu').value.trim();c.innerHTML=`<h1${su?' class="h1s"':''}>${esc(t||'untitled')}</h1>${su?`<p class="sb">${esc(su)}</p>`:''}${marked.parse(src())}`;wrapKo(c);cxHydrate(c)};
+ const pvRender=()=>{const c=$('#epvc');if(!c)return;const pv=c.closest('.epv'),keep=pv?pv.scrollTop:0;const t=$('#eti').value.trim(),su=$('#esu').value.trim();c.innerHTML=`<h1${su?' class="h1s"':''}>${esc(t||'untitled')}</h1>${su?`<p class="sb">${esc(su)}</p>`:''}${marked.parse(src())}`;wrapKo(c);cxHydrate(c);if(pv){pv.scrollTop=keep;pvSync()}};
+ /* keep the preview at the same place as the text being written: scroll position follows proportionally, both ways */
+ let pvLock=0;const pvSync=(from)=>{const L=$('#escr .esl'),P=$('#escr .epv');if(!L||!P||!pvOn())return;const a=from==='pv'?P:L,b=from==='pv'?L:P,ma=a.scrollHeight-a.clientHeight,mb=b.scrollHeight-b.clientHeight;if(mb<=0)return;pvLock=Date.now();b.scrollTop=ma>0?a.scrollTop/ma*mb:0};
+ setTimeout(()=>{const L=$('#escr .esl'),P=$('#escr .epv');if(L)L.addEventListener('scroll',()=>{if(Date.now()-pvLock<60&&pvLock)return;pvSync('ed')},{passive:true});if(P)P.addEventListener('scroll',()=>{if(Date.now()-pvLock<60&&pvLock)return;pvSync('pv')},{passive:true})},0);
  const pvOn=()=>$('#escr').classList.contains('pvon'),pvKick=()=>{if(!pvOn())return;clearTimeout(pvT);pvT=setTimeout(pvRender,250)};
  const pvFF=()=>{const w=$('#epff');if(!w)return;w.innerHTML=Object.keys(FF).map(k=>`<button type="button" data-pvff="${k}" class="${(RS.ff||'serif')===k?'on':''}" style="font-family:${FF[k].tf.replace(/"/g,'&quot;')}">${TFL[k]||k}</button>`).join('');w.onclick=e=>{const b=e.target.closest('[data-pvff]');if(!b)return;RS.ff=b.dataset.pvff;try{localStorage.setItem('rs4',JSON.stringify(RS))}catch(x){}pvFF();pvVars($('.epar'))}};
  const pvSet=on=>{$('#escr').classList.toggle('pvon',on);$('#epvb').classList.toggle('on',on);try{localStorage.setItem('edpv',on?'1':'0')}catch(e){}if(on){pvFF();pvVars($('.epar'));pvRender()}};
