@@ -1439,7 +1439,7 @@ html.mlock,html.mlock body{overflow:hidden}
 /* opened memo: only the sheet scrolls, not the text inside it as well */
 #mov .mfull{max-height:none;overflow:visible}
 /* archive posts read like a book: paragraphs set close together, every following paragraph indented by one character */
-.pg p{margin:0 0 .25em}
+.pg p{margin:0 0 .45em}
 .pg p+p{text-indent:1.5em}
 .pg p+p:has(>img:only-child,>.cx:only-child,>a:only-child>img){text-indent:0}
 .pg p:has(+:not(p)){margin-bottom:.9em}
@@ -1449,14 +1449,17 @@ html.mlock,html.mlock body{overflow:hidden}
 .sbleaf.one.go{transform:rotateY(-160deg)}
 .sbleaf.one .sbfc::after{background:linear-gradient(90deg,rgba(0,0,0,.2),rgba(0,0,0,0) 45%)}
 /* dialogue (archive and log) */
-.dl{display:grid;grid-template-columns:minmax(3.6em,max-content) minmax(0,1fr);column-gap:.7em;row-gap:.15em;margin:.9em 0;text-indent:0}
+.dl{display:grid;grid-template-columns:minmax(3.2em,max-content) minmax(0,1fr);column-gap:.5em;row-gap:.15em;margin:.9em 0;text-indent:0}
 .dl .ln{display:contents}
 .dl .n{display:flex;align-items:center;gap:.4em;height:1.8em;height:1lh;align-self:start;white-space:nowrap}
-.dl .n em{font:600 .74em/1 var(--sans);font-style:normal;letter-spacing:.01em;color:var(--mut)}
+.dl .n em{font:600 .7em/1 var(--sans);font-style:normal;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
 .dl .ln.sq .n em{color:inherit}
 .dl .n i{display:block;flex:none;width:.52em;height:.52em;border:1px solid currentColor;background:#fff}
 .dl .n i.b{background:#111}
 .dl .t{min-width:0}
+/* a blank line (an empty paragraph) is a small scene gap, and the paragraph after it starts flush */
+.pg p.gap{height:.7em;margin:0;overflow:hidden;line-height:0;color:transparent}
+.pg p.gap+p{text-indent:0}
 </style>
 </head>
 <body>
@@ -1776,6 +1779,7 @@ function hbClean(src){const t=document.createElement('template');t.innerHTML=src
  t.content.querySelectorAll('style').forEach(st=>{st.textContent=hbScope(st.textContent,id)});
  const d=document.createElement('div');d.appendChild(t.content);return`<div class="hb ${id}">${d.innerHTML}</div>`}
 const mdE=s=>{HB_ED=true;try{return marked.parse(s||'')}finally{HB_ED=false}};
+marked.use({renderer:{paragraph(t){if(HB_ED)return false;const v=typeof t==='string'?t:(t&&t.text)||'';return /^\s*(&nbsp;|\u00a0|&amp;nbsp;|<br>)*\s*$/.test(v)&&v.trim()?'<p class="gap">&nbsp;</p>\n':false}}});
 /* dialogue lines: "Name|line" or "Name(w)|"line"" — quotes dropped, name in a column beside the line; (w)/(b) puts a white/black square by the name and sticks for that name until changed in the same text */
 let DLS={};
 marked.use({hooks:{preprocess(md){DLS={};return md}},extensions:[{name:'dlg',level:'block',
