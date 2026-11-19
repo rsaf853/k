@@ -731,7 +731,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jkib.jkpp{width:36px;height:36px;border:1px solid var(--fg)}.jkib.jkpp svg{width:12px;height:12px}
 .jkvol{margin-left:auto;display:flex;align-items:center;gap:4px}
 .jkvol .jkib svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.jkvol input{width:76px;height:16px;margin:0;padding:0;border:0;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;--v:70%}
+.jkvol input{width:76px;height:16px;margin:0;padding:0;border:0;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;--v:21%}
 .jkvol input::-webkit-slider-runnable-track{height:2px;background:linear-gradient(var(--fg),var(--fg)) 0/var(--v) 100% no-repeat,var(--line)}
 .jkvol input::-moz-range-track{height:2px;background:var(--line)}.jkvol input::-moz-range-progress{height:2px;background:var(--fg)}
 .jkvol input::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;margin-top:-4px;border-radius:50%;background:var(--fg);border:0}
@@ -2109,7 +2109,7 @@ const jkList=()=>{const L=lvData();return Array.isArray(L.juke)?L.juke:JK_DEF};
 const jkOwn=()=>{const L=lvData();if(!Array.isArray(L.juke))L.juke=JSON.parse(JSON.stringify(JK_DEF));return L.juke};
 const ytId=u=>{const m=/(?:[?&]v=|youtu\.be\/|\/embed\/|\/shorts\/|\/live\/)([\w-]{11})/.exec(u||'');return m?m[1]:/^[\w-]{11}$/.test(String(u||'').trim())?String(u).trim():''};
 const ytList=u=>{const m=/[?&]list=([\w-]+)/.exec(u||'');return m?m[1]:''};
-let JKV=70;try{const v=localStorage.getItem('e4vol');if(v!==null)JKV=+v}catch(e){}
+let JKV=21;try{const v=localStorage.getItem('e4vol');if(v!==null)JKV=+v}catch(e){}
 const JK={ai:-1,al:null,cur:0,on:false,mute:false,yt:null,ready:false,loading:false,q:[],busy:0,tick:null,tt:{},t:0,d:0,msg:''};
 const JKI={play:'<svg viewBox="0 0 10 10"><path d="M2.5 1l6.5 4-6.5 4z"/></svg>',pause:'<svg viewBox="0 0 10 10"><path d="M2 1h2.2v8H2zM5.8 1H8v8H5.8z"/></svg>',
  prev:'<svg viewBox="0 0 12 12"><path d="M2 1.5h1.6v9H2zM10.5 1.5v9L4.2 6z"/></svg>',next:'<svg viewBox="0 0 12 12"><path d="M8.4 1.5H10v9H8.4zM1.5 1.5v9L7.8 6z"/></svg>',
@@ -2213,7 +2213,7 @@ document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('#
   if(k==='p')jkToggle();
   else if(k==='-')jkGo(JK.t>3?JK.cur:Math.max(0,JK.cur-1));
   else if(k==='+')jkGo(JK.cur+1>=T.length?0:JK.cur+1);
-  else if(k==='m'){JK.mute=!JK.mute;if(!JK.mute&&JKV==0)JKV=50;$('#jkvo').value=JK.mute?0:JKV;jkVolApply();jkPaint()}return}
+  else if(k==='m'){JK.mute=!JK.mute;if(!JK.mute&&JKV==0)JKV=21;$('#jkvo').value=JK.mute?0:JKV;jkVolApply();jkPaint()}return}
  if(x=t.closest('#jkbar')){if(!JK.d||!JK.yt)return;const r=x.getBoundingClientRect(),p=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));try{JK.yt.seekTo(p*JK.d,true)}catch(z){}JK.t=p*JK.d;return jkBar()}
  if(x=t.closest('[data-jkt]'))return jkGo(+x.dataset.jkt);
  if(x=t.closest('[data-jk]'))return jkPick(+x.dataset.jk)});
