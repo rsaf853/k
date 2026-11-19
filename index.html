@@ -1448,6 +1448,15 @@ html.mlock,html.mlock body{overflow:hidden}
 .sbleaf.one .sbfc{left:0;width:100%}
 .sbleaf.one.go{transform:rotateY(-160deg)}
 .sbleaf.one .sbfc::after{background:linear-gradient(90deg,rgba(0,0,0,.2),rgba(0,0,0,0) 45%)}
+/* dialogue (archive and log) */
+.dl{display:grid;grid-template-columns:minmax(3.6em,max-content) minmax(0,1fr);column-gap:.7em;row-gap:.15em;margin:.9em 0;text-indent:0}
+.dl .ln{display:contents}
+.dl .n{display:flex;align-items:center;gap:.4em;height:1.8em;height:1lh;align-self:start;white-space:nowrap}
+.dl .n em{font:600 .74em/1 var(--sans);font-style:normal;letter-spacing:.01em;color:var(--mut)}
+.dl .ln.sq .n em{color:inherit}
+.dl .n i{display:block;flex:none;width:.52em;height:.52em;border:1px solid currentColor;background:#fff}
+.dl .n i.b{background:#111}
+.dl .t{min-width:0}
 </style>
 </head>
 <body>
@@ -1767,6 +1776,16 @@ function hbClean(src){const t=document.createElement('template');t.innerHTML=src
  t.content.querySelectorAll('style').forEach(st=>{st.textContent=hbScope(st.textContent,id)});
  const d=document.createElement('div');d.appendChild(t.content);return`<div class="hb ${id}">${d.innerHTML}</div>`}
 const mdE=s=>{HB_ED=true;try{return marked.parse(s||'')}finally{HB_ED=false}};
+/* dialogue lines: "Name|line" or "Name(w)|"line"" — quotes dropped, name in a column beside the line; (w)/(b) puts a white/black square by the name and sticks for that name until changed in the same text */
+let DLS={};
+marked.use({hooks:{preprocess(md){DLS={};return md}},extensions:[{name:'dlg',level:'block',
+ start(src){const m=/(^|\n) {0,3}[A-Za-z][A-Za-z0-9 .'_-]{0,23}?\s*(?:\((?:w|b|white|black|백|흑)\))?\s*\|\s*\S/i.exec(src);return m?m.index+(m[1]?1:0):undefined},
+ tokenizer(src){const LR=/^ {0,3}([A-Za-z][A-Za-z0-9 .'_-]{0,23}?)\s*(?:\((w|b|white|black|백|흑)\))?\s*\|\s*(\S.*)(?:\n|$)/i;let rest=src,raw='';const items=[];let m;
+  while((m=LR.exec(rest))){if(/^\s*\|?\s*:?-{2,}/.test(rest.slice(m[0].length)))break;raw+=m[0];rest=rest.slice(m[0].length);const t=m[3].trim().replace(/^["“”]\s*/,'').replace(/\s*["“”]$/,'');items.push({n:m[1].trim(),k:(m[2]||'').toLowerCase(),t,tokens:this.lexer.inlineTokens(t)})}
+  if(!items.length)return;return{type:'dlg',raw,items}},
+ renderer(tk){if(HB_ED)return`<p>${tk.raw.trim().split('\n').map(l=>esc(l)).join('<br>')}</p>`;
+  return`<div class="dl">${tk.items.map((x,j)=>{if(x.k)DLS[x.n]=/^(w|white|백)$/.test(x.k)?'w':'b';const sq=DLS[x.n]||'',cont=j&&tk.items[j-1].n===x.n;
+   return`<div class="ln${sq?' sq':''}"><span class="n">${cont?'':`${sq?`<i class="${sq}"></i>`:''}<em>${esc(x.n)}</em>`}</span><span class="t">${this.parser.parseInline(x.tokens)}</span></div>`}).join('')}</div>`}}]});
 marked.use({breaks:true,renderer:{code(c,l){if(String(l||'').trim().split(/\s/)[0]!=='html')return false;return HB_ED?`<pre class="hbx" data-html>${esc(c)}</pre>`:hbClean(c)}}});
 /* highlight (nesting ok) + bold/italic that still apply when syntax overlaps */
 marked.use({renderer:{blockquote(q){const h=typeof q==='string'?q:this.parser.parse(q.tokens),m=/^<p>\{(q4|q9)\}(<br>\s*|<\/p>\s*)?/.exec(h);if(!m)return false;return`<blockquote class="${m[1]}">\n${m[2]&&m[2].startsWith('</p>')?'':'<p>'}${h.slice(m[0].length)}</blockquote>\n`}}});
