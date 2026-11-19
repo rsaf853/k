@@ -1460,6 +1460,9 @@ html.mlock,html.mlock body{overflow:hidden}
 /* a blank line (an empty paragraph) is a small scene gap, and the paragraph after it starts flush */
 .pg p.gap{height:.7em;margin:0;overflow:hidden;line-height:0;color:transparent}
 .pg p.gap+p{text-indent:0}
+/* editor: unsaved draft offer */
+.edraft{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 16px;border-bottom:1px solid var(--line);background:var(--soft);font:600 12px var(--sans)}
+.edraft span{margin-right:auto}
 </style>
 </head>
 <body>
@@ -2203,6 +2206,15 @@ function editor(it,kind){kind=(it&&it.kind)||kind||'post';const i=it||{visibilit
  const pvFF=()=>{const w=$('#epff');if(!w)return;w.innerHTML=Object.keys(FF).map(k=>`<button type="button" data-pvff="${k}" class="${(RS.ff||'serif')===k?'on':''}" style="font-family:${FF[k].tf.replace(/"/g,'&quot;')}">${TFL[k]||k}</button>`).join('');w.onclick=e=>{const b=e.target.closest('[data-pvff]');if(!b)return;RS.ff=b.dataset.pvff;try{localStorage.setItem('rs4',JSON.stringify(RS))}catch(x){}pvFF();pvVars($('.epar'))}};
  const pvSet=on=>{$('#escr').classList.toggle('pvon',on);$('#epvb').classList.toggle('on',on);try{localStorage.setItem('edpv',on?'1':'0')}catch(e){}if(on){pvFF();pvVars($('.epar'));pvRender()}};
  $('#epvb').onclick=()=>pvSet(!pvOn());[eb,em,$('#eti'),$('#esu')].forEach(x=>x.addEventListener('input',pvKick));
+ /* draft: everything written is kept in this browser every couple of seconds and offered back next time the editor opens; cleared once the post is saved */
+ const DK='e4draft:'+kind+':'+(i.id||'new');let dT=null;const dRead=()=>{try{return JSON.parse(localStorage.getItem(DK)||'null')}catch(x){return null}};
+ const dSave=()=>{const d={t:$('#eti').value,su:$('#esu').value,b:src(),tg:$('#et').value,at:Date.now()};if(!d.t.trim()&&!d.b.trim())return;if(d.t===(i.title||'')&&d.b===(i.body||'')&&d.su===(i.meta?.sub||''))return;try{localStorage.setItem(DK,JSON.stringify(d));const x=new Date(d.at);$('#sv').textContent=`draft saved ${p2(x.getHours())}:${p2(x.getMinutes())}`}catch(x){}};
+ const dKick=()=>{clearTimeout(dT);dT=setTimeout(dSave,1500)};[eb,em,$('#eti'),$('#esu'),$('#et')].forEach(x=>x.addEventListener('input',dKick));
+ $('#ed').addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();clearTimeout(dT);dSave()}});
+ {const d=dRead();if(d&&(d.b!==(i.body||'')||d.t!==(i.title||'')||d.su!==(i.meta?.sub||''))){const x=new Date(d.at),bar=document.createElement('div');bar.className='edraft';
+  bar.innerHTML=`<span>Unsaved draft from ${date(d.at,1)}</span><button type="button" class="bt" data-dr="load">RESTORE</button><button type="button" class="bt gh" data-dr="drop">DISCARD</button>`;
+  const host=$('#escr');host.parentNode.insertBefore(bar,host);
+  bar.onclick=e=>{const b=e.target.closest('[data-dr]');if(!b)return;if(b.dataset.dr==='load'){$('#eti').value=d.t||'';$('#esu').value=d.su||'';$('#et').value=d.tg||'';if(mode==='md'){em.value=d.b||'';mdFit()}else{eb.innerHTML=mdE(d.b||'');renumber(eb)}cnt();pvKick()}else{try{localStorage.removeItem(DK)}catch(x){}}bar.remove()}}}
  {let v='0';try{v=localStorage.getItem('edpv')||'0'}catch(e){}if(v==='1'&&innerWidth>700)pvSet(true)}
 
  let tbR=null;eb.addEventListener('blur',()=>{const s=getSelection();if(s&&s.rangeCount&&eb.contains(s.anchorNode))tbR=s.getRangeAt(0).cloneRange()});
@@ -2239,7 +2251,7 @@ function editor(it,kind){kind=(it&&it.kind)||kind||'post';const i=it||{visibilit
   if(k==='h'||k==='q'){eb.focus();const s=getSelection();if(!(s.rangeCount&&eb.contains(s.anchorNode))&&tbR){s.removeAllRanges();s.addRange(tbR)}if(k==='h')hlVariant(v);else qVariant(v);cnt();return}
   if(v==='rs'){const o=curEl('ol')||(edList('n',ECUR.n),curEl('ol'));if(o){o.dataset.r=1;eb.dispatchEvent(new Event('input',{bubbles:true}))}return}
   ECUR[k]=v;if(k==='d')divider(v);else edList(k,v)};
- $('#ed').onclick=e=>{if(!e.target.closest('#epm,[data-menu]'))$('#epm').hidden=true};
+ $('#ed').onclick=e=>{const m=$('#epm');if(m&&!e.target.closest('#epm,[data-menu]'))m.hidden=true};
  $('#ecan').onclick=closeEd;
  if($('#edel'))$('#edel').onclick=async()=>{if(!confirm('Delete this post?'))return;const r=await sb.from('items').delete().eq('id',i.id);if(r.error)return $('#sv').textContent=r.error.message;closeEd();await load();location.hash=kind==='post'?'#/posts':'#/log';route()};
  $('#esave').onclick=async()=>{const vis=$('#ev').value,pw=$('#epw').value;if(vis==='locked'&&nw&&!pw)return $('#sv').textContent='locked posts need a password';$('#sv').textContent='saving…';
@@ -2249,6 +2261,7 @@ function editor(it,kind){kind=(it&&it.kind)||kind||'post';const i=it||{visibilit
    const r=i.id?await sb.from('items').update(row).eq('id',i.id).select('id').single():await sb.from('items').insert(row).select('id').single();
    if(r.error){btn.disabled=false;return $('#sv').textContent='failed: '+r.error.message}
    if(pw){const q=await sb.rpc('set_pw',{p_id:r.data.id,p_pw:pw});if(q.error){btn.disabled=false;return $('#sv').textContent='saved, but password failed: '+q.error.message}}
+   try{localStorage.removeItem('e4draft:'+kind+':'+(i.id||'new'))}catch(x){}clearTimeout(dT);
    closeEd();await load();route()
   }catch(x){btn.disabled=false;$('#sv').textContent='failed: '+(x.message||x)}}}
 /* list views */
