@@ -2148,21 +2148,21 @@ function jkToggle(){if(!JK.al)return;const y=JK.yt;let st=-1;try{st=y?y.getPlaye
  if(jkPlMode()&&!(JK.ids&&JK.ids.length))return jkStart();jkGo(JK.cur)}
 function jkStop(){JK.on=false;try{JK.yt&&JK.yt.stopVideo()}catch(e){}}
 /* progress: poll the player while the home page is on screen; leaving the page stops the music */
-function jkTick(){clearInterval(JK.tick);JK.tick=setInterval(()=>{if(!document.getElementById('jkv')){clearInterval(JK.tick);JK.tick=null;if(JK.on)jkStop();JK.ai=-1;JK.al=null;return}
+function jkTick(){clearInterval(JK.tick);JK.tick=setInterval(()=>{if(!document.getElementById('jkv')){clearInterval(JK.tick);JK.tick=null;if(JK.on)jkStop();JK.ai=-1;JK.al=null;JK.touched=false;return}
  if(JK.ready&&JK.on){try{JK.t=JK.yt.getCurrentTime();JK.d=JK.yt.getDuration()}catch(e){}jkBar()}},500)}
 const jkCd=a=>a.cd?`<img class="a" src="${esc(a.cd)}" alt=""><img class="t" src="jk/cd-light.webp" alt="">`:`<svg viewBox="0 0 200 200" aria-hidden="true"><defs><mask id="jkm"><rect width="200" height="200" fill="#fff"/><circle cx="100" cy="100" r="57" fill="#777"/><circle cx="100" cy="100" r="12.5" fill="#000"/></mask></defs><g mask="url(#jkm)"><circle cx="100" cy="100" r="99" fill="#d9dcdf"/><circle cx="100" cy="100" r="95" fill="#c9cdd1"/><circle cx="100" cy="100" r="29" fill="#e9ebee"/></g><text x="100" y="58" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="12" letter-spacing="2" fill="#222">${esc(String(a.a||'').toUpperCase())}</text><text x="100" y="150" text-anchor="middle" font-family="Inter,sans-serif" font-weight="500" font-size="10" fill="#333">${esc(a.t||'')}</text></svg><img class="t" src="jk/cd-light.webp" alt="">`;
 function jkStageHtml(a){return`<div class="jkst" id="jkst"><div class="jksl"><div class="jkcd" id="jkcd">${jkCd(a)}</div><div class="jksh a"></div><div class="jksh b"></div><div class="jksh c"></div><div class="jkshd"></div></div>
  <div class="jkcase"><div class="jkhg"${a.sp?` style="background-image:url('${esc(a.sp)}')"`:''}></div><img src="jk/case.webp" alt=""><div class="jkcov${a.cov?'':' gen'}"${a.cov?` style="background-image:url('${esc(a.cov)}')"`:''}>${a.cov?'':esc(a.t||'')+'<small>'+esc(a.a||'')+'</small>'}</div><img src="jk/case-light.webp" alt=""></div></div>`}
-function lvJuke(){const el=$('#lvjk');if(!el)return;const L=jkList(),ed=em(),a=JK.ai>=0?L[JK.ai]:null;if(!a){JK.ai=-1;JK.al=null}
+function lvJuke(){const el=$('#lvjk');if(!el)return;const L=jkList(),ed=em();if(JK.ai<0||!L[JK.ai])JK.ai=jkDef();const a=JK.ai>=0?L[JK.ai]:null;if(!a){JK.ai=-1;JK.al=null}
  el.innerHTML=`<div class="jk${a?' open':''}${JK.on?' playing':''}" id="jkv"><div class="jkrack" id="jkrack">${L.map((x,i)=>`<div class="jksp${i===JK.ai?' cur':''}" role="button" tabindex="0" data-jk="${i}" aria-label="${esc(x.a)} — ${esc(x.t)}">${x.sp?`<div class="jkspi"><img src="${esc(x.sp)}" alt="" loading="lazy"></div>`:`<div class="jkspi gen"><span>${esc(String(x.a+' · '+x.t).toUpperCase())}</span></div>`}<div class="jkbox"></div></div>`).join('')}</div><div class="jkledge"></div>
  <div class="jkcap"><span>${L.length?L.length+' ALBUMS':'NO ALBUMS YET'}</span>${ed?'<button class="btn" data-jkadd>+ ALBUM</button>':''}</div>
- <div class="jkpl"><div class="jkhd"><div><div class="jkttl" id="jkttl"></div><div class="jkart" id="jkart"></div></div>${ed?'<button class="btn" data-jked>EDIT</button>':''}</div>
+ <div class="jkpl"><div class="jkhd"><div><div class="jkttl" id="jkttl"></div><div class="jkart" id="jkart"></div></div>${ed?'<button class="btn" data-jkadd>+ ALBUM</button><button class="btn" data-jked>EDIT</button>':''}</div>
  <div class="jkpg"><span class="jktm" id="jktc">0:00</span><div class="jkbar" id="jkbar" role="slider" aria-label="position"><i id="jkfill"></i></div><span class="jktm r" id="jktd">0:00</span></div>
  <div class="jkct"><button class="jkib" type="button" data-jkp="-" aria-label="previous">${JKI.prev}</button><button class="jkib jkpp" type="button" data-jkp="p" id="jkpp" aria-label="play / pause"></button><button class="jkib" type="button" data-jkp="+" aria-label="next">${JKI.next}</button>
  <div class="jkvol"><button class="jkib" type="button" data-jkp="m" id="jkmu" aria-label="mute"></button><input type="range" id="jkvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></div></div>
  <p class="jkmsg" id="jkmsg"></p><ol class="jkls" id="jkls"></ol></div></div>`;
  if(a){JK.al=a;const box=el.querySelector('.jksp.cur .jkbox');box.innerHTML=jkStageHtml(a);const st=$('#jkst');st.classList.add('now','in','out');requestAnimationFrame(()=>st.classList.remove('now'))}
- jkList2();jkPaint();jkTick()}
+ jkList2();jkPaint();jkTick();requestAnimationFrame(jkReveal)}
 function jkList2(){const ul=$('#jkls');if(!ul||!JK.al)return;const T=jkTracks();
  ul.innerHTML=T.map((x,k)=>`<li data-jkt="${k}"><span class="n">${k+1}</span><span class="eq"><i></i><i></i><i></i></span><span class="t">${esc(x.t)}</span>${!x.v&&!jkPlMode()?'<span class="nl">NO LINK</span>':''}</li>`).join('');jkPaint()}
 function jkBar(){const f=$('#jkfill');if(!f)return;f.style.width=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';$('#jktc').textContent=jkFmt(JK.t);$('#jktd').textContent=jkFmt(JK.d)}
@@ -2172,15 +2172,21 @@ function jkPaint(){const v=$('#jkv');if(!v)return;v.classList.toggle('playing',J
   document.querySelectorAll('#jkls li').forEach((li,k)=>li.classList.toggle('cur',k===JK.cur))}
  const m=$('#jkmsg');if(m)m.textContent=JK.msg||'';jkBar()}
 const jkItem=i=>document.querySelector(`#jkrack .jksp[data-jk="${i}"]`);
+const jkDef=()=>{const L=jkList(),k=L.findIndex(a=>/love at first sting/i.test(a.t||''));return L.length?(k<0?L.length-1:k):-1};
+/* keep the open case in view inside the shelf (only works once the tab is visible) */
+function jkReveal(){const r=$('#jkrack'),it=r&&r.querySelector('.jksp.cur');if(!r||!it||!r.clientWidth)return;const b=it.getBoundingClientRect(),rr=r.getBoundingClientRect(),w=it.querySelector('.jkbox').offsetWidth?b.width:b.width+r.clientHeight*1.62;
+ if(b.left<rr.left||b.left+w>rr.right)r.scrollLeft+=b.left+w>rr.right?b.left+w-rr.right+8:b.left-rr.left-8}
+/* opening the Jukebox tab plays the open album, once per visit to the home page */
+function jkTab(){if(JK.ai<0&&jkList().length){JK.ai=jkDef();lvJuke()}requestAnimationFrame(jkReveal);if(!JK.on&&!JK.touched&&JK.al){JK.touched=true;jkStart()}else jkYT(()=>{})}
 function jkOpen(i){const L=jkList(),a=L[i];if(!a)return;JK.ai=i;JK.al=a;const v=$('#jkv'),it=jkItem(i);
  it.querySelector('.jkbox').innerHTML=jkStageHtml(a);const st=$('#jkst');it.classList.add('cur');v.classList.add('open');jkList2();
  setTimeout(()=>st.classList.add('in'),200);
  setTimeout(()=>{st.classList.add('out');const r=$('#jkrack');if(!r)return;const b=it.getBoundingClientRect(),rr=r.getBoundingClientRect();if(b.right>rr.right||b.left<rr.left)r.scrollBy({left:b.left<rr.left?b.left-rr.left-8:b.right-rr.right+8,behavior:'smooth'})},650);
  jkStart()}
 function jkClose(then){jkStop();JK.busy=1;const st=$('#jkst'),i=JK.ai;if(st)st.classList.remove('out');jkPaint();
- setTimeout(()=>{if(st)st.classList.remove('in');const it=jkItem(i);if(it)it.classList.remove('cur');if(!then){const v=$('#jkv');if(v)v.classList.remove('open')}
+ setTimeout(()=>{if(st)st.classList.remove('in');const it=jkItem(i);if(it)it.classList.remove('cur');
   setTimeout(()=>{if(st)st.remove();JK.ai=-1;JK.al=null;JK.busy=0;if(then)then()},450)},600)}
-function jkPick(i){if(JK.busy)return;if(i===JK.ai)return jkClose();if(JK.ai<0)return jkOpen(i);jkClose(()=>jkOpen(i))}
+function jkPick(i){if(JK.busy)return;JK.touched=true;if(i===JK.ai)return jkToggle();if(JK.ai<0)return jkOpen(i);jkClose(()=>jkOpen(i))}
 /* a CD photo becomes a disc: centred square, round edge, the hole punched out and the clear hub see-through */
 async function jkCut(f){const u=URL.createObjectURL(f);try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=u});
  const s=Math.min(im.naturalWidth,im.naturalHeight),N=Math.min(900,s),c=document.createElement('canvas');c.width=c.height=N;const x=c.getContext('2d'),R=N/2;
@@ -2210,7 +2216,7 @@ document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('#
  if(t.closest('[data-jkadd]'))return jkEdit(null);
  if(t.closest('[data-jked]'))return jkEdit(JK.ai);
  if(x=t.closest('[data-jkp]')){const k=x.dataset.jkp,T=jkTracks();
-  if(k==='p')jkToggle();
+  if(k==='p'){JK.touched=true;jkToggle()}
   else if(k==='-')jkGo(JK.t>3?JK.cur:Math.max(0,JK.cur-1));
   else if(k==='+')jkGo(JK.cur+1>=T.length?0:JK.cur+1);
   else if(k==='m'){JK.mute=!JK.mute;if(!JK.mute&&JKV==0)JKV=21;$('#jkvo').value=JK.mute?0:JKV;jkVolApply();jkPaint()}return}
@@ -2243,7 +2249,7 @@ document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('.
  if(x=t.closest('[data-lv]')){const a=x.dataset.lv;if(a==='s'){lvStop();lvGo(0)}if(a==='-'){lvStop();lvGo(LVS.cur-1)}if(a==='+'){lvStop();lvGo(LVS.cur+1)}if(a==='p'){if(LVS.tm)return lvStop();if(LVS.cur>=LVZ.seq.length)lvGo(0);x.innerHTML=IC.pa;x.classList.add('on');LVS.tm=setInterval(()=>{if(!$('.lv')||LVS.cur>=LVZ.seq.length)return lvStop();lvGo(LVS.cur+1)},1100)}return}
  if(x=t.closest('.lvpr')){lvStop();const r=x.getBoundingClientRect();return lvGo(Math.round((e.clientX-r.left)/r.width*LVZ.seq.length))}
  if(x=t.closest('.lvm[data-j]')){lvStop();lvGo(+x.dataset.j);return}
- if(x=t.closest('[data-lt]')){document.querySelectorAll('.lvtabs button').forEach(b=>b.classList.toggle('on',b===x));document.querySelectorAll('.lvpn').forEach(p=>p.classList.toggle('on',p.dataset.lp===x.dataset.lt));if(x.dataset.lt==='chat'){const c=$('#lvch');c.scrollTop=c.scrollHeight}if(x.dataset.lt==='juke')jkYT(()=>{});return}
+ if(x=t.closest('[data-lt]')){document.querySelectorAll('.lvtabs button').forEach(b=>b.classList.toggle('on',b===x));document.querySelectorAll('.lvpn').forEach(p=>p.classList.toggle('on',p.dataset.lp===x.dataset.lt));if(x.dataset.lt==='chat'){const c=$('#lvch');c.scrollTop=c.scrollHeight}if(x.dataset.lt==='juke')jkTab();return}
  if(x=t.closest('[data-lvcdel]')){const L=lvData();(L.chat||[]).splice(+x.dataset.lvcdel,1);saveHome();lvChat();return}
  if(x=t.closest('[data-lvcedit]')){const L=lvData(),m=(L.chat||[])[+x.dataset.lvcedit];if(!m)return;const v=prompt('Edit',m.t);if(v===null)return;if(v.trim())m.t=v.trim();else L.chat.splice(+x.dataset.lvcedit,1);saveHome();lvChat();return}
  if(t.closest('#lvedit'))return lvEdit();
