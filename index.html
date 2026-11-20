@@ -622,6 +622,14 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .lkpg{flex-direction:column;gap:10px;min-height:calc(100vh - 240px);min-height:calc(100svh - 240px)}
 .lkcen{min-height:calc(100vh - 300px);min-height:calc(100svh - 300px)}.lkin{display:flex;flex-direction:column;align-items:center;gap:10px}
 .lkpg .rkt,.lkcen .rkt{display:none}.lkpg .rkw,.lkcen .rkw{align-items:center}.lkpg .uf,.lkcen .uf{width:260px;margin-top:0}
+.lkrs{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.lkr{display:grid;grid-template-columns:minmax(0,1fr) 110px 150px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.lkr b{display:block;font:800 13px var(--sans);letter-spacing:-.03em}.lkr small{display:block;font:500 10.5px var(--sans);color:var(--mut)}
+.lkr select,.lkr input{margin:0;width:100%;min-width:0}
+.lkr input[hidden]{display:block!important;visibility:hidden}
+@media(max-width:520px){.lkr{grid-template-columns:1fr 1fr}.lkr>div{grid-column:1/-1}}
+#lkset[hidden]{display:none}
+body.sitelk header nav,body.sitelk .side,body.sitelk #jkmini{visibility:hidden}
 .rkbig{width:46px;height:46px;fill:var(--fg);stroke:var(--fg);stroke-width:1.5;stroke-linejoin:round;--pe:var(--bg)}
 .lkpm{font:700 9.5px var(--sans);letter-spacing:.14em;color:var(--mut)}
 .lkbk{font:600 11px var(--sans);color:var(--mut);text-decoration:none;margin-top:6px}.lkbk:hover{color:var(--fg)}
@@ -1680,7 +1688,7 @@ setTimeout(function(){if(el.parentNode&&!done)gone()},8000);
 <div class="col">
 <header><nav><a href="#/" data-n="">check</a><a href="#/posts" data-n="posts">e4</a><a href="#/log" data-n="log">e5</a><a href="#/memo" data-n="memo">f4</a><a href="#/lines" data-n="lines">exf4</a><a href="#/gallery" data-n="gallery">?!</a></nav><script>document.querySelectorAll('nav a').forEach(function(a){a.dataset.t=a.textContent})</script><span class="hr"><span class="hcap"><span data-k="mate">mate</span><span data-k="puzzle">puzzle</span></span><span class="hpcs"><button class="hp" id="mateNav" data-k="mate" aria-label="Mate" title="Mate">#</button><button class="hp" id="puzzleNav" data-k="puzzle" aria-label="Puzzle" title="Puzzle"><svg class="bolt" viewBox="0 0 16 16" aria-hidden="true"><path d="M8.8 1.2L3.6 8.8h3.9l-1 5.8 5.9-7.7H8.6z"/></svg></button></span><button class="ib" id="theme" aria-label="Toggle theme"></button></span></header>
 <main id="app"></main>
-<footer><button id="mode" class="mode" type="button">checkmate</button><button id="adm" aria-label="Admin"><svg width="13" height="13" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2v5M9.6 4.3h4.8" fill="none"/><path d="M12 8.4C11 6.8 8 6.5 6.5 8.4 5 10.4 6 13 8.2 14.2L7.2 18.2h9.6l-1-4C18 13 19 10.4 17.5 8.4 16 6.5 13 6.8 12 8.4Z"/><path d="M5.8 18.2h12.4v3.4H5.8Z"/></svg></button></footer>
+<footer><button id="lkset" class="lkset" type="button" aria-label="Settings" title="Settings" hidden><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><path d="M14 4v6M6 14v6"/></svg></button><button id="mode" class="mode" type="button">checkmate</button><button id="adm" aria-label="Admin"><svg width="13" height="13" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2v5M9.6 4.3h4.8" fill="none"/><path d="M12 8.4C11 6.8 8 6.5 6.5 8.4 5 10.4 6 13 8.2 14.2L7.2 18.2h9.6l-1-4C18 13 19 10.4 17.5 8.4 16 6.5 13 6.8 12 8.4Z"/><path d="M5.8 18.2h12.4v3.4H5.8Z"/></svg></button></footer>
 </div></div>
 <div id="rd" hidden></div><div id="ed" hidden></div><div id="md" hidden><div class="mb" id="mb"></div></div><div id="lb" hidden></div>
 <button id="top" type="button" aria-label="Back to top"><span class="t0"><i>↑</i><b id="tpa">0%</b></span><span class="t1" aria-hidden="true"><i>↑</i><b id="tpb">0%</b></span></button>
@@ -1742,9 +1750,11 @@ const DEF=()=>({img:'',blocks:[{id:uid(),t:'calendar',w:1},{id:uid(),t:'posts',w
 let loadSeq=0;
 async function load(){const my=++loadSeq;
  try{
+  await lkLoad();
+  const any=!admin&&Object.values(LOCK).some(m=>m!=='open'),hl=!admin&&(lkMode('site')!=='open'||lkMode('home')!=='open');
   const [r,h,ec]=await Promise.all([
-   sb.from(admin?'items':'feed').select('*').order('created_at',{ascending:false}),
-   sb.from('settings').select('value').eq('key','home').maybeSingle(),
+   any?sb.rpc('feed_open',{p_pw:LKP}).order('created_at',{ascending:false}):sb.from(admin?'items':'feed').select('*').order('created_at',{ascending:false}),
+   hl?sb.rpc('home_get',{p_pw:LKP}).then(x=>({data:x.data?{value:x.data}:null,error:x.error})):sb.from('settings').select('value').eq('key','home').maybeSingle(),
    admin?Promise.resolve({data:null}):sb.rpc('eval_counts')]);
   if(my!==loadSeq)return false; /* a newer load started; drop this stale result */
   ITEMS=r.data||[];EVC=null;setTimeout(()=>pzNav&&pzNav(),0);if(ec&&Array.isArray(ec.data)){EVC={pub:0,hid:0};ec.data.forEach(x=>{if(x.visibility==='public')EVC.pub+=+x.n;else EVC.hid+=+x.n})}HOME=h.data?.value?.blocks?h.data.value:DEF();
@@ -1774,12 +1784,38 @@ function imgAdjustPhone(){const dk=ADJTM==='dark'&&!!HOME.imgD,T=dk?'D':'L',url=
  const mv=e=>{const r=a.getBoundingClientRect();o.x=Math.round(Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100)));o.y=Math.round(Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100)));paint(true)};
  a.onpointerdown=e=>{e.preventDefault();a.setPointerCapture(e.pointerId);mv(e);a.onpointermove=mv};a.onpointerup=()=>{a.onpointermove=null};
  $('#ipz').oninput=e=>{o.z=+e.target.value;paint(true)};$('#iph').oninput=e=>{h=+e.target.value;paint(true)};paint(false)}
+/* ---------- site and page locks (settings in the database: lock_cfg, see sql/lock.sql) ----------
+   LOCK = {scope: 'open'|'private'|'password'}; scopes are 'site' and one per menu page.
+   Passwords a visitor got right stay in this tab (sessionStorage) and go with every read. */
+let LOCK={},LKP={},LKOK={};
+try{LKP=JSON.parse(sessionStorage.getItem('e4lk')||'{}')||{}}catch(e){LKP={}}
+const LKS=[['site','SITE','the whole site'],['home','check','home'],['post','e4','archive'],['log','e5','log'],['memo','f4','memo'],['line','exf4','txt'],['gallery','?!','img']];
+const lkMode=k=>LOCK[k]||'open';
+const lkSave=()=>{try{sessionStorage.setItem('e4lk',JSON.stringify(LKP))}catch(e){}};
+async function lkLoad(){LOCK={};LKOK={};const r=await sb.rpc('lock_info');if(r.error||!Array.isArray(r.data))return;r.data.forEach(x=>LOCK[x.scope]=x.mode);
+ if(admin)return;await Promise.all(Object.keys(LKP).filter(k=>lkMode(k)==='password').map(async k=>{const q=await sb.rpc('lock_ok',{p_scope:k,p_pw:LKP[k]});LKOK[k]=!q.error&&q.data===true;if(!LKOK[k]){delete LKP[k];lkSave()}}))}
+const lkOpen=k=>admin||lkMode(k)==='open'||(lkMode(k)==='password'&&!!LKOK[k]);
+const lkScopeOf=a=>!a?'home':a==='post'||a==='posts'?'post':a==='log'?'log':a==='memo'?'memo':a==='lines'?'line':a==='gallery'?'gallery':null;
+function lkScreen(k){const L=LKS.find(x=>x[0]===k),site=k==='site',pv=lkMode(k)==='private';document.body.classList.toggle('sitelk',site);
+ app.innerHTML=`<div class="lkpg"><svg class="rkbig" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnR"/></svg><div class="lkpm">${site?'LOCKED':esc(L[1])+' · LOCKED'}</div><h1 class="lkh1">${site?'잠겨 있어요':pv?'비공개 페이지예요':'잠긴 페이지예요'}</h1>${pv?'':`<div class="rkw"><form class="uf" data-pf="${k}" autocomplete="off"><input type="password" name="pw" placeholder="password" aria-label="password"><button aria-label="Unlock">→</button></form><p class="uer"></p></div>`}${site?'':'<a class="lkbk" href="#/">← check</a>'}</div>`;
+ setTimeout(()=>{const o=app.querySelector('.uf input');if(o)o.focus()},60)}
+document.addEventListener('submit',async e=>{const f=e.target.closest&&e.target.closest('form[data-pf]');if(!f)return;e.preventDefault();const k=f.dataset.pf,inp=f.querySelector('input'),er=f.nextElementSibling;if(!inp.value)return;
+ const r=await sb.rpc('lock_ok',{p_scope:k,p_pw:inp.value});
+ if(r.error||r.data!==true){if(er)er.textContent='비밀번호가 맞지 않아요';inp.value='';f.classList.remove('shake');void f.offsetWidth;f.classList.add('shake');inp.focus();return}
+ LKP[k]=inp.value;lkSave();document.body.classList.remove('sitelk');if(await load())route()});
+function lkSettings(){const row=([k,n,d])=>`<div class="lkr"><div><b>${esc(n)}</b><small>${esc(d)}</small></div><select data-lkm="${k}">${[['open','공개'],['private','비공개'],['password','비밀번호']].map(([v,t])=>`<option value="${v}"${lkMode(k)===v?' selected':''}>${t}</option>`).join('')}</select><input type="password" data-lkp="${k}" placeholder="${lkMode(k)==='password'?'바꿀 때만 입력':'새 비밀번호'}" autocomplete="new-password"${lkMode(k)==='password'?'':' hidden'}></div>`;
+ openM(`<h3>SETTINGS · LOCKS</h3><p class="st" style="margin:0 0 10px">비공개는 로그인한 나만 볼 수 있어요. 비밀번호는 방문자가 맞게 넣으면 그 창에서는 계속 열려 있어요. SITE를 잠그면 모든 페이지가 잠겨요.</p><div class="lkrs">${LKS.map(row).join('')}</div><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" id="lksave">SAVE</button></div>`);
+ $('#mb').querySelectorAll('[data-lkm]').forEach(sel=>sel.onchange=()=>{$('#mb').querySelector(`[data-lkp="${sel.dataset.lkm}"]`).hidden=sel.value!=='password'});
+ $('#lksave').onclick=async()=>{msg('Saving…');for(const [k] of LKS){const m=$('#mb').querySelector(`[data-lkm="${k}"]`).value,pw=$('#mb').querySelector(`[data-lkp="${k}"]`).value;
+   if(m===lkMode(k)&&!(m==='password'&&pw))continue;if(m==='password'&&lkMode(k)!=='password'&&!pw)return msg(`${k==='site'?'SITE':LKS.find(x=>x[0]===k)[1]}: 비밀번호를 넣어 주세요`);
+   const r=await sb.rpc('lock_set',{p_scope:k,p_mode:m,p_pw:pw||null});if(r.error)return msg('Save failed: '+r.error.message+(/lock_set/.test(r.error.message)?' — run sql/lock.sql in Supabase first':''))}
+  closeM();if(await load())route()}}
 const saveHome=async()=>{const r=await sb.from('settings').upsert({key:'home',value:HOME});if(r.error)msg('Save failed: '+r.error.message)};
 /* locked items: the title stays visible and the password field opens in place (no popup) */
 function unlock(id){const it=ITEMS.find(x=>x.id==id);if(!it)return;const k=it.kind,to=(h,fn)=>{OPENLK=id;if(location.hash!==h)location.hash=h;else fn()};
  if(k==='post')to('#/post/'+id,()=>route());else if(k==='log')to('#/log/'+id,()=>view('log'));else if(k==='memo')to('#/memo',()=>view('memo'));else if(k==='gallery')to('#/gallery',()=>view('gallery'));else to('#/lines',()=>view('lines'));
  setTimeout(()=>{const o=document.querySelector('.lk.open .uf input,.e5r .uf input,.lgb .uf input,.lkpg .uf input');if(o)o.focus();OPENLK=null},120)}
-document.addEventListener('submit',async e=>{const f=e.target.closest&&e.target.closest('.uf');if(!f)return;e.preventDefault();const id=+f.dataset.uf,inp=f.querySelector('input'),er=f.nextElementSibling;if(!inp.value)return;
+document.addEventListener('submit',async e=>{const f=e.target.closest&&e.target.closest('.uf');if(!f||f.hasAttribute('data-pf'))return;e.preventDefault();const id=+f.dataset.uf,inp=f.querySelector('input'),er=f.nextElementSibling;if(!inp.value)return;
  const r=await sb.rpc('unlock',{p_id:id,p_pw:inp.value});
  if(r.error||!r.data?.length){if(er)er.textContent='비밀번호가 맞지 않아요';inp.value='';f.classList.remove('shake');void f.offsetWidth;f.classList.add('shake');inp.focus();return}
  UNL[id]=r.data[0];OPENLK=null;const it=ITEMS.find(x=>x.id==id);if(it&&it.kind==='post'){const h='#/post/'+id;if(location.hash===h)route();else location.hash=h}else route()});
@@ -2717,7 +2753,8 @@ function view(k){const kind=KIND[k],all=ITEMS.filter(i=>i.kind===kind);if(kind==
  const q=$('#q');if(q){const tgi=q.elements.tg,spk=t=>{const k=String(t).toLowerCase();return lvKeys('w').includes(k)||lvKeys('b').includes(k)};tgi.value=LQT;tgi.addEventListener('input',()=>{LQT=tgi.value});tagPicker($('#lqt'),tgi,tagPool('line').filter(t=>!spk(t)),true);const di=q.elements.dt,db=$('#dtb'),dx=$('#dtx'),sh=()=>{db.textContent=di.value?date(new Date(di.value).toISOString(),1):'DATE';dx.hidden=!di.value;db.classList.toggle('pri',!!di.value)};db.onclick=()=>{try{di.showPicker()}catch(e){di.focus();di.click()}};di.onchange=sh;dx.onclick=()=>{di.value='';sh()};const ta=q.elements.t,grow=()=>{ta.style.height='auto';ta.style.height=ta.scrollHeight+2+'px'};
   ta.oninput=grow;ta.onkeydown=e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();q.requestSubmit()}};
   q.onsubmit=async e=>{e.preventDefault();const t=ta.value.trim();if(!t)return;await save({kind:'line',body:t,tags:[...new Set([...lvSpTags(hash(t),q),...tagsOf(q.elements.tg.value)])],visibility:'public',...(q.elements.dt.value?{created_at:new Date(q.elements.dt.value).toISOString()}:{})})}}}
-function route0(){const h=location.hash.replace('#/','')||'',[a0,b]=h.split('/'),a=a0==='e5'?'log':a0;document.body.classList.toggle('bnpg',a==='banners');document.body.classList.toggle('pzpg',a==='puzzle');$('#puzzleNav').classList.toggle('on',a==='puzzle');$('#mateNav').classList.toggle('on',a==='banners');{const H=$('.hr');H.dataset.cur=a==='banners'?'mate':a==='puzzle'?'puzzle':'';delete H.dataset.h}document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('on',x.dataset.n===(a==='post'?'posts':a)));
+function route0(){const h=location.hash.replace('#/','')||'',[a0,b]=h.split('/'),a=a0==='e5'?'log':a0;
+ if(!lkOpen('site')){FS=false;closeReader();return lkScreen('site')}document.body.classList.remove('sitelk');{const k=lkScopeOf(a);if(k&&!lkOpen(k)){FS=false;closeReader();document.body.classList.remove('pgd');return lkScreen(k)}}document.body.classList.toggle('bnpg',a==='banners');document.body.classList.toggle('pzpg',a==='puzzle');$('#puzzleNav').classList.toggle('on',a==='puzzle');$('#mateNav').classList.toggle('on',a==='banners');{const H=$('.hr');H.dataset.cur=a==='banners'?'mate':a==='puzzle'?'puzzle':'';delete H.dataset.h}document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('on',x.dataset.n===(a==='post'?'posts':a)));
  if(a==='post'){const it=ITEMS.find(i=>i.id==b);if(!it){closeReader();return view('posts')}
   if(locked(it)){closeReader();document.body.classList.remove('pgd');return lockPage(it)}
   if(FS){if(!$('#app').innerHTML)view('posts');return reader(it)}return article(it)}
@@ -3204,7 +3241,8 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
 addEventListener('hashchange',()=>{TAG=PEND;PEND='';Q='';FS=false;if(!(/^#\/(log|e5)\b/.test(location.hash)&&$('#e5r')))scrollTo(0,0);route()});
 document.addEventListener('input',e=>{const t=e.target,k=t.dataset&&t.dataset.ia;if(!k)return;if(/D$/.test(k)&&HOME.ixD===undefined){HOME.ixD=HOME.ix??50;HOME.iyD=HOME.iy??50;HOME.izD=HOME.iz||100}HOME[k]=+t.value;$('#v_'+k).textContent=t.value+IU[k];paintVars()});
 /* auth */
-const sync=()=>{$('#adm').classList.toggle('on',admin);const m=$('#mode');m.textContent=EM?'stalemate':'checkmate';m.classList.toggle('ok',admin);m.classList.toggle('on',admin&&EM)};
+$('#lkset').onclick=()=>lkSettings();
+const sync=()=>{$('#adm').classList.toggle('on',admin);$('#lkset').hidden=!(admin&&EM);const m=$('#mode');m.textContent=EM?'stalemate':'checkmate';m.classList.toggle('ok',admin);m.classList.toggle('on',admin&&EM)};
 $('#mode').onclick=()=>{if(!admin)return;EM=!EM;if(!EM)EDITM=false;sync();paintImg();route()};
 $('#adm').onclick=async()=>{if(admin){await sb.auth.signOut();return}
  openM(`<h3>ADMIN LOGIN</h3><form id="f"><label>Email</label><input type="email" name="email" required autocomplete="username"><label>Password</label><input type="password" name="pw" required autocomplete="current-password"><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn">LOGIN</button></div></form>`);
