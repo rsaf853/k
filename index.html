@@ -2238,10 +2238,14 @@ setInterval(lvClock,1000);
 const SMC=new Map();
 function smUrl(u,px){const k=u+'|'+px;if(SMC.has(k))return SMC.get(k);
  const pr=new Promise(res=>{const im=new Image();im.crossOrigin='anonymous';im.decoding='async';
-  im.onload=()=>{try{const t=Math.round(px*Math.min(3,Math.max(2,devicePixelRatio||1)));let w=im.naturalWidth,h=im.naturalHeight;if(Math.min(w,h)<=t*1.2)return res(null);
+  im.onload=()=>{try{const t=Math.round(px*Math.max(1,devicePixelRatio||1)); /* exactly the screen pixels, so the browser shows it 1:1 with no extra blur */let w=im.naturalWidth,h=im.naturalHeight;if(Math.min(w,h)<=t*1.2)return res(null);
    let c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0);
-   while(Math.min(w,h)/2>=t){const n=document.createElement('canvas');n.width=Math.round(w/2);n.height=Math.round(h/2);const x=n.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(c,0,0,n.width,n.height);c=n;w=n.width;h=n.height}
+   while(Math.min(w,h)/4>=t){const n=document.createElement('canvas');n.width=Math.round(w/2);n.height=Math.round(h/2);const x=n.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(c,0,0,n.width,n.height);c=n;w=n.width;h=n.height}
    const r=t/Math.min(w,h),f=document.createElement('canvas');f.width=Math.round(w*r);f.height=Math.round(h*r);const fx=f.getContext('2d');fx.imageSmoothingEnabled=true;fx.imageSmoothingQuality='high';fx.drawImage(c,0,0,f.width,f.height);
+   /* a light unsharp pass: the smooth downscale loses some crispness, this brings the detail back without the jagged edges */
+   try{const W=f.width,H=f.height,id=fx.getImageData(0,0,W,H),d=id.data,o=new Uint8ClampedArray(d),A=.3;
+    for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){const i=(y*W+x)*4;for(let ch=0;ch<3;ch++){const v=o[i+ch]*(1+4*A)-A*(o[i-4+ch]+o[i+4+ch]+o[i-W*4+ch]+o[i+W*4+ch]);d[i+ch]=v}}
+    fx.putImageData(id,0,0)}catch(e){}
    f.toBlob(b=>res(b?URL.createObjectURL(b):null),'image/png')}catch(e){res(null)}};
   im.onerror=()=>res(null);im.src=u});
  SMC.set(k,pr);return pr}
