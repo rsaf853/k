@@ -676,11 +676,11 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jk{position:relative}
 .jkrack{--jh:360px;transition:--jh .6s cubic-bezier(.3,.8,.2,1);display:flex;align-items:flex-end;gap:1px;padding:20px 2px 10px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
 .jkrack::-webkit-scrollbar{display:none}
-.jk.open .jkrack{--jh:150px}
+.jk.open .jkrack{--jh:190px}
 .jksp{flex:none;display:flex;align-items:flex-end;height:var(--jh);cursor:pointer;transition:transform .35s cubic-bezier(.3,.8,.2,1)}
 .jksp:not(.cur):hover{transform:translateY(-10px)}
 .jksp:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
-.jkspi{flex:none;height:100%;width:calc(var(--jh)*.075);overflow:hidden;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25));transition:width .55s cubic-bezier(.3,.8,.2,1),opacity .3s}
+.jkspi{flex:none;height:100%;width:calc(var(--jh)*.075);overflow:hidden;transition:width .55s cubic-bezier(.3,.8,.2,1),opacity .3s}
 .jkspi img{display:block;width:100%;height:100%}
 .jkspi.gen{box-sizing:border-box;background:var(--soft);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;container-type:size}
 .jkspi.gen span{writing-mode:vertical-rl;font:700 min(52cqw,3cqh)/1 var(--sans);letter-spacing:.2em;white-space:nowrap;overflow:hidden}
@@ -690,7 +690,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jkcap{display:flex;align-items:center;gap:6px;min-height:28px;padding-top:8px;font:700 10px var(--sans);letter-spacing:.1em;color:var(--mut)}
 .jkcap .btn{margin-left:auto}
 .jk.open .jkcap{display:none}
-.jkst{position:absolute;left:4px;bottom:0;height:var(--jh);width:calc(var(--jh)*1.143);opacity:0;transition:opacity .35s;filter:drop-shadow(0 6px 8px rgba(0,0,0,.28)) drop-shadow(0 1px 2px rgba(0,0,0,.2))}
+.jkst{position:absolute;left:4px;bottom:0;height:var(--jh);width:calc(var(--jh)*1.143);opacity:0;transition:opacity .35s}
 .jkst.in{opacity:1}
 .jkst.now,.jkst.now *{transition:none!important}
 .jkcase{position:absolute;inset:0;z-index:2}
@@ -712,7 +712,6 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jksh{position:absolute;inset:0;border-radius:50%;pointer-events:none;-webkit-mask:radial-gradient(circle closest-side,transparent 0 29%,#000 30.5% 98.5%,transparent 99.5%);mask:radial-gradient(circle closest-side,transparent 0 29%,#000 30.5% 98.5%,transparent 99.5%)}
 .jksh.a{mix-blend-mode:screen;opacity:.9;background:conic-gradient(from 205deg,transparent 0,rgba(255,255,255,.75) 4%,rgba(255,120,200,.55) 6.5%,rgba(255,235,120,.5) 8.5%,rgba(120,230,170,.45) 10.5%,rgba(110,190,255,.55) 12.5%,rgba(190,140,255,.4) 14.5%,transparent 19%,transparent 50%,rgba(255,255,255,.65) 54%,rgba(255,120,200,.45) 56.5%,rgba(255,235,120,.4) 58.5%,rgba(110,190,255,.45) 61%,transparent 66%)}
 .jksh.b{mix-blend-mode:soft-light;opacity:.9;background:linear-gradient(135deg,rgba(255,255,255,.85),rgba(255,255,255,0) 45%,rgba(0,0,0,.35) 100%)}
-.jksh.c{mix-blend-mode:screen;background:radial-gradient(ellipse 12% 4.5% at 74% 24%,rgba(255,255,255,.95),transparent 70%),radial-gradient(ellipse 7% 2.6% at 80% 76%,rgba(255,255,255,.75),transparent 70%)}
 .jkshd{position:absolute;inset:0;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .4s;background:linear-gradient(90deg,rgba(0,0,0,.55) 0 51.5%,rgba(0,0,0,.28) 53%,rgba(0,0,0,.08) 60%,transparent 68%)}
 .jkst.out .jkshd{opacity:1;transition-delay:.7s}
 .jkpl{display:none;padding-top:14px}
@@ -2243,7 +2242,7 @@ function jkStop(){JK.on=false;try{JK.yt&&JK.yt.stopVideo()}catch(e){}JK.live=fal
 /* progress: poll the player while the home page is on screen; leaving the page stops the music */
 function jkTick(){if(JK.tick)return;JK.tick=setInterval(()=>{if(JK.ready&&JK.on){try{JK.t=JK.yt.getCurrentTime();JK.d=JK.yt.getDuration()}catch(e){}jkBar()}jkMini()},500)}
 const jkCd=a=>a.cd?`<img class="a" src="${esc(a.cd)}" alt=""><img class="t" src="jk/cd-light.webp" alt="">`:`<svg viewBox="0 0 200 200" aria-hidden="true"><defs><mask id="jkm"><rect width="200" height="200" fill="#fff"/><circle cx="100" cy="100" r="57" fill="#777"/><circle cx="100" cy="100" r="12.5" fill="#000"/></mask></defs><g mask="url(#jkm)"><circle cx="100" cy="100" r="99" fill="#d9dcdf"/><circle cx="100" cy="100" r="95" fill="#c9cdd1"/><circle cx="100" cy="100" r="29" fill="#e9ebee"/></g><text x="100" y="58" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="12" letter-spacing="2" fill="#222">${esc(String(a.a||'').toUpperCase())}</text><text x="100" y="150" text-anchor="middle" font-family="Inter,sans-serif" font-weight="500" font-size="10" fill="#333">${esc(a.t||'')}</text></svg><img class="t" src="jk/cd-light.webp" alt="">`;
-function jkStageHtml(a){return`<div class="jkst" id="jkst"><div class="jksl"><div class="jkcd" id="jkcd">${jkCd(a)}</div><div class="jksh a"></div><div class="jksh b"></div><div class="jksh c"></div><div class="jkshd"></div></div>
+function jkStageHtml(a){return`<div class="jkst" id="jkst"><div class="jksl"><div class="jkcd" id="jkcd">${jkCd(a)}</div><div class="jksh a"></div><div class="jksh b"></div><div class="jkshd"></div></div>
  <div class="jkcase"><div class="jkhg"${a.sp?` style="background-image:url('${esc(a.sp)}')"`:''}></div><img src="jk/case.webp" alt=""><div class="jkcov${a.cov?'':' gen'}"${a.cov?` style="background-image:url('${esc(a.cov)}')"`:''}>${a.cov?'':esc(a.t||'')+'<small>'+esc(a.a||'')+'</small>'}</div><img src="jk/case-light.webp" alt=""></div></div>`}
 function lvJuke(){const el=$('#lvjk');if(!el)return;const L=jkList(),ed=em();if(JK.ai<0||!L[JK.ai])JK.ai=jkDef();const a=JK.ai>=0?L[JK.ai]:null;if(!a){JK.ai=-1;JK.al=null}
  el.innerHTML=`<div class="jk${a?' open':''}${JK.on?' playing':''}" id="jkv"><div class="jkrack" id="jkrack">${L.map((x,i)=>`<div class="jksp${i===JK.ai?' cur':''}" role="button" tabindex="0" data-jk="${i}" aria-label="${esc(x.a)} — ${esc(x.t)}">${x.sp?`<div class="jkspi"><img src="${esc(x.sp)}" alt="" loading="lazy"></div>`:`<div class="jkspi gen"><span>${esc(String(x.a+' · '+x.t).toUpperCase())}</span></div>`}<div class="jkbox"></div></div>`).join('')}</div>
