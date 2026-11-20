@@ -341,15 +341,11 @@ input,select,textarea{padding:6px 9px}
 .bn .lb{position:absolute;left:6px;top:6px;max-width:calc(100% - 12px);padding:2px 8px;background:var(--fg);color:var(--bg);font:700 11px/1.35 var(--sans);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .25s,transform .25s}
 .bn:hover .lb,.bn:active .lb,.bn:focus-visible .lb{opacity:1;transform:none}
 
-/* unified scrollbar: narrow (4px), square-edged, same everywhere */
-::-webkit-scrollbar{width:4px;height:4px;background:transparent}
-::-webkit-scrollbar-track{background:transparent;border-radius:0}
-::-webkit-scrollbar-thumb{background:transparent;border:0;border-radius:0;min-height:28px;min-width:28px}
-html.sb ::-webkit-scrollbar-thumb{background:var(--fg)} /* html.sb = scrolled within the last second; idle = hidden */
-::-webkit-scrollbar-thumb:hover{background:var(--mut)}
-::-webkit-scrollbar-button{display:none;width:0;height:0}
-::-webkit-scrollbar-corner{background:transparent}
-@supports not selector(::-webkit-scrollbar){*{scrollbar-width:thin;scrollbar-color:transparent transparent}html.sb *{scrollbar-color:var(--fg) transparent}}
+/* scrollbars: the browser draws none anywhere; while something scrolls, a small sharp square (black, white in dark mode) marks where you are along its edge */
+*{scrollbar-width:none}
+::-webkit-scrollbar{display:none;width:0;height:0}
+#sbi{position:fixed;left:0;top:0;z-index:2147483000;width:6px;height:6px;background:var(--fg);pointer-events:none;opacity:0;transition:opacity .3s}
+#sbi.on{opacity:1;transition:none}
 .puzzle-square{overflow:hidden}.puzzle-square .co{position:absolute;font:600 9px/1 var(--sans);font-style:normal;color:var(--mut);pointer-events:none}.puzzle-square .cr{left:3px;top:3px}.puzzle-square .cf{right:3px;bottom:3px}
 .puzzle-square.dot::after{content:"";position:absolute;width:26%;height:26%;border-radius:50%;background:var(--fg);opacity:.32;pointer-events:none}
 .puzzle-square.pcap::after{content:"";position:absolute;inset:5%;border:3px solid var(--fg);border-radius:50%;opacity:.32;pointer-events:none}
@@ -635,7 +631,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 /* ---------- HOME · live broadcast ---------- */
 .lv{padding-top:2px}
 .lvg{display:grid;grid-template-columns:minmax(280px,1fr) minmax(0,1.1fr);grid-template-areas:"t b" "p b";grid-template-rows:auto 1fr;column-gap:22px;align-items:start}
-.lvt{grid-area:t;margin-bottom:14px}.lvlft{grid-area:b}.lvrgt{grid-area:p}
+.lvt{grid-area:t;margin-bottom:20px}.lvlft{grid-area:b}.lvrgt{grid-area:p}
 .lvt1{display:flex;align-items:center;gap:10px}
 .lvchip{display:inline-flex;align-items:center;gap:6px;background:var(--fg);color:var(--bg);font:800 9.5px/1 var(--sans);letter-spacing:.14em;padding:5px 7px;text-transform:uppercase}.lvchip::before{content:"";width:6px;height:6px;background:var(--bg);animation:lvbk 1.4s steps(1) infinite}@keyframes lvbk{50%{opacity:0}}@media(prefers-reduced-motion:reduce){.lvchip::before{animation:none}}
 .lvcn{margin-left:auto;font:700 10.5px var(--sans);letter-spacing:.06em;color:var(--mut);font-variant-numeric:tabular-nums;text-transform:uppercase}.lvt1 .btn{flex:none}
@@ -815,8 +811,12 @@ input.jkr:hover::-moz-range-thumb,input.jkr:active::-moz-range-thumb,input.jkr:f
 .jkmpg s{flex:1;height:2px;background:var(--line);position:relative;text-decoration:none;cursor:pointer}.jkmpg s::before{content:"";position:absolute;inset:-7px 0}.jkmpg s i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--fg)}
 .jkmct{display:flex;align-items:center;padding:4px 10px 0 8px}
 .jkmini .jkib{width:22px;height:22px}.jkmini .jkib svg{width:9px;height:9px}
-.jkmini .jkvol{margin-left:auto}.jkmini .jkvol .jkib svg{width:14px;height:14px}.jkmini .jkvol input{width:56px}
-.jkmls{margin:8px 12px 10px;padding:0;list-style:none;overflow:auto;min-height:0;scrollbar-width:thin}
+.jkmini .jkvol{margin-left:auto}
+.jkmvh{display:flex;align-items:center;gap:4px;flex-direction:row-reverse}
+.jkmvh .jkib svg{width:14px!important;height:14px!important;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.jkmini:not(.mob) .jkmvh input{width:0;opacity:0;transition:width .25s cubic-bezier(.3,.8,.2,1),opacity .2s}
+.jkmini:not(.mob) .jkmvh:hover input,.jkmini:not(.mob) .jkmvh:focus-within input{width:64px;opacity:1}.jkmini .jkvol .jkib svg{width:14px;height:14px}.jkmini .jkvol input{width:56px}
+.jkmls{margin:8px 12px 10px;padding:0;list-style:none;overflow:auto;min-height:0}
 .jkmls li{display:flex;align-items:center;gap:8px;height:24px;font:500 11.5px var(--sans);cursor:pointer}
 .jkmls li:hover{background:var(--hl)}
 .jkmls em{flex:none;width:14px;font:600 9.5px var(--sans);font-style:normal;color:var(--mut);text-align:right}
@@ -2289,7 +2289,7 @@ function jkMini(){let m=document.getElementById('jkmini');const show=JK.live&&JK
  const parts=()=>`<div class="jkmhd"><span class="jkcd" id="jkmcd">${jkCd(a)}</span><span><b id="jkmt"></b><small id="jkma"></small></span><button class="jkib jkmx" type="button" data-jkm="${mob?'o':'x'}" aria-label="${mob?'fold the player':'stop and close'}">×</button></div>
   <div class="jkmpg"><span id="jkmtc">0:00</span><s id="jkmbar"><i id="jkmf"></i><b class="jkknob"></b></s><span id="jkmtd">0:00</span></div>
   <div class="jkmct"><button class="jkib" type="button" data-jkm="-" aria-label="previous">${JKI.prev}</button><button class="jkib" type="button" data-jkm="p" id="jkmp" aria-label="play / pause"></button><button class="jkib" type="button" data-jkm="+" aria-label="next">${JKI.next}</button>
-  <span class="jkvol"><input type="range" class="jkr" id="jkmvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></span></div>`;
+  <span class="jkvol jkmvh"><button class="jkib" type="button" data-jkm="m" id="jkmmu" aria-label="mute"></button><input type="range" class="jkr" id="jkmvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></span></div>`;
  const tl=()=>`<ol class="jkmls" id="jkmls">${T.map((x,k)=>`<li data-jkmt="${k}"><em>${k+1}</em><span>${esc(x.t)}</span></li>`).join('')}</ol>`;
  if(m.dataset.k!==key&&mob){m.dataset.k=key;m.classList.add('mob');
   m.innerHTML=`<button type="button" class="jkmod" data-jkm="o" aria-label="open the player"><span class="jkcd" id="jkmcd2">${jkCd(a)}</span></button>
@@ -2301,7 +2301,7 @@ function jkMini(){let m=document.getElementById('jkmini');const show=JK.live&&JK
   <div class="jkmbd">${parts()}${tl()}</div>`}
  m.hidden=false;m.classList.toggle('open',!!JK.mo);jkMiniFit(m);
  $('#jkmt').textContent=tr?tr.t:a.t;$('#jkma').textContent=a.a+' · '+a.t;$('#jkmp').innerHTML=JK.on?JKI.pause:JKI.play;$('#jkmcd').classList.toggle('go',JK.on);const c2=$('#jkmcd2');if(c2)c2.classList.toggle('go',JK.on);
- const vv=JK.mute?0:JKV;$('#jkmvo').style.setProperty('--v',vv+'%');
+ const vv=JK.mute?0:JKV;$('#jkmvo').style.setProperty('--v',vv+'%');$('#jkmmu').innerHTML=vv==0?JKI.off:vv<50?JKI.low:JKI.vol;
  m.querySelectorAll('#jkmls li').forEach((li,k)=>li.classList.toggle('cur',k===JK.cur));
  $('#jkmf').style.width=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';$('#jkmtc').textContent=jkFmt(JK.t);$('#jkmtd').textContent=jkFmt(JK.d)}
 document.addEventListener('click',e=>{const mi=e.target.closest&&e.target.closest('#jkmini');if(!mi)return;const T=jkTracks();let x;
@@ -3175,7 +3175,13 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(c('[data-iadj]'))return imgAdjust();
  if(c('[data-ireset]')){if(ADJT==='phone'){['ixML','iyML','izML','ixMD','iyMD','izMD','ihM'].forEach(k=>delete HOME[k]);paintVars();imgAdjustPhone();return}if(ADJT==='dark'){delete HOME.ixD;delete HOME.iyD;delete HOME.izD}else Object.assign(HOME,IMG_DEF);paintVars();imgAdjust(ADJT,true);return}
  if(c('[data-isave]')){ADJ=null;saveHome();closeM();return}});
-{let t=0;addEventListener('scroll',()=>{const h=document.documentElement.classList;h.add('sb');clearTimeout(t);t=setTimeout(()=>h.remove('sb'),900)},{capture:true,passive:true})} /* show scrollbars only while scrolling */
+{let t=0;const m=document.createElement('i');m.id='sbi';m.setAttribute('aria-hidden','true');document.body.appendChild(m);
+ addEventListener('scroll',e=>{let el=e.target,r,f,v=true;const S=6;
+  if(el===document||el===document.documentElement||el===document.body){el=document.scrollingElement||document.documentElement;const H=el.scrollHeight-innerHeight;if(H<=0)return;f=el.scrollTop/H;r={left:0,top:0,right:innerWidth,bottom:innerHeight,width:innerWidth,height:innerHeight}}
+  else{if(!el.getBoundingClientRect)return;const H=el.scrollHeight-el.clientHeight,W=el.scrollWidth-el.clientWidth;r=el.getBoundingClientRect();if(H>1)f=el.scrollTop/H;else if(W>1){v=false;f=el.scrollLeft/W}else return}
+  f=Math.max(0,Math.min(1,f));
+  if(v)m.style.transform=`translate(${Math.round(r.right-S-1)}px,${Math.round(r.top+2+f*(r.height-S-4))}px)`;else m.style.transform=`translate(${Math.round(r.left+2+f*(r.width-S-4))}px,${Math.round(r.bottom-S-1)}px)`;
+  m.classList.add('on');document.documentElement.classList.add('sb');clearTimeout(t);t=setTimeout(()=>{m.classList.remove('on');document.documentElement.classList.remove('sb')},900)},{capture:true,passive:true})} /* a square marks the scroll position while scrolling */
 {const tb=$('#top'),ta=$('#tpa'),tc=$('#tpb'),up=()=>{const mx=document.documentElement.scrollHeight-innerHeight,p=mx>0?Math.min(1,Math.max(0,scrollY/mx)):0,v=Math.round(p*100)+'%';tb.classList.toggle('on',scrollY>400);tb.style.setProperty('--p',v);ta.textContent=v;tc.textContent=v};
  addEventListener('scroll',up,{passive:true});addEventListener('resize',up);if(window.ResizeObserver)new ResizeObserver(up).observe(app);
  tb.onclick=()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});up()}
