@@ -676,7 +676,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jk{position:relative}
 .jkrack{--jh:360px;transition:--jh .6s cubic-bezier(.3,.8,.2,1);display:flex;align-items:flex-end;gap:1px;padding:20px 2px 10px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
 .jkrack::-webkit-scrollbar{display:none}
-.jk.open .jkrack{--jh:212px}
+.jk.open .jkrack{--jh:150px}
 .jksp{flex:none;display:flex;align-items:flex-end;height:var(--jh);cursor:pointer;transition:transform .35s cubic-bezier(.3,.8,.2,1)}
 .jksp:not(.cur):hover{transform:translateY(-10px)}
 .jksp:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
@@ -733,8 +733,6 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jkvol input{width:76px;height:16px;margin:0;padding:0;border:0;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;--v:21%}
 .jkvol input::-webkit-slider-runnable-track{height:2px;background:linear-gradient(var(--fg),var(--fg)) 0/var(--v) 100% no-repeat,var(--line)}
 .jkvol input::-moz-range-track{height:2px;background:var(--line)}.jkvol input::-moz-range-progress{height:2px;background:var(--fg)}
-.jkvol input::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;margin-top:-4px;border-radius:50%;background:var(--fg);border:0}
-.jkvol input::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:var(--fg);border:0}
 .jkls{max-height:240px;overflow:auto;margin:10px 0 0;padding:4px 0;list-style:none;border-top:1px solid var(--line)}
 .jkls li{display:flex;align-items:center;gap:10px;padding:0 6px;height:31px;cursor:pointer;font:500 12.5px var(--sans)}
 .jkls li:hover{background:var(--hl)}
@@ -745,6 +743,52 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jkls .eq{display:none;flex:none;align-items:flex-end;justify-content:flex-end;gap:2px;width:18px;height:10px}.jkls .eq i{width:2px;height:30%;background:var(--fg)}
 .jk.playing .jkls .eq i{animation:jkeq .9s ease-in-out infinite alternate}.jkls .eq i:nth-child(2){animation-delay:-.3s}.jkls .eq i:nth-child(3){animation-delay:-.6s}
 @keyframes jkeq{from{height:25%}to{height:100%}}
+/* home player (T2a): title with the controls at the right edge, progress, album name over a flowing track list, L1 lyrics */
+.jkrow{display:flex;align-items:center;gap:12px}
+.jkrow .jkttl{flex:1;min-width:0;font-size:15px}
+.jkrow .jkct{flex:none;margin:0;gap:0;margin-right:-5px}
+.jkrow .jkct .jkib{width:22px;height:22px}.jkrow .jkct .jkib svg{width:9px;height:9px}
+.jkrow .jkr{flex:none;width:64px}
+.jkah{display:flex;align-items:flex-end;gap:8px;margin-top:14px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+.jkah>div{flex:1;min-width:0}
+.jkah small{display:block;font:600 11px/1.2 var(--sans);letter-spacing:-.03em;color:var(--mut);opacity:.7}
+.jkah b{display:block;margin-top:1px;font:900 17px/1.1 var(--sans);letter-spacing:-.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jkah .btn{flex:none}
+.jkly{flex:none;width:22px;height:22px;display:grid;place-items:center;padding:0;border:0;background:none;color:var(--mut);cursor:pointer}
+.jkly svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.jkly:hover{color:var(--fg)}.jkly.on{color:var(--fg);background:var(--hl)}
+.jkfl{margin:10px 0 0;font:500 13px/1.85 var(--sans)}
+.jkfl button{display:inline;padding:0;border:0;background:none;font:inherit;color:var(--mut);opacity:.8;cursor:pointer;text-align:left}
+.jkfl button sup{font:700 8px var(--sans);margin-right:2px}
+.jkfl button:hover{color:var(--fg);opacity:1}
+.jkfl button.cur{color:var(--fg);opacity:1;font-weight:800}
+.jkfl button.nl{text-decoration:line-through;text-decoration-color:var(--line)}
+.jkfl i{font-style:normal;color:var(--line);margin:0 6px}
+.jklyr{position:relative;height:190px;overflow:hidden;margin-top:4px;-webkit-mask:linear-gradient(transparent,#000 18% 82%,transparent);mask:linear-gradient(transparent,#000 18% 82%,transparent)}
+.jklyr ol{margin:0;padding:72px 0 0;list-style:none;transition:transform .6s cubic-bezier(.3,.8,.2,1)}
+.jklyr li{font:800 19px/1.3 var(--sans);letter-spacing:-.04em;color:var(--mut);opacity:.35;padding:5px 0;transition:opacity .4s,color .4s}
+.jklyr li.c{opacity:1;color:var(--fg)}
+.jklyr.plain ol{padding-top:4px}.jklyr.plain li{opacity:.9;color:var(--fg);font-size:15px}
+.jklyr.plain{overflow:auto;-webkit-mask:none;mask:none}
+.jk .jkpl[data-v="l"] .jkfl,.jk .jkpl:not([data-v="l"]) .jklyr{display:none}
+/* range controls across the site: a 2px line and a flat square handle */
+input[type=range]{-webkit-appearance:none;appearance:none;height:16px;margin:0;padding:0;border:0;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--line)}
+input[type=range]::-moz-range-track{height:2px;background:var(--line)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:6px;margin-top:-2px;border:0;border-radius:0;background:var(--fg)}
+input[type=range]::-moz-range-thumb{width:10px;height:6px;border:0;border-radius:0;background:var(--fg)}
+input[type=range]:focus-visible{outline:1px solid var(--fg);outline-offset:3px}
+/* the music volume: filled to the level, handle only on hover */
+input.jkr{--v:21%}
+input.jkr::-webkit-slider-runnable-track{background:linear-gradient(var(--fg),var(--fg)) 0/var(--v) 100% no-repeat,var(--line)}
+input.jkr::-moz-range-progress{height:2px;background:var(--fg)}
+input.jkr::-webkit-slider-thumb{opacity:0;transition:opacity .15s}input.jkr::-moz-range-thumb{opacity:0;transition:opacity .15s}
+input.jkr:hover::-webkit-slider-thumb,input.jkr:active::-webkit-slider-thumb,input.jkr:focus-visible::-webkit-slider-thumb{opacity:1}
+input.jkr:hover::-moz-range-thumb,input.jkr:active::-moz-range-thumb,input.jkr:focus-visible::-moz-range-thumb{opacity:1}
+/* progress bars: the same handle at the playing point, on hover */
+.jkknob{position:absolute;top:50%;left:var(--p,0%);width:10px;height:6px;margin:-3px 0 0 -5px;background:var(--fg);opacity:0;transition:opacity .15s;pointer-events:none}
+.jkbar:hover .jkknob,#jkmbar:hover .jkknob{opacity:1}
+.jkbar .jkknob{top:8px}
 .jkmsg{margin:8px 0 0;font:500 11.5px var(--sans);color:var(--mut)}.jkmsg:empty{display:none}
 .jkyt{position:fixed;left:0;bottom:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
 /* mini player on other pages: the album's spine stands in the corner; tap it and the player opens from it like a case lid, the other albums standing as thin spines beside it */
@@ -2204,20 +2248,27 @@ function jkStageHtml(a){return`<div class="jkst" id="jkst"><div class="jksl"><di
 function lvJuke(){const el=$('#lvjk');if(!el)return;const L=jkList(),ed=em();if(JK.ai<0||!L[JK.ai])JK.ai=jkDef();const a=JK.ai>=0?L[JK.ai]:null;if(!a){JK.ai=-1;JK.al=null}
  el.innerHTML=`<div class="jk${a?' open':''}${JK.on?' playing':''}" id="jkv"><div class="jkrack" id="jkrack">${L.map((x,i)=>`<div class="jksp${i===JK.ai?' cur':''}" role="button" tabindex="0" data-jk="${i}" aria-label="${esc(x.a)} — ${esc(x.t)}">${x.sp?`<div class="jkspi"><img src="${esc(x.sp)}" alt="" loading="lazy"></div>`:`<div class="jkspi gen"><span>${esc(String(x.a+' · '+x.t).toUpperCase())}</span></div>`}<div class="jkbox"></div></div>`).join('')}</div>
  <div class="jkcap"><span>${L.length?L.length+' ALBUMS':'NO ALBUMS YET'}</span>${ed?'<button class="btn" data-jkadd>+ ALBUM</button>':''}</div>
- <div class="jkpl"><div class="jkhd"><div><div class="jkttl" id="jkttl"></div><div class="jkart" id="jkart"></div></div>${ed?'<button class="btn" data-jkadd>+ ALBUM</button><button class="btn" data-jked>EDIT</button>':''}</div>
- <div class="jkpg"><span class="jktm" id="jktc">0:00</span><div class="jkbar" id="jkbar" role="slider" aria-label="position"><i id="jkfill"></i></div><span class="jktm r" id="jktd">0:00</span></div>
- <div class="jkct"><button class="jkib" type="button" data-jkp="-" aria-label="previous">${JKI.prev}</button><button class="jkib jkpp" type="button" data-jkp="p" id="jkpp" aria-label="play / pause"></button><button class="jkib" type="button" data-jkp="+" aria-label="next">${JKI.next}</button>
- <div class="jkvol"><button class="jkib" type="button" data-jkp="m" id="jkmu" aria-label="mute"></button><input type="range" id="jkvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></div></div>
- <p class="jkmsg" id="jkmsg"></p><ol class="jkls" id="jkls"></ol></div></div>`;
+ <div class="jkpl" id="jkpl"><div class="jkrow"><div class="jkttl" id="jkttl"></div><div class="jkct"><button class="jkib" type="button" data-jkp="-" aria-label="previous">${JKI.prev}</button><button class="jkib" type="button" data-jkp="p" id="jkpp" aria-label="play / pause"></button><button class="jkib" type="button" data-jkp="+" aria-label="next">${JKI.next}</button></div><input type="range" class="jkr" id="jkvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></div>
+ <div class="jkpg"><span class="jktm" id="jktc">0:00</span><div class="jkbar" id="jkbar" role="slider" aria-label="position"><i id="jkfill"></i><b class="jkknob"></b></div><span class="jktm r" id="jktd">0:00</span></div>
+ <div class="jkah"><div><small id="jkar"></small><b id="jkal"></b></div>${ed?'<button class="btn" data-jkadd>+ ALBUM</button><button class="btn" data-jked>EDIT</button>':''}<button class="jkly" type="button" data-jkp="l" id="jkly" aria-label="lyrics" title="Lyrics" hidden><svg viewBox="0 0 16 16"><path d="M2.5 4h11M2.5 8h11M2.5 12h6"/></svg></button></div>
+ <p class="jkmsg" id="jkmsg"></p><p class="jkfl" id="jkls"></p><div class="jklyr" id="jklyr"><ol></ol></div></div></div>`;
  if(a){JK.al=a;const box=el.querySelector('.jksp.cur .jkbox');box.innerHTML=jkStageHtml(a);const st=$('#jkst');st.classList.add('now','in','out');requestAnimationFrame(()=>st.classList.remove('now'))}
  jkList2();jkPaint();jkTick();requestAnimationFrame(jkReveal)}
 function jkList2(){const ul=$('#jkls');if(!ul||!JK.al)return;const T=jkTracks();
- ul.innerHTML=T.map((x,k)=>`<li data-jkt="${k}"><span class="n">${k+1}</span><span class="eq"><i></i><i></i><i></i></span><span class="t">${esc(x.t)}</span>${!x.v&&!jkPlMode()?'<span class="nl">NO LINK</span>':''}</li>`).join('');jkPaint()}
-function jkBar(){const mf=$('#jkmf');if(mf){mf.style.width=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';$('#jkmtc').textContent=jkFmt(JK.t);$('#jkmtd').textContent=jkFmt(JK.d)}const f=$('#jkfill');if(!f)return;f.style.width=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';$('#jktc').textContent=jkFmt(JK.t);$('#jktd').textContent=jkFmt(JK.d)}
+ ul.innerHTML=T.map((x,k)=>`<button type="button" data-jkt="${k}"${!x.v&&!jkPlMode()?' class="nl" title="No YouTube link yet"':''}><sup>${k+1}</sup>${esc(x.t)}</button>`).join('<i>/</i>');JK.lyk=null;jkPaint()}
+/* lyrics: a track may carry LRC text ([mm:ss.xx] line); timed lines follow the music, untimed ones just scroll */
+const jkLrc=t=>{const L=[];String(t||'').split(/\n/).forEach(r=>{const ts=[...r.matchAll(/\[(\d+):(\d+(?:\.\d+)?)\]/g)],x=r.replace(/\[[^\]]*\]/g,'').trim();if(ts.length)ts.forEach(m=>L.push({s:+m[1]*60+ +m[2],x}));else if(x)L.push({s:-1,x})});return L.sort((a,b)=>a.s-b.s)};
+function jkLyr(){const T=jkTracks(),tr=T[JK.cur],box=$('#jklyr'),bt=$('#jkly'),pl=$('#jkpl');if(!box)return;const has=!!(tr&&tr.ly&&tr.ly.trim());
+ if(bt){bt.hidden=!has;bt.classList.toggle('on',has&&!!JK.lyOn)}if(pl)pl.dataset.v=has&&JK.lyOn?'l':'t';
+ const key=JK.ai+':'+JK.cur;if(JK.lyk!==key){JK.lyk=key;JK.lyl=has?jkLrc(tr.ly):[];JK.lyi=-2;const tm=JK.lyl.some(x=>x.s>=0);box.classList.toggle('plain',!tm);
+  box.querySelector('ol').innerHTML=JK.lyl.map(x=>`<li>${esc(x.x)||'&nbsp;'}</li>`).join('');box.querySelector('ol').style.transform=''}
+ if(!JK.lyl.length||!JK.lyl.some(x=>x.s>=0))return;let n=-1;JK.lyl.forEach((x,k)=>{if(x.s>=0&&x.s<=JK.t+.2)n=k});if(n===JK.lyi)return;JK.lyi=n;
+ const li=box.querySelectorAll('li');li.forEach((x,k)=>x.classList.toggle('c',k===n));const k=Math.max(0,n);if(li[k])box.querySelector('ol').style.transform=`translateY(${-(li[k].offsetTop-li[0].offsetTop)}px)`}
+function jkBar(){const pc=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';document.querySelectorAll('#jkbar,#jkmbar').forEach(b=>b.style.setProperty('--p',pc));if($('#jklyr'))jkLyr();const mf=$('#jkmf');if(mf){mf.style.width=pc;$('#jkmtc').textContent=jkFmt(JK.t);$('#jkmtd').textContent=jkFmt(JK.d)}const f=$('#jkfill');if(!f)return;f.style.width=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';$('#jktc').textContent=jkFmt(JK.t);$('#jktd').textContent=jkFmt(JK.d)}
 function jkPaint(){const v=$('#jkv');if(!v)return jkMini();v.classList.toggle('playing',JK.on);const cd=$('#jkcd');if(cd)cd.classList.toggle('go',JK.on);
- const pp=$('#jkpp');if(pp)pp.innerHTML=JK.on?JKI.pause:JKI.play;const vv=JK.mute?0:JKV,mu=$('#jkmu');if(mu)mu.innerHTML=vv==0?JKI.off:vv<50?JKI.low:JKI.vol;const vo=$('#jkvo');if(vo)vo.style.setProperty('--v',vv+'%');
- if(JK.al){const T=jkTracks(),tr=T[JK.cur];$('#jkttl').textContent=tr?tr.t:JK.al.t;$('#jkart').textContent=JK.al.a+' · '+JK.al.t;
-  document.querySelectorAll('#jkls li').forEach((li,k)=>li.classList.toggle('cur',k===JK.cur))}
+ const pp=$('#jkpp');if(pp)pp.innerHTML=JK.on?JKI.pause:JKI.play;const vv=JK.mute?0:JKV,vo=$('#jkvo');if(vo)vo.style.setProperty('--v',vv+'%');
+ if(JK.al){const T=jkTracks(),tr=T[JK.cur];$('#jkttl').textContent=tr?tr.t:JK.al.t;$('#jkar').textContent=JK.al.a||'';$('#jkal').textContent=JK.al.t||'';
+  document.querySelectorAll('#jkls [data-jkt]').forEach(b=>b.classList.toggle('cur',+b.dataset.jkt===JK.cur));jkLyr()}
  const m=$('#jkmsg');if(m)m.textContent=JK.msg||'';jkBar();jkMini()}
 const jkItem=i=>document.querySelector(`#jkrack .jksp[data-jk="${i}"]`);
 /* mini player: shown on every other page while an album is loaded; the disc keeps turning with the music */
@@ -2234,9 +2285,9 @@ function jkMini(){let m=document.getElementById('jkmini');const show=JK.live&&JK
  if(!m){m=document.createElement('div');m.id='jkmini';m.className='jkmini';m.setAttribute('role','region');m.setAttribute('aria-label','music');document.body.appendChild(m)}
  const a=JK.al,L=jkList(),T=jkTracks(),tr=T[JK.cur],mob=innerWidth<=720,key=(mob?'m':'d')+JK.ai+'|'+(a.t||'')+'|'+T.length+'|'+L.length;
  const parts=()=>`<div class="jkmhd"><span class="jkcd" id="jkmcd">${jkCd(a)}</span><span><b id="jkmt"></b><small id="jkma"></small></span><button class="jkib jkmx" type="button" data-jkm="${mob?'o':'x'}" aria-label="${mob?'fold the player':'stop and close'}">×</button></div>
-  <div class="jkmpg"><span id="jkmtc">0:00</span><s id="jkmbar"><i id="jkmf"></i></s><span id="jkmtd">0:00</span></div>
+  <div class="jkmpg"><span id="jkmtc">0:00</span><s id="jkmbar"><i id="jkmf"></i><b class="jkknob"></b></s><span id="jkmtd">0:00</span></div>
   <div class="jkmct"><button class="jkib" type="button" data-jkm="-" aria-label="previous">${JKI.prev}</button><button class="jkib" type="button" data-jkm="p" id="jkmp" aria-label="play / pause"></button><button class="jkib" type="button" data-jkm="+" aria-label="next">${JKI.next}</button>
-  <span class="jkvol"><button class="jkib" type="button" data-jkm="m" id="jkmmu" aria-label="mute"></button><input type="range" id="jkmvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></span></div>`;
+  <span class="jkvol"><input type="range" class="jkr" id="jkmvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></span></div>`;
  const tl=()=>`<ol class="jkmls" id="jkmls">${T.map((x,k)=>`<li data-jkmt="${k}"><em>${k+1}</em><span>${esc(x.t)}</span></li>`).join('')}</ol>`;
  if(m.dataset.k!==key&&mob){m.dataset.k=key;m.classList.add('mob');
   m.innerHTML=`<button type="button" class="jkmod" data-jkm="o" aria-label="open the player"><span class="jkcd" id="jkmcd2">${jkCd(a)}</span></button>
@@ -2248,7 +2299,7 @@ function jkMini(){let m=document.getElementById('jkmini');const show=JK.live&&JK
   <div class="jkmbd">${parts()}${tl()}</div>`}
  m.hidden=false;m.classList.toggle('open',!!JK.mo);jkMiniFit(m);
  $('#jkmt').textContent=tr?tr.t:a.t;$('#jkma').textContent=a.a+' · '+a.t;$('#jkmp').innerHTML=JK.on?JKI.pause:JKI.play;$('#jkmcd').classList.toggle('go',JK.on);const c2=$('#jkmcd2');if(c2)c2.classList.toggle('go',JK.on);
- const vv=JK.mute?0:JKV;$('#jkmmu').innerHTML=vv==0?JKI.off:vv<50?JKI.low:JKI.vol;$('#jkmvo').style.setProperty('--v',vv+'%');
+ const vv=JK.mute?0:JKV;$('#jkmvo').style.setProperty('--v',vv+'%');
  m.querySelectorAll('#jkmls li').forEach((li,k)=>li.classList.toggle('cur',k===JK.cur));
  $('#jkmf').style.width=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';$('#jkmtc').textContent=jkFmt(JK.t);$('#jkmtd').textContent=jkFmt(JK.d)}
 document.addEventListener('click',e=>{const mi=e.target.closest&&e.target.closest('#jkmini');if(!mi)return;const T=jkTracks();let x;
@@ -2297,11 +2348,13 @@ async function jkCut(f){const u=URL.createObjectURL(f);try{const im=await new Pr
  x.globalAlpha=.5;x.beginPath();x.arc(R,R,R*.285,0,Math.PI*2);x.arc(R,R,R*.125,0,Math.PI*2,true);x.fill('evenodd');
  const b=await new Promise(ok=>c.toBlob(ok,'image/webp',.9));return new File([b],'cd.webp',{type:'image/webp'})}finally{URL.revokeObjectURL(u)}}
 function jkEdit(i){const n=i==null,a=n?{a:'',t:'',sp:'',cov:'',cd:'',tr:[],pl:''}:jkList()[i];if(!a)return;
+ const lyTxt=(a.tr||[]).map((x,k)=>x.ly&&x.ly.trim()?'# '+(k+1)+' '+x.t+'\n'+x.ly.trim():'').filter(Boolean).join('\n\n');
  const trTxt=(a.pl?['https://www.youtube.com/playlist?list='+a.pl]:[]).concat((a.tr||[]).map(x=>x.t+(x.v?' | https://youtu.be/'+x.v:''))).join('\n');
  const img=(k,lab,hint)=>`<label>${lab}</label><div style="display:flex;gap:6px;align-items:center"><input name="${k}" placeholder="URL" value="${esc(a[k]||'')}" style="flex:1"><input type="file" name="${k}f" accept="image/*" style="max-width:180px"></div>${hint?`<p class="st" style="margin:2px 0 0">${hint}</p>`:''}`;
  openM(`<h3>JUKEBOX · ${n?'NEW ALBUM':'EDIT ALBUM'}</h3><form id="f"><label>Artist</label><input name="a" value="${esc(a.a||'')}"><label>Album</label><input name="t" value="${esc(a.t||'')}">
  ${img('sp','Spine photo','A tall photo of the case spine; it stands on the shelf and shows in the case hinge.')}${img('cov','Cover')}${img('cd','CD photo','Crop it to the edge of the disc; an upload is cut into a circle with the hole punched out.')}
  <label>Tracks — one per line: <code>Title | YouTube link</code> (or one YouTube playlist link)</label><textarea name="tr" style="min-height:170px;font-size:12px">${esc(trTxt)}</textarea>
+ <label>Lyrics — start each song with <code># number</code>, then its lines; <code>[01:23.40]</code> in front of a line makes it follow the music</label><textarea name="ly" style="min-height:140px;font-size:12px" placeholder="# 1\n[00:12.00] first line\n[00:16.50] second line">${esc(lyTxt)}</textarea>
  <p id="st" class="st"></p><div class="acts">${n?'':'<button type="button" class="btn" data-jkmv="-1" title="Move left">◀</button><button type="button" class="btn" data-jkmv="1" title="Move right">▶</button><button type="button" class="btn" data-jkdel>DELETE</button>'}<button type="button" class="btn" data-x>CANCEL</button><button class="btn pri">SAVE</button></div></form>`);
  const after=async()=>{await saveHome();closeM();if(JK.ai>=0)jkStop();JK.ai=-1;JK.al=null;lvJuke()};
  if(!n){$('#mb').querySelectorAll('[data-jkmv]').forEach(b=>b.onclick=async()=>{const L=jkOwn(),j=i+ +b.dataset.jkmv;if(j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];await after()});
@@ -2311,6 +2364,7 @@ function jkEdit(i){const n=i==null,a=n?{a:'',t:'',sp:'',cov:'',cd:'',tr:[],pl:''
   F.elements.tr.value.split('\n').map(x=>x.trim()).filter(Boolean).forEach(line=>{const m=/^(.*?)\s*\|\s*(\S+)\s*$/.exec(line),t=m?m[1].trim():line,u=m?m[2]:(/^https?:\/\//.test(line)?line:'');
    const pl=ytList(u),v=ytId(u);if(pl&&!v&&!m){o.pl=pl;return}if(pl&&!o.pl&&!v)o.pl=pl;o.tr.push({t:t===u?'':t,v})});
   o.tr=o.tr.filter(x=>x.t||x.v).map((x,k)=>({t:x.t||'Track '+(k+1),v:x.v}));
+  {let cur=-1;const B={};F.elements.ly.value.split('\n').forEach(r=>{const m=/^#\s*(\d+)/.exec(r);if(m){cur=+m[1]-1;B[cur]=[];return}if(cur>=0)B[cur].push(r)});Object.keys(B).forEach(k=>{const t=B[k].join('\n').trim();if(o.tr[k]&&t)o.tr[k].ly=t})}
   if(!o.a&&!o.t)return msg('Add an artist or an album name.');
   const L=jkOwn();if(n)L.push(o);else L[i]=o;await after()}}
 document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('#jkv'))return;const t=e.target;let x;
@@ -2320,7 +2374,8 @@ document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('#
   if(k==='p'){JK.touched=true;jkToggle()}
   else if(k==='-')jkGo(JK.t>3?JK.cur:Math.max(0,JK.cur-1));
   else if(k==='+')jkGo(JK.cur+1>=T.length?0:JK.cur+1);
-  else if(k==='m'){JK.mute=!JK.mute;if(!JK.mute&&JKV==0)JKV=21;$('#jkvo').value=JK.mute?0:JKV;jkVolApply();jkPaint()}return}
+  else if(k==='m'){JK.mute=!JK.mute;if(!JK.mute&&JKV==0)JKV=21;$('#jkvo').value=JK.mute?0:JKV;jkVolApply();jkPaint()}
+  else if(k==='l'){JK.lyOn=!JK.lyOn;JK.lyi=-2;jkLyr()}return}
  if(x=t.closest('#jkbar')){if(!JK.d||!JK.yt)return;const r=x.getBoundingClientRect(),p=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));try{JK.yt.seekTo(p*JK.d,true)}catch(z){}JK.t=p*JK.d;return jkBar()}
  if(x=t.closest('[data-jkt]'))return jkGo(+x.dataset.jkt);
  if(x=t.closest('[data-jk]'))return jkPick(+x.dataset.jk)});
