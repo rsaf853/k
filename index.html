@@ -745,7 +745,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 /* home player (T2a): title with the controls at the right edge, progress, album name over a flowing track list, L1 lyrics */
 .jkrow{display:flex;align-items:center;gap:12px}
 .jkrow .jkttl{flex:1;min-width:0;font-size:17px;letter-spacing:-.06em}
-@media(min-width:721px){.jk.open .jkrack{--jh:220px}}
+@media(min-width:721px){.jk.open .jkrack{--jh:230px}}
 .jkrow .jkct{flex:none;margin:0;gap:0;margin-right:-5px}
 .jkrow .jkct .jkib{width:22px;height:22px}.jkrow .jkct .jkib svg{width:9px;height:9px}
 .jkrow .jkr{flex:none;width:64px}
@@ -2328,7 +2328,7 @@ function jkAuto(){if(JKAUTO||JK.live)return;JKAUTO=true;
 const jkDef=()=>{const L=jkList(),k=L.findIndex(a=>/love at first sting/i.test(a.t||''));return L.length?(k<0?L.length-1:k):-1};
 /* keep the open case in view inside the shelf (only works once the tab is visible) */
 /* the open case shrinks with the panel so the disc never runs off its right edge: the slot holds the other spines plus the case and the disc */
-function jkFit(){const r=$('#jkrack');if(!r||!r.clientWidth)return;const n=Math.max(0,r.querySelectorAll('.jksp').length-1),max=innerWidth>720?220:190;
+function jkFit(){const r=$('#jkrack');if(!r||!r.clientWidth)return;const n=Math.max(0,r.querySelectorAll('.jksp').length-1),max=innerWidth>720?230:190;
  const h=Math.floor(Math.max(120,Math.min(max,(r.clientWidth-24-n)/(1.62+n*.075))));r.style.setProperty('--jh',h+'px')}
 if(window.ResizeObserver){const ro=new ResizeObserver(()=>jkFit());document.addEventListener('jk:rack',()=>{const r=$('#jkrack');if(r)ro.observe(r)})}else addEventListener('resize',jkFit);
 function jkReveal(){const r=$('#jkrack'),it=r&&r.querySelector('.jksp.cur');if(!r||!it||!r.clientWidth)return;const b=it.getBoundingClientRect(),rr=r.getBoundingClientRect(),w=it.querySelector('.jkbox').offsetWidth?b.width:b.width+r.clientHeight*1.62;
