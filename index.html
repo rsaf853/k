@@ -776,7 +776,27 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jkmls em{flex:none;width:14px;font:600 9.5px var(--sans);font-style:normal;color:var(--mut);text-align:right}
 .jkmls span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .jkmls li.cur{font-weight:800}.jkmls li.cur em{color:var(--fg)}
-@media(prefers-reduced-motion:reduce){.jkmbd,.jkmnb{transition:none}}
+/* phones: only the turning disc in the corner; tapping it raises a sheet from the bottom edge */
+.jkmini.mob{left:0;right:0;bottom:0;height:auto;display:block;pointer-events:none;z-index:36}
+.jkmini.mob>*{pointer-events:auto}
+.jkmod{position:absolute;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));width:48px;height:48px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer;transition:opacity .2s,transform .3s cubic-bezier(.3,.8,.2,1)}
+.jkmod .jkcd{position:absolute;inset:0}
+.jkmini.mob.open .jkmod{opacity:0;transform:scale(.6);pointer-events:none}
+.jkms{position:relative;box-sizing:border-box;border-top:1px solid var(--fg);background:var(--bg);color:var(--fg);padding:6px 12px calc(10px + env(safe-area-inset-bottom,0px));
+  transform:translateY(105%);visibility:hidden;transition:transform .4s cubic-bezier(.3,.8,.2,1),visibility 0s .4s}
+.jkmini.mob.open .jkms{transform:none;visibility:visible;transition:transform .4s cubic-bezier(.3,.8,.2,1)}
+.jkmgr{display:block;width:100%;height:16px;padding:0;border:0;background:none;cursor:pointer;position:relative}.jkmgr::after{content:"";position:absolute;left:50%;top:5px;width:34px;height:3px;margin-left:-17px;background:var(--line)}
+.jkms .jkmhd{padding:0 0 0 0}
+.jkms .jkmpg{padding:12px 0 0}
+.jkms .jkmct{padding:4px 0 0}
+.jkms .jkib{width:30px;height:30px}.jkms .jkib svg{width:10px;height:10px}
+.jkmr2{display:flex;align-items:flex-end;gap:12px;margin-top:4px}
+.jkms .jkmls{flex:1;margin:0;max-height:150px}
+.jkms .jkmls li{height:30px;font-size:12px}
+.jkmab{display:flex;align-items:flex-end;gap:3px;padding-bottom:2px}
+.jkmab button{width:9px;height:44px;padding:0;border:0;background:var(--soft) center/140% 112% no-repeat;cursor:pointer}
+.jkmab button.c{height:52px;outline:1px solid var(--fg);outline-offset:1px}
+@media(prefers-reduced-motion:reduce){.jkmbd,.jkmnb,.jkms,.jkmod{transition:none}}
 @media(prefers-reduced-motion:reduce){.jkcd{animation:none}.jk.playing .jkls .eq i{animation:none}.jkrack,.jksp,.jkspi,.jkbox,.jksl,.jkst{transition:none}}
 @media(max-width:1080px){.lvg{grid-template-columns:1fr;grid-template-areas:"t" "b" "p"}.lvlft{margin-bottom:14px}}
 @media(max-width:720px){.lvt h3{font-size:28px}}
@@ -2212,22 +2232,27 @@ const jkSpBg=a=>a.sp?`background-image:url('${esc(a.sp)}')`:'';
 function jkMini(){let m=document.getElementById('jkmini');const show=JK.live&&JK.al&&!document.getElementById('jkv');
  if(!show){if(m)m.hidden=true;return}
  if(!m){m=document.createElement('div');m.id='jkmini';m.className='jkmini';m.setAttribute('role','region');m.setAttribute('aria-label','music');document.body.appendChild(m)}
- const a=JK.al,L=jkList(),T=jkTracks(),tr=T[JK.cur],key=JK.ai+'|'+(a.t||'')+'|'+T.length+'|'+L.length;
- if(m.dataset.k!==key){m.dataset.k=key;
-  m.innerHTML=`<button type="button" class="jkmsv" data-jkm="o" aria-label="open or close the player" title="${esc(a.a+' — '+a.t)}" style="${jkSpBg(a)}">${a.sp?'':`<span>${esc(String(a.t||'').toUpperCase())}</span>`}</button>
-  <span class="jkmnx">${L.map((x,i)=>i===JK.ai?'':`<button type="button" class="jkmnb" data-jkma="${i}" aria-label="${esc(x.a+' — '+x.t)}" title="${esc(x.a+' — '+x.t)}" style="${jkSpBg(x)}"></button>`).join('')}</span>
-  <div class="jkmbd"><div class="jkmhd"><span class="jkcd" id="jkmcd">${jkCd(a)}</span><span><b id="jkmt"></b><small id="jkma"></small></span><button class="jkib jkmx" type="button" data-jkm="x" aria-label="stop and close">×</button></div>
+ const a=JK.al,L=jkList(),T=jkTracks(),tr=T[JK.cur],mob=innerWidth<=720,key=(mob?'m':'d')+JK.ai+'|'+(a.t||'')+'|'+T.length+'|'+L.length;
+ const parts=()=>`<div class="jkmhd"><span class="jkcd" id="jkmcd">${jkCd(a)}</span><span><b id="jkmt"></b><small id="jkma"></small></span><button class="jkib jkmx" type="button" data-jkm="${mob?'o':'x'}" aria-label="${mob?'fold the player':'stop and close'}">×</button></div>
   <div class="jkmpg"><span id="jkmtc">0:00</span><s id="jkmbar"><i id="jkmf"></i></s><span id="jkmtd">0:00</span></div>
   <div class="jkmct"><button class="jkib" type="button" data-jkm="-" aria-label="previous">${JKI.prev}</button><button class="jkib" type="button" data-jkm="p" id="jkmp" aria-label="play / pause"></button><button class="jkib" type="button" data-jkm="+" aria-label="next">${JKI.next}</button>
-  <span class="jkvol"><button class="jkib" type="button" data-jkm="m" id="jkmmu" aria-label="mute"></button><input type="range" id="jkmvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></span></div>
-  <ol class="jkmls" id="jkmls">${T.map((x,k)=>`<li data-jkmt="${k}"><em>${k+1}</em><span>${esc(x.t)}</span></li>`).join('')}</ol></div>`}
+  <span class="jkvol"><button class="jkib" type="button" data-jkm="m" id="jkmmu" aria-label="mute"></button><input type="range" id="jkmvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></span></div>`;
+ const tl=()=>`<ol class="jkmls" id="jkmls">${T.map((x,k)=>`<li data-jkmt="${k}"><em>${k+1}</em><span>${esc(x.t)}</span></li>`).join('')}</ol>`;
+ if(m.dataset.k!==key&&mob){m.dataset.k=key;m.classList.add('mob');
+  m.innerHTML=`<button type="button" class="jkmod" data-jkm="o" aria-label="open the player"><span class="jkcd" id="jkmcd2">${jkCd(a)}</span></button>
+  <div class="jkms"><button type="button" class="jkmgr" data-jkm="o" aria-label="fold the player"></button>${parts()}<div class="jkmr2">${tl()}<span class="jkmab">${L.map((x,i)=>`<button type="button" data-jkma="${i}"${i===JK.ai?' class="c"':''} aria-label="${esc(x.a+' — '+x.t)}" style="${jkSpBg(x)}"></button>`).join('')}</span></div></div>`;
+  const sh=m.querySelector('.jkms');let y0=null;sh.addEventListener('touchstart',e=>{y0=e.touches[0].clientY},{passive:true});sh.addEventListener('touchend',e=>{if(y0!==null&&e.changedTouches[0].clientY-y0>60&&!e.target.closest('.jkmls')){JK.mo=false;jkMini()}y0=null})}
+ if(m.dataset.k!==key){m.dataset.k=key;m.classList.remove('mob');
+  m.innerHTML=`<button type="button" class="jkmsv" data-jkm="o" aria-label="open or close the player" title="${esc(a.a+' — '+a.t)}" style="${jkSpBg(a)}">${a.sp?'':`<span>${esc(String(a.t||'').toUpperCase())}</span>`}</button>
+  <span class="jkmnx">${L.map((x,i)=>i===JK.ai?'':`<button type="button" class="jkmnb" data-jkma="${i}" aria-label="${esc(x.a+' — '+x.t)}" title="${esc(x.a+' — '+x.t)}" style="${jkSpBg(x)}"></button>`).join('')}</span>
+  <div class="jkmbd">${parts()}${tl()}</div>`}
  m.hidden=false;m.classList.toggle('open',!!JK.mo);jkMiniFit(m);
- $('#jkmt').textContent=tr?tr.t:a.t;$('#jkma').textContent=a.a+' · '+a.t;$('#jkmp').innerHTML=JK.on?JKI.pause:JKI.play;$('#jkmcd').classList.toggle('go',JK.on);
+ $('#jkmt').textContent=tr?tr.t:a.t;$('#jkma').textContent=a.a+' · '+a.t;$('#jkmp').innerHTML=JK.on?JKI.pause:JKI.play;$('#jkmcd').classList.toggle('go',JK.on);const c2=$('#jkmcd2');if(c2)c2.classList.toggle('go',JK.on);
  const vv=JK.mute?0:JKV;$('#jkmmu').innerHTML=vv==0?JKI.off:vv<50?JKI.low:JKI.vol;$('#jkmvo').style.setProperty('--v',vv+'%');
  m.querySelectorAll('#jkmls li').forEach((li,k)=>li.classList.toggle('cur',k===JK.cur));
  $('#jkmf').style.width=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';$('#jkmtc').textContent=jkFmt(JK.t);$('#jkmtd').textContent=jkFmt(JK.d)}
 document.addEventListener('click',e=>{const mi=e.target.closest&&e.target.closest('#jkmini');if(!mi)return;const T=jkTracks();let x;
- if(x=e.target.closest('[data-jkma]')){const i=+x.dataset.jkma,L=jkList();if(!L[i])return;jkStop();JK.ai=i;JK.al=L[i];JK.live=true;JK.mo=true;jkStart();return jkMini()}
+ if(x=e.target.closest('[data-jkma]')){const i=+x.dataset.jkma,L=jkList();if(!L[i]||i===JK.ai)return;jkStop();JK.ai=i;JK.al=L[i];JK.live=true;JK.mo=true;jkStart();return jkMini()}
  if(x=e.target.closest('[data-jkmt]'))return jkGo(+x.dataset.jkmt);
  if(x=e.target.closest('#jkmbar')){if(!JK.d||!JK.yt)return;const r=x.getBoundingClientRect(),p=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));try{JK.yt.seekTo(p*JK.d,true)}catch(z){}JK.t=p*JK.d;return jkMini()}
  if(!(x=e.target.closest('[data-jkm]')))return;const k=x.dataset.jkm;
