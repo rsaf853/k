@@ -1624,6 +1624,10 @@ html.mlock,html.mlock body{overflow:hidden}
 #mov .msheet .mno,.mdk .msh .mno{display:none}
 #mov .msheet .mst{padding-right:18px}
 #mov .mfoot,#mov.inv .mfoot{border-top:0;padding-top:0}
+/* memos: no shadows anywhere (card hover, dragging, the opened sheet); the highlighted (inverted) memo behaves exactly like the plain one */
+.msh,.msh:hover,.msh.dragging,.msh.big,.msh.inv,.msh.inv:hover,.msh.inv.dragging,.mdk .msh,.mdk .msh:hover,.mdk .msh.dragging,.mdk .msh.big,.mdk .msh.big:hover,.mdk .msh.inv,.mdk .msh.inv:hover,.mdk .msh.inv.dragging,.msheet,.mov.inv .msheet,#mov .msheet,#mov.inv .msheet,.mm,.mm:hover{box-shadow:none!important}
+.mdk .msh.inv{border-color:var(--mbd)}.mdk .msh.inv:hover,.mdk .msh.inv.dragging{border-color:var(--mbh)}
+#mov.inv .msheet{border-color:color-mix(in srgb,var(--fg) 34%,var(--bg))}
 #mov .mfoot .st{color:color-mix(in srgb,var(--fg) 30%,var(--bg))}#mov.inv .mfoot .st{color:color-mix(in srgb,var(--bg) 40%,var(--fg))}
 #mov .mcls{right:8px;top:8px;width:24px;height:24px;opacity:.4}#mov .mcls:hover{opacity:1}#mov .mcls svg{width:9px;height:9px}
 /* opened memo: only the sheet scrolls, not the text inside it as well */
@@ -1897,7 +1901,7 @@ function gFix(root){if(!root||!root.nodeType)return;const base=root.nodeType===3
 const BNB=BNP.filter(p=>p.c.toLowerCase()!=='k'),isK=q=>BNP.some(p=>p.sq===q&&p.c.toLowerCase()==='k'),kKey=q=>BNP.find(p=>p.sq===q).c==='K'?'w':'k';
 const kingHas=q=>{const k=(banData().kings||{})[kKey(q)]||{};return !!(k.name||k.title||k.elo||k.src)};
 function kingCard(q){const key=kKey(q),k=banData().kings[key]||{},e=parseInt(String(k.elo||'').replace(/\D/g,''),10),pc=e?Math.max(0,Math.min(100,(e-1000)/19)):0;
- return`<div class="kch ${key}"><span>${key==='w'?'WHITE':'BLACK'}</span><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bnK"/></svg></div><div class="kcb"><div class="kcp">${k.src?`<img src="${esc(k.src)}" alt="">`:'<svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bnK"/></svg>'}</div><div class="kct"><div class="kcr1"><span class="kcn">${esc(k.name||'—')}</span><span class="kcg">${esc(k.title||'—')}</span></div><div class="kcr2"><span class="kcl">FIDE Rating:</span><span class="kcv">${esc(k.elo||'—')}</span></div>${e?`<div class="kcbar"><i style="width:${pc.toFixed(1)}%"></i></div>`:''}</div></div>`}
+ return`<div class="kch ${key}"><span>${key==='w'?'WHITE':'BLACK'}</span><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bnK"/></svg></div><div class="kcb"><div class="kcp">${k.src?`<img src="${esc(k.src)}" data-sm="${esc(k.src)}" data-smpx="58" alt="">`:'<svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bnK"/></svg>'}</div><div class="kct"><div class="kcr1"><span class="kcn">${esc(k.name||'—')}</span><span class="kcg">${esc(k.title||'—')}</span></div><div class="kcr2"><span class="kcl">FIDE Rating:</span><span class="kcv">${esc(k.elo||'—')}</span></div>${e?`<div class="kcbar"><i style="width:${pc.toFixed(1)}%"></i></div>`:''}</div></div>`}
 function banData(){if(!HOME.ban){const L=(HOME.blocks.find(b=>b.t==='banners')||{}).items||[],s={};L.filter(x=>x&&x.src).slice(0,BNB.length).forEach((x,i)=>{s[BNB[i].sq]={src:x.src,href:x.href||'',name:x.name||''}});HOME.ban={mine:{},slots:s}}if(!HOME.ban.slots)HOME.ban.slots={};if(!HOME.ban.mine)HOME.ban.mine={};if(!HOME.ban.kings)HOME.ban.kings={w:{},k:{}};return HOME.ban}
 const banSorted=fl=>{const ix=new Map((banData().order||[]).map((q,i)=>[q,i]));return fl.slice().sort((a,b)=>(ix.has(a.sq)?ix.get(a.sq):1e3+BNP.indexOf(a))-(ix.has(b.sq)?ix.get(b.sq):1e3+BNP.indexOf(b)))};
 const banDom=h=>{try{return new URL(h).hostname.replace(/^www\./,'')}catch(e){return''}},banName=x=>(x.name||'').trim()||banDom(x.href||'');
@@ -2230,7 +2234,19 @@ const lvAgo=t=>{if(!t)return'—';let x=Math.max(0,Math.floor((Date.now()-t)/100
 const lvLast=s=>{const Z=LVZ;if(!Z)return 0;for(let j=Z.seq.length;j>=1;j--)if((j%2?'w':'b')===s)return+new Date(Z.seq[j-1].created_at);return 0};
 function lvClock(){document.querySelectorAll('.lvclk').forEach(e=>e.textContent=lvAgo(lvLast(e.dataset.side)))}
 setInterval(lvClock,1000);
-const lvBar=s=>{const p=lvData().players[s]||{};return`<div class="lvpi"${p.src?` style="background-image:url('${esc(p.src)}')"`:''}></div><div class="lvnm"><b>${esc(p.name||(s==='w'?'White':'Black'))}</b><small>${[p.en,p.elo,p.title].filter(Boolean).map(esc).join(' · ')}</small></div><div class="lvclk" data-side="${s}"></div>`};
+const SMC=new Map();
+function smUrl(u,px){const k=u+'|'+px;if(SMC.has(k))return SMC.get(k);
+ const pr=new Promise(res=>{const im=new Image();im.crossOrigin='anonymous';im.decoding='async';
+  im.onload=()=>{try{const t=Math.round(px*Math.min(3,Math.max(2,devicePixelRatio||1)));let w=im.naturalWidth,h=im.naturalHeight;if(Math.min(w,h)<=t*1.2)return res(null);
+   let c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0);
+   while(Math.min(w,h)/2>=t){const n=document.createElement('canvas');n.width=Math.round(w/2);n.height=Math.round(h/2);const x=n.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(c,0,0,n.width,n.height);c=n;w=n.width;h=n.height}
+   const r=t/Math.min(w,h),f=document.createElement('canvas');f.width=Math.round(w*r);f.height=Math.round(h*r);const fx=f.getContext('2d');fx.imageSmoothingEnabled=true;fx.imageSmoothingQuality='high';fx.drawImage(c,0,0,f.width,f.height);
+   f.toBlob(b=>res(b?URL.createObjectURL(b):null),'image/png')}catch(e){res(null)}};
+  im.onerror=()=>res(null);im.src=u});
+ SMC.set(k,pr);return pr}
+const smApply=el=>{const u=el.dataset.sm,px=+el.dataset.smpx||48;if(!u)return;smUrl(u,px).then(b=>{if(!b||el.dataset.sm!==u)return;if(el.tagName==='IMG')el.src=b;else el.style.backgroundImage=`url('${b}')`})};
+new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1){if(n.dataset&&n.dataset.sm)smApply(n);if(n.querySelectorAll)n.querySelectorAll('[data-sm]').forEach(smApply)}}).observe(document.body,{childList:true,subtree:true});
+const lvBar=s=>{const p=lvData().players[s]||{};return`<div class="lvpi"${p.src?` data-sm="${esc(p.src)}" data-smpx="40" style="background-image:url('${esc(p.src)}')"`:''}></div><div class="lvnm"><b>${esc(p.name||(s==='w'?'White':'Black'))}</b><small>${[p.en,p.elo,p.title].filter(Boolean).map(esc).join(' · ')}</small></div><div class="lvclk" data-side="${s}"></div>`};
 const lvLines=g=>String(g.body||'').split(/\n+/).map(x=>x.trim()).filter(Boolean).map(l=>{const pf=lvSideOfPrefix(l);return plain(pf?pf[1]:l)});
 const lvTitle=i=>{const g=G(i);if(i.kind==='line'&&!locked(g)){const t=lvLines(g)[0]||'';return esc(t.length>40?t.slice(0,40)+'…':t)}return`${vb(i)}${esc(itName(g,40)||LVK[i.kind])}`};
 function lvMoves(){const Z=LVZ,c=j=>j>Z.seq.length?'<span></span>':`<div class="lvm${j===LVS.sel?' on':''}${j>LVS.cur?' fut':''}" data-j="${j}"><span class="san">${esc(Z.G.M[j-1]||'')}</span><b>${lvTitle(Z.seq[j-1])}</b></div>`;let h='';
@@ -2250,7 +2266,7 @@ function lvStop(){clearInterval(LVS.tm);LVS.tm=null;LVS.tok=(LVS.tok||0)+1;const
 /* HOME chat: written by hand here (HOME.live.chat), not linked to the txt page. One line = one bubble. */
 function lvChat(){const L=lvData(),C=L.chat||(L.chat=[]),P=L.players,ed=em(),gr=[];
  C.forEach((m,k)=>{const x={s:m.s,t:m.t,at:m.at,k},l=gr[gr.length-1];if(l&&l.s===x.s&&lvDay(l.at)===lvDay(x.at)){l.a.push(x);l.at=x.at}else gr.push({s:x.s,at:x.at,a:[x]})});
- $('#lvch').innerHTML=gr.length?gr.map(g=>{const p=P[g.s]||{};return`<div class="lvgr${g.s==='b'?' r':''}"><i class="lvav"${p.src?` style="background-image:url('${esc(p.src)}')"`:''} title="${esc(p.name||'')}"></i><div class="lvls">${g.a.map(m=>`<span class="lvbb">${esc(m.t)}${ed?`<button type="button" class="lvcx" data-lvcedit="${m.k}" title="Edit" aria-label="Edit">✎</button><button type="button" class="lvcx" data-lvcdel="${m.k}" title="Delete" aria-label="Delete">×</button>`:''}</span>`).join('')}</div></div>`}).join(''):'<p class="empty">No messages yet.</p>'}
+ $('#lvch').innerHTML=gr.length?gr.map(g=>{const p=P[g.s]||{};return`<div class="lvgr${g.s==='b'?' r':''}"><i class="lvav"${p.src?` data-sm="${esc(p.src)}" data-smpx="30" style="background-image:url('${esc(p.src)}')"`:''} title="${esc(p.name||'')}"></i><div class="lvls">${g.a.map(m=>`<span class="lvbb">${esc(m.t)}${ed?`<button type="button" class="lvcx" data-lvcedit="${m.k}" title="Edit" aria-label="Edit">✎</button><button type="button" class="lvcx" data-lvcdel="${m.k}" title="Delete" aria-label="Delete">×</button>`:''}</span>`).join('')}</div></div>`}).join(''):'<p class="empty">No messages yet.</p>'}
 function lvCForm(){const f=$('#lvcf');if(!f)return;if(!em()){f.innerHTML='';return}const P=lvData().players,nm=s=>esc(String((P[s]||{}).en||(P[s]||{}).name||(s==='w'?'WHITE':'BLACK')).toUpperCase());
  f.innerHTML=`<form class="lq" id="lvcform"><textarea name="t" rows="2" aria-label="chat" placeholder="대사를 적어요 · 줄마다 말풍선 하나 (Ctrl/⌘+Enter 전송)"></textarea><div class="lqr"><span class="lqs"><b>WHO</b><button type="button" class="sp on" data-csp="w"><svg class="xk w" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnP"/></svg>${nm('w')}</button><button type="button" class="sp" data-csp="b"><svg class="xk b" viewBox="0 0 40 40" aria-hidden="true"><use href="#bnP"/></svg>${nm('b')}</button></span><span class="lqa"><button class="btn pri">SEND</button></span></div></form>`;
  const ta=f.querySelector('textarea');ta.onkeydown=e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();ta.form.requestSubmit()}}}
