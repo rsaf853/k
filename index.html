@@ -632,7 +632,8 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 #lkset[hidden]{display:none}
 body.fplock #lvfp{cursor:default}
 /* left picture switched off in settings: the page takes the whole width (LIVE keeps its own layout) */
-@media(max-width:720px){body.fplock .side{display:none}}
+@media(max-width:720px){html.nomside .side{display:none}}
+html.fpwait .side{visibility:hidden}html.fpinit .shell,html.fpinit .side,html.fpinit .lvg{transition:none!important}
 body.noside .shell{grid-template-columns:0 minmax(0,1fr);column-gap:0}
 body.noside .side{visibility:hidden;overflow:hidden;padding:0;min-width:0}
 @media(max-width:720px){body.noside .side{display:none}}
@@ -1713,11 +1714,15 @@ const dateS=d=>{const x=new Date(d);return `${p2(x.getDate())}/${p2(x.getMonth()
 const loc=d=>{const x=new Date(d);return `${x.getFullYear()}-${p2(x.getMonth()+1)}-${p2(x.getDate())}T${p2(x.getHours())}:${p2(x.getMinutes())}`};
 const uid=()=>Math.random().toString(36).slice(2,8),WD=['SUN','MON','TUE','WED','THU','FRI','SAT'];
 const KIND={posts:'post',log:'log',gallery:'gallery',memo:'memo',lines:'line'},LBL={post:'archive',log:'log',gallery:'img',memo:'memo',line:'txt'};
-let FP=false,FPSET=false;try{const v=localStorage.getItem('e4fp');FPSET=v==='1'||v==='0';FP=v==='1'}catch(e){}
+let FP=false,FPSET=false;try{const v=localStorage.getItem('e4fp'),d=localStorage.getItem('e4fpd');FPSET=v==='1'||v==='0';FP=v==='1';
+ /* the default screen last seen here, so the first paint is already right; a first-time visitor sees no picture until the settings arrive */
+ if(d){if(d==='locked'||(!FPSET&&d==='paused'))FP=true;if(localStorage.getItem('e4ms')==='0')document.documentElement.classList.add('nomside')}else document.documentElement.classList.add('fpwait')}catch(e){}
+document.documentElement.classList.add('fpinit');if(document.body)document.body.classList.toggle('fp',!!FP); /* no layout animation until the real setting is known */
 /* default screen (HOME.fpDef): 'live' — LIVE, anyone may pause; 'paused' — PAUSED, anyone may go LIVE;
    'locked' — PAUSED for visitors everywhere (no picture on phones either); only the owner can switch */
 const fpLock=()=>!admin&&typeof HOME!=='undefined'&&HOME&&HOME.fpDef==='locked';
-function applyLayout(){const d=HOME&&HOME.fpDef;if(fpLock())FP=true;else if(!FPSET)FP=d==='paused'||d==='locked';document.body.classList.remove('noside');applyFP()}
+function applyLayout(){const d=HOME&&HOME.fpDef;if(fpLock())FP=true;else if(!FPSET)FP=d==='paused'||d==='locked';document.body.classList.remove('noside');document.documentElement.classList.toggle('nomside',!!(HOME&&HOME.mside===false));applyFP();try{localStorage.setItem('e4fpd',d||'live');localStorage.setItem('e4ms',HOME&&HOME.mside===false?'0':'1')}catch(e){}
+ requestAnimationFrame(()=>requestAnimationFrame(()=>document.documentElement.classList.remove('fpwait','fpinit')))}
 function applyFP(){document.body.classList.toggle('fp',!!FP);document.body.classList.toggle('fplock',fpLock());const m=document.getElementById('jkmini');if(m){m.dataset.k='';m.removeAttribute('style');if(typeof jkMini==='function'){jkMini();setTimeout(jkMini,560)}}} /* full-page layout: anybody can switch it from the chip on the home page */
 let OPENLK=null,PEND='',admin=false,EM=false,ITEMS=[],PLANS=[],HOME={img:'',blocks:[]},TAG='',Q='',UNL={},EDITM=false,AK='todo',ADJ=null,FS=false;
 const now=new Date(),TODAY=ymd(now.getFullYear(),now.getMonth(),now.getDate()),CAL={y:now.getFullYear(),m:now.getMonth(),sel:TODAY};
@@ -1772,7 +1777,7 @@ async function load(){const my=++loadSeq;
   paintImg();applyLayout();
   if(r.error){app.innerHTML='<p class="empty">Load failed: '+esc(r.error.message)+'</p>';return false}
   return true
- }catch(x){app.innerHTML='<p class="empty">Load failed: '+esc(x.message||x)+'</p>';return false}}
+ }catch(x){document.documentElement.classList.remove('fpwait','fpinit');app.innerHTML='<p class="empty">Load failed: '+esc(x.message||x)+'</p>';return false}}
 const IMG_DEF={iw:310,ix:50,iy:50,iz:100};
 const applyIw=()=>{const r=document.documentElement.style,w=HOME.iw||310;if(HOME.ihM)r.setProperty('--ih',HOME.ihM+'px');else r.removeProperty('--ih');if(innerWidth<=720){r.removeProperty('--iw');return}r.setProperty('--iw',(innerWidth<=1024?Math.round(w*.68):w)+'px')};
 const paintVars=()=>{const s=$('#im').style;s.setProperty('--himgL',HOME.img?`url("${HOME.img}")`:'none');if(HOME.imgD)s.setProperty('--himgD',`url("${HOME.imgD}")`);else s.removeProperty('--himgD');s.setProperty('--ixL',(HOME.ix??50)+'%');s.setProperty('--iyL',(HOME.iy??50)+'%');s.setProperty('--izL',(HOME.iz||100)/100);if(HOME.ixD!==undefined){s.setProperty('--ixD',HOME.ixD+'%');s.setProperty('--iyD',(HOME.iyD??50)+'%');s.setProperty('--izD',(HOME.izD||100)/100)}else{['--ixD','--iyD','--izD'].forEach(k=>s.removeProperty(k))}[['ixML',v=>v+'%'],['iyML',v=>v+'%'],['izML',v=>v/100],['ixMD',v=>v+'%'],['iyMD',v=>v+'%'],['izMD',v=>v/100]].forEach(([k,f])=>{if(HOME[k]!=null)s.setProperty('--'+k,f(HOME[k]));else s.removeProperty('--'+k)});applyIw()};
@@ -1816,10 +1821,10 @@ document.addEventListener('submit',async e=>{const f=e.target.closest&&e.target.
  LKP[k]=inp.value;lkSave();document.body.classList.remove('sitelk');if(await load())route()});
 function lkSettings(){const row=([k,n,d])=>`<div class="lkr"><div><b>${esc(n)}</b><small>${esc(d)}</small></div><select data-lkm="${k}">${[['open','공개'],['private','비공개'],['password','비밀번호']].map(([v,t])=>`<option value="${v}"${lkMode(k)===v?' selected':''}>${t}</option>`).join('')}</select><input type="password" data-lkp="${k}" placeholder="${lkMode(k)==='password'?'바꿀 때만 입력':'새 비밀번호'}" autocomplete="new-password"${lkMode(k)==='password'?'':' hidden'}></div>`;
  const seg=(k,opts,cur)=>`<div class="sg2" data-lay="${k}">${opts.map(([v,t])=>`<button type="button" class="btn${cur===v?' on':''}" data-v="${v}">${t}</button>`).join('')}</div>`;
- openM(`<h3>SETTINGS</h3><div class="lkrs"><div class="lkr"><div><b>기본 화면</b><small>LIVE · PAUSED: 처음에 그 화면으로 열리고, 누구나 바꿀 수 있어요. PAUSED 고정: 방문자는 PAUSED로만 보고 휴대폰에서도 사진이 안 보여요. 나만 LIVE로 바꿀 수 있어요.</small></div>${seg('fpDef',[['live','LIVE'],['paused','PAUSED'],['locked','PAUSED 고정']],['paused','locked'].includes(HOME.fpDef)?HOME.fpDef:'live')}</div></div><h3 style="margin-top:18px">LOCKS</h3><p class="st" style="margin:0 0 10px">비공개는 로그인한 나만 볼 수 있어요. 비밀번호는 방문자가 맞게 넣으면 그 창에서는 계속 열려 있어요. SITE를 잠그면 모든 페이지가 잠겨요.</p><div class="lkrs">${LKS.map(row).join('')}</div><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" id="lksave">SAVE</button></div>`);
+ openM(`<h3>SETTINGS</h3><div class="lkrs"><div class="lkr"><div><b>기본 화면</b><small>LIVE · PAUSED: 처음에 그 화면으로 열리고, 누구나 바꿀 수 있어요. PAUSED 고정: 방문자는 컴퓨터에서 PAUSED로만 보고, 나만 LIVE로 바꿀 수 있어요.</small></div>${seg('fpDef',[['live','LIVE'],['paused','PAUSED'],['locked','PAUSED 고정']],['paused','locked'].includes(HOME.fpDef)?HOME.fpDef:'live')}</div><div class="lkr"><div><b>휴대폰 위쪽 사진</b><small>휴대폰 화면 맨 위의 사진</small></div>${seg('mside',[['on','보이기'],['off','숨기기']],HOME.mside===false?'off':'on')}</div></div><h3 style="margin-top:18px">LOCKS</h3><p class="st" style="margin:0 0 10px">비공개는 로그인한 나만 볼 수 있어요. 비밀번호는 방문자가 맞게 넣으면 그 창에서는 계속 열려 있어요. SITE를 잠그면 모든 페이지가 잠겨요.</p><div class="lkrs">${LKS.map(row).join('')}</div><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" id="lksave">SAVE</button></div>`);
  $('#mb').querySelectorAll('[data-lay] [data-v]').forEach(b=>b.onclick=()=>b.parentNode.querySelectorAll('[data-v]').forEach(x=>x.classList.toggle('on',x===b)));
  $('#mb').querySelectorAll('[data-lkm]').forEach(sel=>sel.onchange=()=>{$('#mb').querySelector(`[data-lkp="${sel.dataset.lkm}"]`).hidden=sel.value!=='password'});
- $('#lksave').onclick=async()=>{msg('Saving…');{const fd=$('#mb').querySelector('[data-lay="fpDef"] .on').dataset.v;if(fd!==(HOME.fpDef||'live')||'side' in HOME){HOME.fpDef=fd;delete HOME.side;await saveHome();applyLayout()}}for(const [k] of LKS){const m=$('#mb').querySelector(`[data-lkm="${k}"]`).value,pw=$('#mb').querySelector(`[data-lkp="${k}"]`).value;
+ $('#lksave').onclick=async()=>{msg('Saving…');{const fd=$('#mb').querySelector('[data-lay="fpDef"] .on').dataset.v,ms=$('#mb').querySelector('[data-lay="mside"] .on').dataset.v==='on';if(fd!==(HOME.fpDef||'live')||ms!==(HOME.mside!==false)||'side' in HOME){HOME.fpDef=fd;HOME.mside=ms;delete HOME.side;await saveHome();applyLayout()}}for(const [k] of LKS){const m=$('#mb').querySelector(`[data-lkm="${k}"]`).value,pw=$('#mb').querySelector(`[data-lkp="${k}"]`).value;
    if(m===lkMode(k)&&!(m==='password'&&pw))continue;if(m==='password'&&lkMode(k)!=='password'&&!pw)return msg(`${k==='site'?'SITE':LKS.find(x=>x[0]===k)[1]}: 비밀번호를 넣어 주세요`);
    const r=await sb.rpc('lock_set',{p_scope:k,p_mode:m,p_pw:pw||null});if(r.error)return msg('Save failed: '+r.error.message+(/lock_set/.test(r.error.message)?' — run sql/lock.sql in Supabase first':''))}
   closeM();if(await load())route()}}
