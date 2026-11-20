@@ -648,12 +648,12 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .lvctr{display:flex;align-items:center;gap:4px;margin-top:8px}.lvctr .bt{height:28px;min-width:32px;padding:0 9px}.lvctr .bt.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .lvpr{flex:1;height:22px;display:flex;align-items:center;margin:0 6px;cursor:pointer}.lvpr s{display:block;width:100%;height:3px;background:var(--line);position:relative;text-decoration:none}.lvpr i{position:absolute;left:0;top:0;bottom:0;background:var(--fg)}
 .lvpg{font:600 11px var(--sans);color:var(--mut);font-variant-numeric:tabular-nums;min-width:52px;text-align:right}
-.lvtabs{display:flex;gap:4px;margin:2px 0 12px}
-.lvtabs button{position:relative;height:36px;min-width:36px;padding:0;border:1px solid var(--fg);display:inline-flex;align-items:center;justify-content:center;gap:8px;color:var(--fg);transition:padding .2s}
-.lvtabs button:nth-child(odd){background:var(--hl2)}
-.lvti{width:20px;height:20px;flex:none;fill:currentColor;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round;--pe:var(--bg)}
-.lvtx{display:none;font:800 10.5px var(--sans);letter-spacing:.12em;text-transform:uppercase}
-.lvtabs button.on{background:var(--fg);color:var(--bg);padding:0 14px}.lvtabs button.on .lvtx{display:inline}.lvtabs button.on .lvti{fill:var(--bg);stroke:var(--bg);--pe:var(--fg)}
+.lvtabs{display:flex;gap:3px;margin:2px 0 10px}
+.lvtabs button{position:relative;height:24px;min-width:24px;background:var(--bg);padding:0;border:1px solid var(--fg);display:inline-flex;align-items:center;justify-content:center;gap:8px;color:var(--fg);transition:padding .2s}
+.lvtabs button:not(.on):hover{background:var(--hl)}
+.lvti{width:13px;height:13px;flex:none;fill:currentColor;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round;--pe:var(--bg)}
+.lvtx{display:none;font:800 9px var(--sans);letter-spacing:.04em;text-transform:uppercase}
+.lvtabs button.on{background:var(--fg);color:var(--bg);padding:0 8px;gap:5px}.lvtabs button.on .lvtx{display:inline}.lvtabs button.on .lvti{fill:var(--bg);stroke:var(--bg);--pe:var(--fg)}
 .lvpn{display:none}.lvpn.on{display:block}
 .lvmv{max-height:340px;overflow:auto;border-bottom:1px solid var(--line)}
 .lvmh{display:grid;grid-template-columns:30px minmax(0,1fr) minmax(0,1fr);border-bottom:2px solid var(--fg);font:800 10px var(--sans);letter-spacing:.14em;position:sticky;top:0;background:var(--bg);z-index:1}.lvmh span{padding:7px 8px;display:flex;align-items:center;gap:7px}.lvmh span+span{border-left:1px solid var(--line)}
@@ -744,7 +744,8 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 @keyframes jkeq{from{height:25%}to{height:100%}}
 /* home player (T2a): title with the controls at the right edge, progress, album name over a flowing track list, L1 lyrics */
 .jkrow{display:flex;align-items:center;gap:12px}
-.jkrow .jkttl{flex:1;min-width:0;font-size:15px}
+.jkrow .jkttl{flex:1;min-width:0;font-size:20px;letter-spacing:-.05em}
+@media(min-width:721px){.jk.open .jkrack{--jh:220px}}
 .jkrow .jkct{flex:none;margin:0;gap:0;margin-right:-5px}
 .jkrow .jkct .jkib{width:22px;height:22px}.jkrow .jkct .jkib svg{width:9px;height:9px}
 .jkrow .jkr{flex:none;width:64px}
@@ -2390,7 +2391,7 @@ function lvHome(){lvStop();lvData();LVZ=lvGame();const intro=false;LVS.cur=intro
  const TB=(t,pc,nm,on)=>`<button${on?' class="on"':''} data-lt="${t}" aria-label="${nm}"><svg class="lvti" viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${pc}"/></svg><span class="lvtx">${nm}</span></button>`;
  app.innerHTML=`<section class="lv"><div class="lvg"><div class="lvt"><div class="lvt1"><button type="button" class="lvchip" id="lvfp" title="${FP?'Back to normal':'Full page'}" aria-pressed="${FP}">${FP?'PAUSED':'LIVE'} · GAME ${LVZ.game}</button><span class="lvcn">${done?esc(o.h.Result||o.result||'')+' · FINISHED':LVZ.seq.length+' / '+LVZ.n+' MOVES'}</span>${em()?'<button class="btn" id="lvedit">EDIT</button>':''}</div><h3>${esc(tt)}</h3>${ts?`<p>${esc(ts)}</p>`:''}</div>
  <div class="lvlft"><div class="lvbar lvbk" id="lvpb"></div><div id="lvbd"></div><div class="lvbar lvwh" id="lvpw"></div><div class="lvctr"><button class="bt" data-lv="s" aria-label="start">${IC.s}</button><button class="bt" data-lv="-" aria-label="back">${IC.b}</button><button class="bt" data-lv="p" id="lvplay" aria-label="play">${IC.p}</button><button class="bt" data-lv="+" aria-label="next">${IC.n}</button><div class="lvpr" id="lvpr"><s><i></i></s></div><span class="lvpg" id="lvpg"></span></div></div>
- <div class="lvrgt"><div class="lvtabs">${TB('juke','N','Jukebox',1)}${TB('moves','P','Moves')}${TB('chat','R','Chat')}${TB('notes','B','Notes')}</div>
+ <div class="lvrgt"><div class="lvtabs">${TB('moves','P','Moves')}${TB('juke','N','Jukebox',1)}${TB('chat','R','Chat')}${TB('notes','B','Notes')}</div>
  <div class="lvpn on" data-lp="juke"><div id="lvjk"></div></div><div class="lvpn" data-lp="moves"><div class="lvmv" id="lvmv"></div><div class="lvpv" id="lvpv"></div></div><div class="lvpn" data-lp="chat"><div class="lvch" id="lvch"></div><div id="lvcf"></div></div><div class="lvpn" data-lp="notes"><div class="lvnt" id="lvnt"></div></div></div></div></section>`;
  lvPaint();lvChat();lvCForm();lvNotes();lvJuke();jkAuto();if(intro)lvIntro()}
 function lvIntro(){const n=LVZ.seq.length,dt=Math.max(LVI.min,Math.min(LVI.max,Math.round(LVI.total/n))),tok=LVS.tok;
