@@ -756,7 +756,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jkmnb{flex:none;width:0;height:100%;box-sizing:border-box;padding:0;border:0;background:var(--soft) -4.8px 50%/33.6px 112% no-repeat;cursor:pointer;overflow:hidden;transition:width .3s cubic-bezier(.3,.8,.2,1)}
 .jkmini.open .jkmnb{width:7px;border:1px solid var(--fg);border-left:0}
 .jkmini.open .jkmnb:hover,.jkmini.open .jkmnb:focus-visible{width:24px}
-.jkmbd{width:min(270px,calc(100vw - 96px));height:100%;box-sizing:border-box;display:grid;grid-template-rows:auto auto auto minmax(0,1fr);border:1px solid var(--fg);border-left:0;background:var(--bg);color:var(--fg);
+.jkmbd{width:var(--jmw,min(270px,calc(100vw - 96px)));height:100%;box-sizing:border-box;display:grid;grid-template-rows:auto auto auto minmax(0,1fr);border:1px solid var(--fg);border-left:0;background:var(--bg);color:var(--fg);
   clip-path:inset(0 100% 0 0);transition:clip-path .55s cubic-bezier(.3,.8,.2,1)}
 .jkmini.open .jkmbd{clip-path:inset(0)}
 .jkmbd>*{min-width:0}
@@ -2201,6 +2201,12 @@ function jkPaint(){const v=$('#jkv');if(!v)return jkMini();v.classList.toggle('p
  const m=$('#jkmsg');if(m)m.textContent=JK.msg||'';jkBar();jkMini()}
 const jkItem=i=>document.querySelector(`#jkrack .jksp[data-jk="${i}"]`);
 /* mini player: shown on every other page while an album is loaded; the disc keeps turning with the music */
+/* on wide screens the mini player sits on the sidebar photo: same left and bottom edge, and open it spans the photo's width */
+function jkMiniFit(m){const im=document.querySelector('.side .im'),r=im&&im.getBoundingClientRect(),ok=r&&innerWidth>720&&r.width>=160&&r.height>=200&&!document.body.classList.contains('fp');
+ if(!ok){m.style.left=m.style.bottom=m.style.height='';m.style.removeProperty('--jmw');return}
+ const nb=m.querySelectorAll('.jkmnb').length;m.style.left=Math.round(r.left)+'px';m.style.bottom=Math.round(innerHeight-r.bottom)+'px';
+ m.style.height=Math.round(Math.min(300,r.height))+'px';m.style.setProperty('--jmw',Math.max(200,Math.round(r.width-24-nb*7))+'px')}
+addEventListener('resize',()=>{const m=document.getElementById('jkmini');if(m&&!m.hidden)jkMiniFit(m)});
 /* mini player: shown on every other page while an album is loaded */
 const jkSpBg=a=>a.sp?`background-image:url('${esc(a.sp)}')`:'';
 function jkMini(){let m=document.getElementById('jkmini');const show=JK.live&&JK.al&&!document.getElementById('jkv');
@@ -2215,7 +2221,7 @@ function jkMini(){let m=document.getElementById('jkmini');const show=JK.live&&JK
   <div class="jkmct"><button class="jkib" type="button" data-jkm="-" aria-label="previous">${JKI.prev}</button><button class="jkib" type="button" data-jkm="p" id="jkmp" aria-label="play / pause"></button><button class="jkib" type="button" data-jkm="+" aria-label="next">${JKI.next}</button>
   <span class="jkvol"><button class="jkib" type="button" data-jkm="m" id="jkmmu" aria-label="mute"></button><input type="range" id="jkmvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></span></div>
   <ol class="jkmls" id="jkmls">${T.map((x,k)=>`<li data-jkmt="${k}"><em>${k+1}</em><span>${esc(x.t)}</span></li>`).join('')}</ol></div>`}
- m.hidden=false;m.classList.toggle('open',!!JK.mo);
+ m.hidden=false;m.classList.toggle('open',!!JK.mo);jkMiniFit(m);
  $('#jkmt').textContent=tr?tr.t:a.t;$('#jkma').textContent=a.a+' · '+a.t;$('#jkmp').innerHTML=JK.on?JKI.pause:JKI.play;$('#jkmcd').classList.toggle('go',JK.on);
  const vv=JK.mute?0:JKV;$('#jkmmu').innerHTML=vv==0?JKI.off:vv<50?JKI.low:JKI.vol;$('#jkmvo').style.setProperty('--v',vv+'%');
  m.querySelectorAll('#jkmls li').forEach((li,k)=>li.classList.toggle('cur',k===JK.cur));
