@@ -749,6 +749,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jkrow .jkct{flex:none;margin:0;gap:0;margin-right:-5px}
 .jkrow .jkct .jkib{width:22px;height:22px}.jkrow .jkct .jkib svg{width:9px;height:9px}
 .jkrow .jkr{flex:none;width:64px}
+.jkmut .jkib svg{width:14px!important;height:14px!important;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .jkah{display:flex;align-items:flex-end;gap:8px;margin-top:14px;padding-bottom:9px;border-bottom:1px solid var(--line)}
 .jkah>div{flex:1;min-width:0}
 .jkah small{display:block;font:600 11px/1.2 var(--sans);letter-spacing:-.03em;color:var(--mut);opacity:.7}
@@ -2248,12 +2249,12 @@ function jkStageHtml(a){return`<div class="jkst" id="jkst"><div class="jksl"><di
 function lvJuke(){const el=$('#lvjk');if(!el)return;const L=jkList(),ed=em();if(JK.ai<0||!L[JK.ai])JK.ai=jkDef();const a=JK.ai>=0?L[JK.ai]:null;if(!a){JK.ai=-1;JK.al=null}
  el.innerHTML=`<div class="jk${a?' open':''}${JK.on?' playing':''}" id="jkv"><div class="jkrack" id="jkrack">${L.map((x,i)=>`<div class="jksp${i===JK.ai?' cur':''}" role="button" tabindex="0" data-jk="${i}" aria-label="${esc(x.a)} — ${esc(x.t)}">${x.sp?`<div class="jkspi"><img src="${esc(x.sp)}" alt="" loading="lazy"></div>`:`<div class="jkspi gen"><span>${esc(String(x.a+' · '+x.t).toUpperCase())}</span></div>`}<div class="jkbox"></div></div>`).join('')}</div>
  <div class="jkcap"><span>${L.length?L.length+' ALBUMS':'NO ALBUMS YET'}</span>${ed?'<button class="btn" data-jkadd>+ ALBUM</button>':''}</div>
- <div class="jkpl" id="jkpl"><div class="jkrow"><div class="jkttl" id="jkttl"></div><div class="jkct"><button class="jkib" type="button" data-jkp="p" id="jkpp" aria-label="play / pause"></button></div><input type="range" class="jkr" id="jkvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></div>
+ <div class="jkpl" id="jkpl"><div class="jkrow"><div class="jkttl" id="jkttl"></div><div class="jkct jkmut"><button class="jkib" type="button" data-jkp="m" id="jkmu" aria-label="mute" title="Mute"></button></div><input type="range" class="jkr" id="jkvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></div>
  <div class="jkpg"><span class="jktm" id="jktc">0:00</span><div class="jkbar" id="jkbar" role="slider" aria-label="position"><i id="jkfill"></i><b class="jkknob"></b></div><span class="jktm r" id="jktd">0:00</span></div>
  <div class="jkah"><div><small id="jkar"></small><b id="jkal"></b></div>${ed?'<button class="btn" data-jkadd>+ ALBUM</button><button class="btn" data-jked>EDIT</button>':''}<button class="jkly" type="button" data-jkp="l" id="jkly" aria-label="lyrics" title="Lyrics" hidden><svg viewBox="0 0 16 16"><path d="M2.5 4h11M2.5 8h11M2.5 12h6"/></svg></button></div>
  <p class="jkmsg" id="jkmsg"></p><p class="jkfl" id="jkls"></p><div class="jklyr" id="jklyr"><ol></ol></div></div></div>`;
  if(a){JK.al=a;const box=el.querySelector('.jksp.cur .jkbox');box.innerHTML=jkStageHtml(a);const st=$('#jkst');st.classList.add('now','in','out');requestAnimationFrame(()=>st.classList.remove('now'))}
- jkList2();jkPaint();jkTick();requestAnimationFrame(jkReveal)}
+ jkList2();jkPaint();jkTick();jkFit();document.dispatchEvent(new Event('jk:rack'));requestAnimationFrame(jkReveal)}
 function jkList2(){const ul=$('#jkls');if(!ul||!JK.al)return;const T=jkTracks();
  ul.innerHTML=T.map((x,k)=>`<button type="button" data-jkt="${k}"${!x.v&&!jkPlMode()?' class="nl" title="No YouTube link yet"':''}><sup>${k+1}</sup>${esc(x.t)}</button>`).join('<i>/</i>');JK.lyk=null;jkPaint()}
 /* lyrics: a track may carry LRC text ([mm:ss.xx] line); timed lines follow the music, untimed ones just scroll */
@@ -2266,7 +2267,7 @@ function jkLyr(){const T=jkTracks(),tr=T[JK.cur],box=$('#jklyr'),bt=$('#jkly'),p
  const li=box.querySelectorAll('li');li.forEach((x,k)=>x.classList.toggle('c',k===n));const k=Math.max(0,n);if(li[k])box.querySelector('ol').style.transform=`translateY(${-(li[k].offsetTop-li[0].offsetTop)}px)`}
 function jkBar(){const pc=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';document.querySelectorAll('#jkbar,#jkmbar').forEach(b=>b.style.setProperty('--p',pc));if($('#jklyr'))jkLyr();const mf=$('#jkmf');if(mf){mf.style.width=pc;$('#jkmtc').textContent=jkFmt(JK.t);$('#jkmtd').textContent=jkFmt(JK.d)}const f=$('#jkfill');if(!f)return;f.style.width=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';$('#jktc').textContent=jkFmt(JK.t);$('#jktd').textContent=jkFmt(JK.d)}
 function jkPaint(){const v=$('#jkv');if(!v)return jkMini();v.classList.toggle('playing',JK.on);const cd=$('#jkcd');if(cd)cd.classList.toggle('go',JK.on);
- const pp=$('#jkpp');if(pp)pp.innerHTML=JK.on?JKI.pause:JKI.play;const vv=JK.mute?0:JKV,vo=$('#jkvo');if(vo)vo.style.setProperty('--v',vv+'%');
+ const pp=$('#jkpp');if(pp)pp.innerHTML=JK.on?JKI.pause:JKI.play;const vv=JK.mute?0:JKV,vo=$('#jkvo');if(vo)vo.style.setProperty('--v',vv+'%');const mu=$('#jkmu');if(mu)mu.innerHTML=vv==0?JKI.off:vv<50?JKI.low:JKI.vol;
  if(JK.al){const T=jkTracks(),tr=T[JK.cur];$('#jkttl').textContent=tr?tr.t:JK.al.t;$('#jkar').textContent=JK.al.a||'';$('#jkal').textContent=JK.al.t||'';
   document.querySelectorAll('#jkls [data-jkt]').forEach(b=>b.classList.toggle('cur',+b.dataset.jkt===JK.cur));jkLyr()}
  const m=$('#jkmsg');if(m)m.textContent=JK.msg||'';jkBar();jkMini()}
@@ -2326,6 +2327,10 @@ function jkAuto(){if(JKAUTO||JK.live)return;JKAUTO=true;
  setTimeout(go,300)}
 const jkDef=()=>{const L=jkList(),k=L.findIndex(a=>/love at first sting/i.test(a.t||''));return L.length?(k<0?L.length-1:k):-1};
 /* keep the open case in view inside the shelf (only works once the tab is visible) */
+/* the open case shrinks with the panel so the disc never runs off its right edge: the slot holds the other spines plus the case and the disc */
+function jkFit(){const r=$('#jkrack');if(!r||!r.clientWidth)return;const n=Math.max(0,r.querySelectorAll('.jksp').length-1),max=innerWidth>720?220:190;
+ const h=Math.floor(Math.max(120,Math.min(max,(r.clientWidth-24-n)/(1.62+n*.075))));r.style.setProperty('--jh',h+'px')}
+if(window.ResizeObserver){const ro=new ResizeObserver(()=>jkFit());document.addEventListener('jk:rack',()=>{const r=$('#jkrack');if(r)ro.observe(r)})}else addEventListener('resize',jkFit);
 function jkReveal(){const r=$('#jkrack'),it=r&&r.querySelector('.jksp.cur');if(!r||!it||!r.clientWidth)return;const b=it.getBoundingClientRect(),rr=r.getBoundingClientRect(),w=it.querySelector('.jkbox').offsetWidth?b.width:b.width+r.clientHeight*1.62;
  if(b.left<rr.left||b.left+w>rr.right)r.scrollLeft+=b.left+w>rr.right?b.left+w-rr.right+8:b.left-rr.left-8}
 /* opening the Jukebox tab plays the open album, once per visit to the home page */
