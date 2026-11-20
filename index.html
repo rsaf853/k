@@ -2230,6 +2230,18 @@ document.addEventListener('click',e=>{const mi=e.target.closest&&e.target.closes
  else if(k==='m'){JK.mute=!JK.mute;if(!JK.mute&&JKV==0)JKV=21;$('#jkmvo').value=JK.mute?0:JKV;jkVolApply()}
  else if(k==='x'){JK.mo=false;jkStop()}
  jkMini()});
+/* arriving on the site: once the entrance animation is gone, the open album starts. Browsers refuse sound before the visitor
+   has touched the page, so if YouTube is held back the music starts on the first click or key press anywhere (controls excepted: they act themselves) */
+let JKAUTO=false;
+function jkAuto(){if(JKAUTO||JK.live)return;JKAUTO=true;
+ const go=()=>{if(document.getElementById('intro'))return setTimeout(go,150);if(!document.getElementById('jkv')||JK.live||!JK.al)return;
+  if(!jkTracks().some(x=>x.v)&&!jkPlMode())return;jkStart();
+  setTimeout(()=>{if(JK.on||!JK.live)return;
+   const C='[data-jkp],[data-jkm],[data-jkt],[data-jk],[data-jkma],[data-jkmt],#jkbar,#jkvo,#jkmvo';
+   const kick=e=>{if(e.target.closest&&e.target.closest(C))return off();off();if(JK.live&&!JK.on){try{JK.yt.playVideo()}catch(z){jkGo(JK.cur)}}};
+   const off=()=>['pointerdown','keydown'].forEach(t=>removeEventListener(t,kick,true));
+   ['pointerdown','keydown'].forEach(t=>addEventListener(t,kick,true))},2500)};
+ setTimeout(go,300)}
 const jkDef=()=>{const L=jkList(),k=L.findIndex(a=>/love at first sting/i.test(a.t||''));return L.length?(k<0?L.length-1:k):-1};
 /* keep the open case in view inside the shelf (only works once the tab is visible) */
 function jkReveal(){const r=$('#jkrack'),it=r&&r.querySelector('.jksp.cur');if(!r||!it||!r.clientWidth)return;const b=it.getBoundingClientRect(),rr=r.getBoundingClientRect(),w=it.querySelector('.jkbox').offsetWidth?b.width:b.width+r.clientHeight*1.62;
@@ -2295,7 +2307,7 @@ function lvHome(){lvStop();lvData();LVZ=lvGame();const intro=false;LVS.cur=intro
  <div class="lvlft"><div class="lvbar lvbk" id="lvpb"></div><div id="lvbd"></div><div class="lvbar lvwh" id="lvpw"></div><div class="lvctr"><button class="bt" data-lv="s" aria-label="start">${IC.s}</button><button class="bt" data-lv="-" aria-label="back">${IC.b}</button><button class="bt" data-lv="p" id="lvplay" aria-label="play">${IC.p}</button><button class="bt" data-lv="+" aria-label="next">${IC.n}</button><div class="lvpr" id="lvpr"><s><i></i></s></div><span class="lvpg" id="lvpg"></span></div></div>
  <div class="lvrgt"><div class="lvtabs">${TB('juke','N','Jukebox',1)}${TB('moves','P','Moves')}${TB('chat','R','Chat')}${TB('notes','B','Notes')}</div>
  <div class="lvpn on" data-lp="juke"><div id="lvjk"></div></div><div class="lvpn" data-lp="moves"><div class="lvmv" id="lvmv"></div><div class="lvpv" id="lvpv"></div></div><div class="lvpn" data-lp="chat"><div class="lvch" id="lvch"></div><div id="lvcf"></div></div><div class="lvpn" data-lp="notes"><div class="lvnt" id="lvnt"></div></div></div></div></section>`;
- lvPaint();lvChat();lvCForm();lvNotes();lvJuke();if(intro)lvIntro()}
+ lvPaint();lvChat();lvCForm();lvNotes();lvJuke();jkAuto();if(intro)lvIntro()}
 function lvIntro(){const n=LVZ.seq.length,dt=Math.max(LVI.min,Math.min(LVI.max,Math.round(LVI.total/n))),tok=LVS.tok;
  const start=()=>{if(tok!==LVS.tok||LVS.tm||!$('.lv'))return;const b=$('#lvplay');if(b){b.innerHTML=IC.pa;b.classList.add('on')}
   LVS.tm=setInterval(()=>{if(!$('.lv')||LVS.cur>=n)return lvStop();lvGo(LVS.cur+1)},dt)};
