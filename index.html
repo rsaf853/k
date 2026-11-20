@@ -674,7 +674,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 /* ---------- jukebox (home tab): spines on a shelf; the chosen one opens in its own slot as a jewel case and the CD slides out and turns while YouTube plays ---------- */
 @property --jh{syntax:'<length>';inherits:true;initial-value:360px}
 .jk{position:relative}
-.jkrack{--jh:360px;transition:--jh .6s cubic-bezier(.3,.8,.2,1);display:flex;align-items:flex-end;gap:1px;padding:20px 2px 0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+.jkrack{--jh:360px;transition:--jh .6s cubic-bezier(.3,.8,.2,1);display:flex;align-items:flex-end;gap:1px;padding:20px 2px 10px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
 .jkrack::-webkit-scrollbar{display:none}
 .jk.open .jkrack{--jh:212px}
 .jksp{flex:none;display:flex;align-items:flex-end;height:var(--jh);cursor:pointer;transition:transform .35s cubic-bezier(.3,.8,.2,1)}
@@ -687,7 +687,6 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jksp.cur .jkspi{width:0;opacity:0}
 .jkbox{flex:none;position:relative;height:100%;width:0;transition:width .6s cubic-bezier(.3,.8,.2,1)}
 .jksp.cur .jkbox{width:calc(var(--jh)*1.62 + 8px)}
-.jkledge{height:12px;background:color-mix(in srgb,var(--fg) 15%,var(--bg));box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 5px 9px -5px rgba(0,0,0,.45)}
 .jkcap{display:flex;align-items:center;gap:6px;min-height:28px;padding-top:8px;font:700 10px var(--sans);letter-spacing:.1em;color:var(--mut)}
 .jkcap .btn{margin-left:auto}
 .jk.open .jkcap{display:none}
@@ -748,6 +747,16 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 @keyframes jkeq{from{height:25%}to{height:100%}}
 .jkmsg{margin:8px 0 0;font:500 11.5px var(--sans);color:var(--mut)}.jkmsg:empty{display:none}
 .jkyt{position:fixed;left:0;bottom:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+.jkmini{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:34;width:min(380px,calc(100vw - 116px));height:56px;box-sizing:border-box;display:flex;align-items:center;gap:2px;padding:0 6px 0 8px;border:1px solid var(--fg);background:var(--bg);color:var(--fg);box-shadow:0 10px 26px -14px rgba(0,0,0,.45);animation:jkin .3s both}
+.jkmini[hidden]{display:none}
+.jkmd{flex:none;position:relative;width:40px;height:40px;padding:0;border:0;background:none;cursor:pointer}
+.jkmt{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:0 6px;border:0;background:none;color:inherit;cursor:pointer;text-align:left}
+.jkmt b{max-width:100%;font:800 12.5px/1.2 var(--sans);letter-spacing:-.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jkmt small{max-width:100%;font:600 10px/1.2 var(--sans);color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jkmini .jkib{width:28px;height:28px}.jkmini .jkib.jkpp{width:32px;height:32px}
+.jkmini .jkmx{font:400 19px/1 var(--sans);color:var(--mut)}.jkmini .jkmx:hover{color:var(--fg)}
+.jkmb{position:absolute;left:-1px;right:-1px;bottom:-1px;height:2px}.jkmb i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--fg)}
+@media(max-width:420px){.jkmini [data-jkm="-"]{display:none}}
 @media(prefers-reduced-motion:reduce){.jkcd{animation:none}.jk.playing .jkls .eq i{animation:none}.jkrack,.jksp,.jkspi,.jkbox,.jksl,.jkst{transition:none}}
 @media(max-width:1080px){.lvg{grid-template-columns:1fr;grid-template-areas:"t" "b" "p"}.lvlft{margin-bottom:14px}}
 @media(max-width:720px){.lvt h3{font-size:28px}}
@@ -2135,26 +2144,25 @@ function jkState(e){const S=e.data,y=JK.yt;
  else if(S===0){JK.on=false;if(!jkPlMode())return jkGo(JK.cur+1)}
  else if(S===-1&&jkPlMode()){try{const ids=y.getPlaylist();if(ids&&ids.length&&!JK.ids){JK.ids=ids;jkList2()}}catch(x){}}
  jkPaint()}
-function jkGo(k){const T=jkTracks();if(!T.length)return;if(k>=T.length){JK.on=false;try{JK.yt&&JK.yt.stopVideo()}catch(e){}JK.cur=0;return jkPaint()}
+function jkGo(k){JK.live=true;const T=jkTracks();if(!T.length)return;if(k>=T.length){JK.on=false;try{JK.yt&&JK.yt.stopVideo()}catch(e){}JK.cur=0;return jkPaint()}
  JK.cur=Math.max(0,k);JK.t=0;JK.d=0;JK.msg='';
  if(jkPlMode()){jkYT(()=>{try{JK.yt.playVideoAt(JK.cur)}catch(e){}});return jkPaint()}
  const v=T[JK.cur].v;if(!v){JK.on=false;try{JK.yt&&JK.yt.stopVideo()}catch(e){}JK.msg='No YouTube link for this track yet.';return jkPaint()}
  jkYT(()=>{JK.yt.loadVideoById(v);jkVolApply()});jkPaint()}
-function jkStart(){const a=JK.al;JK.cur=0;JK.ids=null;JK.t=0;JK.d=0;JK.msg='';
+function jkStart(){const a=JK.al;JK.live=true;JK.cur=0;JK.ids=null;JK.t=0;JK.d=0;JK.msg='';
  if(jkPlMode())jkYT(()=>{JK.yt.loadPlaylist({list:a.pl,listType:'playlist',index:0});jkVolApply()});else jkGo(0)}
 function jkToggle(){if(!JK.al)return;const y=JK.yt;let st=-1;try{st=y?y.getPlayerState():-1}catch(e){}
  if(JK.on){try{y.pauseVideo()}catch(e){}JK.on=false;return jkPaint()}
  if(st===2){try{y.playVideo()}catch(e){}return}
  if(jkPlMode()&&!(JK.ids&&JK.ids.length))return jkStart();jkGo(JK.cur)}
-function jkStop(){JK.on=false;try{JK.yt&&JK.yt.stopVideo()}catch(e){}}
+function jkStop(){JK.on=false;try{JK.yt&&JK.yt.stopVideo()}catch(e){}JK.live=false;jkMini()}
 /* progress: poll the player while the home page is on screen; leaving the page stops the music */
-function jkTick(){clearInterval(JK.tick);JK.tick=setInterval(()=>{if(!document.getElementById('jkv')){clearInterval(JK.tick);JK.tick=null;if(JK.on)jkStop();JK.ai=-1;JK.al=null;JK.touched=false;return}
- if(JK.ready&&JK.on){try{JK.t=JK.yt.getCurrentTime();JK.d=JK.yt.getDuration()}catch(e){}jkBar()}},500)}
+function jkTick(){if(JK.tick)return;JK.tick=setInterval(()=>{if(JK.ready&&JK.on){try{JK.t=JK.yt.getCurrentTime();JK.d=JK.yt.getDuration()}catch(e){}jkBar()}jkMini()},500)}
 const jkCd=a=>a.cd?`<img class="a" src="${esc(a.cd)}" alt=""><img class="t" src="jk/cd-light.webp" alt="">`:`<svg viewBox="0 0 200 200" aria-hidden="true"><defs><mask id="jkm"><rect width="200" height="200" fill="#fff"/><circle cx="100" cy="100" r="57" fill="#777"/><circle cx="100" cy="100" r="12.5" fill="#000"/></mask></defs><g mask="url(#jkm)"><circle cx="100" cy="100" r="99" fill="#d9dcdf"/><circle cx="100" cy="100" r="95" fill="#c9cdd1"/><circle cx="100" cy="100" r="29" fill="#e9ebee"/></g><text x="100" y="58" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="12" letter-spacing="2" fill="#222">${esc(String(a.a||'').toUpperCase())}</text><text x="100" y="150" text-anchor="middle" font-family="Inter,sans-serif" font-weight="500" font-size="10" fill="#333">${esc(a.t||'')}</text></svg><img class="t" src="jk/cd-light.webp" alt="">`;
 function jkStageHtml(a){return`<div class="jkst" id="jkst"><div class="jksl"><div class="jkcd" id="jkcd">${jkCd(a)}</div><div class="jksh a"></div><div class="jksh b"></div><div class="jksh c"></div><div class="jkshd"></div></div>
  <div class="jkcase"><div class="jkhg"${a.sp?` style="background-image:url('${esc(a.sp)}')"`:''}></div><img src="jk/case.webp" alt=""><div class="jkcov${a.cov?'':' gen'}"${a.cov?` style="background-image:url('${esc(a.cov)}')"`:''}>${a.cov?'':esc(a.t||'')+'<small>'+esc(a.a||'')+'</small>'}</div><img src="jk/case-light.webp" alt=""></div></div>`}
 function lvJuke(){const el=$('#lvjk');if(!el)return;const L=jkList(),ed=em();if(JK.ai<0||!L[JK.ai])JK.ai=jkDef();const a=JK.ai>=0?L[JK.ai]:null;if(!a){JK.ai=-1;JK.al=null}
- el.innerHTML=`<div class="jk${a?' open':''}${JK.on?' playing':''}" id="jkv"><div class="jkrack" id="jkrack">${L.map((x,i)=>`<div class="jksp${i===JK.ai?' cur':''}" role="button" tabindex="0" data-jk="${i}" aria-label="${esc(x.a)} — ${esc(x.t)}">${x.sp?`<div class="jkspi"><img src="${esc(x.sp)}" alt="" loading="lazy"></div>`:`<div class="jkspi gen"><span>${esc(String(x.a+' · '+x.t).toUpperCase())}</span></div>`}<div class="jkbox"></div></div>`).join('')}</div><div class="jkledge"></div>
+ el.innerHTML=`<div class="jk${a?' open':''}${JK.on?' playing':''}" id="jkv"><div class="jkrack" id="jkrack">${L.map((x,i)=>`<div class="jksp${i===JK.ai?' cur':''}" role="button" tabindex="0" data-jk="${i}" aria-label="${esc(x.a)} — ${esc(x.t)}">${x.sp?`<div class="jkspi"><img src="${esc(x.sp)}" alt="" loading="lazy"></div>`:`<div class="jkspi gen"><span>${esc(String(x.a+' · '+x.t).toUpperCase())}</span></div>`}<div class="jkbox"></div></div>`).join('')}</div>
  <div class="jkcap"><span>${L.length?L.length+' ALBUMS':'NO ALBUMS YET'}</span>${ed?'<button class="btn" data-jkadd>+ ALBUM</button>':''}</div>
  <div class="jkpl"><div class="jkhd"><div><div class="jkttl" id="jkttl"></div><div class="jkart" id="jkart"></div></div>${ed?'<button class="btn" data-jkadd>+ ALBUM</button><button class="btn" data-jked>EDIT</button>':''}</div>
  <div class="jkpg"><span class="jktm" id="jktc">0:00</span><div class="jkbar" id="jkbar" role="slider" aria-label="position"><i id="jkfill"></i></div><span class="jktm r" id="jktd">0:00</span></div>
@@ -2165,19 +2173,30 @@ function lvJuke(){const el=$('#lvjk');if(!el)return;const L=jkList(),ed=em();if(
  jkList2();jkPaint();jkTick();requestAnimationFrame(jkReveal)}
 function jkList2(){const ul=$('#jkls');if(!ul||!JK.al)return;const T=jkTracks();
  ul.innerHTML=T.map((x,k)=>`<li data-jkt="${k}"><span class="n">${k+1}</span><span class="eq"><i></i><i></i><i></i></span><span class="t">${esc(x.t)}</span>${!x.v&&!jkPlMode()?'<span class="nl">NO LINK</span>':''}</li>`).join('');jkPaint()}
-function jkBar(){const f=$('#jkfill');if(!f)return;f.style.width=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';$('#jktc').textContent=jkFmt(JK.t);$('#jktd').textContent=jkFmt(JK.d)}
-function jkPaint(){const v=$('#jkv');if(!v)return;v.classList.toggle('playing',JK.on);const cd=$('#jkcd');if(cd)cd.classList.toggle('go',JK.on);
+function jkBar(){const mf=$('#jkmf');if(mf)mf.style.width=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';const f=$('#jkfill');if(!f)return;f.style.width=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%';$('#jktc').textContent=jkFmt(JK.t);$('#jktd').textContent=jkFmt(JK.d)}
+function jkPaint(){const v=$('#jkv');if(!v)return jkMini();v.classList.toggle('playing',JK.on);const cd=$('#jkcd');if(cd)cd.classList.toggle('go',JK.on);
  const pp=$('#jkpp');if(pp)pp.innerHTML=JK.on?JKI.pause:JKI.play;const vv=JK.mute?0:JKV,mu=$('#jkmu');if(mu)mu.innerHTML=vv==0?JKI.off:vv<50?JKI.low:JKI.vol;const vo=$('#jkvo');if(vo)vo.style.setProperty('--v',vv+'%');
  if(JK.al){const T=jkTracks(),tr=T[JK.cur];$('#jkttl').textContent=tr?tr.t:JK.al.t;$('#jkart').textContent=JK.al.a+' · '+JK.al.t;
   document.querySelectorAll('#jkls li').forEach((li,k)=>li.classList.toggle('cur',k===JK.cur))}
- const m=$('#jkmsg');if(m)m.textContent=JK.msg||'';jkBar()}
+ const m=$('#jkmsg');if(m)m.textContent=JK.msg||'';jkBar();jkMini()}
 const jkItem=i=>document.querySelector(`#jkrack .jksp[data-jk="${i}"]`);
+/* mini player: shown on every other page while an album is loaded; the disc keeps turning with the music */
+function jkMini(){let m=document.getElementById('jkmini');const show=JK.live&&JK.al&&!document.getElementById('jkv');
+ if(!show){if(m)m.hidden=true;return}
+ if(!m){m=document.createElement('div');m.id='jkmini';m.className='jkmini';m.setAttribute('role','region');m.setAttribute('aria-label','music');document.body.appendChild(m)}
+ const a=JK.al,T=jkTracks(),tr=T[JK.cur],key=(a.cd||'')+'|'+(a.t||'');
+ if(m.dataset.k!==key){m.dataset.k=key;m.innerHTML=`<button type="button" class="jkmd" data-jkm="home" aria-label="open the jukebox"><span class="jkcd" id="jkmcd">${jkCd(a)}</span></button><button type="button" class="jkmt" data-jkm="home"><b id="jkmt"></b><small id="jkma"></small></button><button class="jkib" type="button" data-jkm="-" aria-label="previous">${JKI.prev}</button><button class="jkib jkpp" type="button" data-jkm="p" id="jkmp" aria-label="play / pause"></button><button class="jkib" type="button" data-jkm="+" aria-label="next">${JKI.next}</button><button class="jkib jkmx" type="button" data-jkm="x" aria-label="stop and close">×</button><i class="jkmb"><i id="jkmf"></i></i>`}
+ m.hidden=false;$('#jkmt').textContent=tr?tr.t:a.t;$('#jkma').textContent=a.a+' · '+a.t;$('#jkmp').innerHTML=JK.on?JKI.pause:JKI.play;$('#jkmcd').classList.toggle('go',JK.on);
+ const f=$('#jkmf');if(f)f.style.width=(JK.d?Math.min(100,JK.t/JK.d*100):0)+'%'}
+document.addEventListener('click',e=>{const x=e.target.closest&&e.target.closest('#jkmini [data-jkm]');if(!x)return;const k=x.dataset.jkm,T=jkTracks();
+ if(k==='home'){location.hash='#/';return}
+ if(k==='p')jkToggle();else if(k==='-')jkGo(JK.t>3?JK.cur:Math.max(0,JK.cur-1));else if(k==='+')jkGo(JK.cur+1>=T.length?0:JK.cur+1);else if(k==='x')jkStop();jkMini()});
 const jkDef=()=>{const L=jkList(),k=L.findIndex(a=>/love at first sting/i.test(a.t||''));return L.length?(k<0?L.length-1:k):-1};
 /* keep the open case in view inside the shelf (only works once the tab is visible) */
 function jkReveal(){const r=$('#jkrack'),it=r&&r.querySelector('.jksp.cur');if(!r||!it||!r.clientWidth)return;const b=it.getBoundingClientRect(),rr=r.getBoundingClientRect(),w=it.querySelector('.jkbox').offsetWidth?b.width:b.width+r.clientHeight*1.62;
  if(b.left<rr.left||b.left+w>rr.right)r.scrollLeft+=b.left+w>rr.right?b.left+w-rr.right+8:b.left-rr.left-8}
 /* opening the Jukebox tab plays the open album, once per visit to the home page */
-function jkTab(){if(JK.ai<0&&jkList().length){JK.ai=jkDef();lvJuke()}requestAnimationFrame(jkReveal);if(!JK.on&&!JK.touched&&JK.al){JK.touched=true;jkStart()}else jkYT(()=>{})}
+function jkTab(){if(JK.ai<0&&jkList().length){JK.ai=jkDef();lvJuke()}requestAnimationFrame(jkReveal);jkYT(()=>{})}
 function jkOpen(i){const L=jkList(),a=L[i];if(!a)return;JK.ai=i;JK.al=a;const v=$('#jkv'),it=jkItem(i);
  it.querySelector('.jkbox').innerHTML=jkStageHtml(a);const st=$('#jkst');it.classList.add('cur');v.classList.add('open');jkList2();
  setTimeout(()=>st.classList.add('in'),200);
@@ -2231,12 +2250,12 @@ function lvEdit(){const L=lvData(),P=L.players,f=(s,lab)=>{const p=P[s]||{};retu
  $('#f').onsubmit=async e=>{e.preventDefault();const F=e.target,np={};msg('Saving…');try{for(const s of['w','b']){let src=F.elements[s+'src'].value.trim();const fl=F.elements[s+'file'].files[0];if(fl)src=await upload(fl);np[s]={name:F.elements[s+'name'].value.trim(),en:F.elements[s+'en'].value.trim(),title:F.elements[s+'title'].value.trim(),elo:F.elements[s+'elo'].value.trim(),src,tags:F.elements[s+'tags'].value.trim()}}}catch(x){return msg('Upload failed: '+x.message)}
   const pg=F.elements.pgn.value.trim(),G2=cxPlay(cxSpec(pg||LV_PGN));if(G2.bad)return msg('Could not read the PGN: '+G2.bad+' (after '+G2.M.length+' plies)');
   L.players=np;L.pgn=pg||LV_PGN;await saveHome();closeM();home()}}
-function lvHome(){lvStop();lvData();LVZ=lvGame();const intro=LV_INTRO&&LVZ.seq.length>1&&!matchMedia('(prefers-reduced-motion:reduce)').matches;LV_INTRO=false;LVS.cur=intro?0:LVZ.seq.length;LVS.sel=Math.max(1,LVS.cur);const o=LVZ.o,done=LVZ.seq.length>=LVZ.n,vp=String(o.h.Variation||'').split(/\s*,\s*/).filter(Boolean),op=[o.h.Opening,vp[0]].filter(Boolean).join(' '),full=op?op+(vp.length>1?', '+vp.slice(1).join(', '):''):'',tt=o.h.Site||op||o.h.Event||'Game',ts=o.h.Site?full:vp.slice(1).join(', ');
+function lvHome(){lvStop();lvData();LVZ=lvGame();const intro=false;LVS.cur=intro?0:LVZ.seq.length;LVS.sel=Math.max(1,LVS.cur);const o=LVZ.o,done=LVZ.seq.length>=LVZ.n,vp=String(o.h.Variation||'').split(/\s*,\s*/).filter(Boolean),op=[o.h.Opening,vp[0]].filter(Boolean).join(' '),full=op?op+(vp.length>1?', '+vp.slice(1).join(', '):''):'',tt=o.h.Site||op||o.h.Event||'Game',ts=o.h.Site?full:vp.slice(1).join(', ');
  const TB=(t,pc,nm,on)=>`<button${on?' class="on"':''} data-lt="${t}" aria-label="${nm}"><svg class="lvti" viewBox="0 0 40 40" aria-hidden="true"><use href="#bn${pc}"/></svg><span class="lvtx">${nm}</span></button>`;
  app.innerHTML=`<section class="lv"><div class="lvg"><div class="lvt"><div class="lvt1"><button type="button" class="lvchip" id="lvfp" title="${FP?'Back to normal':'Full page'}" aria-pressed="${FP}">${FP?'PAUSED':'LIVE'} · GAME ${LVZ.game}</button><span class="lvcn">${done?esc(o.h.Result||o.result||'')+' · FINISHED':LVZ.seq.length+' / '+LVZ.n+' MOVES'}</span>${em()?'<button class="btn" id="lvedit">EDIT</button>':''}</div><h3>${esc(tt)}</h3>${ts?`<p>${esc(ts)}</p>`:''}</div>
  <div class="lvlft"><div class="lvbar lvbk" id="lvpb"></div><div id="lvbd"></div><div class="lvbar lvwh" id="lvpw"></div><div class="lvctr"><button class="bt" data-lv="s" aria-label="start">${IC.s}</button><button class="bt" data-lv="-" aria-label="back">${IC.b}</button><button class="bt" data-lv="p" id="lvplay" aria-label="play">${IC.p}</button><button class="bt" data-lv="+" aria-label="next">${IC.n}</button><div class="lvpr" id="lvpr"><s><i></i></s></div><span class="lvpg" id="lvpg"></span></div></div>
- <div class="lvrgt"><div class="lvtabs">${TB('moves','P','Moves',1)}${TB('juke','N','Jukebox')}${TB('chat','R','Chat')}${TB('notes','B','Notes')}</div>
- <div class="lvpn on" data-lp="moves"><div class="lvmv" id="lvmv"></div><div class="lvpv" id="lvpv"></div></div><div class="lvpn" data-lp="juke"><div id="lvjk"></div></div><div class="lvpn" data-lp="chat"><div class="lvch" id="lvch"></div><div id="lvcf"></div></div><div class="lvpn" data-lp="notes"><div class="lvnt" id="lvnt"></div></div></div></div></section>`;
+ <div class="lvrgt"><div class="lvtabs">${TB('juke','N','Jukebox',1)}${TB('moves','P','Moves')}${TB('chat','R','Chat')}${TB('notes','B','Notes')}</div>
+ <div class="lvpn on" data-lp="juke"><div id="lvjk"></div></div><div class="lvpn" data-lp="moves"><div class="lvmv" id="lvmv"></div><div class="lvpv" id="lvpv"></div></div><div class="lvpn" data-lp="chat"><div class="lvch" id="lvch"></div><div id="lvcf"></div></div><div class="lvpn" data-lp="notes"><div class="lvnt" id="lvnt"></div></div></div></div></section>`;
  lvPaint();lvChat();lvCForm();lvNotes();lvJuke();if(intro)lvIntro()}
 function lvIntro(){const n=LVZ.seq.length,dt=Math.max(LVI.min,Math.min(LVI.max,Math.round(LVI.total/n))),tok=LVS.tok;
  const start=()=>{if(tok!==LVS.tok||LVS.tm||!$('.lv'))return;const b=$('#lvplay');if(b){b.innerHTML=IC.pa;b.classList.add('on')}
@@ -2249,7 +2268,7 @@ document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('.
  if(x=t.closest('[data-lv]')){const a=x.dataset.lv;if(a==='s'){lvStop();lvGo(0)}if(a==='-'){lvStop();lvGo(LVS.cur-1)}if(a==='+'){lvStop();lvGo(LVS.cur+1)}if(a==='p'){if(LVS.tm)return lvStop();if(LVS.cur>=LVZ.seq.length)lvGo(0);x.innerHTML=IC.pa;x.classList.add('on');LVS.tm=setInterval(()=>{if(!$('.lv')||LVS.cur>=LVZ.seq.length)return lvStop();lvGo(LVS.cur+1)},1100)}return}
  if(x=t.closest('.lvpr')){lvStop();const r=x.getBoundingClientRect();return lvGo(Math.round((e.clientX-r.left)/r.width*LVZ.seq.length))}
  if(x=t.closest('.lvm[data-j]')){lvStop();lvGo(+x.dataset.j);return}
- if(x=t.closest('[data-lt]')){document.querySelectorAll('.lvtabs button').forEach(b=>b.classList.toggle('on',b===x));document.querySelectorAll('.lvpn').forEach(p=>p.classList.toggle('on',p.dataset.lp===x.dataset.lt));if(x.dataset.lt==='chat'){const c=$('#lvch');c.scrollTop=c.scrollHeight}if(x.dataset.lt==='juke')jkTab();return}
+ if(x=t.closest('[data-lt]')){document.querySelectorAll('.lvtabs button').forEach(b=>b.classList.toggle('on',b===x));document.querySelectorAll('.lvpn').forEach(p=>p.classList.toggle('on',p.dataset.lp===x.dataset.lt));if(x.dataset.lt==='chat'){const c=$('#lvch');c.scrollTop=c.scrollHeight}if(x.dataset.lt==='juke')jkTab();if(x.dataset.lt==='moves'&&LV_INTRO){LV_INTRO=false;if(LVZ.seq.length>1&&!matchMedia('(prefers-reduced-motion:reduce)').matches){lvStop();lvGo(0);lvIntro()}}return}
  if(x=t.closest('[data-lvcdel]')){const L=lvData();(L.chat||[]).splice(+x.dataset.lvcdel,1);saveHome();lvChat();return}
  if(x=t.closest('[data-lvcedit]')){const L=lvData(),m=(L.chat||[])[+x.dataset.lvcedit];if(!m)return;const v=prompt('Edit',m.t);if(v===null)return;if(v.trim())m.t=v.trim();else L.chat.splice(+x.dataset.lvcedit,1);saveHome();lvChat();return}
  if(t.closest('#lvedit'))return lvEdit();
