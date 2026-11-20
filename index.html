@@ -1377,8 +1377,6 @@ html.mlock,html.mlock body{overflow:hidden}
 .mdk .msf{border-top:1px dashed currentColor}
 .mdk .msh.inv .mno,.mdk .msh.inv .msf,.mdk .msh.inv .msf .tg{color:var(--bg)}
 .mdk .msh.inv .msf{border-top-color:var(--bg)}
-.mdk mark,#mov mark{background:var(--fg);color:var(--bg);border-bottom:0}
-.mdk .msh.inv mark,#mov.inv mark{background:var(--bg);color:var(--fg)}
 .mdk .md code,.mdk .md pre,#mov .md code,#mov .md pre{background:transparent;border:1px solid currentColor}
 /* reading sheet */
 #mov .msheet{background:var(--bg);color:var(--fg);border:2px solid var(--fg);box-shadow:9px 9px 0 var(--fg)}
@@ -1624,10 +1622,8 @@ html.mlock,html.mlock body{overflow:hidden}
 #mov .msheet .mno,.mdk .msh .mno{display:none}
 #mov .msheet .mst{padding-right:18px}
 #mov .mfoot,#mov.inv .mfoot{border-top:0;padding-top:0}
-/* memos: no shadows anywhere (card hover, dragging, the opened sheet); the highlighted (inverted) memo behaves exactly like the plain one */
+/* memos: no shadows anywhere (card hover, dragging, the opened sheet) */
 .msh,.msh:hover,.msh.dragging,.msh.big,.msh.inv,.msh.inv:hover,.msh.inv.dragging,.mdk .msh,.mdk .msh:hover,.mdk .msh.dragging,.mdk .msh.big,.mdk .msh.big:hover,.mdk .msh.inv,.mdk .msh.inv:hover,.mdk .msh.inv.dragging,.msheet,.mov.inv .msheet,#mov .msheet,#mov.inv .msheet,.mm,.mm:hover{box-shadow:none!important}
-.mdk .msh.inv{border-color:var(--mbd)}.mdk .msh.inv:hover,.mdk .msh.inv.dragging{border-color:var(--mbh)}
-#mov.inv .msheet{border-color:color-mix(in srgb,var(--fg) 34%,var(--bg))}
 #mov .mfoot .st{color:color-mix(in srgb,var(--fg) 30%,var(--bg))}#mov.inv .mfoot .st{color:color-mix(in srgb,var(--bg) 40%,var(--fg))}
 #mov .mcls{right:8px;top:8px;width:24px;height:24px;opacity:.4}#mov .mcls:hover{opacity:1}#mov .mcls svg{width:9px;height:9px}
 /* opened memo: only the sheet scrolls, not the text inside it as well */
