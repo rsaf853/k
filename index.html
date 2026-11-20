@@ -674,24 +674,24 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 /* ---------- jukebox (home tab): spines on a shelf; the chosen one opens in its own slot as a jewel case and the CD slides out and turns while YouTube plays ---------- */
 @property --jh{syntax:'<length>';inherits:true;initial-value:360px}
 .jk{position:relative}
-.jkrack{--jh:360px;transition:--jh .6s cubic-bezier(.3,.8,.2,1);display:flex;align-items:flex-end;gap:1px;padding:20px 2px 10px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+.jkrack{--jh:360px;transition:--jh .6s cubic-bezier(.3,.8,.2,1);display:flex;align-items:flex-end;gap:1px;padding:20px 2px 4px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
 .jkrack::-webkit-scrollbar{display:none}
 .jk.open .jkrack{--jh:190px}
 .jksp{flex:none;display:flex;align-items:flex-end;height:var(--jh);cursor:pointer;transition:transform .35s cubic-bezier(.3,.8,.2,1)}
 .jksp:not(.cur):hover{transform:translateY(-10px)}
 .jksp:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
-.jkspi{flex:none;height:100%;width:calc(var(--jh)*.075);overflow:hidden;transition:width .55s cubic-bezier(.3,.8,.2,1),opacity .3s}
+.jkspi{flex:none;height:100%;width:calc(var(--jh)*.075);overflow:hidden;transition:width .6s cubic-bezier(.65,0,.35,1),opacity .3s}
 .jkspi img{display:block;width:100%;height:100%}
 .jkspi.gen{box-sizing:border-box;background:var(--soft);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;container-type:size}
 .jkspi.gen span{writing-mode:vertical-rl;font:700 min(52cqw,3cqh)/1 var(--sans);letter-spacing:.2em;white-space:nowrap;overflow:hidden}
 .jksp.cur .jkspi{width:0;opacity:0}
-.jkbox{flex:none;position:relative;height:100%;width:0;transition:width .6s cubic-bezier(.3,.8,.2,1)}
+.jkbox{flex:none;position:relative;height:100%;width:0;transition:width .6s cubic-bezier(.65,0,.35,1)}
 .jksp.cur .jkbox{width:calc(var(--jh)*1.62 + 8px)}
 .jkcap{display:flex;align-items:center;gap:6px;min-height:28px;padding-top:8px;font:700 10px var(--sans);letter-spacing:.1em;color:var(--mut)}
 .jkcap .btn{margin-left:auto}
 .jk.open .jkcap{display:none}
-.jkst{position:absolute;left:4px;bottom:0;height:var(--jh);width:calc(var(--jh)*1.143);opacity:0;transition:opacity .35s}
-.jkst.in{opacity:1}
+.jkst{position:absolute;left:4px;bottom:0;height:var(--jh);width:calc(var(--jh)*1.143);opacity:0;transform-origin:0 50%;transform:perspective(900px) rotateY(-88deg);transition:transform .6s cubic-bezier(.65,0,.35,1),opacity .2s .4s}
+.jkst.in{opacity:1;transform:perspective(900px) rotateY(0);transition:transform .6s cubic-bezier(.65,0,.35,1),opacity .15s}
 .jkst.now,.jkst.now *{transition:none!important}
 .jkcase{position:absolute;inset:0;z-index:2}
 .jkcase>img{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
@@ -700,7 +700,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jkcov.gen small{font:600 10px var(--sans);color:var(--mut);margin-top:3px}
 .jkhg{position:absolute;left:1.74%;top:2.84%;width:6.38%;height:93.94%;overflow:hidden;background:#222 center/140% 112% no-repeat}
 .jkhg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.12),rgba(0,0,0,0) 30% 75%,rgba(0,0,0,.1))}
-.jksl{position:absolute;z-index:1;width:calc(var(--jh)*.92);height:calc(var(--jh)*.92);top:calc(var(--jh)*.04);left:calc(var(--jh)*.15);transition:transform 1s cubic-bezier(.2,.75,.2,1)}
+.jksl{position:absolute;z-index:1;width:calc(var(--jh)*.92);height:calc(var(--jh)*.92);top:calc(var(--jh)*.04);left:calc(var(--jh)*.15);transition:transform .55s cubic-bezier(.65,0,.35,1)}
 .jkst.out .jksl{transform:translateX(calc(var(--jh)*.51))}
 .jkcd{position:absolute;inset:0;border-radius:50%;animation:jkspin 5s linear infinite paused}
 .jkcd.go{animation-play-state:running}
@@ -714,7 +714,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .jksh.b{mix-blend-mode:soft-light;opacity:.9;background:linear-gradient(135deg,rgba(255,255,255,.85),rgba(255,255,255,0) 45%,rgba(0,0,0,.35) 100%)}
 .jkshd{position:absolute;inset:0;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .4s;background:linear-gradient(90deg,rgba(0,0,0,.55) 0 51.5%,rgba(0,0,0,.28) 53%,rgba(0,0,0,.08) 60%,transparent 68%)}
 .jkst.out .jkshd{opacity:1;transition-delay:.7s}
-.jkpl{display:none;padding-top:14px}
+.jkpl{display:none;padding-top:6px}
 .jk.open .jkpl{display:block;animation:jkin .4s .25s both}
 @keyframes jkin{from{opacity:0;transform:translateY(-6px)}}
 .jkhd{display:flex;align-items:flex-start;gap:10px}.jkhd>div{flex:1;min-width:0}.jkhd .btn{flex:none}
@@ -744,7 +744,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 @keyframes jkeq{from{height:25%}to{height:100%}}
 /* home player (T2a): title with the controls at the right edge, progress, album name over a flowing track list, L1 lyrics */
 .jkrow{display:flex;align-items:center;gap:12px}
-.jkrow .jkttl{flex:1;min-width:0;font-size:20px;letter-spacing:-.05em}
+.jkrow .jkttl{flex:1;min-width:0;font-size:17px;letter-spacing:-.06em}
 @media(min-width:721px){.jk.open .jkrack{--jh:220px}}
 .jkrow .jkct{flex:none;margin:0;gap:0;margin-right:-5px}
 .jkrow .jkct .jkib{width:22px;height:22px}.jkrow .jkct .jkib svg{width:9px;height:9px}
@@ -2248,7 +2248,7 @@ function jkStageHtml(a){return`<div class="jkst" id="jkst"><div class="jksl"><di
 function lvJuke(){const el=$('#lvjk');if(!el)return;const L=jkList(),ed=em();if(JK.ai<0||!L[JK.ai])JK.ai=jkDef();const a=JK.ai>=0?L[JK.ai]:null;if(!a){JK.ai=-1;JK.al=null}
  el.innerHTML=`<div class="jk${a?' open':''}${JK.on?' playing':''}" id="jkv"><div class="jkrack" id="jkrack">${L.map((x,i)=>`<div class="jksp${i===JK.ai?' cur':''}" role="button" tabindex="0" data-jk="${i}" aria-label="${esc(x.a)} — ${esc(x.t)}">${x.sp?`<div class="jkspi"><img src="${esc(x.sp)}" alt="" loading="lazy"></div>`:`<div class="jkspi gen"><span>${esc(String(x.a+' · '+x.t).toUpperCase())}</span></div>`}<div class="jkbox"></div></div>`).join('')}</div>
  <div class="jkcap"><span>${L.length?L.length+' ALBUMS':'NO ALBUMS YET'}</span>${ed?'<button class="btn" data-jkadd>+ ALBUM</button>':''}</div>
- <div class="jkpl" id="jkpl"><div class="jkrow"><div class="jkttl" id="jkttl"></div><div class="jkct"><button class="jkib" type="button" data-jkp="-" aria-label="previous">${JKI.prev}</button><button class="jkib" type="button" data-jkp="p" id="jkpp" aria-label="play / pause"></button><button class="jkib" type="button" data-jkp="+" aria-label="next">${JKI.next}</button></div><input type="range" class="jkr" id="jkvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></div>
+ <div class="jkpl" id="jkpl"><div class="jkrow"><div class="jkttl" id="jkttl"></div><div class="jkct"><button class="jkib" type="button" data-jkp="p" id="jkpp" aria-label="play / pause"></button></div><input type="range" class="jkr" id="jkvo" min="0" max="100" value="${JK.mute?0:JKV}" aria-label="volume"></div>
  <div class="jkpg"><span class="jktm" id="jktc">0:00</span><div class="jkbar" id="jkbar" role="slider" aria-label="position"><i id="jkfill"></i><b class="jkknob"></b></div><span class="jktm r" id="jktd">0:00</span></div>
  <div class="jkah"><div><small id="jkar"></small><b id="jkal"></b></div>${ed?'<button class="btn" data-jkadd>+ ALBUM</button><button class="btn" data-jked>EDIT</button>':''}<button class="jkly" type="button" data-jkp="l" id="jkly" aria-label="lyrics" title="Lyrics" hidden><svg viewBox="0 0 16 16"><path d="M2.5 4h11M2.5 8h11M2.5 12h6"/></svg></button></div>
  <p class="jkmsg" id="jkmsg"></p><p class="jkfl" id="jkls"></p><div class="jklyr" id="jklyr"><ol></ol></div></div></div>`;
@@ -2332,12 +2332,12 @@ function jkReveal(){const r=$('#jkrack'),it=r&&r.querySelector('.jksp.cur');if(!
 function jkTab(){if(JK.ai<0&&jkList().length){JK.ai=jkDef();lvJuke()}requestAnimationFrame(jkReveal);jkYT(()=>{})}
 function jkOpen(i){const L=jkList(),a=L[i];if(!a)return;JK.ai=i;JK.al=a;const v=$('#jkv'),it=jkItem(i);
  it.querySelector('.jkbox').innerHTML=jkStageHtml(a);const st=$('#jkst');it.classList.add('cur');v.classList.add('open');jkList2();
- setTimeout(()=>st.classList.add('in'),200);
+ setTimeout(()=>st.classList.add('in'),60);
  setTimeout(()=>{st.classList.add('out');const r=$('#jkrack');if(!r)return;const b=it.getBoundingClientRect(),rr=r.getBoundingClientRect();if(b.right>rr.right||b.left<rr.left)r.scrollBy({left:b.left<rr.left?b.left-rr.left-8:b.right-rr.right+8,behavior:'smooth'})},650);
  jkStart()}
 function jkClose(then){jkStop();JK.busy=1;const st=$('#jkst'),i=JK.ai;if(st)st.classList.remove('out');jkPaint();
- setTimeout(()=>{if(st)st.classList.remove('in');const it=jkItem(i);if(it)it.classList.remove('cur');
-  setTimeout(()=>{if(st)st.remove();JK.ai=-1;JK.al=null;JK.busy=0;if(then)then()},450)},600)}
+ setTimeout(()=>{if(st){st.classList.remove('in');st.removeAttribute('id');st.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'))}const it=jkItem(i);if(it)it.classList.remove('cur');
+  JK.ai=-1;JK.al=null;if(then)then();setTimeout(()=>{if(st)st.remove();JK.busy=0},650)},250)}
 function jkPick(i){if(JK.busy)return;JK.touched=true;if(i===JK.ai)return jkToggle();if(JK.ai<0)return jkOpen(i);jkClose(()=>jkOpen(i))}
 /* a CD photo becomes a disc: centred square, round edge, the hole punched out and the clear hub see-through */
 async function jkCut(f){const u=URL.createObjectURL(f);try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=u});
