@@ -633,7 +633,8 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 body.fplock #lvfp{cursor:default}
 /* left picture switched off in settings: the page takes the whole width (LIVE keeps its own layout) */
 body.noside .shell{grid-template-columns:0 minmax(0,1fr);column-gap:0}
-body.noside .side{display:none}
+body.noside .side{visibility:hidden;overflow:hidden;padding:0;min-width:0}
+@media(max-width:720px){body.noside .side{display:none}}
 body.sitelk header nav,body.sitelk .side,body.sitelk #jkmini{visibility:hidden}
 .rkbig{width:46px;height:46px;fill:var(--fg);stroke:var(--fg);stroke-width:1.5;stroke-linejoin:round;--pe:var(--bg)}
 .lkpm{font:700 9.5px var(--sans);letter-spacing:.14em;color:var(--mut)}
@@ -1100,7 +1101,7 @@ body.fp .lvchip::before{animation:none}
  body.fp .shell{grid-template-columns:0 minmax(0,1fr);column-gap:0;padding:0 11vw}
  body.fp .side{transform:translateX(-110%);opacity:0;pointer-events:none;overflow:hidden}
  /* the board column never gets taller than the screen: board + two player bars + controls ~ 230px of chrome */
- body.fp .lvg{grid-template-columns:minmax(280px,1fr) minmax(0,min(calc((100% - 22px) * .5238),max(320px,calc(100vh - 230px)),max(320px,calc(100svh - 230px))))}
+ body.fp .lvg,body.noside .lvg{grid-template-columns:minmax(280px,1fr) minmax(0,min(calc((100% - 22px) * .5238),max(320px,calc(100vh - 230px)),max(320px,calc(100svh - 230px))))}
 }
 @media(max-width:720px){button.lvchip{pointer-events:none;cursor:default}}
 
