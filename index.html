@@ -623,12 +623,17 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .lkcen{min-height:calc(100vh - 300px);min-height:calc(100svh - 300px)}.lkin{display:flex;flex-direction:column;align-items:center;gap:10px}
 .lkpg .rkt,.lkcen .rkt{display:none}.lkpg .rkw,.lkcen .rkw{align-items:center}.lkpg .uf,.lkcen .uf{width:260px;margin-top:0}
 .lkrs{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.lkr .sg2{grid-column:2/-1;margin:0}
 .lkr{display:grid;grid-template-columns:minmax(0,1fr) 110px 150px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
 .lkr b{display:block;font:800 13px var(--sans);letter-spacing:-.03em}.lkr small{display:block;font:500 10.5px var(--sans);color:var(--mut)}
 .lkr select,.lkr input{margin:0;width:100%;min-width:0}
 .lkr input[hidden]{display:block!important;visibility:hidden}
 @media(max-width:520px){.lkr{grid-template-columns:1fr 1fr}.lkr>div{grid-column:1/-1}}
 #lkset[hidden]{display:none}
+body.fplock #lvfp{cursor:default}
+/* left picture switched off in settings: the page takes the whole width (LIVE keeps its own layout) */
+body.noside .shell{grid-template-columns:0 minmax(0,1fr);column-gap:0}
+body.noside .side{display:none}
 body.sitelk header nav,body.sitelk .side,body.sitelk #jkmini{visibility:hidden}
 .rkbig{width:46px;height:46px;fill:var(--fg);stroke:var(--fg);stroke-width:1.5;stroke-linejoin:round;--pe:var(--bg)}
 .lkpm{font:700 9.5px var(--sans);letter-spacing:.14em;color:var(--mut)}
@@ -1707,7 +1712,9 @@ const loc=d=>{const x=new Date(d);return `${x.getFullYear()}-${p2(x.getMonth()+1
 const uid=()=>Math.random().toString(36).slice(2,8),WD=['SUN','MON','TUE','WED','THU','FRI','SAT'];
 const KIND={posts:'post',log:'log',gallery:'gallery',memo:'memo',lines:'line'},LBL={post:'archive',log:'log',gallery:'img',memo:'memo',line:'txt'};
 let FP=false;try{FP=localStorage.getItem('e4fp')==='1'}catch(e){}
-function applyFP(){document.body.classList.toggle('fp',!!FP);const m=document.getElementById('jkmini');if(m){m.dataset.k='';m.removeAttribute('style');if(typeof jkMini==='function'){jkMini();setTimeout(jkMini,560)}}} /* full-page layout: anybody can switch it from the chip on the home page */
+const fpLock=()=>!admin&&typeof HOME!=='undefined'&&HOME&&HOME.fpDef==='paused';
+function applyLayout(){if(fpLock())FP=true;document.body.classList.toggle('noside',!!(HOME&&HOME.side===false));applyFP()}
+function applyFP(){document.body.classList.toggle('fp',!!FP);document.body.classList.toggle('fplock',fpLock());const m=document.getElementById('jkmini');if(m){m.dataset.k='';m.removeAttribute('style');if(typeof jkMini==='function'){jkMini();setTimeout(jkMini,560)}}} /* full-page layout: anybody can switch it from the chip on the home page */
 let OPENLK=null,PEND='',admin=false,EM=false,ITEMS=[],PLANS=[],HOME={img:'',blocks:[]},TAG='',Q='',UNL={},EDITM=false,AK='todo',ADJ=null,FS=false;
 const now=new Date(),TODAY=ymd(now.getFullYear(),now.getMonth(),now.getDate()),CAL={y:now.getFullYear(),m:now.getMonth(),sel:TODAY};
 const G=i=>UNL[i.id]?{...i,...UNL[i.id]}:i,locked=i=>i.visibility==='locked'&&!admin&&!UNL[i.id];
@@ -1758,7 +1765,7 @@ async function load(){const my=++loadSeq;
    admin?Promise.resolve({data:null}):sb.rpc('eval_counts')]);
   if(my!==loadSeq)return false; /* a newer load started; drop this stale result */
   ITEMS=r.data||[];EVC=null;setTimeout(()=>pzNav&&pzNav(),0);if(ec&&Array.isArray(ec.data)){EVC={pub:0,hid:0};ec.data.forEach(x=>{if(x.visibility==='public')EVC.pub+=+x.n;else EVC.hid+=+x.n})}HOME=h.data?.value?.blocks?h.data.value:DEF();
-  paintImg();
+  paintImg();applyLayout();
   if(r.error){app.innerHTML='<p class="empty">Load failed: '+esc(r.error.message)+'</p>';return false}
   return true
  }catch(x){app.innerHTML='<p class="empty">Load failed: '+esc(x.message||x)+'</p>';return false}}
@@ -1804,9 +1811,11 @@ document.addEventListener('submit',async e=>{const f=e.target.closest&&e.target.
  if(r.error||r.data!==true){if(er)er.textContent='비밀번호가 맞지 않아요';inp.value='';f.classList.remove('shake');void f.offsetWidth;f.classList.add('shake');inp.focus();return}
  LKP[k]=inp.value;lkSave();document.body.classList.remove('sitelk');if(await load())route()});
 function lkSettings(){const row=([k,n,d])=>`<div class="lkr"><div><b>${esc(n)}</b><small>${esc(d)}</small></div><select data-lkm="${k}">${[['open','공개'],['private','비공개'],['password','비밀번호']].map(([v,t])=>`<option value="${v}"${lkMode(k)===v?' selected':''}>${t}</option>`).join('')}</select><input type="password" data-lkp="${k}" placeholder="${lkMode(k)==='password'?'바꿀 때만 입력':'새 비밀번호'}" autocomplete="new-password"${lkMode(k)==='password'?'':' hidden'}></div>`;
- openM(`<h3>SETTINGS · LOCKS</h3><p class="st" style="margin:0 0 10px">비공개는 로그인한 나만 볼 수 있어요. 비밀번호는 방문자가 맞게 넣으면 그 창에서는 계속 열려 있어요. SITE를 잠그면 모든 페이지가 잠겨요.</p><div class="lkrs">${LKS.map(row).join('')}</div><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" id="lksave">SAVE</button></div>`);
+ const seg=(k,opts,cur)=>`<div class="sg2" data-lay="${k}">${opts.map(([v,t])=>`<button type="button" class="btn${cur===v?' on':''}" data-v="${v}">${t}</button>`).join('')}</div>`;
+ openM(`<h3>SETTINGS</h3><div class="lkrs"><div class="lkr"><div><b>왼쪽 사진</b><small>LIVE 화면 왼쪽의 큰 사진</small></div>${seg('side',[['on','보이기'],['off','숨기기']],HOME.side===false?'off':'on')}</div><div class="lkr"><div><b>기본 화면</b><small>PAUSED로 두면 방문자는 LIVE로 바꿀 수 없어요. 나는 바꿀 수 있어요.</small></div>${seg('fpDef',[['live','LIVE'],['paused','PAUSED']],HOME.fpDef==='paused'?'paused':'live')}</div></div><h3 style="margin-top:18px">LOCKS</h3><p class="st" style="margin:0 0 10px">비공개는 로그인한 나만 볼 수 있어요. 비밀번호는 방문자가 맞게 넣으면 그 창에서는 계속 열려 있어요. SITE를 잠그면 모든 페이지가 잠겨요.</p><div class="lkrs">${LKS.map(row).join('')}</div><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button type="button" class="btn pri" id="lksave">SAVE</button></div>`);
+ $('#mb').querySelectorAll('[data-lay] [data-v]').forEach(b=>b.onclick=()=>b.parentNode.querySelectorAll('[data-v]').forEach(x=>x.classList.toggle('on',x===b)));
  $('#mb').querySelectorAll('[data-lkm]').forEach(sel=>sel.onchange=()=>{$('#mb').querySelector(`[data-lkp="${sel.dataset.lkm}"]`).hidden=sel.value!=='password'});
- $('#lksave').onclick=async()=>{msg('Saving…');for(const [k] of LKS){const m=$('#mb').querySelector(`[data-lkm="${k}"]`).value,pw=$('#mb').querySelector(`[data-lkp="${k}"]`).value;
+ $('#lksave').onclick=async()=>{msg('Saving…');{const g=k=>$('#mb').querySelector(`[data-lay="${k}"] .on`).dataset.v,sd=g('side')==='on',fd=g('fpDef');if(sd!==(HOME.side!==false)||fd!==(HOME.fpDef==='paused'?'paused':'live')){HOME.side=sd;HOME.fpDef=fd;await saveHome();applyLayout()}}for(const [k] of LKS){const m=$('#mb').querySelector(`[data-lkm="${k}"]`).value,pw=$('#mb').querySelector(`[data-lkp="${k}"]`).value;
    if(m===lkMode(k)&&!(m==='password'&&pw))continue;if(m==='password'&&lkMode(k)!=='password'&&!pw)return msg(`${k==='site'?'SITE':LKS.find(x=>x[0]===k)[1]}: 비밀번호를 넣어 주세요`);
    const r=await sb.rpc('lock_set',{p_scope:k,p_mode:m,p_pw:pw||null});if(r.error)return msg('Save failed: '+r.error.message+(/lock_set/.test(r.error.message)?' — run sql/lock.sql in Supabase first':''))}
   closeM();if(await load())route()}}
@@ -2460,7 +2469,7 @@ function lvIntro(){const n=LVZ.seq.length,dt=Math.max(LVI.min,Math.min(LVI.max,M
  const wait=()=>{if(tok!==LVS.tok||!$('.lv'))return;if(document.getElementById('intro'))return setTimeout(wait,120);setTimeout(start,LVI.wait)};
  wait()}
 document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('.lv'))return;const t=e.target;let x;
- if(x=t.closest('#lvfp')){FP=!FP;try{localStorage.setItem('e4fp',FP?'1':'0')}catch(z){}applyFP();x.setAttribute('aria-pressed',FP);x.title=FP?'Back to normal':'Full page';x.textContent=(FP?'PAUSED':'LIVE')+' · GAME '+LVZ.game;setTimeout(()=>dispatchEvent(new Event('resize')),540);return}
+ if(x=t.closest('#lvfp')){if(fpLock())return;FP=!FP;try{localStorage.setItem('e4fp',FP?'1':'0')}catch(z){}applyFP();x.setAttribute('aria-pressed',FP);x.title=FP?'Back to normal':'Full page';x.textContent=(FP?'PAUSED':'LIVE')+' · GAME '+LVZ.game;setTimeout(()=>dispatchEvent(new Event('resize')),540);return}
  if(x=t.closest('[data-lv]')){const a=x.dataset.lv;if(a==='s'){lvStop();lvGo(0)}if(a==='-'){lvStop();lvGo(LVS.cur-1)}if(a==='+'){lvStop();lvGo(LVS.cur+1)}if(a==='p'){if(LVS.tm)return lvStop();if(LVS.cur>=LVZ.seq.length)lvGo(0);x.innerHTML=IC.pa;x.classList.add('on');LVS.tm=setInterval(()=>{if(!$('.lv')||LVS.cur>=LVZ.seq.length)return lvStop();lvGo(LVS.cur+1)},1100)}return}
  if(x=t.closest('.lvpr')){lvStop();const r=x.getBoundingClientRect();return lvGo(Math.round((e.clientX-r.left)/r.width*LVZ.seq.length))}
  if(x=t.closest('.lvm[data-j]')){lvStop();lvGo(+x.dataset.j);return}
