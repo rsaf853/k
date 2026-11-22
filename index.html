@@ -630,6 +630,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .lkr input[hidden]{display:block!important;visibility:hidden}
 @media(max-width:520px){.lkr{grid-template-columns:1fr 1fr}.lkr>div{grid-column:1/-1}}
 #lkset[hidden]{display:none}
+nav a[hidden]{display:none!important}
 body.fplock #lvfp{cursor:default}
 /* left picture switched off in settings: the page takes the whole width (LIVE keeps its own layout) */
 @media(max-width:720px){html.nomside .side{display:none}}
@@ -1684,7 +1685,7 @@ W.forEach(function(w,i){A(w,[{opacity:0,transform:'translateY(40%)'},{opacity:1,
 /* each word flies to its own menu slot in the header and becomes the menu */
 setTimeout(function(){if(done)return;
  var N=[].slice.call(document.querySelectorAll('header nav a'));
- if(N.length!==W.length||!N[0].getBoundingClientRect().width)return gone();
+ if(N.length!==W.length||N.some(function(a){return !a.getBoundingClientRect().width}))return gone();
  done=true;el.style.pointerEvents='none';hid=N;
  var last=null;
  W.forEach(function(w,i){var a=w.getBoundingClientRect(),t=N[i],b=t.getBoundingClientRect(),cs=getComputedStyle(t),sc=parseFloat(cs.fontSize)/parseFloat(getComputedStyle(w).fontSize);
@@ -1699,7 +1700,7 @@ setTimeout(function(){if(el.parentNode&&!done)gone()},8000);
 <div class="shell">
 <aside class="side"><div class="im" id="im"></div></aside>
 <div class="col">
-<header><nav><a href="#/" data-n="">check</a><a href="#/posts" data-n="posts">e4</a><a href="#/log" data-n="log">e5</a><a href="#/memo" data-n="memo">f4</a><a href="#/lines" data-n="lines">exf4</a><a href="#/gallery" data-n="gallery">?!</a></nav><script>document.querySelectorAll('nav a').forEach(function(a){a.dataset.t=a.textContent})</script><span class="hr"><span class="hcap"><span data-k="mate">mate</span><span data-k="puzzle">puzzle</span></span><span class="hpcs"><button class="hp" id="mateNav" data-k="mate" aria-label="Mate" title="Mate">#</button><button class="hp" id="puzzleNav" data-k="puzzle" aria-label="Puzzle" title="Puzzle"><svg class="bolt" viewBox="0 0 16 16" aria-hidden="true"><path d="M8.8 1.2L3.6 8.8h3.9l-1 5.8 5.9-7.7H8.6z"/></svg></button></span><button class="ib" id="theme" aria-label="Toggle theme"></button></span></header>
+<header><nav><a href="#/" data-n="">check</a><a href="#/posts" data-n="posts">e4</a><a href="#/log" data-n="log">e5</a><a href="#/memo" data-n="memo">f4</a><a href="#/lines" data-n="lines">exf4</a><a href="#/gallery" data-n="gallery">?!</a></nav><script>document.querySelectorAll('nav a').forEach(function(a){a.dataset.t=a.textContent});try{var LM=JSON.parse(localStorage.getItem('e4lkm')||'{}'),SC={'':'home',posts:'post',log:'log',memo:'memo',lines:'line',gallery:'gallery'};document.querySelectorAll('nav a').forEach(function(a){if(LM[SC[a.dataset.n]]==='private')a.hidden=true})}catch(e){}</script><span class="hr"><span class="hcap"><span data-k="mate">mate</span><span data-k="puzzle">puzzle</span></span><span class="hpcs"><button class="hp" id="mateNav" data-k="mate" aria-label="Mate" title="Mate">#</button><button class="hp" id="puzzleNav" data-k="puzzle" aria-label="Puzzle" title="Puzzle"><svg class="bolt" viewBox="0 0 16 16" aria-hidden="true"><path d="M8.8 1.2L3.6 8.8h3.9l-1 5.8 5.9-7.7H8.6z"/></svg></button></span><button class="ib" id="theme" aria-label="Toggle theme"></button></span></header>
 <main id="app"></main>
 <footer><button id="lkset" class="lkset" type="button" aria-label="Settings" title="Settings" hidden><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><path d="M14 4v6M6 14v6"/></svg></button><button id="mode" class="mode" type="button">checkmate</button><button id="adm" aria-label="Admin"><svg width="13" height="13" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2v5M9.6 4.3h4.8" fill="none"/><path d="M12 8.4C11 6.8 8 6.5 6.5 8.4 5 10.4 6 13 8.2 14.2L7.2 18.2h9.6l-1-4C18 13 19 10.4 17.5 8.4 16 6.5 13 6.8 12 8.4Z"/><path d="M5.8 18.2h12.4v3.4H5.8Z"/></svg></button></footer>
 </div></div>
@@ -1813,8 +1814,9 @@ try{LKP=JSON.parse(sessionStorage.getItem('e4lk')||'{}')||{}}catch(e){LKP={}}
 const LKS=[['site','SITE','the whole site'],['home','check','home'],['post','e4','archive'],['log','e5','log'],['memo','f4','memo'],['line','exf4','txt'],['gallery','?!','img']];
 const lkMode=k=>LOCK[k]||'open';
 const lkSave=()=>{try{sessionStorage.setItem('e4lk',JSON.stringify(LKP))}catch(e){}};
-async function lkLoad(){LOCK={};LKOK={};const r=await sb.rpc('lock_info');if(r.error||!Array.isArray(r.data))return;r.data.forEach(x=>LOCK[x.scope]=x.mode);
+async function lkLoad(){LOCK={};LKOK={};const r=await sb.rpc('lock_info');if(r.error||!Array.isArray(r.data)){lkNav();return}r.data.forEach(x=>LOCK[x.scope]=x.mode);try{localStorage.setItem('e4lkm',JSON.stringify(LOCK))}catch(e){}lkNav();
  if(admin)return;await Promise.all(Object.keys(LKP).filter(k=>lkMode(k)==='password').map(async k=>{const q=await sb.rpc('lock_ok',{p_scope:k,p_pw:LKP[k]});LKOK[k]=!q.error&&q.data===true;if(!LKOK[k]){delete LKP[k];lkSave()}}))}
+function lkNav(){document.querySelectorAll('nav a').forEach(a=>{const k=lkScopeOf(a.dataset.n);a.hidden=!admin&&!!k&&lkMode(k)==='private'})}
 const lkOpen=k=>admin||lkMode(k)==='open'||(lkMode(k)==='password'&&!!LKOK[k]);
 const lkScopeOf=a=>!a?'home':a==='post'||a==='posts'?'post':a==='log'?'log':a==='memo'?'memo':a==='lines'?'line':a==='gallery'?'gallery':null;
 function lkScreen(k){const L=LKS.find(x=>x[0]===k),site=k==='site',pv=lkMode(k)==='private';document.body.classList.toggle('sitelk',site);
@@ -3282,7 +3284,7 @@ addEventListener('hashchange',()=>{TAG=PEND;PEND='';Q='';FS=false;if(!(/^#\/(log
 document.addEventListener('input',e=>{const t=e.target,k=t.dataset&&t.dataset.ia;if(!k)return;if(/D$/.test(k)&&HOME.ixD===undefined){HOME.ixD=HOME.ix??50;HOME.iyD=HOME.iy??50;HOME.izD=HOME.iz||100}HOME[k]=+t.value;$('#v_'+k).textContent=t.value+IU[k];paintVars()});
 /* auth */
 $('#lkset').onclick=()=>lkSettings();
-const sync=()=>{$('#adm').classList.toggle('on',admin);$('#lkset').hidden=!(admin&&EM);const m=$('#mode');m.textContent=EM?'stalemate':'checkmate';m.classList.toggle('ok',admin);m.classList.toggle('on',admin&&EM)};
+const sync=()=>{if(typeof lkNav==='function')lkNav();$('#adm').classList.toggle('on',admin);$('#lkset').hidden=!(admin&&EM);const m=$('#mode');m.textContent=EM?'stalemate':'checkmate';m.classList.toggle('ok',admin);m.classList.toggle('on',admin&&EM)};
 $('#mode').onclick=()=>{if(!admin)return;EM=!EM;if(!EM)EDITM=false;sync();paintImg();route()};
 $('#adm').onclick=async()=>{if(admin){await sb.auth.signOut();return}
  openM(`<h3>ADMIN LOGIN</h3><form id="f"><label>Email</label><input type="email" name="email" required autocomplete="username"><label>Password</label><input type="password" name="pw" required autocomplete="current-password"><p id="st" class="st"></p><div class="acts"><button type="button" class="btn" data-x>CANCEL</button><button class="btn">LOGIN</button></div></form>`);
