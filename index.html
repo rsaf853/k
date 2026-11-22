@@ -1669,7 +1669,7 @@ html.mlock,html.mlock body{overflow:hidden}
 try{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
  var h=location.hash;if(h&&h!=='#'&&h!=='#/')return;
  if(sessionStorage.getItem('e4intro'))return;sessionStorage.setItem('e4intro','1')}catch(e){}
-var NAV=['check','e4','e5','f4','exf4','?!'];
+var NAV=['check','e4','e5','f4','exf4','?!'];try{var LM=JSON.parse(localStorage.getItem('e4lkm')||'{}'),SC=['home','post','log','memo','line','gallery'];NAV=NAV.filter(function(n,i){return LM[SC[i]]!=='private'})}catch(e){} /* menus hidden as private leave the intro too */
 var css='#intro{position:fixed;inset:0;z-index:99999;cursor:pointer;pointer-events:auto}'
 +'#intro .ibg{position:absolute;inset:0;background:var(--bg)}'
 +'#intro .iw{position:absolute;inset:0;display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:.42em;padding:0 16px;white-space:nowrap;font:800 clamp(22px,6.4vw,84px)/1.1 var(--sans);letter-spacing:-.045em;color:var(--fg)}'
@@ -1686,7 +1686,7 @@ el.addEventListener('click',gone);
 W.forEach(function(w,i){A(w,[{opacity:0,transform:'translateY(40%)'},{opacity:1,transform:'none'}],{duration:600,delay:200+i*225,easing:ease})});
 /* each word flies to its own menu slot in the header and becomes the menu */
 setTimeout(function(){if(done)return;
- var N=[].slice.call(document.querySelectorAll('header nav a'));
+ var N=[].slice.call(document.querySelectorAll('header nav a')).filter(function(a){return !a.hidden});
  if(N.length!==W.length||N.some(function(a){return !a.getBoundingClientRect().width}))return gone();
  done=true;el.style.pointerEvents='none';hid=N;
  var last=null;
