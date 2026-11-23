@@ -341,10 +341,12 @@ input,select,textarea{padding:6px 9px}
 .bn .lb{position:absolute;left:6px;top:6px;max-width:calc(100% - 12px);padding:2px 8px;background:var(--fg);color:var(--bg);font:700 11px/1.35 var(--sans);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .25s,transform .25s}
 .bn:hover .lb,.bn:active .lb,.bn:focus-visible .lb{opacity:1;transform:none}
 
-/* scrollbars: the browser draws none anywhere; while something scrolls, a small sharp square (black, white in dark mode) marks where you are along its edge */
+/* scrollbars: the browser draws none anywhere; while something scrolls, a thin bar on a hairline track (black, white in dark mode) shows where you are along its edge */
 *{scrollbar-width:none}
 ::-webkit-scrollbar{display:none;width:0;height:0}
-#sbi{position:fixed;left:0;top:0;z-index:2147483000;width:6px;height:6px;background:var(--fg);pointer-events:none;opacity:0;transition:opacity .3s}
+#sbi{position:fixed;left:0;top:0;z-index:2147483000;width:1px;height:0;background:var(--line);pointer-events:none;opacity:0;transition:opacity .35s}
+#sbi b{position:absolute;left:-1px;top:0;width:3px;height:0;background:var(--fg)}
+#sbi.h{height:1px}#sbi.h b{left:0;top:-1px;width:0;height:3px}
 #sbi.on{opacity:1;transition:none}
 .puzzle-square{overflow:hidden}.puzzle-square .co{position:absolute;font:600 9px/1 var(--sans);font-style:normal;color:var(--mut);pointer-events:none}.puzzle-square .cr{left:3px;top:3px}.puzzle-square .cf{right:3px;bottom:3px}
 .puzzle-square.dot::after{content:"";position:absolute;width:26%;height:26%;border-radius:50%;background:var(--fg);opacity:.32;pointer-events:none}
@@ -3280,13 +3282,14 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(c('[data-iadj]'))return imgAdjust();
  if(c('[data-ireset]')){if(ADJT==='phone'){['ixML','iyML','izML','ixMD','iyMD','izMD','ihM'].forEach(k=>delete HOME[k]);paintVars();imgAdjustPhone();return}if(ADJT==='dark'){delete HOME.ixD;delete HOME.iyD;delete HOME.izD}else Object.assign(HOME,IMG_DEF);paintVars();imgAdjust(ADJT,true);return}
  if(c('[data-isave]')){ADJ=null;saveHome();closeM();return}});
-{let t=0;const m=document.createElement('i');m.id='sbi';m.setAttribute('aria-hidden','true');document.body.appendChild(m);
- addEventListener('scroll',e=>{let el=e.target,r,f,v=true;const S=6;
-  if(el===document||el===document.documentElement||el===document.body){el=document.scrollingElement||document.documentElement;const H=el.scrollHeight-innerHeight;if(H<=0)return;f=el.scrollTop/H;r={left:0,top:0,right:innerWidth,bottom:innerHeight,width:innerWidth,height:innerHeight}}
-  else{if(!el.getBoundingClientRect)return;const H=el.scrollHeight-el.clientHeight,W=el.scrollWidth-el.clientWidth;r=el.getBoundingClientRect();if(H>1)f=el.scrollTop/H;else if(W>1){v=false;f=el.scrollLeft/W}else return}
-  f=Math.max(0,Math.min(1,f));
-  if(v)m.style.transform=`translate(${Math.round(r.right-S-1)}px,${Math.round(r.top+2+f*(r.height-S-4))}px)`;else m.style.transform=`translate(${Math.round(r.left+2+f*(r.width-S-4))}px,${Math.round(r.bottom-S-1)}px)`;
-  m.classList.add('on');document.documentElement.classList.add('sb');clearTimeout(t);t=setTimeout(()=>{m.classList.remove('on');document.documentElement.classList.remove('sb')},900)},{capture:true,passive:true})} /* a square marks the scroll position while scrolling */
+{let t=0;const m=document.createElement('i');m.id='sbi';m.setAttribute('aria-hidden','true');m.innerHTML='<b></b>';document.body.appendChild(m);const th=m.firstChild;
+ addEventListener('scroll',e=>{let el=e.target,r,f,v=true,view,full;
+  if(el===document||el===document.documentElement||el===document.body){el=document.scrollingElement||document.documentElement;full=el.scrollHeight;view=innerHeight;if(full-view<=0)return;f=el.scrollTop/(full-view);r={left:0,top:0,right:innerWidth,bottom:innerHeight,width:innerWidth,height:innerHeight}}
+  else{if(!el.getBoundingClientRect)return;const H=el.scrollHeight-el.clientHeight,W=el.scrollWidth-el.clientWidth;r=el.getBoundingClientRect();if(H>1){f=el.scrollTop/H;full=el.scrollHeight;view=el.clientHeight}else if(W>1){v=false;f=el.scrollLeft/W;full=el.scrollWidth;view=el.clientWidth}else return}
+  f=Math.max(0,Math.min(1,f));m.classList.toggle('h',!v);
+  if(v){const tr=Math.max(0,r.height-12),len=Math.max(18,tr*view/full);m.style.height=tr+'px';m.style.width='';m.style.transform=`translate(${Math.round(r.right-4)}px,${Math.round(r.top+6)}px)`;th.style.height=len+'px';th.style.width='';th.style.transform=`translateY(${Math.round(f*(tr-len))}px)`}
+  else{const tr=Math.max(0,r.width-12),len=Math.max(18,tr*view/full);m.style.width=tr+'px';m.style.height='';m.style.transform=`translate(${Math.round(r.left+6)}px,${Math.round(r.bottom-4)}px)`;th.style.width=len+'px';th.style.height='';th.style.transform=`translateX(${Math.round(f*(tr-len))}px)`}
+  m.classList.add('on');document.documentElement.classList.add('sb');clearTimeout(t);t=setTimeout(()=>{m.classList.remove('on');document.documentElement.classList.remove('sb')},900)},{capture:true,passive:true})} /* a thin bar shows the scroll position while scrolling */
 {const tb=$('#top'),ta=$('#tpa'),tc=$('#tpb'),up=()=>{const mx=document.documentElement.scrollHeight-innerHeight,p=mx>0?Math.min(1,Math.max(0,scrollY/mx)):0,v=Math.round(p*100)+'%';tb.classList.toggle('on',scrollY>400);tb.style.setProperty('--p',v);ta.textContent=v;tc.textContent=v};
  addEventListener('scroll',up,{passive:true});addEventListener('resize',up);if(window.ResizeObserver)new ResizeObserver(up).observe(app);
  tb.onclick=()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});up()}
