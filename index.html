@@ -3285,9 +3285,11 @@ document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest(s);let x;
  if(c('[data-ireset]')){if(ADJT==='phone'){['ixML','iyML','izML','ixMD','iyMD','izMD','ihM'].forEach(k=>delete HOME[k]);paintVars();imgAdjustPhone();return}if(ADJT==='dark'){delete HOME.ixD;delete HOME.iyD;delete HOME.izD}else Object.assign(HOME,IMG_DEF);paintVars();imgAdjust(ADJT,true);return}
  if(c('[data-isave]')){ADJ=null;saveHome();closeM();return}});
 {let t=0;const m=document.createElement('i');m.id='sbi';m.setAttribute('aria-hidden','true');m.innerHTML='<b></b>';document.body.appendChild(m);const th=m.firstChild;
- addEventListener('scroll',e=>{let el=e.target,r,f,v=true,view,full;
+ let act=0;['wheel','touchmove','keydown','pointerdown'].forEach(t=>addEventListener(t,()=>{act=Date.now()},{capture:true,passive:true}));
+ addEventListener('scroll',e=>{if(Date.now()-act>1200)return; /* only scrolling the visitor does, not the page moving things into view */
+  let el=e.target,r,f,v=true,view,full;
   if(el===document||el===document.documentElement||el===document.body){el=document.scrollingElement||document.documentElement;full=el.scrollHeight;view=innerHeight;if(full-view<=0)return;f=el.scrollTop/(full-view);r={left:0,top:0,right:innerWidth,bottom:innerHeight,width:innerWidth,height:innerHeight}}
-  else{if(!el.getBoundingClientRect)return;const H=el.scrollHeight-el.clientHeight,W=el.scrollWidth-el.clientWidth;r=el.getBoundingClientRect();if(H>1){f=el.scrollTop/H;full=el.scrollHeight;view=el.clientHeight}else if(W>1){v=false;f=el.scrollLeft/W;full=el.scrollWidth;view=el.clientWidth}else return}
+  else{if(!el.getBoundingClientRect)return;const H=el.scrollHeight-el.clientHeight,W=el.scrollWidth-el.clientWidth;r=el.getBoundingClientRect();if(!r.width||!r.height)return;if(H>1){f=el.scrollTop/H;full=el.scrollHeight;view=el.clientHeight}else if(W>1){v=false;f=el.scrollLeft/W;full=el.scrollWidth;view=el.clientWidth}else return}
   f=Math.max(0,Math.min(1,f));m.classList.toggle('h',!v);
   if(v){const tr=Math.max(0,r.height-12),len=Math.max(18,tr*view/full);m.style.height=tr+'px';m.style.width='';m.style.transform=`translate(${Math.round(r.right-4)}px,${Math.round(r.top+6)}px)`;th.style.height=len+'px';th.style.width='';th.style.transform=`translateY(${Math.round(f*(tr-len))}px)`}
   else{const tr=Math.max(0,r.width-12),len=Math.max(18,tr*view/full);m.style.width=tr+'px';m.style.height='';m.style.transform=`translate(${Math.round(r.left+6)}px,${Math.round(r.bottom-4)}px)`;th.style.width=len+'px';th.style.height='';th.style.transform=`translateX(${Math.round(f*(tr-len))}px)`}
