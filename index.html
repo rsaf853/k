@@ -2423,7 +2423,7 @@ document.addEventListener('click',e=>{const mi=e.target.closest&&e.target.closes
 /* arriving on the site: once the entrance animation is gone, the open album starts. Browsers refuse sound before the visitor
    has touched the page, so if YouTube is held back the music starts on the first click or key press anywhere (controls excepted: they act themselves) */
 let JKAUTO=false;
-function jkAuto(){if(JKAUTO||JK.live)return;JKAUTO=true;
+function jkAuto(){if(JKAUTO||JK.live)return;JKAUTO=true;if(innerWidth<=720||matchMedia('(hover:none)').matches)return; /* phones and touch screens: no autoplay */
  const go=()=>{if(document.getElementById('intro'))return setTimeout(go,150);if(!document.getElementById('jkv')||JK.live||!JK.al)return;
   if(!jkTracks().some(x=>x.v)&&!jkPlMode())return;jkStart();
   setTimeout(()=>{if(JK.on||!JK.live)return;
